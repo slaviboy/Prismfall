@@ -23,3 +23,13 @@ test('every stage loads, renders and plays', async ({ page }) => {
     await page.evaluate(() => (window as unknown as { __PRISMFALL__: { shell: { quitToMenu(): void } } }).__PRISMFALL__.shell.quitToMenu());
   }
 });
+
+test('stages wire their reactivity profiles with layer scopes', async ({ page }) => {
+  await openMenu(page);
+  const expected: Record<string, number> = { 'luminous-tide': 8, 'celestial-drift': 6, 'ember-foundry': 5 };
+  for (const [id, count] of Object.entries(expected)) {
+    await page.evaluate((stage) => (window as unknown as { __PRISMFALL__: { shell: { stageManager: { show(i: string, o: unknown): Promise<boolean> } } } }).__PRISMFALL__.shell.stageManager.show(stage, { transition: 0 }), id);
+    await expect.poll(() => hooks<string | undefined>(page, 'h.shell.renderSystem.environments.current?.manifest.id'), { timeout: 20_000 }).toBe(id);
+    expect(await hooks<number>(page, 'h.shell.renderSystem.environments.current.reactivity.size'), id).toBe(count);
+  }
+});

@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { registerBuiltinComponents } from '../rendering/environments/builtins';
 import { registerBuiltinEffects } from '../rendering/fx/lineClearEffects';
 import { registries } from '../sdk/registry';
-import { discoverStages, resetStageCache } from './registry';
-import { satisfiesRange, stageManifestSchema } from './schema';
+import { discoverStages, reactivityProfileFiles, resetStageCache } from './registry';
+import { reactivityProfileSchema, satisfiesRange, stageManifestSchema } from './schema';
 import { validateManifest } from './validate';
 
 registerBuiltinComponents();
@@ -29,6 +29,13 @@ describe('shipped content', () => {
         const parsed = factory.schema.safeParse(layer.params);
         expect(parsed.success, `${stage.id}/${layer.id ?? layer.type}: ${parsed.success ? '' : parsed.error.message}`).toBe(true);
       }
+    });
+  }
+
+  for (const [path, raw] of Object.entries(reactivityProfileFiles())) {
+    it(`reactivity profile ${path.slice(path.lastIndexOf('/') + 1)} is valid`, () => {
+      const parsed = reactivityProfileSchema.safeParse(raw);
+      expect(parsed.success, parsed.success ? '' : parsed.error.message).toBe(true);
     });
   }
 
@@ -71,6 +78,15 @@ describe('manifest validation', () => {
     expect(validateManifest({ ...minimal, id: 'Bad Id' }, env).errors.length).toBeGreaterThan(0);
     expect(validateManifest({ ...minimal, requires: { sdk: '^2.0.0' } }, env).errors.join()).toContain('Content SDK');
     expect(validateManifest({ ...minimal, id: 'other' }, env).errors.join()).toContain('folder');
+  });
+
+  it('checks reactivity profile references and their layer scopes', () => {
+    const profiled = (profiles: unknown[]) => ({ ...minimal, environment: { layers: [{ id: 'sky', type: 'sky' }] }, reactivity: { profiles } });
+    const withProfiles = { ...env, profileExists: (n: string) => n === 'bass-breath' };
+    expect(validateManifest(profiled(['bass-breath']), withProfiles).errors).toEqual([]);
+    expect(validateManifest(profiled([{ name: 'bass-breath', layers: ['sky'], amount: 0.5 }]), withProfiles).manifest?.reactivity.profiles[0]).toEqual({ name: 'bass-breath', layers: ['sky'], amount: 0.5 });
+    expect(validateManifest(profiled(['missing']), withProfiles).errors.join()).toContain('not found');
+    expect(validateManifest(profiled([{ name: 'bass-breath', layers: ['ocean'] }]), withProfiles).errors.join()).toContain('no layer with id "ocean"');
   });
 
   it('checks semver ranges', () => {

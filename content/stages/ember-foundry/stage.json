@@ -204,16 +204,7 @@
             0.9
           ]
         },
-        "bind": [
-          {
-            "target": "heat",
-            "feature": "lowMid",
-            "amount": 0.6,
-            "category": "lighting",
-            "attackMs": 60,
-            "releaseMs": 700
-          }
-        ]
+        "bind": []
       },
       {
         "id": "anvil-sparks",
@@ -380,6 +371,23 @@
         "minDetail": "medium"
       }
     ]
+  },
+  "reactivity": {
+    "profiles": [
+      {
+        "name": "mid-architecture",
+        "layers": [
+          "molten-channel"
+        ]
+      },
+      {
+        "name": "transient-strike",
+        "layers": [
+          "hall"
+        ]
+      }
+    ],
+    "bindings": []
   },
   "effects": {
     "lineClear": {

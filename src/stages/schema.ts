@@ -30,6 +30,19 @@ export const bindingSchema = z.object({
 });
 export type Binding = z.infer<typeof bindingSchema>;
 
+/**
+ * A reusable reactivity profile (content/shared/reactivity/<name>.json), by name or with a scope:
+ * `layers` limits it to those layer ids, `amount` scales every binding's amount.
+ */
+export const profileRefSchema = z.union([
+  z.string().transform((name) => ({ name, layers: undefined as string[] | undefined, amount: 1 })),
+  z.object({ name: z.string(), layers: z.array(z.string()).optional(), amount: z.number().min(0).max(4).default(1) }),
+]);
+export type ProfileRef = z.infer<typeof profileRefSchema>;
+
+/** File format of a shared reactivity profile. */
+export const reactivityProfileSchema = z.object({ description: z.string().default(''), bindings: z.array(bindingSchema).min(1) });
+
 export const layerSchema = z.object({
   id: z.string().optional(),
   type: z.string(),
@@ -110,7 +123,7 @@ export const stageManifestSchema = z.object({
     })
     .prefault({}),
   environment: z.object({ layers: z.array(layerSchema).min(1) }),
-  reactivity: z.object({ profiles: z.array(z.string()).default([]), bindings: z.array(bindingSchema).default([]) }).prefault({}),
+  reactivity: z.object({ profiles: z.array(profileRefSchema).default([]), bindings: z.array(bindingSchema).default([]) }).prefault({}),
   effects: z
     .object({
       lineClear: z.object({ effect: z.string(), params: z.record(z.string(), z.unknown()).default({}) }).default({ effect: 'prismBurst', params: {} }),

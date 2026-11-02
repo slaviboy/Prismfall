@@ -1,0 +1,7 @@
+{
+  "description": "Drum hits strike the structures: emissive seams and beams flare on transients.",
+  "bindings": [
+    { "layer": "type:gltfScene", "target": "emissive", "feature": "transientIntensity", "amount": 0.35, "category": "lighting", "attackMs": 8, "releaseMs": 260 },
+    { "layer": "type:beams", "target": "intensity", "feature": "transientIntensity", "amount": 0.3, "category": "lighting", "attackMs": 8, "releaseMs": 240 }
+  ]
+}

@@ -14,6 +14,8 @@ export interface ValidationEnv {
   readonly assetExists: (relativePath: string) => boolean;
   /** Folder name the manifest lives in (must equal the id). */
   readonly folder: string;
+  /** Whether a shared reactivity profile exists (content/shared/reactivity/<name>.json). */
+  readonly profileExists?: (name: string) => boolean;
 }
 
 /** Pure manifest validation shared by the in-game registry and `npm run content:validate`. */
@@ -37,6 +39,11 @@ export function validateManifest(raw: unknown, env: ValidationEnv): ValidationRe
   for (const track of m.music.tracks) {
     if (!env.assetExists(track.src)) errors.push(`music track "${track.id}": "${track.src}" not found`);
     if (track.meta && !env.assetExists(track.meta)) errors.push(`music track "${track.id}": metadata "${track.meta}" not found`);
+  }
+  const layerIds = new Set(m.environment.layers.map((l) => l.id).filter((id): id is string => !!id));
+  for (const ref of m.reactivity.profiles) {
+    if (env.profileExists && !env.profileExists(ref.name)) errors.push(`reactivity profile "${ref.name}" not found in content/shared/reactivity`);
+    for (const id of ref.layers ?? []) if (!layerIds.has(id)) errors.push(`reactivity profile "${ref.name}": no layer with id "${id}"`);
   }
   if (m.music.defaultTrack && !m.music.tracks.some((t) => t.id === m.music.defaultTrack)) errors.push(`defaultTrack "${m.music.defaultTrack}" is not one of the tracks`);
   for (const [sfx, path] of Object.entries(m.sfx.overrides)) if (!env.assetExists(path)) errors.push(`sfx override "${sfx}": "${path}" not found`);

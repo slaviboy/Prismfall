@@ -1,0 +1,8 @@
+{
+  "description": "Beat-locked light: water and rings flash on the beat grid of the music.",
+  "bindings": [
+    { "layer": "type:water", "target": "glow", "feature": "beatPulse", "amount": 0.8, "attackMs": 20, "releaseMs": 350 },
+    { "layer": "type:rings", "target": "intensity", "feature": "beatPulse", "amount": 0.35, "category": "lighting", "attackMs": 15, "releaseMs": 300 },
+    { "layer": "type:beams", "target": "intensity", "feature": "beatPulse", "amount": 0.3, "category": "lighting", "attackMs": 15, "releaseMs": 280 }
+  ]
+}

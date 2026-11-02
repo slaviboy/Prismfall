@@ -70,6 +70,7 @@ export function discoverStages(): StageInfo[] {
       knownComponents: known,
       folder,
       assetExists: (rel) => existsInContent(`${dir}/${rel.replace(/^\.\//, '')}`) || existsInContent(rel),
+      profileExists: (name) => `/content/shared/reactivity/${name}.json` in PROFILES,
     });
     const errors = [...result.errors];
     if (source !== 'core') {
@@ -121,6 +122,11 @@ export async function loadMusicModule(info: StageInfo, src: string): Promise<unk
 
 export function readTrackMeta(info: StageInfo, src: string): unknown {
   return JSON_FILES[`${info.dir}/${src.replace(/^\.\//, '')}`];
+}
+
+/** Every shared reactivity profile file (for validation). */
+export function reactivityProfileFiles(): Record<string, unknown> {
+  return PROFILES;
 }
 
 /** Reusable reactivity profiles (content/shared/reactivity/<name>.json → { bindings: Binding[] }). */

@@ -1,0 +1,7 @@
+{
+  "description": "Fast, low-amplitude sparkle from the treble: particles and stars glint without flicker.",
+  "bindings": [
+    { "layer": "type:particles", "target": "brightness", "feature": "treble", "amount": 0.9, "category": "particles", "attackMs": 25, "releaseMs": 220 },
+    { "layer": "type:sky", "target": "stars", "feature": "treble", "amount": 0.4, "attackMs": 30, "releaseMs": 300 }
+  ]
+}

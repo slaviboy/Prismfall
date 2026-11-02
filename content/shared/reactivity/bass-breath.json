@@ -1,0 +1,8 @@
+{
+  "description": "Slow, heavy breathing on the bass: swells, sky glow and atmospheres rise and settle with the low end.",
+  "bindings": [
+    { "layer": "type:water", "target": "amplitude", "feature": "bass", "amount": 0.55, "attackMs": 120, "releaseMs": 900 },
+    { "layer": "type:sky", "target": "glow", "feature": "bass", "amount": 0.35, "attackMs": 80, "releaseMs": 600 },
+    { "layer": "type:planet", "target": "atmosphere", "feature": "bass", "amount": 0.45, "category": "lighting", "attackMs": 100, "releaseMs": 900 }
+  ]
+}

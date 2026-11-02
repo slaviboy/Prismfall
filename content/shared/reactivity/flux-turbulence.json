@@ -1,0 +1,6 @@
+{
+  "description": "Spectral change stirs the air: particles turn more turbulent when the music moves.",
+  "bindings": [
+    { "layer": "type:particles", "target": "turbulence", "feature": "spectralFlux", "amount": 0.6, "category": "particles" }
+  ]
+}

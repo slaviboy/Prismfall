@@ -1,0 +1,8 @@
+{
+  "description": "The body of the music shapes the architecture: low mids heat molten channels and thicken haze, mids warm emissive structures.",
+  "bindings": [
+    { "layer": "type:lava", "target": "heat", "feature": "lowMid", "amount": 0.6, "category": "lighting", "attackMs": 60, "releaseMs": 700 },
+    { "layer": "type:clouds", "target": "opacity", "feature": "lowMid", "amount": 0.3, "attackMs": 200, "releaseMs": 1200 },
+    { "layer": "type:gltfScene", "target": "emissive", "feature": "mid", "amount": 0.25, "category": "lighting", "attackMs": 60, "releaseMs": 600 }
+  ]
+}

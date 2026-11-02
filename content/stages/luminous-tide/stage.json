@@ -114,15 +114,7 @@
             "intensity": 1
           }
         },
-        "bind": [
-          {
-            "target": "glow",
-            "feature": "bass",
-            "amount": 0.35,
-            "attackMs": 80,
-            "releaseMs": 600
-          }
-        ]
+        "bind": []
       },
       {
         "id": "ocean",
@@ -144,22 +136,7 @@
             -1
           ]
         },
-        "bind": [
-          {
-            "target": "amplitude",
-            "feature": "bass",
-            "amount": 0.55,
-            "attackMs": 120,
-            "releaseMs": 900
-          },
-          {
-            "target": "glow",
-            "feature": "beatPulse",
-            "amount": 0.8,
-            "attackMs": 20,
-            "releaseMs": 350
-          }
-        ]
+        "bind": []
       },
       {
         "id": "plankton",
@@ -193,26 +170,12 @@
         },
         "bind": [
           {
-            "target": "brightness",
-            "feature": "treble",
-            "amount": 0.9,
-            "category": "particles",
-            "attackMs": 25,
-            "releaseMs": 220
-          },
-          {
             "target": "size",
             "feature": "bass",
             "amount": 0.3,
             "category": "particles",
             "attackMs": 60,
             "releaseMs": 500
-          },
-          {
-            "target": "turbulence",
-            "feature": "spectralFlux",
-            "amount": 0.6,
-            "category": "particles"
           }
         ]
       },
@@ -274,16 +237,7 @@
           "sequence": 4,
           "seed": 2
         },
-        "bind": [
-          {
-            "target": "intensity",
-            "feature": "sectionIntensity",
-            "amount": 0.6,
-            "category": "lighting",
-            "attackMs": 300,
-            "releaseMs": 1200
-          }
-        ]
+        "bind": []
       },
       {
         "id": "sea-haze",
@@ -317,6 +271,36 @@
         "minDetail": "medium"
       }
     ]
+  },
+  "reactivity": {
+    "profiles": [
+      "bass-breath",
+      {
+        "name": "treble-sparkle",
+        "layers": [
+          "plankton"
+        ]
+      },
+      {
+        "name": "flux-turbulence",
+        "layers": [
+          "plankton"
+        ]
+      },
+      {
+        "name": "beat-lights",
+        "layers": [
+          "ocean"
+        ]
+      },
+      {
+        "name": "section-swell",
+        "layers": [
+          "pillars"
+        ]
+      }
+    ],
+    "bindings": []
   },
   "effects": {
     "lineClear": {

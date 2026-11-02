@@ -1,7 +1,7 @@
 import { Group } from 'three/webgpu';
 import { registries } from '../../sdk/registry';
 import type { BeatInfo, EnvFrame, EnvironmentComponent, EnvironmentContext, StageGameEvent } from '../../sdk/types';
-import type { LayerSpec, StageManifest } from '../../stages/schema';
+import type { Binding, LayerSpec, StageManifest } from '../../stages/schema';
 import { reactivityProfile } from '../../stages/registry';
 import { parseBindings, ReactivityLayer, type ReactivitySettings } from './reactivity';
 
@@ -59,13 +59,18 @@ export class StageEnvironment {
   }
 
   private wireBindings(): void {
-    const all = [
-      ...this.built.flatMap((b) => b.spec.bind.map((bind) => ({ ...bind, layer: b.spec.id ?? `type:${b.spec.type}` }))),
-      ...this.manifest.reactivity.profiles.flatMap((p) => parseBindings(reactivityProfile(p))),
-      ...this.manifest.reactivity.bindings,
+    // Each binding may carry a scope: the layer ids a scoped profile is limited to.
+    const all: { binding: Binding; only?: ReadonlySet<string> }[] = [
+      ...this.built.flatMap((b) => b.spec.bind.map((bind) => ({ binding: { ...bind, layer: b.spec.id ?? `type:${b.spec.type}` } }))),
+      ...this.manifest.reactivity.profiles.flatMap((ref) => {
+        const only = ref.layers ? new Set(ref.layers) : undefined;
+        return parseBindings(reactivityProfile(ref.name)).map((binding) => ({ binding: { ...binding, amount: binding.amount * ref.amount }, only }));
+      }),
+      ...this.manifest.reactivity.bindings.map((binding) => ({ binding })),
     ];
-    for (const binding of all) {
+    for (const { binding, only } of all) {
       for (const b of this.built) {
+        if (only && !(b.spec.id && only.has(b.spec.id))) continue;
         const matches = binding.layer === '*' || binding.layer === b.spec.id || binding.layer === `type:${b.spec.type}`;
         const target = matches ? b.component.reactive?.[binding.target] : undefined;
         if (target) this.reactivity.add(binding, target);

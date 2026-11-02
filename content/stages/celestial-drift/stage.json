@@ -111,13 +111,6 @@
             "amount": 0.35,
             "attackMs": 200,
             "releaseMs": 1400
-          },
-          {
-            "target": "stars",
-            "feature": "treble",
-            "amount": 0.4,
-            "attackMs": 30,
-            "releaseMs": 300
           }
         ]
       },
@@ -150,16 +143,7 @@
             "opacity": 0.5
           }
         },
-        "bind": [
-          {
-            "target": "atmosphere",
-            "feature": "bass",
-            "amount": 0.45,
-            "category": "lighting",
-            "attackMs": 100,
-            "releaseMs": 900
-          }
-        ]
+        "bind": []
       },
       {
         "id": "near-stars",
@@ -289,19 +273,33 @@
           "pulse": 0.45,
           "speed": 3
         },
-        "bind": [
-          {
-            "target": "intensity",
-            "feature": "sectionIntensity",
-            "amount": 0.8,
-            "category": "lighting",
-            "attackMs": 400,
-            "releaseMs": 1500
-          }
-        ],
+        "bind": [],
         "minDetail": "medium"
       }
     ]
+  },
+  "reactivity": {
+    "profiles": [
+      {
+        "name": "bass-breath",
+        "layers": [
+          "giant"
+        ]
+      },
+      {
+        "name": "treble-sparkle",
+        "layers": [
+          "sky"
+        ]
+      },
+      {
+        "name": "section-swell",
+        "layers": [
+          "orbit-rings"
+        ]
+      }
+    ],
+    "bindings": []
   },
   "effects": {
     "lineClear": {
