@@ -123,6 +123,8 @@ export class RenderSystem implements GameView {
     renderer.toneMapping = ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1;
     renderer.shadowMap.enabled = true;
+    // Counters accumulate across the pipeline's passes; reset once per frame in render().
+    renderer.info.autoReset = false;
     const system = new RenderSystem(canvas, renderer, adapter);
     system.setupEnvironmentLighting();
     return system;
@@ -251,6 +253,7 @@ export class RenderSystem implements GameView {
     this.post.setFocusDistance(this.cameraRig.camera.position.length());
     const t1 = performance.now();
     this.post.updateFrame();
+    this.renderer.info.reset();
     this.post.render();
     const t2 = performance.now();
     this.perf.addCpu('scene update', t1 - t0);

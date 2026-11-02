@@ -6,9 +6,10 @@ import { createRoot } from 'react-dom/client';
 import { shell } from './app/GameShell';
 import { appStore, hudStore } from './app/stores';
 import { progressStore } from './app/progressStore';
-import { settingsStore } from './settings/store';
+import { getSettings, settingsStore, updateSection } from './settings/store';
 import { App, ErrorBoundary } from './ui/App';
 import { MenuNavigator } from './ui/navigation/MenuNavigator';
+import { perfStore } from './rendering/renderer/perfStore';
 
 async function boot(): Promise<void> {
   const canvas = document.getElementById('scene') as HTMLCanvasElement;
@@ -29,7 +30,7 @@ async function boot(): Promise<void> {
     </StrictMode>,
   );
   if (__PRISMFALL_HOOKS__) {
-    (window as unknown as Record<string, unknown>).__PRISMFALL__ = { shell, appStore, hudStore, settingsStore, progressStore, navigator };
+    (window as unknown as Record<string, unknown>).__PRISMFALL__ = { shell, appStore, hudStore, settingsStore, progressStore, navigator, updateSection, getSettings, perfStore };
   }
 }
 

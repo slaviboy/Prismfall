@@ -40,3 +40,34 @@ export async function autoplay(page: Page, pieces: number): Promise<void> {
     }
   }, pieces);
 }
+
+import { PNG } from 'pngjs';
+
+/** Screenshot-based "is something actually rendered" check (WebGPU canvases can't be read back reliably). */
+export async function canvasStats(page: Page): Promise<{ mean: number; stdDev: number; colorful: number }> {
+  const png = PNG.sync.read(await page.screenshot());
+  let sum = 0;
+  let sumSq = 0;
+  let colorful = 0;
+  const n = png.width * png.height;
+  for (let i = 0; i < png.data.length; i += 4) {
+    const r = png.data[i] as number;
+    const g = png.data[i + 1] as number;
+    const b = png.data[i + 2] as number;
+    const l = (r + g + b) / 3;
+    sum += l;
+    sumSq += l * l;
+    if (Math.max(r, g, b) - Math.min(r, g, b) > 60) colorful++;
+  }
+  const mean = sum / n;
+  return { mean, stdDev: Math.sqrt(Math.max(0, sumSq / n - mean * mean)), colorful: colorful / n };
+}
+
+/** Starts a game in the given mode and lets the AI place some pieces so blocks are on screen. */
+export async function startAndPlay(page: Page, mode = 'zen', pieces = 12): Promise<void> {
+  await page.getByTestId('menu-play').click();
+  await page.getByTestId(`mode-${mode}`).click();
+  await page.getByTestId('setup-start').click();
+  await expect.poll(() => hooks<string>(page, 'h.shell.session.status')).toBe('running');
+  await autoplay(page, pieces);
+}

@@ -1,14 +1,11 @@
 import { RenderPipeline, Vector3, type Camera, type Node, type Scene, type WebGPURenderer } from 'three/webgpu';
 import {
-  colorToDirection,
-  directionToColor,
   emissive,
   float,
   length,
   luminance,
   mix,
   mrt,
-  normalView,
   output,
   pass,
   renderOutput,
@@ -131,8 +128,7 @@ export class PostPipeline {
     this.samples = msaa;
     const scenePass = pass(this.scene, this.camera, { samples: msaa });
     this.scenePass = scenePass;
-    const needNormals = settings.enabled && settings.ambientOcclusion;
-    scenePass.setMRT(needNormals ? mrt({ output, emissive, normal: directionToColor(normalView) }) : mrt({ output, emissive }));
+    scenePass.setMRT(mrt({ output, emissive }));
     const pipeline = new RenderPipeline(this.renderer);
     const color = scenePass.getTextureNode('output');
 
@@ -144,7 +140,9 @@ export class PostPipeline {
 
     let lit: Node<'vec3'> = vec3(color.rgb);
     if (settings.ambientOcclusion) {
-      const aoPass = ao(scenePass.getTextureNode('depth'), colorToDirection(scenePass.getTextureNode('normal')), this.camera);
+      // Normals are reconstructed from depth (no extra MRT target needed).
+      // three documents normalNode as `?Node`; @types/three r187 omits the null case.
+      const aoPass = ao(scenePass.getTextureNode('depth'), null as unknown as Node, this.camera);
       aoPass.resolutionScale = 0.5;
       lit = lit.mul(aoPass.getTextureNode().r);
     }

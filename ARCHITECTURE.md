@@ -99,8 +99,8 @@ React is never inside this loop. The HUD updates on events through a zustand van
 |---|---|---|
 | 1 | Investigation & planning | done |
 | 2 | Gameplay foundation (playable) | done |
-| 3 | 3D rendering foundation | in progress |
-| 4 | Effects, environments, Content SDK, first 3 stages | planned |
+| 3 | 3D rendering foundation | done |
+| 4 | Effects, environments, Content SDK, first 3 stages | in progress |
 | 5 | Audio engine + Music Analysis Engine | planned |
 | 6 | Complete interface + all modes | planned |
 | 7 | Controllers, settings, persistence | planned |
