@@ -12,6 +12,7 @@ import { useNavScope } from './navigation/useNavScope';
 import { reducedMotion } from '../settings/store';
 import { PerfOverlay } from './hud/PerfOverlay';
 import './settings/graphicsPanels';
+import './settings/audioPanels';
 
 function Toasts(): ReactNode {
   const toasts = useApp((s) => s.toasts);

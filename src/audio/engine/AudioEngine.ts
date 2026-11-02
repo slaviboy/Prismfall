@@ -44,6 +44,9 @@ export class AudioEngine {
   private clockOffset: number | null = null;
   private readonly listeners = new Set<(state: AudioContextState | 'none') => void>();
   ducked = false;
+  /** Music and ambience pulled down while the latency calibration clicks play. */
+  private calibrating = false;
+  private meterBuf: Float32Array<ArrayBuffer> | null = null;
 
   get ready(): boolean {
     return this.ctx !== null && this.ctx.state === 'running';
@@ -138,10 +141,17 @@ export class AudioEngine {
       else node.gain.setTargetAtTime(value, ctx.currentTime, RAMP);
     };
     set(this.masterFader, v.muted || !v.enabled ? 0 : sliderToGain(v.master));
-    set(this.musicFader, sliderToGain(v.music));
+    const bed = this.calibrating ? 0.15 : 1;
+    set(this.musicFader, sliderToGain(v.music) * bed);
     set(this.sfx, sliderToGain(v.sfx));
-    set(this.ui, sliderToGain(v.sfx) * 0.8);
-    set(this.ambience, sliderToGain(v.ambience));
+    // UI sounds (and calibration clicks) stay audible even with effects turned right down.
+    set(this.ui, Math.max(this.calibrating ? 0.5 : 0, sliderToGain(v.sfx) * 0.8));
+    set(this.ambience, sliderToGain(v.ambience) * bed);
+  }
+
+  setCalibrating(on: boolean): void {
+    this.calibrating = on;
+    this.applyVolumes(false);
   }
 
   /** Pause treatment: muffle and lower the music (duck) or silence it. */
@@ -192,7 +202,8 @@ export class AudioEngine {
   /** RMS level (linear) of the audible output right now. */
   outputRms(): number {
     if (!this.ctx || !this.outputMeter) return 0;
-    const buf = new Float32Array(this.outputMeter.fftSize);
+    if (!this.meterBuf || this.meterBuf.length !== this.outputMeter.fftSize) this.meterBuf = new Float32Array(this.outputMeter.fftSize);
+    const buf = this.meterBuf;
     this.outputMeter.getFloatTimeDomainData(buf);
     let sum = 0;
     for (let i = 0; i < buf.length; i++) sum += (buf[i] as number) ** 2;

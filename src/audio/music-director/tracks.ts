@@ -282,7 +282,7 @@ export class CompositionPlayer implements TrackPlayer {
     // Quantise to the next sixteenth so the flourish sits in the groove.
     const step = this.spb / STEPS_PER_BEAT;
     const start = this.origin + Math.ceil((at - this.origin) / step) * step;
-    seq.forEach((n, i) => playNote(this.ctx, ch.input, spec, n, start + i * step, step * 2, 0.55 + strength * 0.3));
+    seq.forEach((n, i) => playNote(this.ctx, ch.input, spec, n, start + i * step, step * 2, 0.3 + strength * 0.55));
   }
 
   fadeTo(level: number, at: number, seconds: number): void {

@@ -27,7 +27,7 @@ export type SettingDef =
   | { kind: 'group'; label: string }
   | { kind: 'custom'; id: string };
 
-export type TabId = 'gameplay' | 'controls' | 'controller' | 'graphics' | 'audio' | 'camera' | 'interface' | 'accessibility' | 'data' | 'developer';
+export type TabId = 'gameplay' | 'controls' | 'controller' | 'graphics' | 'audio' | 'reactivity' | 'camera' | 'interface' | 'accessibility' | 'data' | 'developer';
 
 export interface TabDef {
   readonly id: TabId;
@@ -210,5 +210,117 @@ export const CAMERA_TAB: TabDef = {
   ],
 };
 
+const signedMs = (v: number): string => (v === 0 ? 'None' : `${v > 0 ? '+' : ''}${v} ms`);
+
+export const AUDIO_TAB: TabDef = {
+  id: 'audio',
+  label: 'Audio',
+  inGame: true,
+  resets: ['audio'],
+  rows: [
+    { kind: 'toggle', section: 'audio', key: 'enabled', label: 'Sound', description: 'Turns all game audio on or off. Off also stops audio processing.' },
+    { kind: 'toggle', section: 'audio', key: 'muted', label: 'Mute', description: 'Silences the output but keeps the music running, so it is still in time when you unmute.', when: (s) => s.audio.enabled },
+    { kind: 'group', label: 'Volume' },
+    { kind: 'slider', section: 'audio', key: 'master', label: 'Master volume', min: 0, max: 1, step: 0.01, format: percent },
+    { kind: 'slider', section: 'audio', key: 'music', label: 'Music', min: 0, max: 1, step: 0.01, format: percent },
+    { kind: 'slider', section: 'audio', key: 'sfx', label: 'Sound effects', min: 0, max: 1, step: 0.01, format: percent },
+    { kind: 'slider', section: 'audio', key: 'ambience', label: 'Ambience', description: 'Each world\u2019s background sound: waves, wind, machinery.', min: 0, max: 1, step: 0.01, format: percent },
+    { kind: 'group', label: 'Behaviour' },
+    {
+      kind: 'choice',
+      section: 'audio',
+      key: 'pauseBehavior',
+      label: 'Music while paused',
+      options: [
+        { value: 'duck', label: 'Quieter and muffled' },
+        { value: 'stop', label: 'Stop' },
+      ],
+    },
+    {
+      kind: 'toggle',
+      section: 'audio',
+      key: 'sfxAccentLayer',
+      label: 'Musical clear accents',
+      description: 'Line clears and spins also play a short phrase in the music\u2019s key, timed to the beat. The main sound effects always play instantly.',
+    },
+    { kind: 'group', label: 'Timing' },
+    {
+      kind: 'slider',
+      section: 'audio',
+      key: 'latencyOffsetMs',
+      label: 'Audio offset',
+      description: 'Shifts when music-reactive visuals and beat effects happen. Raise it if visuals land before the beat you hear (Bluetooth headphones need more).',
+      min: -250,
+      max: 250,
+      step: 1,
+      format: signedMs,
+    },
+    { kind: 'custom', id: 'latencyCalibration' },
+  ],
+};
+
+export const REACTIVITY_TAB: TabDef = {
+  id: 'reactivity',
+  label: 'Reactivity',
+  inGame: true,
+  resets: ['reactivity'],
+  rows: [
+    { kind: 'toggle', section: 'reactivity', key: 'enabled', label: 'Music-reactive worlds', description: 'Environments, particles and lights respond to the music. Gameplay effects are unaffected.' },
+    {
+      kind: 'choice',
+      section: 'reactivity',
+      key: 'preset',
+      label: 'Reaction style',
+      description: 'The character of the response. The sliders below fine-tune any style.',
+      options: [
+        { value: 'cinematic', label: 'Cinematic' },
+        { value: 'subtle', label: 'Subtle' },
+        { value: 'energetic', label: 'Energetic' },
+        { value: 'ambient', label: 'Ambient' },
+        { value: 'hypnotic', label: 'Hypnotic' },
+        { value: 'intense', label: 'Intense' },
+        { value: 'custom', label: 'Neutral (sliders only)' },
+      ],
+      when: (s) => s.reactivity.enabled,
+    },
+    { kind: 'slider', section: 'reactivity', key: 'strength', label: 'Overall strength', min: 0, max: 2, step: 0.05, format: percent, when: (s) => s.reactivity.enabled },
+    { kind: 'group', label: 'Sensitivity' },
+    { kind: 'slider', section: 'reactivity', key: 'bassSensitivity', label: 'Bass', description: 'Low-frequency swells: breathing, heavy motion.', min: 0, max: 2, step: 0.05, format: percent, when: (s) => s.reactivity.enabled },
+    { kind: 'slider', section: 'reactivity', key: 'trebleSensitivity', label: 'Treble', description: 'High-frequency detail: sparkle and shimmer.', min: 0, max: 2, step: 0.05, format: percent, when: (s) => s.reactivity.enabled },
+    { kind: 'slider', section: 'reactivity', key: 'beatSensitivity', label: 'Beats and hits', description: 'Pulses on beats, drum hits and sudden changes.', min: 0, max: 2, step: 0.05, format: percent, when: (s) => s.reactivity.enabled },
+    { kind: 'group', label: 'Response' },
+    { kind: 'slider', section: 'reactivity', key: 'particleResponse', label: 'Particles', min: 0, max: 2, step: 0.05, format: percent, when: (s) => s.reactivity.enabled },
+    { kind: 'slider', section: 'reactivity', key: 'environmentResponse', label: 'Environment', min: 0, max: 2, step: 0.05, format: percent, when: (s) => s.reactivity.enabled },
+    { kind: 'slider', section: 'reactivity', key: 'lightingResponse', label: 'Lighting', min: 0, max: 2, step: 0.05, format: percent, when: (s) => s.reactivity.enabled },
+    { kind: 'group', label: 'Analysis' },
+    {
+      kind: 'choice',
+      section: 'reactivity',
+      key: 'analysisPath',
+      label: 'Analysis method',
+      description: 'Auto uses an audio worklet, which analyses at a fixed rate independent of the frame rate, and falls back to an analyser node.',
+      options: [
+        { value: 'auto', label: 'Auto' },
+        { value: 'worklet', label: 'Audio worklet' },
+        { value: 'analyser', label: 'Analyser node' },
+      ],
+    },
+    {
+      kind: 'choice',
+      section: 'reactivity',
+      key: 'fftSize',
+      label: 'Low-frequency resolution',
+      description: 'The long analysis window for sub-bass and bass. 4096 separates bass notes better; 2048 reacts slightly sooner.',
+      options: [
+        { value: 4096, label: '4096 (finer)' },
+        { value: 2048, label: '2048 (faster)' },
+      ],
+    },
+    { kind: 'custom', id: 'analysisInfo' },
+  ],
+};
+
 registerTab(GRAPHICS_TAB, 'interface');
 registerTab(CAMERA_TAB, 'interface');
+registerTab(AUDIO_TAB, 'interface');
+registerTab(REACTIVITY_TAB, 'interface');

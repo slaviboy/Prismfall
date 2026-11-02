@@ -210,12 +210,15 @@ export class AudioSystem {
           if (e.backToBack) this.sfx.play('b2b', { gain: 0.8 });
           if (e.perfectClear) this.sfx.play('perfect');
           const strength = Math.min(1, e.lines / 4 + (e.spin !== 'none' ? 0.3 : 0) + (e.perfectClear ? 0.5 : 0));
-          if (strength >= 0.75) this.director.stinger(strength);
+          // Beat-quantised musical accent layer: a short phrase in the track's key on every clear,
+          // a full stinger on big ones. The SFX above always play instantly.
+          if (this.settings?.audio.sfxAccentLayer ?? true) this.director.stinger(strength >= 0.75 ? strength : Math.max(0.1, strength * 0.5));
           this.clearEnergy = Math.min(1, this.clearEnergy + strength * 0.6);
           break;
         }
         case 'spinNoLines':
           this.sfx.play('tspin', { gain: 0.6 });
+          if (this.settings?.audio.sfxAccentLayer ?? true) this.director.stinger(0.1);
           break;
         case 'levelUp':
           this.sfx.play('levelUp');
