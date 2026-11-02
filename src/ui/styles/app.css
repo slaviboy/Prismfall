@@ -1189,3 +1189,87 @@ kbd {
   outline: 2px solid var(--aqua);
   outline-offset: 2px;
 }
+
+
+/* ------------------------------------------------------ visual sound cues */
+
+.sound-cues {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+  font-size: calc(14px * var(--hud-scale, 1));
+}
+
+.sound-cues.align-end {
+  align-items: flex-end;
+}
+
+.sound-cues.align-start {
+  align-items: flex-start;
+}
+
+.sound-cue-meters {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.sound-cue-lamp {
+  width: calc(14px * var(--hud-scale, 1));
+  height: calc(14px * var(--hud-scale, 1));
+  border-radius: 50%;
+  background: var(--aqua);
+  box-shadow: 0 0 12px rgba(92, 242, 200, 0.7);
+  opacity: 0.25;
+}
+
+.sound-cue-heart {
+  color: var(--rose);
+  font-size: calc(18px * var(--hud-scale, 1));
+  line-height: 1;
+  opacity: 0;
+  text-shadow: 0 0 10px rgba(255, 94, 135, 0.8);
+}
+
+.sound-cue-captions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: inherit;
+  gap: 4px;
+}
+
+.sound-cue-caption {
+  padding: 4px 12px;
+  font-size: calc(15px * var(--hud-scale, 1));
+  background: rgba(var(--night-rgb), 0.72);
+  border-left: 2px solid var(--haze);
+  color: var(--starlight);
+  white-space: nowrap;
+  animation: sound-cue-in 160ms var(--ease-out);
+}
+
+.sound-cue-caption.tone-music {
+  border-left-color: var(--violet);
+}
+
+.sound-cue-caption.tone-warn {
+  border-left-color: var(--rose);
+}
+
+@keyframes sound-cue-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sound-cue-caption {
+    animation: none;
+  }
+}

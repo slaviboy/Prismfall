@@ -1,3 +1,4 @@
+import { emitCue, hasCueListeners } from '../audio/cues';
 import type { GameAction, GameEvent } from '../game/core/types';
 import type { Engine } from '../game/core/engine';
 import { GAME_ACTIONS } from '../game/core/types';
@@ -642,7 +643,11 @@ export class GameShell {
     this.lastFrame = t;
     this.input.poll(t);
     const beats = this.features.update(t, dt);
-    if (beats.length > 0) this.pendingBeats.push(...beats);
+    if (beats.length > 0) {
+      this.pendingBeats.push(...beats);
+      // Only real music produces visual beat cues (not the silent metronome stand-in).
+      if (this.audio.hub.playing && hasCueListeners()) for (const b of beats) emitCue({ kind: 'beat', downbeat: b.downbeat });
+    }
     let events: GameEvent[] = [];
     const session = this.session;
     if (session) events = session.update(t);

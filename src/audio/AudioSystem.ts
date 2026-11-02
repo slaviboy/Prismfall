@@ -2,6 +2,7 @@ import type { Engine } from '../game/core/engine';
 import type { GameEvent } from '../game/core/types';
 import type { Settings } from '../settings/schema';
 import { AnalysisEngine, type AnalysisPath } from './analysis/AnalysisEngine';
+import { emitCue, hasCueListeners } from './cues';
 import { DEFAULT_TUNING } from './analysis/dsp/featureProcessor';
 import { createAudioFeatures, MetronomeFeatureSource, type AudioFeatureSource, type AudioFeatures, type BeatEvent } from './analysis/features';
 import { AudioEngine } from './engine/AudioEngine';
@@ -22,6 +23,11 @@ class FeaturesHub implements AudioFeatureSource {
 
   get features(): AudioFeatures {
     return this.usingLive ? this.live : this.metronome.features;
+  }
+
+  /** True while features come from music that is actually playing (not the metronome stand-in). */
+  get playing(): boolean {
+    return this.usingLive;
   }
 
   update(now: number, dt: number): readonly BeatEvent[] {
@@ -170,6 +176,17 @@ export class AudioSystem {
   }
 
   /** Gameplay events → sound effects, stingers and intensity. Called once per frame. */
+  private readonly lastCaption = new Map<string, number>();
+
+  /** Announces a sound for the visual cue display (rate-limited per sound). */
+  private caption(text: string, tone: 'info' | 'warn' | 'music', key: string, minGapMs = 700): void {
+    if (!hasCueListeners()) return;
+    const now = performance.now();
+    if (now - (this.lastCaption.get(key) ?? -Infinity) < minGapMs) return;
+    this.lastCaption.set(key, now);
+    emitCue({ kind: 'caption', text, tone });
+  }
+
   onGameEvents(events: readonly GameEvent[], engine: Engine | null, dt: number): void {
     let hardDropped = false;
     for (const e of events) {
@@ -182,6 +199,7 @@ export class AudioSystem {
           break;
         case 'rotateFailed':
           this.sfx.play('rotateFail', { gain: 0.6 });
+          this.caption('Rotation blocked (click)', 'info', 'rotateFail');
           break;
         case 'softDrop':
           this.sfx.play('softDrop', { gain: 0.5, minGapMs: 45 });
@@ -201,14 +219,21 @@ export class AudioSystem {
           break;
         case 'holdDenied':
           this.sfx.play('holdDenied');
+          this.caption('Hold already used (buzz)', 'info', 'holdDenied');
           break;
         case 'lineClear': {
           const id = (['clear1', 'clear2', 'clear3', 'clear4'] as const)[Math.min(4, e.lines) - 1] ?? 'clear1';
           this.sfx.play(id);
           if (e.spin !== 'none') this.sfx.play('tspin');
-          if (e.combo >= 1) this.sfx.play('combo', { semitones: SfxBank.comboSemitones(e.combo), gain: 0.8 });
+          if (e.combo >= 1) {
+            this.sfx.play('combo', { semitones: SfxBank.comboSemitones(e.combo), gain: 0.8 });
+            this.caption(`Combo chime, rising (${e.combo})`, 'info', 'combo');
+          }
           if (e.backToBack) this.sfx.play('b2b', { gain: 0.8 });
-          if (e.perfectClear) this.sfx.play('perfect');
+          if (e.perfectClear) {
+            this.sfx.play('perfect');
+            this.caption('Perfect clear fanfare', 'music', 'perfect');
+          }
           const strength = Math.min(1, e.lines / 4 + (e.spin !== 'none' ? 0.3 : 0) + (e.perfectClear ? 0.5 : 0));
           // Beat-quantised musical accent layer: a short phrase in the track's key on every clear,
           // a full stinger on big ones. The SFX above always play instantly.
@@ -222,6 +247,7 @@ export class AudioSystem {
           break;
         case 'levelUp':
           this.sfx.play('levelUp');
+          this.caption('Level-up fanfare', 'music', 'levelUp');
           break;
         case 'goal':
           this.sfx.play('levelUp');
@@ -231,6 +257,7 @@ export class AudioSystem {
           break;
         case 'gameOver':
           this.sfx.play('gameOver');
+          this.caption('Game over sting', 'warn', 'gameOver');
           break;
         default:
           break;
@@ -247,6 +274,7 @@ export class AudioSystem {
       this.dangerTimer -= dt;
       if (this.dangerTimer <= 0) {
         this.sfx.play('danger', { gain: 0.55 });
+        emitCue({ kind: 'heartbeat' });
         this.dangerTimer = 1.1;
       }
     } else this.dangerTimer = 0;

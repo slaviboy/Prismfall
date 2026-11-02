@@ -48,3 +48,35 @@ test.describe('audio and reactivity settings', () => {
     await expect.poll(() => hooks<number>(page, 'h.shell.audio.engine.outputRms()'), { timeout: 5000 }).toBeGreaterThan(0.004);
   });
 });
+
+test.describe('visual sound cues', () => {
+  test.use({ viewport: { width: 2560, height: 1080 } });
+
+  test('beat lamp follows the music and denied holds are captioned', async ({ page }) => {
+    await openMenu(page);
+    await page.evaluate(() => (window as unknown as { __PRISMFALL__: { updateSection(s: string, p: unknown): void } }).__PRISMFALL__.updateSection('accessibility', { visualAudioCues: true }));
+    await page.getByTestId('menu-play').click();
+    await page.getByTestId('mode-zen').click();
+    await page.getByTestId('setup-start').click();
+    await expect.poll(() => hooks<string>(page, 'h.shell.session.status')).toBe('running');
+    await expect(page.getByTestId('sound-cues')).toBeVisible();
+    // The lamp animates on every heard beat of the stage music.
+    const pulses = await page.evaluate(async () => {
+      const lamp = document.querySelector('.sound-cue-lamp') as HTMLElement;
+      let count = 0;
+      const t0 = performance.now();
+      while (performance.now() - t0 < 3000) {
+        if (lamp.getAnimations().length > 0) count++;
+        await new Promise((r) => setTimeout(r, 100));
+      }
+      return count;
+    });
+    expect(pulses).toBeGreaterThan(5);
+    // Hold, then hold again with the same piece: the buzz is captioned.
+    await page.keyboard.press('KeyC');
+    await page.waitForTimeout(50);
+    await page.keyboard.press('KeyC');
+    await expect(page.getByTestId('sound-cues')).toContainText('Hold already used');
+    await page.screenshot({ path: 'test-results/screens/sound-cues.png' });
+  });
+});

@@ -1,8 +1,16 @@
 import type { AudioFeatures, BeatEvent } from '../analysis/features';
+import { emitCue, hasCueListeners } from '../cues';
 import type { AudioEngine } from '../engine/AudioEngine';
 import type { TrackPlayer } from './tracks';
 
 const LOOKAHEAD_S = 0.15;
+const SECTION_CAPTIONS: Partial<Record<string, string>> = {
+  build: 'Music builds up',
+  drop: 'Music drops',
+  break: 'Music breaks down',
+  bridge: 'Music changes key',
+  outro: 'Music winds down',
+};
 const EXTENDED_S = 2.0;
 const TICK_MS = 25;
 
@@ -21,6 +29,7 @@ export class MusicDirector {
   private readonly beats: BeatEvent[] = [];
   pauseMode: 'duck' | 'stop' = 'duck';
   private pausedState = false;
+  private lastSection = '';
   /** Where the last track change landed on the outgoing track's timeline (verification/debug). */
   lastTransition: { atTime: number; outgoingBeat: number; beatsPerBar: number } | null = null;
 
@@ -157,6 +166,12 @@ export class MusicDirector {
     f.barPhase = (f.beatInBar + f.beatPhase) / bpb;
     f.beatConfidence = 1;
     const section = player.section(beat);
+    if (section.name !== this.lastSection) {
+      // Section changes are audible structure; announce the meaningful ones for visual cues.
+      const label = this.lastSection !== '' && hasCueListeners() ? SECTION_CAPTIONS[section.kind] : undefined;
+      if (label) emitCue({ kind: 'caption', text: label, tone: 'music' });
+      this.lastSection = section.name;
+    }
     f.section = section.name;
     this.sectionIntensity += (section.intensity - this.sectionIntensity) * (1 - Math.exp(-dt / 1.5));
     f.sectionIntensity = this.sectionIntensity;

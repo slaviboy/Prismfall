@@ -1,7 +1,8 @@
 import type { CSSProperties, ReactNode } from 'react';
 import { shell } from '../../app/GameShell';
 import { useHud } from '../../app/stores';
-import { useSettings } from '../../settings/store';
+import { reducedMotion, useSettings } from '../../settings/store';
+import { SoundCues } from './SoundCues';
 import { formatScore, formatTime } from '../format';
 import { useTicker } from '../components/controls';
 
@@ -41,6 +42,8 @@ export function Hud(): ReactNode {
   const ui = useSettings((s) => s.interface);
   const showHold = useSettings((s) => s.gameplay.showHold);
   const showNext = useSettings((s) => s.gameplay.showNext);
+  const soundCues = useSettings((s) => s.accessibility.visualAudioCues);
+  const calm = useSettings(reducedMotion);
   if (!hud.visible || !hud.boardRect) return null;
   const r = hud.boardRect;
   const scale = ui.hudScale;
@@ -95,6 +98,10 @@ export function Hud(): ReactNode {
         <div className="hud-intro" style={{ left: r.x + r.w / 2, top: r.y + r.h * 0.42 }} data-testid="hud-intro">
           {hud.countdown !== null ? hud.countdown : hud.intro === 'ready' ? 'Ready' : 'Go'}
         </div>
+      ) : null}
+      {soundCues ? (
+        // In the stats column, below the numbers: always on screen at any aspect ratio.
+        <SoundCues style={{ ...leftSide, top: r.y + r.h * 0.55 }} align={ui.mirrored ? 'start' : 'end'} reducedMotion={calm} />
       ) : null}
       {hud.danger ? <div className="hud-danger" style={{ left: r.x - 6, top: r.y - 6, width: r.w + 12, height: r.h + 12 }} aria-hidden /> : null}
       <button type="button" className="hud-pause" onClick={() => shell.togglePause()} aria-label="Pause" data-testid="hud-pause">
