@@ -1,0 +1,53 @@
+{
+  "name": "prismfall",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Prismfall — an immersive, music-reactive 3D falling-tetromino game (personal project).",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "vite",
+    "typecheck": "tsc -p tsconfig.app.json --noEmit && tsc -p tsconfig.node.json --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:soak": "playwright test --config playwright.soak.config.ts",
+    "content:validate": "node scripts/validate-content.ts",
+    "prebuild": "npm run content:validate",
+    "build": "npm run typecheck && vite build",
+    "build:test": "vite build --mode test --outDir dist-test",
+    "preview": "vite preview",
+    "perf": "node scripts/perf.ts",
+    "assets:blender": "node scripts/build-blender-assets.ts",
+    "content:thumbnails": "node scripts/thumbnails.ts"
+  },
+  "dependencies": {
+    "idb": "8.0.4",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "three": "0.187.0",
+    "zod": "4.6.7",
+    "zustand": "5.0.16"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.64.1",
+    "@types/node": "24.19.2",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@types/three": "0.187.0",
+    "@vitejs/plugin-react": "6.2.1",
+    "@webgpu/types": "0.1.74",
+    "eslint": "10.14.0",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "fake-indexeddb": "6.2.7",
+    "globals": "17.14.0",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.1",
+    "vite": "8.3.5",
+    "vitest": "5.0.5"
+  }
+}

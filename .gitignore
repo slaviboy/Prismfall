@@ -1,0 +1,17 @@
+node_modules/
+dist/
+dist-test/
+coverage/
+test-results/
+playwright-report/
+blob-report/
+perf-results/*.json
+!perf-results/.gitkeep
+*.blend1
+*.blend2
+.vite/
+*.log
+.DS_Store
+Thumbs.db
+.env
+.env.*
