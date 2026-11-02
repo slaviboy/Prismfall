@@ -324,3 +324,13 @@ export async function shippedCompositions(): Promise<Composition[]> {
 export function sfxPresetNames(): string[] {
   return Object.keys(SFX_PRESETS);
 }
+
+/** A WAV rendered by the game's synth with beat metadata, as a player's own file would be (object URL). */
+export async function makeTestFileTrack(): Promise<{ url: string; bpm: number; offset: number; bars: number }> {
+  const { encodeWav } = await import('./wav');
+  const style = CORPUS.find((s) => s.id === 'electronic') as (typeof CORPUS)[number];
+  const bars = 8;
+  const { buffer } = await renderStyle(style.composition, 0.05 + (bars * 4 * 60) / style.composition.bpm + 0.5);
+  const url = URL.createObjectURL(new Blob([encodeWav(buffer)], { type: 'audio/wav' }));
+  return { url, bpm: style.composition.bpm, offset: 0.05, bars };
+}

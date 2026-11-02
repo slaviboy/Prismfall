@@ -72,3 +72,40 @@ test.describe('audio engine', () => {
     expect(Math.min(offBar, t.beatsPerBar - offBar)).toBeLessThan(0.02);
   });
 });
+
+test.describe('user music files', () => {
+  test('a WAV with beat metadata plays through the file path and its beat clock matches the audio', async ({ page }) => {
+    test.setTimeout(60_000);
+    await openMenu(page);
+    await expect.poll(() => hooks<string>(page, 'h.shell.audio.engine.state'), { timeout: 10_000 }).toBe('running');
+    const track = await page.evaluate(async () => {
+      const h = (window as unknown as { __PRISMFALL__: { lab: () => Promise<{ makeTestFileTrack: () => Promise<{ url: string; bpm: number; offset: number; bars: number }> }>; shell: { audio: { setOverride(t: unknown): Promise<void> } } } }).__PRISMFALL__;
+      const t = await (await h.lab()).makeTestFileTrack();
+      await h.shell.audio.setOverride({
+        id: 'user-file-test',
+        bpm: t.bpm,
+        beatsPerBar: 4,
+        composition: null,
+        file: { url: t.url, meta: { title: 'Test file', bpm: t.bpm, offset: t.offset, loop: { startBar: 0, endBar: t.bars } } },
+        ambience: null,
+        ambienceLevel: 0,
+        sfxPreset: 'glass',
+      });
+      return t;
+    });
+    await expect.poll(() => hooks<string>(page, 'h.shell.audio.director.current?.id'), { timeout: 10_000 }).toBe('user-file-test');
+    expect(await hooks<boolean>(page, "'buffer' in h.shell.audio.director.current")).toBe(true);
+    // Let the old track fade out and the analysis lock onto the file.
+    await page.waitForTimeout(9000);
+    const s = await hooks<{ bpm: number; detected: number; trackPhase: number; detectedPhase: number; confidence: number }>(
+      page,
+      '({ bpm: h.shell.features.features.bpm, detected: h.shell.audio.analysis.processor.tempo.bpm, trackPhase: h.shell.features.features.beatPhase, detectedPhase: h.shell.audio.analysis.processor.tempo.phase, confidence: h.shell.audio.analysis.processor.tempo.confidence })',
+    );
+    expect(s.bpm).toBe(track.bpm);
+    expect(Math.abs(s.detected - track.bpm) / track.bpm).toBeLessThan(0.02);
+    // The file's metadata beat clock and the beat detected in its audio agree (live jitter allowed).
+    let d = s.trackPhase - s.detectedPhase;
+    d -= Math.round(d);
+    expect(Math.abs(d) * (60 / track.bpm) * 1000).toBeLessThan(40);
+  });
+});

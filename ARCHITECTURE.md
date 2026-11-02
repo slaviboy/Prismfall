@@ -101,7 +101,7 @@ React is never inside this loop. The HUD updates on events through a zustand van
 | 2 | Gameplay foundation (playable) | done |
 | 3 | 3D rendering foundation | done |
 | 4 | Effects, environments, Content SDK, first 3 stages | done |
-| 5 | Audio engine + Music Analysis Engine | in progress |
+| 5 | Audio engine + Music Analysis Engine (see AUDIO_ANALYSIS.md) | done |
 | 6 | Complete interface + all modes | planned |
 | 7 | Controllers, settings, persistence | planned |
 | 8 | Final content (10 stages + Folded Sky scalability test) | planned |

@@ -344,6 +344,9 @@ export class FileTrackPlayer implements TrackPlayer {
   private pausedAt = 0;
   private readonly spb: number;
   private readonly offset: number;
+  /** Loop region in seconds from the first downbeat (the whole file after it, without loop metadata). */
+  private readonly loopStartS: number;
+  private readonly loopEndS: number;
 
   constructor(
     private readonly ctx: BaseAudioContext,
@@ -358,6 +361,10 @@ export class FileTrackPlayer implements TrackPlayer {
     this.beatsPerBar = meta.beatsPerBar ?? 4;
     this.spb = 60 / meta.bpm;
     this.offset = meta.offset ?? 0;
+    const barS = this.beatsPerBar * this.spb;
+    const fileS = Math.max(0, buffer.duration - this.offset);
+    this.loopStartS = meta.loop ? Math.min(fileS, meta.loop.startBar * barS) : 0;
+    this.loopEndS = meta.loop ? Math.min(fileS, meta.loop.endBar * barS) : fileS;
     this.output = ctx.createGain();
     this.output.gain.value = 0;
     this.output.connect(destination);
@@ -366,11 +373,11 @@ export class FileTrackPlayer implements TrackPlayer {
   private startSource(at: number, fileTime: number): void {
     const src = this.ctx.createBufferSource();
     src.buffer = this.buffer;
-    if (this.meta.loop) {
-      src.loop = true;
-      src.loopStart = this.offset + this.meta.loop.startBar * this.beatsPerBar * this.spb;
-      src.loopEnd = Math.min(this.buffer.duration, this.offset + this.meta.loop.endBar * this.beatsPerBar * this.spb);
-    } else src.loop = true;
+    // Loop on the musical region so the beat clock below stays aligned after every repeat
+    // (looping the whole file from 0 would skip the lead-in before the first downbeat).
+    src.loop = this.loopEndS > this.loopStartS;
+    src.loopStart = this.offset + this.loopStartS;
+    src.loopEnd = this.offset + this.loopEndS;
     src.connect(this.output);
     src.start(at, fileTime);
     this.source = src;
@@ -391,12 +398,8 @@ export class FileTrackPlayer implements TrackPlayer {
     if (!this.started) return -1;
     if (this.paused) return this.pausedAt;
     const elapsed = audioTime - this.origin;
-    const loop = this.meta.loop;
-    if (loop && this.source?.loop) {
-      const loopStart = loop.startBar * this.beatsPerBar * this.spb;
-      const loopLen = (loop.endBar - loop.startBar) * this.beatsPerBar * this.spb;
-      if (elapsed > loopStart + loopLen && loopLen > 0) return (loopStart + ((elapsed - loopStart) % loopLen)) / this.spb;
-    }
+    const loopLen = this.loopEndS - this.loopStartS;
+    if (loopLen > 0 && elapsed >= this.loopEndS) return (this.loopStartS + ((elapsed - this.loopStartS) % loopLen)) / this.spb;
     return elapsed / this.spb;
   }
 
