@@ -5,6 +5,7 @@ test.describe('world select', () => {
 
   test('cards preview their world live; choosing one starts the game there', async ({ page }) => {
     await openMenu(page);
+    await page.evaluate(() => (window as unknown as { __PRISMFALL__: { updateSection(s: string, p: unknown): void } }).__PRISMFALL__.updateSection('setup', { unlockAll: true }));
     await page.getByTestId('menu-play').click();
     await page.getByTestId('mode-marathon').click();
     await page.getByTestId('setup-world').click();
@@ -26,6 +27,20 @@ test.describe('world select', () => {
     await expect.poll(() => hooks<string>(page, 'h.shell.session.status'), { timeout: 15_000 }).toBe('running');
     expect(await hooks<string | null>(page, 'h.shell.stageManager.activeId')).toBe(target);
     await expect.poll(() => hooks<string | null>(page, 'h.shell.audio.stageId'), { timeout: 15_000 }).toBe(target);
+  });
+
+  test('locked worlds explain how to unlock them and cannot be chosen', async ({ page }) => {
+    await openMenu(page);
+    await page.getByTestId('menu-play').click();
+    await page.getByTestId('mode-marathon').click();
+    await page.getByTestId('setup-world').click();
+    const locked = page.locator('.world-card.is-locked').first();
+    await expect(locked).toBeVisible();
+    await locked.focus();
+    await expect(page.getByTestId('world-details')).toContainText('Voyage');
+    await page.keyboard.press('Enter');
+    await expect(page.getByTestId('stage-select')).toBeVisible();
+    expect(await hooks<string>(page, 'h.getSettings().setup.stageId')).toBe('luminous-tide');
   });
 
   test('backing out restores the selected world; music previews can be turned off', async ({ page }) => {

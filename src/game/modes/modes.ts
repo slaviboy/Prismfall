@@ -141,8 +141,10 @@ export function getMode(id: ModeId): ModeDefinition {
   return mode;
 }
 
+/** Variant ids may carry a qualifier after "@" (Voyage: "standard@first-light" = difficulty at a start area). */
 export function getVariant(mode: ModeDefinition, variantId: string): ModeVariant {
-  return mode.variants.find((v) => v.id === variantId) ?? (mode.variants.find((v) => v.id === mode.defaultVariant) as ModeVariant);
+  const base = variantId.split('@')[0];
+  return mode.variants.find((v) => v.id === base) ?? (mode.variants.find((v) => v.id === mode.defaultVariant) as ModeVariant);
 }
 
 export function buildModeRules(modeId: ModeId, variantId: string, extra: Partial<RuleConfig> = {}): RuleConfig {

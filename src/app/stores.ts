@@ -43,7 +43,9 @@ export interface GameResults {
   readonly best: HighScoreEntry | null;
   readonly isPersonalBest: boolean;
   readonly replayId: string | null;
+  /** Names of worlds and areas unlocked by this run. */
   readonly unlocked: readonly string[];
+  readonly voyage: { readonly legsCleared: number; readonly legs: number; readonly lastStage: string; readonly areaName: string } | null;
 }
 
 export interface RendererInfo {
@@ -147,6 +149,8 @@ export interface HudState {
   /** Board rectangle in CSS pixels for anchoring the HUD (from the view). */
   readonly boardRect: { readonly x: number; readonly y: number; readonly w: number; readonly h: number } | null;
   readonly stageName: string;
+  /** Voyage: current leg (null outside Voyage). */
+  readonly voyage: { readonly leg: number; readonly legs: number; readonly stage: string } | null;
 }
 
 export const hudStore = createStore<HudState>(() => ({
@@ -171,6 +175,7 @@ export const hudStore = createStore<HudState>(() => ({
   danger: false,
   boardRect: null,
   stageName: '',
+  voyage: null,
 }));
 
 export function useHud<T>(selector: (s: HudState) => T): T {

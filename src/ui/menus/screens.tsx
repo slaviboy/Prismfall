@@ -12,7 +12,7 @@ import { ControlHints, MenuScreen } from './MenuScreen';
 import { useNavScope } from '../navigation/useNavScope';
 import { BRAND } from '../../config/branding';
 import { useLatest } from '../useLatest';
-import { getStage } from '../../stages/registry';
+import { getCampaign, getStage } from '../../stages/registry';
 import { isStageUnlocked, unlockHint } from '../../stages/progression';
 import { PracticeOptions } from './PracticeOptions';
 import { StageArt, orderedStages } from './StageSelect';
@@ -59,6 +59,7 @@ export function MainMenu(): ReactNode {
     <MenuScreen testId="main-menu" footer={<ControlHints hints={hints} />}>
       <h1 className="brand-mark">{BRAND.title}</h1>
       <MenuList>
+        <MenuItem label="Voyage" description="A journey through the worlds, one after another, as the music carries you on." onSelect={() => navigate('voyage')} testId="menu-voyage" />
         <MenuItem label="Play" description="Choose a mode and a world to play in." onSelect={() => navigate('modes')} autoFocus testId="menu-play" />
         <MenuItem label="High scores" description="Your best runs in every mode, with replays." onSelect={() => navigate('highscores')} testId="menu-highscores" />
         <MenuItem label="Settings" description="Controls, graphics, audio, camera and accessibility." onSelect={() => navigate('settings')} testId="menu-settings" />
@@ -190,7 +191,11 @@ export function ResultsScreen(): ReactNode {
   const headline =
     r.outcome === 'complete' ? (mode.metric === 'time' ? formatTime(r.timeMs) : formatScore(r.score)) : formatScore(r.score);
   const verdict =
-    r.outcome === 'complete'
+    r.voyage
+      ? r.outcome === 'complete'
+        ? 'Voyage complete'
+        : `The voyage ended in ${r.voyage.lastStage}`
+      : r.outcome === 'complete'
       ? mode.id === 'sprint'
         ? `${variant.label} cleared`
         : mode.id === 'ultra'
@@ -199,12 +204,24 @@ export function ResultsScreen(): ReactNode {
       : 'The stack reached the top';
   const s = r.stats;
   return (
-    <MenuScreen title={verdict} subtitle={`${mode.name}, ${variant.label}`} onBack={() => shell.quitToMenu()} testId="results-screen" footer={<ControlHints hints={hints} />}>
+    <MenuScreen
+      title={verdict}
+      subtitle={r.voyage ? `Voyage from ${r.voyage.areaName}, ${variant.label}` : `${mode.name}, ${variant.label}`}
+      onBack={() => shell.quitToMenu()}
+      testId="results-screen"
+      footer={<ControlHints hints={hints} />}
+    >
       <div className="results-hero">
         <span className="results-number" data-testid="results-headline">{headline}</span>
         {r.isPersonalBest ? <span className="results-badge">New personal best</span> : r.rank ? <span className="results-badge quiet">Rank {r.rank} of 10</span> : null}
       </div>
+      {r.unlocked.length > 0 ? (
+        <p className="results-unlocked" data-testid="results-unlocked">
+          Unlocked: {r.unlocked.join(', ')}
+        </p>
+      ) : null}
       <dl className="results-stats">
+        {r.voyage ? <div><dt>Worlds cleared</dt><dd data-testid="results-legs">{r.voyage.legsCleared} of {r.voyage.legs}</dd></div> : null}
         <div><dt>Score</dt><dd>{formatScore(r.score)}</dd></div>
         <div><dt>Time</dt><dd>{formatTime(r.timeMs)}</dd></div>
         <div><dt>Lines</dt><dd>{r.lines}</dd></div>
@@ -228,7 +245,15 @@ export function ResultsScreen(): ReactNode {
 // ----------------------------------------------------------------------------- high scores
 
 export function HighScoresScreen(): ReactNode {
-  const ranked = MODES.flatMap((m) => (m.metric === 'none' ? [] : m.variants.map((v) => ({ mode: m, variant: v }))));
+  const campaign = getCampaign('voyage').campaign;
+  const ranked = MODES.flatMap((m) => {
+    if (m.metric === 'none') return [];
+    if (m.id === 'voyage') {
+      // One table per start area and difficulty.
+      return (campaign?.areas ?? []).flatMap((a) => m.variants.map((v) => ({ mode: m, variant: { ...v, id: `${v.id}@${a.id}`, label: `${a.name}, ${v.label}` } })));
+    }
+    return m.variants.map((v) => ({ mode: m, variant: v }));
+  });
   const [index, setIndex] = useState(0);
   const [loaded, setLoaded] = useState<{ key: string; list: HighScoreEntry[] } | null>(null);
   const current = ranked[index] ?? ranked[0]!;

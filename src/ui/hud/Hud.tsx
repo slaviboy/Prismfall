@@ -57,6 +57,11 @@ export function Hud(): ReactNode {
       <div className={`hud-column ${ui.mirrored ? 'start' : 'end'}`} style={leftSide}>
         {showHold ? <span className="hud-label pod-label">Hold</span> : null}
         <div className="hud-stats">
+          {hud.voyage ? (
+            <span className="hud-voyage" data-testid="hud-voyage">
+              Leg {hud.voyage.leg} of {hud.voyage.legs}: {hud.voyage.stage}
+            </span>
+          ) : null}
           {ui.showScore ? (
             <Stat label="Score" testId="hud-score" big>
               {formatScore(hud.score)}

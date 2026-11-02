@@ -9,6 +9,7 @@ import { PauseOverlay } from './menus/PauseOverlay';
 import { BootScreen, CreditsScreen, HighScoresScreen, LoadingScreen, MainMenu, ModeSelectScreen, ModeSetupScreen, ResultsScreen } from './menus/screens';
 import { SettingsScreen } from './settings/SettingsScreen';
 import { StageSelectScreen } from './menus/StageSelect';
+import { VoyageScreen } from './menus/VoyageScreen';
 import { useNavScope } from './navigation/useNavScope';
 import { reducedMotion } from '../settings/store';
 import { PerfOverlay } from './hud/PerfOverlay';
@@ -98,6 +99,7 @@ export function App(): ReactNode {
       {screen === 'modes' ? <ModeSelectScreen onPick={pickMode} /> : null}
       {screen === 'setup' ? <ModeSetupScreen modeId={lastMode} onStart={start} /> : null}
       {screen === 'stages' ? <StageSelectScreen /> : null}
+      {screen === 'voyage' ? <VoyageScreen /> : null}
       {screen === 'loading' ? <LoadingScreen /> : null}
       {screen === 'results' ? <ResultsScreen /> : null}
       {screen === 'highscores' ? <HighScoresScreen /> : null}

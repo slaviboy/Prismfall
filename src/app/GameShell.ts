@@ -31,6 +31,8 @@ import { registerBuiltinEffects } from '../rendering/fx/lineClearEffects';
 import { StageManager } from '../stages/StageManager';
 import { availableStages, getStage } from '../stages/registry';
 import { isStageUnlocked } from '../stages/progression';
+import { getCampaign } from '../stages/registry';
+import { planVoyage, VoyageRun, type VoyageDifficulty, type VoyageLeg } from '../stages/campaign';
 import type { AudioFeatureSource, BeatEvent } from '../audio/analysis/features';
 import { AudioSystem, type StageAudio } from '../audio/AudioSystem';
 import type { Composition } from '../audio/sequencer/composition';
@@ -41,6 +43,8 @@ export interface StartOptions {
   readonly variantId: string;
   readonly stageId: string;
   readonly seed?: number;
+  /** Voyage: where the run starts and how hard it is. */
+  readonly voyage?: { readonly areaId: string; readonly difficulty: VoyageDifficulty };
 }
 
 type FrameListener = (now: number, dt: number) => void;
@@ -71,6 +75,10 @@ export class GameShell {
   session: GameSession | null = null;
   replaySession: ReplaySession | null = null;
   private lastOptions: StartOptions | null = null;
+  /** Voyage run in progress (null in other modes). */
+  voyage: VoyageRun | null = null;
+  private readonly voyagePreloaded = new Set<string>();
+  private voyageTimer: ReturnType<typeof setTimeout> | null = null;
   private finishing = false;
   private rafId = 0;
   private lastFrame = 0;
@@ -381,9 +389,24 @@ export class GameShell {
     void this.startGameAsync(options);
   }
 
-  private async startGameAsync(options: StartOptions): Promise<void> {
+  private async startGameAsync(input: StartOptions): Promise<void> {
     this.stopReplay();
-    this.lastOptions = options;
+    this.lastOptions = input;
+    this.clearVoyage();
+    let options = input;
+    let voyageRules: SessionConfig['rules'] = {};
+    if (input.modeId === 'voyage') {
+      const { campaign } = getCampaign('voyage');
+      const area = input.voyage?.areaId ?? campaign?.areas[0]?.id ?? '';
+      const difficulty = input.voyage?.difficulty ?? 'standard';
+      if (campaign) {
+        const plan = planVoyage(campaign, area, difficulty);
+        const first = plan.legs[0] as VoyageLeg;
+        this.voyage = new VoyageRun(plan);
+        options = { ...input, stageId: first.stage, variantId: `${difficulty}@${plan.startAreaId}`, voyage: { areaId: plan.startAreaId, difficulty } };
+        voyageRules = { goal: { kind: 'lines', lines: plan.totalLines }, startLevel: first.level };
+      }
+    }
     await this.ensureStage(options.stageId);
     // The world may have been previewed without its music (music previews off).
     const stageInfo = getStage(options.stageId);
@@ -393,7 +416,7 @@ export class GameShell {
     const config: SessionConfig = {
       ...options,
       handling: handlingFromSettings(s),
-      rules: this.rulesForMode(options.modeId),
+      rules: { ...this.rulesForMode(options.modeId), ...voyageRules },
     };
     const session = new GameSession(config);
     session.heldAtStart = () => this.heldGameActions();
@@ -421,7 +444,9 @@ export class GameShell {
       countdown: null,
       danger: false,
       best: null,
+      voyage: this.voyage ? { leg: 1, legs: this.voyage.plan.legs.length, stage: getStage(this.voyage.current.stage)?.manifest?.name ?? this.voyage.current.stage } : null,
     });
+    if (this.voyage) hudStore.setState({ linesGoal: this.voyage.current.endLines });
     void this.highScores.top(highScoreKey(mode.id, options.variantId), mode.lowerIsBetter, 1).then((top) => {
       const best = top[0];
       hudStore.setState({ best: best ? (mode.metric === 'time' ? best.timeMs : best.score) : null });
@@ -484,6 +509,45 @@ export class GameShell {
     this.startGame(this.lastOptions);
   }
 
+  private clearVoyage(): void {
+    if (this.voyageTimer) clearTimeout(this.voyageTimer);
+    this.voyageTimer = null;
+    this.voyage = null;
+    this.voyagePreloaded.clear();
+  }
+
+  /** Voyage: enter new legs as their line goals are reached; preload the next world halfway. */
+  private updateVoyage(engine: Engine): void {
+    const run = this.voyage;
+    if (!run) return;
+    const name = (id: string): string => getStage(id)?.manifest?.name ?? id;
+    const { completed, entered } = run.advance(engine.lines);
+    if (entered) {
+      for (const leg of completed) pushCallout({ title: `${name(leg.stage)} cleared`, detail: '', intensity: 0.7, tone: 'level' }, 1800);
+      // The speed band only ever rises within a run.
+      if (entered.level > engine.level) engine.setLevel(entered.level);
+      this.voyageTransition(entered.stage);
+      hudStore.setState({ linesGoal: entered.endLines, voyage: { leg: run.index + 1, legs: run.plan.legs.length, stage: name(entered.stage) } });
+    }
+    const next = run.plan.legs[run.index + 1];
+    if (next && run.progress(engine.lines) >= 0.5 && !this.voyagePreloaded.has(next.stage)) {
+      this.voyagePreloaded.add(next.stage);
+      this.stageManager?.preload(next.stage);
+    }
+  }
+
+  /** Mid-game world change, started on the next musical bar (its music crossfades on a bar too). */
+  private voyageTransition(stageId: string): void {
+    const f = this.features.features;
+    const barS = f.bpm > 0 ? (60 / f.bpm) * (this.audio.director.current?.beatsPerBar ?? 4) : 0;
+    const wait = barS > 0 ? Math.max(0, (1 - f.barPhase) * barS) : 0;
+    if (this.voyageTimer) clearTimeout(this.voyageTimer);
+    this.voyageTimer = setTimeout(() => {
+      this.voyageTimer = null;
+      if (this.session && this.voyage) void this.stageManager?.show(stageId, { transition: 2.4 });
+    }, wait * 1000);
+  }
+
   quitToMenu(): void {
     if (this.session && this.session.status !== 'finished') void this.finishSession('quit', false);
     this.endSessionView();
@@ -500,11 +564,42 @@ export class GameShell {
 
   private endSessionView(): void {
     if (this.audio.director.paused) this.audio.resume();
+    this.clearVoyage();
     this.session = null;
     this.stopReplay();
     hudStore.setState({ visible: false, callouts: [] });
     appStore.setState({ paused: false });
     this.input.setContext('menu');
+  }
+
+  /**
+   * Voyage progress for a finished run: completed legs unlock their worlds, completed areas unlock
+   * the next area, and the best score per start area and difficulty is kept. Returns the names
+   * of everything newly unlocked.
+   */
+  private recordVoyage(run: VoyageRun, progress: Progress, engine: Engine, outcome: 'complete' | 'gameOver' | 'quit', key: string): string[] {
+    if (outcome === 'complete') run.advance(engine.lines);
+    const unlockAll = getSettings().setup.unlockAll;
+    const before = new Set(availableStages().filter((st) => st.manifest && isStageUnlocked(st.manifest, progress, unlockAll)).map((st) => st.id));
+    const campaign = getCampaign('voyage').campaign;
+    const areasBefore = new Set(progress.voyage.completedAreas);
+    for (const leg of run.completed) {
+      if (!progress.voyage.completedLegs.includes(leg.stage)) progress.voyage.completedLegs.push(leg.stage);
+      const rec = progress.stages[leg.stage] ?? { unlocked: true, completed: false, plays: 0, bestScore: 0, bestLines: 0, lastPlayed: null };
+      progress.stages[leg.stage] = { ...rec, unlocked: true, completed: true };
+    }
+    for (const area of run.completedAreas()) if (!progress.voyage.completedAreas.includes(area)) progress.voyage.completedAreas.push(area);
+    progress.voyage.bestScores[key] = Math.max(progress.voyage.bestScores[key] ?? 0, engine.score);
+    const names: string[] = [];
+    for (const st of availableStages()) {
+      if (st.manifest && !before.has(st.id) && isStageUnlocked(st.manifest, progress, unlockAll)) names.push(st.manifest.name);
+    }
+    // Completing an area opens the next one as a starting point.
+    campaign?.areas.forEach((area, i) => {
+      const prev = campaign.areas[i - 1];
+      if (prev && progress.voyage.completedAreas.includes(prev.id) && !areasBefore.has(prev.id)) names.push(`${area.name} (Voyage area)`);
+    });
+    return names;
   }
 
   private async finishSession(outcome: 'complete' | 'gameOver' | 'quit', showResults: boolean): Promise<void> {
@@ -518,6 +613,8 @@ export class GameShell {
     const ranked = outcome !== 'quit' && mode.metric !== 'none' && (mode.metric !== 'time' || outcome === 'complete');
     let rank: number | null = null;
     let replayId: string | null = null;
+    const unlocked: string[] = [];
+    const voyageRun = mode.id === 'voyage' ? this.voyage : null;
     const key = highScoreKey(mode.id, session.config.variantId);
     try {
       if (replay && engine.stats.pieces > 0 && mode.id !== 'practice') {
@@ -553,6 +650,7 @@ export class GameShell {
           bestLines: Math.max(stage.bestLines, engine.lines),
           lastPlayed: new Date().toISOString(),
         };
+        if (voyageRun) unlocked.push(...this.recordVoyage(voyageRun, progress, engine, outcome, key));
         progress.modesPlayed[mode.id] = (progress.modesPlayed[mode.id] ?? 0) + 1;
         progress.bestByMode[mode.id] = Math.max(progress.bestByMode[mode.id] ?? 0, engine.score);
         progressStore.setState({ lifetime });
@@ -574,7 +672,15 @@ export class GameShell {
           best,
           isPersonalBest: rank === 1 && (previousBest === null || previousBest.id !== best?.id),
           replayId,
-          unlocked: [],
+          unlocked,
+          voyage: voyageRun
+            ? {
+                legsCleared: voyageRun.completed.length,
+                legs: voyageRun.plan.legs.length,
+                lastStage: getStage(voyageRun.current.stage)?.manifest?.name ?? voyageRun.current.stage,
+                areaName: getCampaign('voyage').campaign?.areas.find((a) => a.id === voyageRun.plan.startAreaId)?.name ?? voyageRun.plan.startAreaId,
+              }
+            : null,
         };
         appStore.setState({ results });
       }
@@ -674,6 +780,7 @@ export class GameShell {
       this.eventListeners.forEach((l) => l(events));
       this.hapticsFor(events);
     }
+    if (session && this.voyage && session.status === 'running') this.updateVoyage(session.engine);
     if (engine) this.audio.onGameEvents(events, engine, dt);
     if (engine) this.syncHud(t);
     this.renderSystem?.tickPerf(t);

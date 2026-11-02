@@ -1561,3 +1561,53 @@ kbd {
 .setup-world:focus .setup-world-desc {
   color: var(--starlight);
 }
+
+
+/* ------------------------------------------------------------------ voyage */
+
+.area-card {
+  grid-template-columns: clamp(180px, 13vw, 260px) 1fr;
+}
+
+.area-card-art {
+  display: flex;
+  gap: 3px;
+  border: 1px solid rgba(238, 240, 255, 0.14);
+}
+
+.area-leg-art {
+  flex: 1 1 0;
+  min-width: 0;
+  height: clamp(72px, 7.2vw, 108px);
+  aspect-ratio: auto;
+}
+
+.area-card:focus .area-card-art {
+  border-color: var(--starlight);
+}
+
+.area-card.is-locked .area-card-art {
+  filter: grayscale(0.85) brightness(0.55);
+}
+
+.area-legs {
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+  color: var(--starlight);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.hud-voyage {
+  margin-bottom: 6px;
+  font-size: calc(13px * var(--hud-scale, 1));
+  color: var(--haze);
+  text-align: right;
+}
+
+.results-unlocked {
+  margin: 0 0 12px;
+  color: var(--aqua);
+  font-size: 17px;
+}
