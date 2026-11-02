@@ -57,6 +57,8 @@ export class InputManager {
     this.lookups.clear();
     const prevent = new Set<string>();
     for (const action of GAMEPLAY_ACTIONS) for (const code of keyboard[action]) prevent.add(code);
+    // Menu confirm/back are handled by the navigator; native Enter/Space activation would double-fire.
+    for (const code of [...keyboard.confirm, ...keyboard.back]) prevent.add(code);
     for (const code of ['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Tab', 'Backspace']) prevent.add(code);
     this.keyboard.preventDefaultCodes = prevent;
   }
