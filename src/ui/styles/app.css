@@ -1611,3 +1611,67 @@ kbd {
   color: var(--aqua);
   font-size: 17px;
 }
+
+
+/* -------------------------------------------------------------- music room */
+
+.track-list {
+  gap: 4px;
+}
+
+.track-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.track-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  padding: 6px 0;
+  background: none;
+  border: 0;
+  color: var(--haze);
+  text-align: left;
+  cursor: pointer;
+}
+
+.track-title {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(19px, 2.4vh, 26px);
+}
+
+.track-meta {
+  font-size: 14px;
+  color: var(--haze-dim);
+}
+
+.track-item:focus,
+.track-item:hover {
+  color: var(--starlight);
+}
+
+.track-item:focus .track-title {
+  font-weight: 450;
+}
+
+.track-row.is-playing .track-meta {
+  color: var(--aqua);
+}
+
+.now-playing-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 6px;
+  font-size: 14px;
+  color: var(--haze);
+}
+
+.now-playing .sound-cue-lamp {
+  width: 12px;
+  height: 12px;
+}

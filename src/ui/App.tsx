@@ -10,6 +10,7 @@ import { BootScreen, CreditsScreen, HighScoresScreen, LoadingScreen, MainMenu, M
 import { SettingsScreen } from './settings/SettingsScreen';
 import { StageSelectScreen } from './menus/StageSelect';
 import { VoyageScreen } from './menus/VoyageScreen';
+import { MusicRoom } from './menus/MusicRoom';
 import { useNavScope } from './navigation/useNavScope';
 import { reducedMotion } from '../settings/store';
 import { PerfOverlay } from './hud/PerfOverlay';
@@ -100,6 +101,7 @@ export function App(): ReactNode {
       {screen === 'setup' ? <ModeSetupScreen modeId={lastMode} onStart={start} /> : null}
       {screen === 'stages' ? <StageSelectScreen /> : null}
       {screen === 'voyage' ? <VoyageScreen /> : null}
+      {screen === 'musicRoom' ? <MusicRoom /> : null}
       {screen === 'loading' ? <LoadingScreen /> : null}
       {screen === 'results' ? <ResultsScreen /> : null}
       {screen === 'highscores' ? <HighScoresScreen /> : null}

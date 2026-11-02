@@ -75,7 +75,7 @@ export class AudioSystem {
   );
   readonly hub = new FeaturesHub(this);
   private settings: Settings | null = null;
-  private stage: StageAudio | null = null;
+  stage: StageAudio | null = null;
   private analysisKey = '';
   private dangerTimer = 0;
   private danger = false;

@@ -61,6 +61,7 @@ export function MainMenu(): ReactNode {
       <MenuList>
         <MenuItem label="Voyage" description="A journey through the worlds, one after another, as the music carries you on." onSelect={() => navigate('voyage')} testId="menu-voyage" />
         <MenuItem label="Play" description="Choose a mode and a world to play in." onSelect={() => navigate('modes')} autoFocus testId="menu-play" />
+        <MenuItem label="Music Room" description="Listen to every world's music, add your own and choose what plays in free play." onSelect={() => navigate('musicRoom')} testId="menu-music" />
         <MenuItem label="High scores" description="Your best runs in every mode, with replays." onSelect={() => navigate('highscores')} testId="menu-highscores" />
         <MenuItem label="Settings" description="Controls, graphics, audio, camera and accessibility." onSelect={() => navigate('settings')} testId="menu-settings" />
         <MenuItem label="Credits" description="Who made what, and the licences of every asset." onSelect={() => navigate('credits')} testId="menu-credits" />

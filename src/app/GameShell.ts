@@ -36,7 +36,19 @@ import { planVoyage, VoyageRun, type VoyageDifficulty, type VoyageLeg } from '..
 import type { AudioFeatureSource, BeatEvent } from '../audio/analysis/features';
 import { AudioSystem, type StageAudio } from '../audio/AudioSystem';
 import type { Composition } from '../audio/sequencer/composition';
-import { loadMusicModule, type StageInfo } from '../stages/registry';
+import { loadMusicModule, readTrackMeta, resolveAsset, type StageInfo } from '../stages/registry';
+import { UserMusicLibrary } from '../audio/library/UserMusic';
+import type { FileTrackMeta } from '../audio/music-director/tracks';
+
+/** A playable track: a world's own music or one of the player's files. */
+export interface CatalogTrack {
+  /** "stage:<stageId>:<trackId>" or "user:<id>". */
+  readonly id: string;
+  readonly title: string;
+  readonly subtitle: string;
+  readonly bpm: number;
+  readonly source: 'world' | 'user';
+}
 
 export interface StartOptions {
   readonly modeId: ModeId;
@@ -75,6 +87,10 @@ export class GameShell {
   session: GameSession | null = null;
   replaySession: ReplaySession | null = null;
   private lastOptions: StartOptions | null = null;
+  /** The player's own music files. */
+  readonly userMusic = new UserMusicLibrary(() => this.backend ?? null);
+  /** Track playing instead of the world's music (Music Room, free-play choice); null = world music. */
+  currentTrackId: string | null = null;
   /** Voyage run in progress (null in other modes). */
   voyage: VoyageRun | null = null;
   private readonly voyagePreloaded = new Set<string>();
@@ -186,17 +202,89 @@ export class GameShell {
         console.warn('[audio] could not load stage music', err);
       }
     }
+    const file = trackSpec?.kind === 'file' ? this.fileTrack(info, trackSpec.src, trackSpec.meta, trackSpec.title) : null;
     const stageAudio: StageAudio = {
       id: m.id,
-      bpm: composition?.bpm ?? m.music.bpm,
-      beatsPerBar: composition?.beatsPerBar ?? m.music.beatsPerBar,
+      bpm: composition?.bpm ?? file?.meta.bpm ?? m.music.bpm,
+      beatsPerBar: composition?.beatsPerBar ?? file?.meta.beatsPerBar ?? m.music.beatsPerBar,
       composition,
-      file: null,
+      file,
       ambience: m.ambience?.preset ?? null,
       ambienceLevel: m.ambience?.level ?? 1,
       sfxPreset: m.sfx.preset,
     };
     await this.audio.setStage(stageAudio);
+  }
+
+  /** A stage's audio-file track with its beat metadata (track.json). */
+  private fileTrack(info: StageInfo, src: string, metaPath: string | undefined, title: string): { url: string; meta: FileTrackMeta } | null {
+    const url = resolveAsset(info.dir, src);
+    const raw = metaPath ? (readTrackMeta(info, metaPath) as Partial<FileTrackMeta> | undefined) : undefined;
+    if (!url) return null;
+    return { url, meta: { title, bpm: raw?.bpm ?? info.manifest?.music.bpm ?? 120, beatsPerBar: raw?.beatsPerBar ?? 4, offset: raw?.offset ?? 0, loop: raw?.loop, sections: raw?.sections } };
+  }
+
+  /** Every playable track: music of unlocked worlds, then the player's own files. */
+  async catalog(): Promise<CatalogTrack[]> {
+    const progress = progressStore.getState().progress;
+    const unlockAll = getSettings().setup.unlockAll;
+    const out: CatalogTrack[] = [];
+    for (const st of availableStages()) {
+      const m = st.manifest;
+      if (!m || !isStageUnlocked(m, progress, unlockAll)) continue;
+      for (const t of m.music.tracks) out.push({ id: `stage:${m.id}:${t.id}`, title: t.title, subtitle: m.name, bpm: m.music.bpm, source: 'world' });
+    }
+    for (const u of await this.userMusic.list()) out.push({ id: `user:${u.id}`, title: u.name, subtitle: 'Your music', bpm: Math.round(u.analysis.bpm), source: 'user' });
+    return out;
+  }
+
+  /** Resolves a catalog id to audio the music director can play. */
+  async trackAudio(id: string): Promise<StageAudio | null> {
+    if (id.startsWith('user:')) {
+      const uid = id.slice(5);
+      const track = (await this.userMusic.list()).find((t) => t.id === uid);
+      const url = track ? await this.userMusic.url(uid) : null;
+      if (!track || !url) return null;
+      const a = track.analysis;
+      return { id, bpm: a.bpm, beatsPerBar: 4, composition: null, file: { url, meta: { title: track.name, bpm: a.bpm, beatsPerBar: 4, offset: a.offset, sections: a.sections } }, ambience: null, ambienceLevel: 0, sfxPreset: this.audio.stage?.sfxPreset ?? 'glass' };
+    }
+    const [, stageId, trackId] = id.split(':');
+    const info = getStage(stageId ?? '');
+    const m = info?.manifest;
+    const spec = m?.music.tracks.find((t) => t.id === trackId);
+    if (!info || !m || !spec) return null;
+    if (spec.kind === 'file') {
+      const file = this.fileTrack(info, spec.src, spec.meta, spec.title);
+      return file ? { id, bpm: file.meta.bpm, beatsPerBar: file.meta.beatsPerBar ?? 4, composition: null, file, ambience: null, ambienceLevel: 0, sfxPreset: m.sfx.preset } : null;
+    }
+    const composition = (await loadMusicModule(info, spec.src)) as Composition;
+    return { id, bpm: composition.bpm, beatsPerBar: composition.beatsPerBar, composition, file: null, ambience: null, ambienceLevel: 0, sfxPreset: m.sfx.preset };
+  }
+
+  /** Plays a catalog track instead of the world's music; null returns to the world's music. */
+  async playTrack(id: string | null): Promise<boolean> {
+    if (id === this.currentTrackId) return true;
+    const audio = id ? await this.trackAudio(id) : null;
+    if (id && !audio) return false;
+    this.currentTrackId = id;
+    await this.audio.setOverride(audio);
+    return true;
+  }
+
+  /** Free play: the world's music, a shuffled track or the chosen track (Music Room). */
+  private async applyFreePlayMusic(): Promise<void> {
+    const choice = getSettings().setup.music;
+    if (choice === 'stage') {
+      await this.playTrack(null);
+      return;
+    }
+    if (choice === 'shuffle') {
+      const tracks = await this.catalog();
+      const pick = tracks[Math.floor(Math.random() * tracks.length)];
+      await this.playTrack(pick?.id ?? null);
+      return;
+    }
+    if (!(await this.playTrack(choice))) await this.playTrack(null);
   }
 
   /** Starts audio from a user gesture (boot screen, first input). */
@@ -411,6 +499,8 @@ export class GameShell {
     // The world may have been previewed without its music (music previews off).
     const stageInfo = getStage(options.stageId);
     if (stageInfo?.available && this.audio.stageId !== options.stageId) await this.loadStageAudio(stageInfo);
+    if (options.modeId === 'voyage') await this.playTrack(null);
+    else await this.applyFreePlayMusic();
     const s = getSettings();
     const mode = getMode(options.modeId);
     const config: SessionConfig = {
@@ -565,6 +655,8 @@ export class GameShell {
   private endSessionView(): void {
     if (this.audio.director.paused) this.audio.resume();
     this.clearVoyage();
+    // Menus play the world's own music again.
+    void this.playTrack(null);
     this.session = null;
     this.stopReplay();
     hudStore.setState({ visible: false, callouts: [] });
