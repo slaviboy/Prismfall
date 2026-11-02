@@ -16,6 +16,8 @@ export const INPUT_ACTIONS = [
   'rotate180',
   'hold',
   'pause',
+  'practiceUndo',
+  'practiceReset',
   'confirm',
   'back',
 ] as const;
@@ -40,6 +42,8 @@ export const DEFAULT_KEYBOARD: Record<InputAction, string[]> = {
   rotate180: ['KeyA'],
   hold: ['KeyC', 'ShiftLeft'],
   pause: ['Escape', 'KeyP'],
+  practiceUndo: ['Backspace'],
+  practiceReset: ['KeyR'],
   confirm: ['Enter', 'NumpadEnter'],
   back: ['Escape', 'Backspace'],
 };
@@ -55,6 +59,8 @@ export const DEFAULT_GAMEPAD: Record<InputAction, string[]> = {
   rotate180: ['button:3'],
   hold: ['button:4', 'button:5'],
   pause: ['button:9'],
+  practiceUndo: ['button:8'],
+  practiceReset: [],
   confirm: ['button:0'],
   back: ['button:1'],
 };

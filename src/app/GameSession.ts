@@ -141,6 +141,16 @@ export class GameSession {
     return true;
   }
 
+  /** Practice: back to the state when the first piece appeared (board, queue and stats). */
+  resetBoard(): boolean {
+    const first = this.undoStack[0];
+    if (this.mode.id !== 'practice' || !first) return false;
+    this.engine.restore(first);
+    this.undoStack = [first];
+    this.lastPieceCount = this.engine.stats.pieces;
+    return true;
+  }
+
   get elapsedMs(): number {
     return this.runner.elapsedMs;
   }

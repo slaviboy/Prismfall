@@ -22,6 +22,7 @@ function PauseMenu(): ReactNode {
         <MenuList>
           <MenuItem label="Resume" onSelect={() => shell.resume()} autoFocus testId="pause-resume" />
           {practice ? <MenuItem label="Undo last piece" onSelect={() => shell.practiceUndo()} testId="pause-undo" /> : null}
+          {practice ? <MenuItem label="Reset board" onSelect={() => shell.practiceReset()} testId="pause-reset" /> : null}
           <MenuItem label="Restart" onSelect={() => shell.restart()} testId="pause-restart" />
           <MenuItem label="Settings" onSelect={() => appStore.setState({ pauseView: 'settings' })} testId="pause-settings" />
           <MenuItem label="Quit to menu" onSelect={() => shell.quitToMenu()} testId="pause-quit" />

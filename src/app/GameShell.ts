@@ -358,6 +358,13 @@ export class GameShell {
       return;
     }
     if (e.action === 'confirm' || e.action === 'back') return;
+    if (e.action === 'practiceUndo' || e.action === 'practiceReset') {
+      if (e.down && this.session?.mode.id === 'practice') {
+        if (e.action === 'practiceUndo') this.practiceUndo();
+        else this.practiceReset();
+      }
+      return;
+    }
     this.session?.handleAction(e.action as GameAction, e.down, e.time);
   }
 
@@ -480,6 +487,10 @@ export class GameShell {
 
   practiceUndo(): void {
     if (this.session?.undo()) toast('Undid the last placement');
+  }
+
+  practiceReset(): void {
+    if (this.session?.resetBoard()) toast('Board reset');
   }
 
   private endSessionView(): void {

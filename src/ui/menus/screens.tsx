@@ -14,6 +14,7 @@ import { BRAND } from '../../config/branding';
 import { useLatest } from '../useLatest';
 import { availableStages, getStage } from '../../stages/registry';
 import { isStageUnlocked, unlockHint } from '../../stages/progression';
+import { PracticeOptions } from './PracticeOptions';
 
 function useHints(extra: readonly { keys: string; label: string }[] = []): readonly { keys: string; label: string }[] {
   const { confirm, back } = useConfirmBackLabels();
@@ -152,6 +153,7 @@ export function ModeSetupScreen(props: { modeId: ModeId; onStart: () => void }):
     <MenuScreen title={mode.name} subtitle={mode.tagline} onBack={() => goBack()} testId="mode-setup" footer={<ControlHints hints={hints} />}>
       <div className="setup-rows">
         {mode.stageSelectable ? <WorldRow /> : null}
+        {mode.id === 'practice' ? <PracticeOptions /> : null}
         {mode.variants.length > 1 ? (
           <ChoiceRow
             label="Rules"
@@ -161,7 +163,7 @@ export function ModeSetupScreen(props: { modeId: ModeId; onStart: () => void }):
             onChange={(v) => updateSection('setup', { variants: { ...getSettings().setup.variants, [mode.id]: v } })}
             testId="setup-variant"
           />
-        ) : (
+        ) : mode.id === 'practice' ? null : (
           <p className="setup-desc">{mode.description}</p>
         )}
         {best ? (

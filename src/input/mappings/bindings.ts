@@ -3,7 +3,7 @@ import type { InputContext, InputDevice, MenuAction } from '../types';
 
 export type Bindings = Readonly<Record<InputAction, readonly string[]>>;
 
-export const GAMEPLAY_ACTIONS: readonly InputAction[] = ['moveLeft', 'moveRight', 'softDrop', 'hardDrop', 'rotateCW', 'rotateCCW', 'rotate180', 'hold', 'pause'];
+export const GAMEPLAY_ACTIONS: readonly InputAction[] = ['moveLeft', 'moveRight', 'softDrop', 'hardDrop', 'rotateCW', 'rotateCCW', 'rotate180', 'hold', 'pause', 'practiceUndo', 'practiceReset'];
 export const MENU_BINDABLE: readonly InputAction[] = ['confirm', 'back'];
 /** Actions that must always keep at least one binding so the player can't lock themselves out. */
 export const REQUIRED_ACTIONS: readonly InputAction[] = ['pause', 'confirm', 'back'];
@@ -18,6 +18,8 @@ export const ACTION_LABELS: Record<InputAction, string> = {
   rotate180: 'Rotate 180°',
   hold: 'Hold',
   pause: 'Pause',
+  practiceUndo: 'Practice: Undo',
+  practiceReset: 'Practice: Reset Board',
   confirm: 'Confirm',
   back: 'Back',
 };
