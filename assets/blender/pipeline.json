@@ -1,6 +1,23 @@
 {
   "$comment": "Blender asset pipeline: generators run headless, exports are optimised into content/.",
   "generators": [
-    { "script": "blocks.py", "outputs": [{ "from": "assets/blender/exports/blocks", "to": "content/shared/blocks" }] }
+    {
+      "script": "blocks.py",
+      "outputs": [
+        {
+          "from": "assets/blender/exports/blocks",
+          "to": "content/shared/blocks"
+        }
+      ]
+    },
+    {
+      "script": "foundry_kit.py",
+      "outputs": [
+        {
+          "from": "assets/blender/exports/foundry",
+          "to": "content/stages/ember-foundry/models"
+        }
+      ]
+    }
   ]
 }

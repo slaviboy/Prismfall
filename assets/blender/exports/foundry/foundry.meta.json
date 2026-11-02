@@ -1,0 +1,18 @@
+{
+  "generator": "assets/blender/scripts/foundry_kit.py",
+  "objects": 156,
+  "triangles": 47080,
+  "animated": {
+    "rotate": "gear_*",
+    "pistons": "piston_rod_*"
+  },
+  "materials": [
+    "darkMetal",
+    "steel",
+    "brass",
+    "hotMetal",
+    "furnaceGlow",
+    "molten"
+  ],
+  "license": "Original work for Prismfall"
+}

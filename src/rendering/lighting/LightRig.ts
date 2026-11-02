@@ -41,7 +41,8 @@ export class LightRig {
     this.key.target.position.set(0, 0, 0);
     this.group.add(this.key, this.key.target, this.rim, this.ambient);
     for (let i = 0; i < ACCENT_COUNT; i++) {
-      const light = new PointLight(0xffffff, 0, 60, 1.6);
+      // Short range: accents shape the playfield, not the distant world.
+      const light = new PointLight(0xffffff, 0, 30, 1.6);
       this.accents.push(light);
       this.group.add(light);
     }
