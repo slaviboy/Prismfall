@@ -72,7 +72,7 @@
     "vignette": 0.42,
     "bloomThreshold": 0.18,
     "bloomRadius": 0.5,
-    "toneMapping": "aces",
+    "toneMapping": "neutral",
     "envIntensity": 0.28,
     "exposure": 0.86
   },

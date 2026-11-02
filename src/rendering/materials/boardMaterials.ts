@@ -1,17 +1,19 @@
-import { AdditiveBlending, Color, DoubleSide, MeshBasicNodeMaterial, MeshStandardNodeMaterial, Vector3 } from 'three/webgpu';
+import { Color, DoubleSide, MeshBasicNodeMaterial, MeshStandardNodeMaterial, Vector3, type InstancedBufferAttribute, type Node } from 'three/webgpu';
 import {
-  abs,
   clamp,
   dot,
   exp,
   float,
+  floor,
   fract,
+  instancedBufferAttribute,
   length,
   max,
   min,
   mix,
+  mod,
   normalView,
-  positionLocal,
+  positionGeometry,
   positionViewDirection,
   smoothstep,
   uniform,
@@ -24,24 +26,48 @@ import { frameUniforms, noBloom, type ColorUniform, type FloatUniform } from '..
 
 const HALF = 0.47;
 
-/** Translucent ghost: bright bevel edges, faint body, gentle shimmer. */
-export function createGhostMaterial(): { material: MeshBasicNodeMaterial; color: ColorUniform; opacity: FloatUniform } {
+/**
+ * Depth-only pre-pass for the ghost, so the translucent ghost colours only its front-most surface;
+ * otherwise the inner side faces of neighbouring cells add up into notches and seams.
+ */
+export function createGhostDepthMaterial(): MeshBasicNodeMaterial {
+  const material = new MeshBasicNodeMaterial();
+  material.colorWrite = false;
+  material.depthWrite = true;
+  // In the transparent pass (render order 1000), after the semi-transparent back plate: an
+  // opaque-pass pre-pass would depth-reject the plate behind the ghost and show the world through.
+  material.transparent = true;
+  noBloom(material);
+  return material;
+}
+
+/**
+ * Ghost piece: an even translucent body in the piece colour with an outline on the piece's
+ * outer silhouette only (per-cell neighbour mask: bits left, right, down, up), so it reads as
+ * one shape. Cells are drawn slightly enlarged so they meet; the depth pre-pass resolves overlaps.
+ */
+export function createGhostMaterial(mask: InstancedBufferAttribute): { material: MeshBasicNodeMaterial; color: ColorUniform; opacity: FloatUniform } {
   const color = uniform(new Vector3(1, 1, 1));
   const opacity = uniform(0.5);
-  const p = positionLocal;
-  const ap = abs(p);
-  const m1 = max(ap.x, max(ap.y, ap.z));
-  const mn = min(ap.x, min(ap.y, ap.z));
-  const m2 = ap.x.add(ap.y).add(ap.z).sub(m1).sub(mn);
-  const edge = smoothstep(HALF - 0.06, HALF - 0.01, m2);
+  const p = positionGeometry;
+  const m = (instancedBufferAttribute(mask, 'vec4') as unknown as Node<'vec4'>).x;
+  const bit = (i: number) => mod(floor(m.div(2 ** i)), 2);
+  const near = (v: Parameters<typeof smoothstep>[2]) => smoothstep(HALF - 0.1, HALF - 0.015, v);
+  const outer = max(
+    max(bit(0).oneMinus().mul(near(p.x.negate())), bit(1).oneMinus().mul(near(p.x))),
+    max(bit(2).oneMinus().mul(near(p.y.negate())), bit(3).oneMinus().mul(near(p.y))),
+  );
+  // Outline only toward the front, so the silhouette reads from the camera.
+  const front = smoothstep(0, HALF - 0.02, p.z);
+  const outline = outer.mul(front) as unknown as Node<'float'>;
   const ndv = clamp(dot(normalView, positionViewDirection), 0, 1);
-  const shimmer = float(0.85).add(frameUniforms.beatPulse.mul(0.15));
-  const alpha = edge.mul(0.95).add(ndv.oneMinus().mul(0.18)).add(0.06).mul(opacity).mul(shimmer);
+  const shimmer = float(0.9).add(frameUniforms.beatPulse.mul(0.1));
+  const body = float(0.12).add(ndv.oneMinus().mul(0.06));
+  const alpha = clamp(body.add(outline.mul(0.9)), 0, 1).mul(opacity).mul(shimmer);
   const material = new MeshBasicNodeMaterial();
-  material.colorNode = vec4(color.mul(float(0.6).add(edge.mul(0.9))), alpha);
+  material.colorNode = vec4(color.mul(float(0.8).add(outline.mul(0.9))), alpha);
   material.transparent = true;
   material.depthWrite = false;
-  material.blending = AdditiveBlending;
   noBloom(material);
   return { material, color, opacity };
 }

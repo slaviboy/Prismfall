@@ -1,5 +1,5 @@
 import { AdditiveBlending, CylinderGeometry, DoubleSide, InstancedBufferAttribute, InstancedMesh, Matrix4, MeshBasicNodeMaterial, Quaternion, Vector3 } from 'three/webgpu';
-import { abs, clamp, dot, exp, float, fract, instancedBufferAttribute, mrt, normalView, positionLocal, positionViewDirection, smoothstep, vec4 } from 'three/tsl';
+import { abs, clamp, dot, exp, float, fract, instancedBufferAttribute, mrt, normalView, positionGeometry, positionViewDirection, smoothstep, vec4 } from 'three/tsl';
 import { z } from 'zod';
 import type { ComponentFactory } from '../../../sdk/types';
 import { colorUniform, floatUniform, seeded, zColor, zVec3 } from './common';
@@ -44,7 +44,8 @@ export const beamsComponent: ComponentFactory<z.infer<typeof schema>> = {
     const u = { intensity: floatUniform(1), beats: floatUniform(0), presence: floatUniform(1) };
     const local = fract(u.beats.div(p.sequence).sub(phase));
     const flash = exp(local.mul(-p.sequence * 2.2)).mul(p.pulse);
-    const vertical = smoothstep(0, 0.08, positionLocal.y.div(p.height)).mul(smoothstep(1, 0.25, positionLocal.y.div(p.height)));
+    // Geometry position: on an InstancedMesh positionLocal is already instance-transformed.
+    const vertical = smoothstep(0, 0.08, positionGeometry.y.div(p.height)).mul(smoothstep(1, 0.25, positionGeometry.y.div(p.height)));
     const edge = float(1).sub(abs(dot(normalView, positionViewDirection))).pow(0.5).oneMinus().add(0.15);
     const color = colorUniform(p.color).mul(float(p.base).add(flash)).mul(vertical).mul(clamp(edge, 0, 1)).mul(u.intensity).mul(u.presence);
     const material = new MeshBasicNodeMaterial();

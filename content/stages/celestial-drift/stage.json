@@ -72,7 +72,7 @@
     "vignette": 0.45,
     "bloomThreshold": 0.16,
     "bloomRadius": 0.55,
-    "toneMapping": "aces",
+    "toneMapping": "neutral",
     "envIntensity": 0.25
   },
   "camera": {

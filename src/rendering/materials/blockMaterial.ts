@@ -14,6 +14,7 @@ import {
   mix,
   mod,
   normalView,
+  positionGeometry,
   positionLocal,
   positionViewDirection,
   sin,
@@ -60,6 +61,7 @@ export function createBlockMaterial(buffer: InstancedInterleavedBuffer, preset: 
     ao: uniform(preset.ao),
     albedo: uniform(preset.albedo),
     musicGlow: uniform(preset.musicGlow),
+    saturation: uniform(preset.saturation),
   };
   const intensity = uniform(1);
   const spawnTime = uniform(-1000);
@@ -67,7 +69,10 @@ export function createBlockMaterial(buffer: InstancedInterleavedBuffer, preset: 
   const dropDuration = uniform(0.12);
   const t = frameUniforms.time;
 
-  const p = positionLocal;
+  // Per-cell shading uses the raw geometry position: on an InstancedMesh, positionLocal already
+  // includes the instance matrix (board space), which put edge glow and crease shading on the
+  // board's centre lines instead of each cell's own edges.
+  const p = positionGeometry;
   const ap = abs(p);
   const m1 = max(ap.x, max(ap.y, ap.z));
   const mn = min(ap.x, min(ap.y, ap.z));
@@ -87,7 +92,7 @@ export function createBlockMaterial(buffer: InstancedInterleavedBuffer, preset: 
   // Row-collapse animation: blocks start `dropRows` higher and ease down (GPU-timed).
   const dropT = clamp(t.sub(a1.z).div(dropDuration), 0, 1);
   const dropRemain = dropT.oneMinus().pow(3);
-  const lifted = p.add(vec3(0, a1.y.mul(dropRemain), 0));
+  const lifted = positionLocal.add(vec3(0, a1.y.mul(dropRemain), 0));
 
   // Lock flash and spawn materialize pulse.
   const flash = exp(max(t.sub(a1.w), 0).mul(-10)).mul(step(0, t.sub(a1.w))).mul(frameUniforms.flashLimit);
@@ -119,10 +124,13 @@ export function createBlockMaterial(buffer: InstancedInterleavedBuffer, preset: 
   const glyph = is(1).mul(g1).add(is(2).mul(g2)).add(is(3).mul(g3)).add(is(4).mul(g4)).add(is(5).mul(g5)).add(is(6).mul(g6)).add(is(7).mul(g7));
   const glyphMask = clamp(glyph, 0, 1).mul(front).mul(glyphs);
 
-  const base = a0.xyz;
+  // Piece colour with a saturation lift, so lighting, clearcoat and bloom can't bleach it.
+  const raw = a0.xyz;
+  const base = max(mix(vec3(dot(raw, vec3(0.2126, 0.7152, 0.0722))), raw, u.saturation), 0);
   const music = frameUniforms.bass.mul(0.6).add(frameUniforms.beatPulse.mul(0.4)).mul(u.musicGlow).mul(frameUniforms.reactivity);
   const albedo = base.mul(u.albedo).mul(ao).mul(surface).mul(mix(float(1), float(0.3), glyphMask));
-  const edgeTint = mix(u.edgeColor, base, u.edgeUsePiece);
+  // A preset edge colour only tints the piece colour (at most 40 %); pure white edges washed blocks out.
+  const edgeTint = mix(mix(base, u.edgeColor, 0.4), base, u.edgeUsePiece);
   const glow = base
     .mul(u.emissive.add(core).add(rim).add(music).add(flash.mul(1.4)).add(spawnPulse))
     .add(edgeTint.mul(edge.mul(u.edgeGlow).mul(float(1).add(music))))
@@ -157,6 +165,7 @@ export function createBlockMaterial(buffer: InstancedInterleavedBuffer, preset: 
       u.ao.value = next.ao;
       u.albedo.value = next.albedo;
       u.musicGlow.value = next.musicGlow;
+      u.saturation.value = next.saturation;
     },
   };
   handle.apply(preset);

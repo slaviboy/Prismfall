@@ -1,5 +1,5 @@
 import { AdditiveBlending, Color, InstancedInterleavedBuffer, InstancedMesh, MeshBasicNodeMaterial, type BufferGeometry } from 'three/webgpu';
-import { clamp, exp, float, instancedBufferAttribute, max, mrt, positionLocal, smoothstep, vec4 } from 'three/tsl';
+import { clamp, exp, float, instancedBufferAttribute, max, mrt, positionGeometry, smoothstep, vec4 } from 'three/tsl';
 import type { Engine } from '../../game/core/engine';
 import type { GameEvent } from '../../game/core/types';
 import { PIECE_TYPES, pieceTypeFromCell } from '../../game/pieces/pieces';
@@ -54,7 +54,7 @@ export class FeedbackDirector {
     const flash = exp(k.mul(-6)).mul(2.5);
     const color = a1.xyz.mul(float(1.2).add(flash)).add(flash.mul(0.6)).mul(alive).mul(float(1).sub(k.mul(0.6)));
     const material = new MeshBasicNodeMaterial();
-    material.positionNode = positionLocal.mul(scale).add(a0.xyz);
+    material.positionNode = positionGeometry.mul(scale).add(a0.xyz);
     material.colorNode = vec4(color, 1);
     material.mrtNode = mrt({ emissive: vec4(color.mul(0.9), 1) });
     material.transparent = true;

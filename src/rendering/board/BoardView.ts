@@ -4,6 +4,7 @@ import {
   BoxGeometry,
   Color,
   Group,
+  InstancedBufferAttribute,
   InstancedInterleavedBuffer,
   InstancedMesh,
   Matrix4,
@@ -17,7 +18,7 @@ import type { GameEvent } from '../../game/core/types';
 import { PIECE_TYPES, pieceCells, pieceTypeFromCell, type PieceType } from '../../game/pieces/pieces';
 import { GARBAGE_COLOR, type PiecePalette } from '../../config/palette';
 import { BLOCK_STRIDE, createBlockMaterial, type BlockMaterialHandle } from '../materials/blockMaterial';
-import { createDimMaterial, createFrameMaterial, createGhostMaterial, createPlateMaterial } from '../materials/boardMaterials';
+import { createDimMaterial, createFrameMaterial, createGhostDepthMaterial, createGhostMaterial, createPlateMaterial } from '../materials/boardMaterials';
 import type { BlockMaterialPreset } from '../materials/blockPresets';
 import { createRoundedBlock } from './blockGeometry';
 
@@ -35,6 +36,9 @@ export interface BoardViewOptions {
 }
 
 /** World position of a cell centre in board space (board centred on the origin). */
+/** Ghost cells are scaled so the 0.94-wide block geometry closes the gaps between cells. */
+const GHOST_SCALE = 1.06;
+
 export function cellToWorld(x: number, y: number, out = new Vector3()): Vector3 {
   return out.set(x - BOARD_W / 2 + 0.5, y - BOARD_H / 2 + 0.5, 0);
 }
@@ -93,7 +97,11 @@ export class BoardView {
   private readonly active: InstanceSet;
   private readonly pods: InstanceSet;
   private readonly ghostMesh: InstancedMesh;
-  private readonly ghost = createGhostMaterial();
+  private readonly ghostDepthMesh: InstancedMesh;
+  private readonly ghostDepth = createGhostDepthMaterial();
+  /** Per-cell neighbour mask of the ghost (outline on the outer silhouette only). */
+  private readonly ghostMask = new InstancedBufferAttribute(new Float32Array(16), 4);
+  private readonly ghost = createGhostMaterial(this.ghostMask);
   private readonly plate = createPlateMaterial();
   private readonly frame = createFrameMaterial();
   private readonly dim = createDimMaterial();
@@ -135,7 +143,13 @@ export class BoardView {
     this.ghostMesh = new InstancedMesh(this.geometry, this.ghost.material, 4);
     this.ghostMesh.count = 0;
     this.ghostMesh.frustumCulled = false;
-    this.ghostMesh.renderOrder = 2;
+    this.ghostMesh.renderOrder = 1001;
+    // Depth pre-pass sharing the ghost's instance matrices, drawn just before the ghost.
+    this.ghostDepthMesh = new InstancedMesh(this.geometry, this.ghostDepth, 4);
+    this.ghostDepthMesh.instanceMatrix = this.ghostMesh.instanceMatrix;
+    this.ghostDepthMesh.count = 0;
+    this.ghostDepthMesh.frustumCulled = false;
+    this.ghostDepthMesh.renderOrder = 1000;
 
     this.plateMesh = new Mesh(new PlaneGeometry(BOARD_W, BOARD_H), this.plate.material);
     this.plateMesh.position.z = -0.52;
@@ -156,7 +170,7 @@ export class BoardView {
     rail(0.2, BOARD_H + 0.5, 1.15, BOARD_W / 2 + 0.12, -0.05);
     rail(BOARD_W + 0.44, 0.34, 1.25, 0, -BOARD_H / 2 - 0.19);
 
-    this.group.add(this.dimMesh, this.plateMesh, this.settled.mesh, this.active.mesh, this.ghostMesh, this.podsGroup);
+    this.group.add(this.dimMesh, this.plateMesh, this.settled.mesh, this.active.mesh, this.ghostDepthMesh, this.ghostMesh, this.podsGroup);
     this.podsGroup.add(this.pods.mesh);
     this.applyPaletteColors();
   }
@@ -201,7 +215,7 @@ export class BoardView {
   setBlockGeometry(geometry: BufferGeometry): void {
     const old = this.geometry;
     this.geometry = geometry;
-    for (const mesh of [this.settled.mesh, this.active.mesh, this.pods.mesh, this.ghostMesh]) mesh.geometry = geometry;
+    for (const mesh of [this.settled.mesh, this.active.mesh, this.pods.mesh, this.ghostMesh, this.ghostDepthMesh]) mesh.geometry = geometry;
     old.dispose();
   }
 
@@ -324,22 +338,28 @@ export class BoardView {
     if (!p) {
       this.active.commit(0);
       this.ghostMesh.count = 0;
+      this.ghostDepthMesh.count = 0;
       return;
     }
     const color = this.colorOf(PIECE_TYPES.indexOf(p.type) + 1);
     const glyph = this.glyphsOn ? PIECE_TYPES.indexOf(p.type) + 1 : 0;
     const cells = pieceCells(p.type, p.rotation);
     const gy = engine.ghostY();
+    const has = (x: number, y: number): boolean => cells.some((o) => o.x === x && o.y === y);
     cells.forEach((c, i) => {
       this.active.write(i, color, glyph, 0, 0, -1000, -1000);
       this.m.compose(cellToWorld(p.x + c.x, p.y + c.y, this.v), this.q.identity(), this.s.set(1, 1, 1));
       this.active.mesh.setMatrixAt(i, this.m);
-      this.m.compose(cellToWorld(p.x + c.x, gy + c.y, this.v), this.q.identity(), this.s.set(0.985, 0.985, 0.985));
+      // Enlarged in x/y so neighbouring ghost cells meet into one shape.
+      this.m.compose(cellToWorld(p.x + c.x, gy + c.y, this.v), this.q.identity(), this.s.set(GHOST_SCALE, GHOST_SCALE, 0.96));
       this.ghostMesh.setMatrixAt(i, this.m);
+      this.ghostMask.setX(i, (has(c.x - 1, c.y) ? 1 : 0) | (has(c.x + 1, c.y) ? 2 : 0) | (has(c.x, c.y - 1) ? 4 : 0) | (has(c.x, c.y + 1) ? 8 : 0));
     });
+    this.ghostMask.needsUpdate = true;
     this.active.commit(cells.length);
     this.ghost.color.value.set(color.r, color.g, color.b);
     this.ghostMesh.count = this.showGhost && gy !== p.y ? cells.length : 0;
+    this.ghostDepthMesh.count = this.ghostMesh.count;
     this.ghostMesh.instanceMatrix.needsUpdate = true;
   }
 
@@ -382,6 +402,7 @@ export class BoardView {
     this.active.dispose();
     this.pods.dispose();
     this.ghost.material.dispose();
+    this.ghostDepth.dispose();
     this.plate.material.dispose();
     this.frame.material.dispose();
     this.dim.material.dispose();

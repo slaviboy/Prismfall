@@ -110,7 +110,7 @@ export const stageManifestSchema = z.object({
       vignette: z.number().default(0.4),
       bloomThreshold: z.number().default(0.2),
       bloomRadius: z.number().default(0.4),
-      toneMapping: z.enum(['aces', 'agx', 'neutral']).default('aces'),
+      toneMapping: z.enum(['aces', 'agx', 'neutral']).default('neutral'),
       envIntensity: z.number().default(0.3),
     })
     .prefault({}),

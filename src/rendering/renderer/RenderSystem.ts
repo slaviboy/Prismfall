@@ -141,7 +141,7 @@ export class RenderSystem implements GameView {
       : { backend: 'webgl2', vendor: '', architecture: '', description: webglRendererName(), isFallbackAdapter: false };
     if (!isWebGPU && !forceWebGL) console.info('[render] WebGPU unavailable — using the WebGL 2 backend');
     renderer.outputColorSpace = SRGBColorSpace;
-    renderer.toneMapping = ACESFilmicToneMapping;
+    renderer.toneMapping = NeutralToneMapping;
     renderer.toneMappingExposure = 1;
     renderer.shadowMap.enabled = true;
     // Counters accumulate across the pipeline's passes; reset once per frame in render().
