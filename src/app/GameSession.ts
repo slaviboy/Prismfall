@@ -158,7 +158,7 @@ export class GameSession {
 
 /** Plays back a stored replay through the same view pipeline. */
 export class ReplaySession {
-  readonly player: ReplayPlayer;
+  player: ReplayPlayer;
   readonly mode: ModeDefinition;
   private startedAt: number | null = null;
   private pausedAt: number | null = null;
@@ -188,6 +188,30 @@ export class ReplaySession {
 
   togglePause(now: number): void {
     this.pausedAt = this.pausedAt === null ? now : null;
+  }
+
+  get paused(): boolean {
+    return this.pausedAt !== null;
+  }
+
+  get positionMs(): number {
+    return Math.min(this.player.engine.tick, this.player.durationMs);
+  }
+
+  get durationMs(): number {
+    return this.player.durationMs;
+  }
+
+  /**
+   * Jumps to a time. The simulation only runs forward, so going back replays from the start
+   * (deterministic and fast); events produced while seeking are discarded.
+   */
+  seek(ms: number): void {
+    const target = Math.max(0, Math.min(this.durationMs, Math.floor(ms)));
+    if (target < this.player.engine.tick) this.player = new ReplayPlayer(this.replay);
+    this.player.advanceTo(target);
+    this.player.engine.drainEvents();
+    this.virtualTime = target;
   }
 
   get finished(): boolean {

@@ -1,6 +1,6 @@
 import { Component, lazy, Suspense, type ErrorInfo, type ReactNode } from 'react';
 import { shell } from '../app/GameShell';
-import { goBack, navigate, useApp } from '../app/stores';
+import { navigate, useApp } from '../app/stores';
 import { getSettings, updateSection, useSettings } from '../settings/store';
 import type { ModeId } from '../game/modes/modes';
 import { getMode, getVariant } from '../game/modes/modes';
@@ -11,7 +11,7 @@ import { SettingsScreen } from './settings/SettingsScreen';
 import { StageSelectScreen } from './menus/StageSelect';
 import { VoyageScreen } from './menus/VoyageScreen';
 import { MusicRoom } from './menus/MusicRoom';
-import { useNavScope } from './navigation/useNavScope';
+import { ReplayControls } from './menus/ReplayControls';
 import { reducedMotion } from '../settings/store';
 import { PerfOverlay } from './hud/PerfOverlay';
 import './settings/graphicsPanels';
@@ -30,37 +30,6 @@ function Toasts(): ReactNode {
           {t.text}
         </div>
       ))}
-    </div>
-  );
-}
-
-function ReplayControls(): ReactNode {
-  const ref = useNavScope<HTMLDivElement>({
-    onBack: () => {
-      shell.stopReplay();
-      goBack();
-    },
-  });
-  const r = shell.replaySession;
-  return (
-    <div className="replay-bar" data-nav-scope ref={ref} data-testid="replay-bar">
-      <span>
-        Replay: {r?.mode.name ?? ''}, {r ? getVariant(getMode(r.mode.id), r.replay.variantId).label : ''}
-      </span>
-      <button type="button" className="btn" data-focusable data-autofocus onClick={() => r?.togglePause(performance.now())}>
-        Pause or play
-      </button>
-      <button
-        type="button"
-        className="btn"
-        data-focusable
-        onClick={() => {
-          shell.stopReplay();
-          goBack();
-        }}
-      >
-        Close replay
-      </button>
     </div>
   );
 }

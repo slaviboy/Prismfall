@@ -12,7 +12,7 @@ test('menus are navigable with the keyboard alone', async ({ page }) => {
   await openMenu(page);
   await expect(page.getByTestId('menu-play')).toBeFocused();
   await page.keyboard.press('ArrowDown');
-  await expect(page.getByTestId('menu-highscores')).toBeFocused();
+  await expect(page.getByTestId('menu-music')).toBeFocused();
   await page.keyboard.press('ArrowUp');
   await page.keyboard.press('Enter');
   await expect(page.getByTestId('mode-select')).toBeVisible();
@@ -33,6 +33,26 @@ test('plays a complete Sprint session to the results screen and records it', asy
   await autoplay(page, 300);
   await expect(page.getByTestId('results-screen')).toBeVisible({ timeout: 30_000 });
   await expect(page.getByTestId('results-headline')).toHaveText(/\d+:\d{2}\.\d{2}/);
+  // The replay viewer: plays, pauses, changes speed, seeks and restarts.
+  await page.getByTestId('results-replay').click();
+  await expect(page.getByTestId('replay-bar')).toBeVisible();
+  await expect.poll(() => hooks<number>(page, 'h.shell.replaySession.positionMs')).toBeGreaterThan(300);
+  await page.getByTestId('replay-pause').click();
+  const paused = await hooks<number>(page, 'h.shell.replaySession.positionMs');
+  await page.waitForTimeout(300);
+  expect(await hooks<number>(page, 'h.shell.replaySession.positionMs')).toBe(paused);
+  await page.getByTestId('replay-forward').click();
+  expect(await hooks<number>(page, 'h.shell.replaySession.positionMs')).toBeGreaterThanOrEqual(Math.min(paused + 10_000, await hooks<number>(page, 'h.shell.replaySession.durationMs')));
+  const forward = await hooks<number>(page, 'h.shell.replaySession.positionMs');
+  await page.getByTestId('replay-back').click();
+  expect(await hooks<number>(page, 'h.shell.replaySession.positionMs')).toBe(Math.max(0, forward - 10_000));
+  await page.getByTestId('replay-speed').click();
+  expect(await hooks<number>(page, 'h.shell.replaySession.speed')).toBe(2);
+  await page.getByTestId('replay-restart').click();
+  expect(await hooks<number>(page, 'h.shell.replaySession.positionMs')).toBe(0);
+  await expect(page.getByTestId('replay-time')).toContainText('/');
+  await page.getByTestId('replay-close').click();
+  await expect(page.getByTestId('results-screen')).toBeVisible();
   await page.getByTestId('results-menu').click();
   await page.getByTestId('menu-highscores').click();
   while (!(await page.getByTestId('highscores-table').innerText()).includes('Sprint: 20 Lines')) await page.getByTestId('highscores-table').click();

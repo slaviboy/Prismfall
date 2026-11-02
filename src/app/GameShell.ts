@@ -87,6 +87,7 @@ export class GameShell {
   session: GameSession | null = null;
   replaySession: ReplaySession | null = null;
   private lastOptions: StartOptions | null = null;
+  private replayReturn: string | null = null;
   /** The player's own music files. */
   readonly userMusic = new UserMusicLibrary(() => this.backend ?? null);
   /** Track playing instead of the world's music (Music Room, free-play choice); null = world music. */
@@ -791,10 +792,23 @@ export class GameShell {
       return;
     }
     this.session = null;
+    this.replayReturn = appStore.getState().screen;
     this.replaySession = new ReplaySession(replay, stageId);
     hudStore.setState({ visible: true, modeId: this.replaySession.mode.id, intro: null, callouts: [], best: null, linesGoal: null, timeLimitMs: null });
     navigate('replay');
     this.input.setContext('menu');
+  }
+
+  /** Leaves the replay viewer for the screen it was opened from (Results or High scores). */
+  closeReplay(): void {
+    const ret = this.replayReturn;
+    this.stopReplay();
+    const state = appStore.getState();
+    if (ret === 'results' && state.results) {
+      const history = [...state.history];
+      if (history[history.length - 1] === 'results') history.pop();
+      appStore.setState({ screen: 'results', history });
+    } else goBack();
   }
 
   stopReplay(): void {
