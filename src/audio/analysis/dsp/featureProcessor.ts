@@ -83,6 +83,15 @@ export class FeatureProcessor {
   /** Low-band (kick) and mid-band (snare) parts of the last accent. */
   private accentLow = 0;
   private accentMid = 0;
+  /**
+   * The tempo tracker runs on a fixed hop grid. Worklet frames arrive exactly one hop apart;
+   * analyser frames arrive once per render frame, so onsets are carried to the next grid step.
+   */
+  private tempoClock = 0;
+  private pendingOnset = 0;
+  private pendingAccent = 0;
+  private pendingLow = 0;
+  private pendingMid = 0;
   /** Raw spectral flux of the last frame (debug/tests). */
   rawFlux = 0;
   /** Detection latency of the analysis window, subtracted from reported onset times. */
@@ -142,8 +151,21 @@ export class FeatureProcessor {
     f.transientIntensity = this.transientEnv.update(0, dt);
     // Onsets are reported one hop late (look-ahead) on top of the window latency.
     this.tempo.latencyS = this.onsetLatencyS + this.hopSeconds;
-    const accent = onset.onset ? this.accent(frame) : 0;
-    this.tempo.push(onset.onset ? 1 : 0, time, accent, this.accentLow, this.accentMid);
+    if (onset.onset) {
+      const accent = this.accent(frame);
+      if (accent >= this.pendingAccent) {
+        this.pendingAccent = accent;
+        this.pendingLow = this.accentLow;
+        this.pendingMid = this.accentMid;
+      }
+      this.pendingOnset = 1;
+    }
+    this.tempoClock += dt;
+    while (this.tempoClock >= this.hopSeconds * 0.999) {
+      this.tempoClock -= this.hopSeconds;
+      this.tempo.push(this.pendingOnset, time, this.pendingAccent, this.pendingLow, this.pendingMid);
+      this.pendingOnset = this.pendingAccent = this.pendingLow = this.pendingMid = 0;
+    }
     this.recordBands(frame);
 
     const centroidHz = frame[FRAME.centroid] as number;

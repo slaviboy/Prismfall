@@ -11,7 +11,7 @@ import { SFX_IDS, SFX_PRESETS, renderSfx } from '../sound-effects/SfxBank';
  */
 
 /** Instruments with a sharp attack: every note start is an acoustic onset (pads, strings, choir, sub and risers swell in). */
-const SHARP = new Set(['kick', 'snare', 'clap', 'hat', 'openhat', 'ride', 'shaker', 'tom', 'perc', 'crash', 'impact', 'pluck', 'bass', 'bell', 'epiano', 'mallet', 'lead']);
+export const SHARP = new Set(['kick', 'snare', 'clap', 'hat', 'openhat', 'ride', 'shaker', 'tom', 'perc', 'crash', 'impact', 'pluck', 'bass', 'bell', 'epiano', 'mallet', 'lead']);
 
 function section(name: string, kind: SectionSpec['kind'], bars: number, intensity: number, chords: string[], parts: SectionSpec['parts']): SectionSpec {
   return { name, kind, bars, intensity, chords, parts };
@@ -100,7 +100,7 @@ const SR = 48000;
 const HOP = 512;
 
 /** Merges ground-truth onsets closer than the tolerance (simultaneous hits count once). */
-function mergeOnsets(times: number[], tol: number): number[] {
+export function mergeOnsets(times: number[], tol: number): number[] {
   const sorted = [...times].sort((a, b) => a - b);
   const out: number[] = [];
   for (const t of sorted) if (out.length === 0 || t - (out[out.length - 1] as number) > tol) out.push(t);

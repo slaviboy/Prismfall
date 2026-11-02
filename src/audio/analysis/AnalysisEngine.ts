@@ -1,16 +1,15 @@
 import workletUrl from './analysis.worklet.ts?worker&url';
 import type { AudioEngine } from '../engine/AudioEngine';
 import type { AudioFeatures } from './features';
-import { BandMapper, DEFAULT_BANDS, logBars, powerToDb } from './dsp/bands';
+import { AnalyserFrameBuilder } from './dsp/analyserFrame';
 import { FeatureProcessor, type ProcessorTuning } from './dsp/featureProcessor';
-import { BAND_COUNT, BAR_COUNT, FRAME, fluxCompress, rectifiedFlux } from './dsp/frameAnalyzer';
+import { FRAME } from './dsp/frameAnalyzer';
 
 export type AnalysisPath = 'worklet' | 'analyser' | 'none';
 
 const HOP = 512;
 const SHORT_FFT = 2048;
-/** Analyser magnitudes (|X|/N, Blackman) scaled to the worklet's calibration (full-scale sine ≈ 0.8). */
-const ANALYSER_MAG_SCALE = 3.9;
+const MAX_QUEUE = 256;
 
 interface QueuedFrame {
   time: number;
@@ -19,27 +18,23 @@ interface QueuedFrame {
 
 /**
  * Music Analysis Engine (brief §24). Taps the music bus before the volume fader and turns the
- * signal into AudioFeatures, via an AudioWorklet (fixed hop, preferred) or an AnalyserNode.
- * Frames are applied when they are *heard* (output latency compensated), so visuals stay in sync.
+ * signal into AudioFeatures, via an AudioWorklet (fixed hop, preferred) or an AnalyserNode
+ * (read once per render frame). Either way frames are queued with their audio-clock time and
+ * applied when they are *heard* (output latency compensated), so visuals stay in sync.
  */
 export class AnalysisEngine {
   path: AnalysisPath = 'none';
   processor = new FeatureProcessor(HOP / 48000);
-  private readonly bandOut = new Float32Array(BAND_COUNT);
-  private readonly barOut = new Float32Array(BAR_COUNT);
   private hopSeconds = HOP / 48000;
   private node: AudioWorkletNode | null = null;
   private analyser: AnalyserNode | null = null;
+  private builder: AnalyserFrameBuilder | null = null;
   private readonly queue: QueuedFrame[] = [];
   private readonly pool: Float32Array[] = [];
   private freq: Float32Array<ArrayBuffer> = new Float32Array(0);
   private time: Float32Array<ArrayBuffer> = new Float32Array(0);
-  private prevLog: Float32Array = new Float32Array(0);
-  private curLog: Float32Array = new Float32Array(0);
-  private bands: BandMapper | null = null;
-  private bars: BandMapper | null = null;
-  private readonly frame = new Float32Array(FRAME.size);
-  private readonly power: Float32Array[] = [];
+  private lastCaptureTime = -1;
+  private lastAppliedTime = -1;
   private framesProcessed = 0;
   private statsWindowStart = performance.now();
   framesPerSecond = 0;
@@ -67,10 +62,7 @@ export class AnalysisEngine {
     this.analyser = analyser;
     this.freq = new Float32Array(analyser.frequencyBinCount);
     this.time = new Float32Array(fftSize);
-    this.prevLog = new Float32Array(analyser.frequencyBinCount);
-    this.curLog = new Float32Array(analyser.frequencyBinCount);
-    this.bands = new BandMapper(ctx.sampleRate, fftSize, DEFAULT_BANDS);
-    this.bars = new BandMapper(ctx.sampleRate, fftSize, logBars(BAR_COUNT));
+    this.builder = new AnalyserFrameBuilder(ctx.sampleRate, fftSize);
     // Rebuild the processor for the real sample rate (hop duration drives tempo estimation).
     const tuning = this.processor.tuning;
     this.hopSeconds = HOP / ctx.sampleRate;
@@ -106,35 +98,52 @@ export class AnalysisEngine {
     return this.path;
   }
 
-  private receive(frames: Float32Array, times: Float64Array): void {
-    for (let i = 0; i < times.length; i++) {
-      const frame = this.pool.pop() ?? new Float32Array(FRAME.size);
-      frame.set(frames.subarray(i * FRAME.size, (i + 1) * FRAME.size));
-      this.queue.push({ time: times[i] as number, frame });
-    }
+  private enqueue(time: number): Float32Array {
+    const frame = this.pool.pop() ?? new Float32Array(FRAME.size);
+    this.queue.push({ time, frame });
     // Never let the queue grow unbounded (e.g. while the tab is hidden).
-    while (this.queue.length > 256) this.pool.push((this.queue.shift() as QueuedFrame).frame);
+    while (this.queue.length > MAX_QUEUE) this.pool.push((this.queue.shift() as QueuedFrame).frame);
+    return frame;
+  }
+
+  private receive(frames: Float32Array, times: Float64Array): void {
+    for (let i = 0; i < times.length; i++) this.enqueue(times[i] as number).set(frames.subarray(i * FRAME.size, (i + 1) * FRAME.size));
+  }
+
+  /** Analyser path: captures the current block (skipped when the audio clock hasn't advanced). */
+  private capture(): void {
+    const a = this.analyser;
+    const builder = this.builder;
+    if (!a || !builder) return;
+    const t = this.engine.now;
+    if (t <= this.lastCaptureTime) return;
+    this.lastCaptureTime = t;
+    a.getFloatFrequencyData(this.freq);
+    a.getFloatTimeDomainData(this.time);
+    builder.build(this.freq, this.time, this.enqueue(t));
   }
 
   setTuning(t: ProcessorTuning): void {
     this.processor.setTuning(t);
   }
 
-  /** Applies all frames heard by `perfNow` (worklet) or analyses the current block (analyser). */
+  /** Applies every analysis frame that has been heard by `perfNow`. */
   update(f: AudioFeatures, perfNow: number, dt: number): void {
+    void dt;
     const t0 = performance.now();
-    if (this.path === 'worklet') {
+    if (this.path === 'analyser') this.capture();
+    if (this.path !== 'none') {
       while (this.queue.length > 0) {
         const q = this.queue[0] as QueuedFrame;
         if (this.engine.heardAt(q.time) > perfNow) break;
         this.queue.shift();
-        this.processor.process(q.frame, q.time, f, this.hopSeconds);
+        // Worklet frames are a fixed hop apart; analyser frames are one render frame apart.
+        const step = this.path === 'worklet' || this.lastAppliedTime < 0 ? this.hopSeconds : Math.max(1 / 480, Math.min(0.1, q.time - this.lastAppliedTime));
+        this.lastAppliedTime = q.time;
+        this.processor.process(q.frame, q.time, f, step);
         this.pool.push(q.frame);
         this.framesProcessed++;
       }
-    } else if (this.path === 'analyser' && this.analyser && this.bands && this.bars) {
-      this.analyseBlock(f, dt);
-      this.framesProcessed++;
     }
     this.processMs = this.processMs * 0.95 + (performance.now() - t0) * 0.05;
     if (perfNow - this.statsWindowStart > 1000) {
@@ -144,49 +153,16 @@ export class AnalysisEngine {
     }
   }
 
-  private analyseBlock(f: AudioFeatures, dt: number): void {
-    const a = this.analyser as AnalyserNode;
-    a.getFloatFrequencyData(this.freq);
-    a.getFloatTimeDomainData(this.time);
-    const n = this.freq.length;
-    if (this.power.length === 0) this.power.push(new Float32Array(n + 1));
-    const power = this.power[0] as Float32Array;
-    let wsum = 0;
-    let psum = 0;
-    const binHz = (this.engine.ctx?.sampleRate ?? 48000) / this.fftSize;
-    for (let k = 0; k < n; k++) {
-      const db = this.freq[k] as number;
-      const p = Math.pow(10, db / 10);
-      power[k] = p;
-      this.curLog[k] = fluxCompress(ANALYSER_MAG_SCALE * Math.sqrt(p));
-      wsum += k * binHz * p;
-      psum += p;
-    }
-    const flux = rectifiedFlux(this.curLog, this.prevLog, 1);
-    (this.bands as BandMapper).energies(power, this.bandOut);
-    for (let b = 0; b < BAND_COUNT; b++) this.frame[FRAME.bands + b] = powerToDb((this.bandOut[b] as number) * 2);
-    (this.bars as BandMapper).energies(power, this.barOut);
-    for (let b = 0; b < BAR_COUNT; b++) this.frame[FRAME.bars + b] = powerToDb((this.barOut[b] as number) * 2);
-    let sum = 0;
-    let peak = 0;
-    for (let i = 0; i < this.time.length; i++) {
-      const v = this.time[i] as number;
-      sum += v * v;
-      peak = Math.max(peak, Math.abs(v));
-    }
-    this.frame[FRAME.rms] = 20 * Math.log10(Math.max(1e-7, Math.sqrt(sum / this.time.length)));
-    this.frame[FRAME.peak] = 20 * Math.log10(Math.max(1e-7, peak));
-    this.frame[FRAME.flux] = flux;
-    this.frame[FRAME.centroid] = psum > 0 ? wsum / psum : 0;
-    this.processor.process(this.frame, this.engine.now, f, Math.max(1 / 480, dt));
-  }
-
   teardown(): void {
     this.node?.disconnect();
     this.node = null;
     this.analyser?.disconnect();
     this.analyser = null;
+    this.builder = null;
+    for (const q of this.queue) this.pool.push(q.frame);
     this.queue.length = 0;
+    this.lastCaptureTime = -1;
+    this.lastAppliedTime = -1;
     this.path = 'none';
   }
 }

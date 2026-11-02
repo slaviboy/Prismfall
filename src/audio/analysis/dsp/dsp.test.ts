@@ -178,6 +178,22 @@ describe('onsets and tempo', () => {
     });
   }
 
+  for (const fps of [60, 144]) {
+    it(`estimates tempo from frames delivered at ${fps} Hz (analyser path)`, () => {
+      const { signal } = clickTrack(120, 12);
+      const hop = Math.round(SR / fps);
+      const analyzer = new FrameAnalyzer(SR, 4096, 2048, hop);
+      const processor = new FeatureProcessor(HOP / SR);
+      const f = createAudioFeatures();
+      const frame = new Float32Array(FRAME.size);
+      for (let i = 0; i + hop <= signal.length; i += hop) {
+        analyzer.process(signal.subarray(i, i + hop), frame);
+        processor.process(frame, (i + hop) / SR, f, hop / SR);
+      }
+      expect(Math.abs(processor.tempo.bpm - 120) / 120).toBeLessThan(0.02);
+    });
+  }
+
   it('tempo tracker reports low confidence without rhythm', () => {
     const tracker = new TempoTracker(HOP / SR);
     for (let i = 0; i < 1500; i++) tracker.push(0, i * (HOP / SR));
