@@ -324,3 +324,16 @@ registerTab(GRAPHICS_TAB, 'interface');
 registerTab(CAMERA_TAB, 'interface');
 registerTab(AUDIO_TAB, 'interface');
 registerTab(REACTIVITY_TAB, 'interface');
+
+export const DEVELOPER_TAB: TabDef = {
+  id: 'developer',
+  label: 'Developer',
+  inGame: true,
+  rows: [
+    { kind: 'toggle', section: 'developer', key: 'audioDashboard', label: 'Audio analysis dashboard', description: 'Spectrum, band meters, onsets, tempo, beat phase and the stage\u2019s live reactivity bindings, with tuning sliders. F9 toggles it.' },
+    { kind: 'toggle', section: 'graphics', key: 'showPerfOverlay', label: 'Performance overlay', description: 'Frame rate, frame time, GPU time and renderer details.' },
+    { kind: 'custom', id: 'contentReport' },
+  ],
+};
+
+registerTab(DEVELOPER_TAB);

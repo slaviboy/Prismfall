@@ -3,7 +3,7 @@ import type { GameEvent } from '../game/core/types';
 import type { Settings } from '../settings/schema';
 import { AnalysisEngine, type AnalysisPath } from './analysis/AnalysisEngine';
 import { emitCue, hasCueListeners } from './cues';
-import { DEFAULT_TUNING } from './analysis/dsp/featureProcessor';
+import { DEFAULT_TUNING, type ProcessorTuning } from './analysis/dsp/featureProcessor';
 import { createAudioFeatures, MetronomeFeatureSource, type AudioFeatureSource, type AudioFeatures, type BeatEvent } from './analysis/features';
 import { AudioEngine } from './engine/AudioEngine';
 import { MusicDirector } from './music-director/MusicDirector';
@@ -115,12 +115,28 @@ export class AudioSystem {
     await this.analysis.setup(r?.analysisPath ?? 'auto', r?.fftSize ?? 4096);
   }
 
+  /** Analysis tuning from the developer dashboard; replaces the settings-derived tuning while set. */
+  private tuningOverride: ProcessorTuning | null = null;
+
+  private tuningFor(s: Settings): ProcessorTuning {
+    return this.tuningOverride ?? { ...DEFAULT_TUNING, sensitivity: 0.85 + 0.15 * s.reactivity.strength };
+  }
+
+  setTuningOverride(t: ProcessorTuning | null): void {
+    this.tuningOverride = t;
+    if (this.settings) this.analysis.setTuning(this.tuningFor(this.settings));
+  }
+
+  get tuning(): ProcessorTuning {
+    return this.analysis.processor.tuning;
+  }
+
   applySettings(s: Settings): void {
     this.settings = s;
     const a = s.audio;
     this.engine.setVolumes({ enabled: a.enabled, muted: a.muted, master: a.master, music: a.music, sfx: a.sfx, ambience: a.ambience, latencyOffsetMs: a.latencyOffsetMs });
     this.director.pauseMode = a.pauseBehavior;
-    this.analysis.setTuning({ ...DEFAULT_TUNING, sensitivity: 0.85 + 0.15 * s.reactivity.strength });
+    this.analysis.setTuning(this.tuningFor(s));
     void this.configureAnalysis();
   }
 

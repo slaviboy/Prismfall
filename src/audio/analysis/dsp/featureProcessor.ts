@@ -74,6 +74,9 @@ export class FeatureProcessor {
   /** Raw (unsmoothed) normalised band values of the last frame, for the debug dashboard. */
   readonly rawBands = new Float32Array(BAND_COUNT);
   readonly peakBands = new Float32Array(BAND_COUNT);
+  /** Band levels (dBFS) and RMS (dBFS) of the last frame, for the debug dashboard. */
+  readonly bandDb = new Float32Array(BAND_COUNT);
+  rmsDb = -120;
   /** Recent band levels (dB) for attack accents: ACCENT_FRAMES × BAND_COUNT ring. */
   private readonly bandHistory = new Float32Array(ACCENT_FRAMES * BAND_COUNT).fill(-120);
   private historyIndex = 0;
@@ -110,8 +113,10 @@ export class FeatureProcessor {
     const sens = this.tuning.sensitivity;
     const rmsDb = frame[FRAME.rms] as number;
     const silent = rmsDb < -70;
+    this.rmsDb = rmsDb;
     for (let b = 0; b < BAND_COUNT; b++) {
       const db = frame[FRAME.bands + b] as number;
+      this.bandDb[b] = db;
       let v = (this.normalizers[b] as AdaptiveNormalizer).update(db, dt) * sens;
       if (b === 5) v *= this.tuning.trebleScale;
       if (silent) v = 0;

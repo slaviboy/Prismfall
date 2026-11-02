@@ -20,6 +20,13 @@ async function boot(): Promise<void> {
     console.error('[boot] initialisation failed', err);
     appStore.setState({ fatalError: err instanceof Error ? err.message : String(err) });
   }
+  // ?devtools turns on developer mode with the audio analysis dashboard; F9 toggles the dashboard.
+  if (new URLSearchParams(location.search).has('devtools')) updateSection('developer', { enabled: true, audioDashboard: true });
+  window.addEventListener('keydown', (e) => {
+    if (e.code !== 'F9' || !getSettings().developer.enabled) return;
+    e.preventDefault();
+    updateSection('developer', { audioDashboard: !getSettings().developer.audioDashboard });
+  });
   const navigator = new MenuNavigator(shell.input);
   navigator.attach();
   navigator.onNavigate = (kind) => {

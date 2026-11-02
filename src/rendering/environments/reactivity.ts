@@ -96,6 +96,11 @@ export class ReactivityLayer {
     return this.items.length;
   }
 
+  /** Live view of every binding: its envelope (0..1) and the driven value (debug dashboard). */
+  inspect(): { binding: Binding; env: number; value: number }[] {
+    return this.items.map((it) => ({ binding: it.binding, env: it.env, value: it.slot.target.value }));
+  }
+
   update(dt: number, audio: Readonly<AudioFeatures>, game: GameSignals, s: ReactivitySettings): void {
     const preset = REACTION_PRESETS[s.preset];
     for (const slot of this.slots.values()) {

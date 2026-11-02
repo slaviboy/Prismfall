@@ -1,4 +1,4 @@
-import { Component, type ErrorInfo, type ReactNode } from 'react';
+import { Component, lazy, Suspense, type ErrorInfo, type ReactNode } from 'react';
 import { shell } from '../app/GameShell';
 import { goBack, navigate, useApp } from '../app/stores';
 import { getSettings, updateSection, useSettings } from '../settings/store';
@@ -13,6 +13,10 @@ import { reducedMotion } from '../settings/store';
 import { PerfOverlay } from './hud/PerfOverlay';
 import './settings/graphicsPanels';
 import './settings/audioPanels';
+import './settings/developerPanels';
+
+/** Developer-only, loaded on first use. */
+const AudioDashboardPanel = lazy(() => import('./devtools/AudioDashboardPanel'));
 
 function Toasts(): ReactNode {
   const toasts = useApp((s) => s.toasts);
@@ -63,6 +67,7 @@ export function App(): ReactNode {
   const fatal = useApp((s) => s.fatalError);
   const lastMode = useSettings((s) => s.setup.lastMode);
   const animations = useSettings((s) => s.interface.menuAnimations && !reducedMotion(s));
+  const dashboard = useSettings((s) => s.developer.enabled && s.developer.audioDashboard);
 
   if (fatal) {
     return (
@@ -100,6 +105,11 @@ export function App(): ReactNode {
       {screen === 'game' ? <PauseOverlay /> : null}
       {screen === 'replay' ? <ReplayControls /> : null}
       <PerfOverlay />
+      {dashboard ? (
+        <Suspense fallback={null}>
+          <AudioDashboardPanel />
+        </Suspense>
+      ) : null}
       <Toasts />
     </div>
   );
