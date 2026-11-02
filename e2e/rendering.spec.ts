@@ -86,3 +86,18 @@ test('post-processing and quality options apply live without errors', async ({ p
     expect(stats.stdDev, JSON.stringify(v)).toBeGreaterThan(6);
   }
 });
+
+test('level up shifts the frame tint and surges its glow', async ({ page }) => {
+  await openMenu(page);
+  await page.getByTestId('menu-play').click();
+  await page.getByTestId('mode-marathon').click();
+  await page.getByTestId('setup-start').click();
+  await expect.poll(() => hooks<string>(page, 'h.shell.session.status')).toBe('running');
+  const before = await hooks<number[]>(page, '[...h.shell.renderSystem.board.frame.accent.value.toArray()]');
+  await page.evaluate(() => (window as unknown as { __PRISMFALL__: { shell: { session: { engine: { setLevel(l: number): void } } } } }).__PRISMFALL__.shell.session.engine.setLevel(5));
+  await expect.poll(() => hooks<number>(page, 'h.shell.renderSystem.board.frame.glow.value')).toBeGreaterThan(1.5);
+  const after = await hooks<number[]>(page, '[...h.shell.renderSystem.board.frame.accent.value.toArray()]');
+  expect(after.some((v, i) => Math.abs(v - (before[i] as number)) > 0.02)).toBe(true);
+  // The surge settles back.
+  await expect.poll(() => hooks<number>(page, 'h.shell.renderSystem.board.frame.glow.value'), { timeout: 5000 }).toBeLessThan(1.05);
+});

@@ -36,6 +36,14 @@ export class LightRig {
   private from: LightingConfig = DEFAULT_LIGHTING;
   private blend = 1;
   private readonly baseAccent: number[] = [];
+  /** Level-up bundle: accents grow a little brighter with each level and flash on a level up. */
+  private level = 1;
+  private levelFlash = 0;
+
+  setLevel(level: number): void {
+    if (level > this.level) this.levelFlash = 1;
+    this.level = level;
+  }
 
   constructor() {
     this.key.target.position.set(0, 0, 0);
@@ -108,7 +116,9 @@ export class LightRig {
       this.blend = Math.min(1, this.blend + dt / 1.8);
       this.apply(this.config, MathUtils.smootherstep(this.blend, 0, 1));
     }
-    const pulse = 1 + (beatPulse * this.config.beatResponse * reactivity) + clearPulse * 0.8;
+    this.levelFlash *= Math.exp(-dt / 0.5);
+    const levelBoost = 1 + Math.min(0.3, (this.level - 1) * 0.02) + this.levelFlash * 0.7;
+    const pulse = (1 + beatPulse * this.config.beatResponse * reactivity + clearPulse * 0.8) * levelBoost;
     this.accents.forEach((light, i) => (light.intensity = (this.baseAccent[i] ?? 0) * pulse));
   }
 }

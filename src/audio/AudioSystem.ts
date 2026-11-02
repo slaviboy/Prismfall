@@ -264,6 +264,8 @@ export class AudioSystem {
         case 'levelUp':
           this.sfx.play('levelUp');
           this.caption('Level-up fanfare', 'music', 'levelUp');
+          // The music answers too: a beat-quantised phrase (its intensity also steps up with the level).
+          if (this.settings?.audio.sfxAccentLayer ?? true) this.director.stinger(0.6);
           break;
         case 'goal':
           this.sfx.play('levelUp');

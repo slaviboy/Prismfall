@@ -309,6 +309,7 @@ export class RenderSystem implements GameView {
     this.board.sync(engine, frame.events, time);
     this.environments.update(frame.dt, time, audio, frame.beats ?? [], sig as GameSignals);
     for (const hook of this.hooks) hook.update(frame);
+    this.lights.setLevel(sig.level);
     this.lights.update(frame.dt, frameUniforms.beatPulse.value, frameUniforms.clearPulse.value, frameUniforms.reactivity.value);
     this.cameraRig.update(frame.dt, time, frameUniforms.beatPulse.value);
     this.post.setFocusDistance(this.cameraRig.camera.position.length());

@@ -124,6 +124,12 @@ export class BoardView {
   private readonly dropTimes = new Float32Array(BOARD_W * MAX_ROWS).fill(-1000);
   private boardVersion = -1;
   private pieceVersion = -1;
+  /** Level-up bundle: the frame tint shifts with the level and surges on each level up. */
+  private readonly baseAccent = new Color(0.45, 0.55, 1);
+  private readonly levelTint = new Color();
+  private level = 0;
+  private levelSurge = 0;
+  private lastSync = 0;
   private podsKey = '';
   private engineRef: Engine | null = null;
 
@@ -206,9 +212,18 @@ export class BoardView {
   }
 
   setAccent(rgb: readonly [number, number, number], plateTint: readonly [number, number, number]): void {
-    this.frame.accent.value.set(rgb[0], rgb[1], rgb[2]);
-    this.plate.u.accent.value.set(rgb[0], rgb[1], rgb[2]);
+    this.baseAccent.setRGB(rgb[0], rgb[1], rgb[2]);
     this.plate.u.tint.value.set(plateTint[0], plateTint[1], plateTint[2]);
+    this.applyLevelTint();
+  }
+
+  /** The stage accent, hue-shifted a step per level (a full turn every 20 levels). */
+  private applyLevelTint(): void {
+    const steps = Math.max(0, this.level - 1);
+    this.levelTint.copy(this.baseAccent).offsetHSL((steps * 0.05) % 1, 0, 0);
+    const c = this.levelTint;
+    this.frame.accent.value.set(c.r, c.g, c.b);
+    this.plate.u.accent.value.set(c.r, c.g, c.b);
   }
 
   /** Replaces the block geometry (Blender block library); keeps the procedural one as fallback. */
@@ -254,6 +269,16 @@ export class BoardView {
     }
     this.group.visible = engine !== null;
     if (!engine) return;
+    const dt = Math.min(0.1, Math.max(0, nowSec - (this.lastSync || nowSec)));
+    this.lastSync = nowSec;
+    if (engine.level !== this.level) {
+      const up = this.level > 0 && engine.level > this.level;
+      this.level = engine.level;
+      this.applyLevelTint();
+      if (up) this.levelSurge = 1;
+    }
+    this.levelSurge *= Math.exp(-dt / 0.45);
+    this.frame.glow.value = 1 + this.levelSurge * 1.8;
     for (const e of events) this.handleEvent(engine, e, nowSec);
     if (engine.board.version !== this.boardVersion) {
       this.boardVersion = engine.board.version;
