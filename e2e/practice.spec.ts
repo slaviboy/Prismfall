@@ -25,7 +25,8 @@ test.describe('practice mode', () => {
     await page.getByTestId('setup-start').click();
     await expect.poll(() => hooks<string>(page, 'h.shell.session.status')).toBe('running');
     expect(await hooks<string[]>(page, 'h.shell.session.engine.preview(5)')).toEqual(['I', 'I', 'I', 'I', 'I']);
-    // No gravity: the piece stays put.
+    // No gravity: the piece stays put (sampled once it has settled after spawning).
+    await expect.poll(() => hooks<boolean>(page, '!!h.shell.session.engine.active && h.shell.session.engine.tick > 300')).toBe(true);
     const y0 = await hooks<number>(page, 'h.shell.session.engine.active.y');
     await page.waitForTimeout(1500);
     expect(await hooks<number>(page, 'h.shell.session.engine.active.y')).toBe(y0);

@@ -27,7 +27,8 @@ export async function openMenu(page: Page, query = ''): Promise<void> {
 
 /** Evaluates against the dev/test debug hooks. */
 export async function hooks<T>(page: Page, fn: string): Promise<T> {
-  return page.evaluate(`(() => { const h = window.__PRISMFALL__; return ${fn}; })()`) as Promise<T>;
+  // Undefined until the app has installed its hooks, so early polls retry instead of throwing.
+  return page.evaluate(`(() => { const h = window.__PRISMFALL__; if (!h) return undefined; return ${fn}; })()`) as Promise<T>;
 }
 
 /** Lets the built-in AI play the current session quickly by injecting timed inputs. */
@@ -70,4 +71,37 @@ export async function startAndPlay(page: Page, mode = 'zen', pieces = 12): Promi
   await page.getByTestId('setup-start').click();
   await expect.poll(() => hooks<string>(page, 'h.shell.session.status')).toBe('running');
   await autoplay(page, pieces);
+}
+
+/**
+ * Installs a scriptable standard-mapping gamepad (navigator.getGamepads is replaced before the app
+ * loads). Use `padPress` to tap a button by its standard index.
+ */
+export async function installFakePad(page: Page, id = 'Wireless Controller (STANDARD GAMEPAD Vendor: 054c Product: 09cc)'): Promise<void> {
+  await page.addInitScript((padId: string) => {
+    const buttons = Array.from({ length: 17 }, () => ({ pressed: false, touched: false, value: 0 }));
+    const pad = { id: padId, index: 0, connected: true, mapping: 'standard', axes: [0, 0, 0, 0], buttons, timestamp: performance.now(), vibrationActuator: null, hapticActuators: [] };
+    (window as unknown as { __fakePad: typeof pad }).__fakePad = pad;
+    Object.defineProperty(navigator, 'getGamepads', { value: () => [pad, null, null, null], configurable: true });
+  }, id);
+}
+
+export async function padPress(page: Page, button: number, holdMs = 120): Promise<void> {
+  const set = (down: boolean): Promise<void> =>
+    page.evaluate(
+      ([b, d]) => {
+        const pad = (window as unknown as { __fakePad: { buttons: { pressed: boolean; value: number }[]; timestamp: number } }).__fakePad;
+        const btn = pad.buttons[b as number];
+        if (btn) {
+          btn.pressed = d as boolean;
+          btn.value = d ? 1 : 0;
+        }
+        pad.timestamp = performance.now();
+      },
+      [button, down] as const,
+    );
+  await set(true);
+  await page.waitForTimeout(holdMs);
+  await set(false);
+  await page.waitForTimeout(80);
 }

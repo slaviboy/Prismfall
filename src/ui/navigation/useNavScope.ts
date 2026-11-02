@@ -9,6 +9,17 @@ interface NavScopeOptions {
   autoFocus?: boolean;
 }
 
+/** Last focused item per screen (scope test id → item test id), restored when the screen returns. */
+const lastFocus = new Map<string, string>();
+
+function focusInitial(el: HTMLElement): void {
+  const key = el.dataset.testid;
+  const remembered = key ? lastFocus.get(key) : undefined;
+  const target = remembered ? el.querySelector<HTMLElement>(`[data-testid="${CSS.escape(remembered)}"]`) : null;
+  if (target && !target.hasAttribute('disabled')) target.focus({ preventScroll: true });
+  else focusFirst(el);
+}
+
 /** Wires a container as a navigation scope: back/tab handlers and initial focus. */
 export function useNavScope<T extends HTMLElement>(options: NavScopeOptions = {}): RefObject<T | null> {
   const ref = useRef<T>(null);
@@ -26,19 +37,26 @@ export function useNavScope<T extends HTMLElement>(options: NavScopeOptions = {}
     const onTab = (e: Event): void => handlers.current.onTab?.((e as CustomEvent<number>).detail);
     el.addEventListener('navback', onBack);
     el.addEventListener('navtab', onTab);
-    if (options.autoFocus !== false) {
-      // Wait a frame so children are laid out.
-      const id = requestAnimationFrame(() => focusFirst(el));
-      return () => {
-        cancelAnimationFrame(id);
-        el.removeEventListener('navback', onBack);
-        el.removeEventListener('navtab', onTab);
-      };
-    }
-    return () => {
+    // Remember the focused item when leaving, so coming back lands where the player was.
+    const remember = (e: FocusEvent): void => {
+      const id = (e.target as HTMLElement | null)?.dataset?.testid;
+      if (el.dataset.testid && id) lastFocus.set(el.dataset.testid, id);
+    };
+    el.addEventListener('focusin', remember);
+    const cleanup = (): void => {
       el.removeEventListener('navback', onBack);
       el.removeEventListener('navtab', onTab);
+      el.removeEventListener('focusin', remember);
     };
+    if (options.autoFocus !== false) {
+      // Wait a frame so children are laid out.
+      const id = requestAnimationFrame(() => focusInitial(el));
+      return () => {
+        cancelAnimationFrame(id);
+        cleanup();
+      };
+    }
+    return cleanup;
   }, [options.autoFocus, handlers]);
 
   return ref;
