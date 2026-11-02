@@ -1,5 +1,6 @@
 import type { Engine } from '../game/core/engine';
 import type { GameEvent } from '../game/core/types';
+import type { AudioFeatures, BeatEvent } from '../audio/analysis/features';
 
 export interface ViewFrame {
   readonly now: number;
@@ -8,6 +9,11 @@ export interface ViewFrame {
   readonly engine: Engine | null;
   readonly events: readonly GameEvent[];
   readonly paused: boolean;
+  /** Music features for this frame (stub metronome until the audio engine runs). */
+  readonly audio?: Readonly<AudioFeatures>;
+  readonly beats?: readonly BeatEvent[];
+  /** 0..1 progress toward the current goal (Voyage leg, Sprint lines), if any. */
+  readonly progress?: number;
 }
 
 export interface BoardRect {

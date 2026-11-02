@@ -1,4 +1,5 @@
 import type { GameAction, GameEvent } from '../game/core/types';
+import type { Engine } from '../game/core/engine';
 import { GAME_ACTIONS } from '../game/core/types';
 import { getMode, highScoreKey, type ModeId } from '../game/modes/modes';
 import { InputManager } from '../input/inputManager';
@@ -24,6 +25,12 @@ import { appStore, goBack, hudStore, navigate, pushCallout, toast, type GameResu
 import { progressStore } from './progressStore';
 import { describeEvents } from './feedback';
 import { choosePlacement } from '../game/ai/bot';
+import { registerBuiltinComponents } from '../rendering/environments/builtins';
+import { registerBuiltinEffects } from '../rendering/fx/lineClearEffects';
+import { StageManager } from '../stages/StageManager';
+import { availableStages, getStage } from '../stages/registry';
+import { isStageUnlocked } from '../stages/progression';
+import { MetronomeFeatureSource, type AudioFeatureSource, type BeatEvent } from '../audio/analysis/features';
 
 export interface StartOptions {
   readonly modeId: ModeId;
@@ -49,6 +56,10 @@ export class GameShell {
 
   view: GameView | null = null;
   renderSystem: RenderSystem | null = null;
+  stageManager: StageManager | null = null;
+  /** Music feature source (metronome stand-in until the audio engine is running). */
+  features: AudioFeatureSource = new MetronomeFeatureSource(100);
+  private readonly pendingBeats: BeatEvent[] = [];
   private lastRender = 0;
   session: GameSession | null = null;
   replaySession: ReplaySession | null = null;
@@ -79,7 +90,10 @@ export class GameShell {
 
     this.setupPersistence();
     this.setupInput();
+    registerBuiltinComponents();
+    registerBuiltinEffects();
     this.view = await this.createView(canvas);
+    this.setupStages();
     window.addEventListener('resize', this.handleResize);
     window.addEventListener('wheel', this.handleWheel, { passive: true });
     this.handleResize();
@@ -114,6 +128,57 @@ export class GameShell {
       toast('3D rendering is unavailable in this browser. Showing the simple playfield view.', 'warning', 8000);
       return this.createDebugView(canvas);
     }
+  }
+
+  private setupStages(): void {
+    const system = this.renderSystem;
+    if (!system) return;
+    const manager = new StageManager(system);
+    this.stageManager = manager;
+    manager.onActivate = (info) => {
+      const music = info.manifest?.music;
+      if (music && this.features instanceof MetronomeFeatureSource) {
+        this.features.setBpm(music.bpm);
+        this.features.beatsPerBar = music.beatsPerBar;
+      }
+      hudStore.setState({ stageName: info.manifest?.name ?? '' });
+    };
+    // Rebuild environments when their quality inputs change.
+    let rebuildTimer: ReturnType<typeof setTimeout> | null = null;
+    subscribeSettings(
+      (s) => `${s.graphics.environmentDetail}|${s.graphics.particleDensity}|${s.graphics.reflections}`,
+      () => {
+        if (rebuildTimer) clearTimeout(rebuildTimer);
+        rebuildTimer = setTimeout(() => void manager.rebuild(), 400);
+      },
+    );
+    // Show the attract world behind the menus as soon as possible.
+    void manager.show(this.menuStageId(), { transition: 0 });
+  }
+
+  /** The stage shown behind menus: the last selection if unlocked, else the first available. */
+  menuStageId(): string {
+    const s = getSettings();
+    const progress = progressStore.getState().progress;
+    const chosen = getStage(s.setup.stageId);
+    if (chosen?.available && chosen.manifest && isStageUnlocked(chosen.manifest, progress, s.setup.unlockAll)) return chosen.id;
+    return availableStages()[0]?.id ?? s.setup.stageId;
+  }
+
+  /** Ensures a stage is on screen before play, showing the loading screen while it builds. */
+  private async ensureStage(stageId: string): Promise<void> {
+    const manager = this.stageManager;
+    if (!manager || manager.activeId === stageId) return;
+    const info = getStage(stageId);
+    if (!info?.available) return;
+    appStore.setState({ loading: { label: info.manifest?.name ?? stageId, progress: 0 } });
+    navigate('loading', true);
+    const ok = await manager.show(stageId, {
+      transition: 1.2,
+      onProgress: (f) => appStore.setState({ loading: { label: info.manifest?.name ?? stageId, progress: f } }),
+    });
+    appStore.setState({ loading: null });
+    if (!ok) toast(`${info.manifest?.name ?? stageId} could not be loaded; playing in the neutral space instead.`, 'warning', 6000);
   }
 
   private createDebugView(canvas: HTMLCanvasElement): GameView {
@@ -247,8 +312,13 @@ export class GameShell {
   // ------------------------------------------------------------------ session lifecycle
 
   startGame(options: StartOptions): void {
+    void this.startGameAsync(options);
+  }
+
+  private async startGameAsync(options: StartOptions): Promise<void> {
     this.stopReplay();
     this.lastOptions = options;
+    await this.ensureStage(options.stageId);
     const s = getSettings();
     const mode = getMode(options.modeId);
     const config: SessionConfig = {
@@ -408,6 +478,7 @@ export class GameShell {
           lastPlayed: new Date().toISOString(),
         };
         progress.modesPlayed[mode.id] = (progress.modesPlayed[mode.id] ?? 0) + 1;
+        progress.bestByMode[mode.id] = Math.max(progress.bestByMode[mode.id] ?? 0, engine.score);
         progressStore.setState({ lifetime });
         await this.saveProgress(progress);
       }
@@ -474,6 +545,14 @@ export class GameShell {
     return this.session?.elapsedMs ?? this.replaySession?.engine.tick ?? 0;
   }
 
+  private goalProgress(engine: Engine | null): number {
+    if (!engine) return 0;
+    const goal = engine.rules.goal;
+    if (goal.kind === 'lines') return Math.min(1, engine.lines / goal.lines);
+    if (goal.kind === 'time') return Math.min(1, engine.tick / goal.ms);
+    return 0;
+  }
+
   /** Frame limiter: simulation and input run every rAF; only rendering is capped. */
   private shouldRender(now: number): boolean {
     const cap = getSettings().graphics.fpsCap;
@@ -503,6 +582,8 @@ export class GameShell {
     const dt = Math.min(0.1, Math.max(0, (t - (this.lastFrame || t)) / 1000));
     this.lastFrame = t;
     this.input.poll(t);
+    const beats = this.features.update(t, dt);
+    if (beats.length > 0) this.pendingBeats.push(...beats);
     let events: GameEvent[] = [];
     const session = this.session;
     if (session) events = session.update(t);
@@ -515,7 +596,16 @@ export class GameShell {
     if (engine) this.syncHud(t);
     this.renderSystem?.tickPerf(t);
     if (this.shouldRender(t)) {
-      this.view?.render({ now: t, dt: Math.min(0.1, (t - (this.lastRender || t)) / 1000), engine, events: this.pendingEvents.length > 0 ? [...this.pendingEvents, ...events] : events, paused: appStore.getState().paused });
+      this.view?.render({
+        now: t,
+        dt: Math.min(0.1, (t - (this.lastRender || t)) / 1000),
+        engine,
+        events: this.pendingEvents.length > 0 ? [...this.pendingEvents, ...events] : events,
+        paused: appStore.getState().paused,
+        audio: this.features.features,
+        beats: this.pendingBeats.length > 0 ? this.pendingBeats.splice(0) : [],
+        progress: this.goalProgress(engine),
+      });
       this.pendingEvents.length = 0;
       this.lastRender = t;
       hudStore.setState({ boardRect: this.view?.boardRect() ?? null });

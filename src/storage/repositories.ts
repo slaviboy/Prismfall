@@ -49,6 +49,8 @@ export const progressSchema = z.object({
     })
     .prefault({}),
   modesPlayed: z.record(z.string(), z.number()).catch({}).default({}),
+  /** Best score per mode (score-based unlock requirements). */
+  bestByMode: z.record(z.string(), z.number()).catch({}).default({}),
 });
 
 export type Progress = z.infer<typeof progressSchema>;

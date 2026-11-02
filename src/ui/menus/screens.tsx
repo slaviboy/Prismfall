@@ -12,6 +12,8 @@ import { ControlHints, MenuScreen } from './MenuScreen';
 import { useNavScope } from '../navigation/useNavScope';
 import { BRAND } from '../../config/branding';
 import { useLatest } from '../useLatest';
+import { availableStages, getStage } from '../../stages/registry';
+import { isStageUnlocked, unlockHint } from '../../stages/progression';
 
 function useHints(extra: readonly { keys: string; label: string }[] = []): readonly { keys: string; label: string }[] {
   const { confirm, back } = useConfirmBackLabels();
@@ -86,9 +88,59 @@ export function ModeSelectScreen(props: { onPick: (id: ModeId) => void }): React
   );
 }
 
+/** Stage choice with live preview behind the menu. */
+function WorldRow(): ReactNode {
+  const stageId = useSettings((s) => s.setup.stageId);
+  const unlockAll = useSettings((s) => s.setup.unlockAll);
+  const progress = useProgress((s) => s.progress);
+  const stages = availableStages();
+  if (stages.length === 0) return null;
+  const current = getStage(stageId)?.manifest ?? stages[0]?.manifest;
+  const locked = current ? !isStageUnlocked(current, progress, unlockAll) : false;
+  const name = (id: string): string => getStage(id)?.manifest?.name ?? id;
+  return (
+    <ChoiceRow
+      label="World"
+      description={locked && current ? unlockHint(current, name) : (current?.description ?? '')}
+      value={current?.id ?? stageId}
+      options={stages.map((st) => ({
+        value: st.id,
+        label: `${st.manifest?.name ?? st.id}${st.manifest && !isStageUnlocked(st.manifest, progress, unlockAll) ? ' (locked)' : ''}`,
+      }))}
+      onChange={(id) => {
+        updateSection('setup', { stageId: id });
+        shell.stageManager?.preview(id);
+      }}
+      testId="setup-world"
+    />
+  );
+}
+
+export function useSelectedStageLocked(): boolean {
+  const stageId = useSettings((s) => s.setup.stageId);
+  const unlockAll = useSettings((s) => s.setup.unlockAll);
+  const progress = useProgress((s) => s.progress);
+  const m = getStage(stageId)?.manifest;
+  return m ? !isStageUnlocked(m, progress, unlockAll) : false;
+}
+
+export function LoadingScreen(): ReactNode {
+  const loading = useApp((s) => s.loading);
+  return (
+    <div className="loading-screen" data-testid="loading-screen" role="status">
+      <p className="loading-kicker">Entering</p>
+      <h1 className="loading-title">{loading?.label ?? ''}</h1>
+      <div className="loading-bar" aria-hidden>
+        <span style={{ width: `${Math.round((loading?.progress ?? 0) * 100)}%` }} />
+      </div>
+    </div>
+  );
+}
+
 export function ModeSetupScreen(props: { modeId: ModeId; onStart: () => void }): ReactNode {
   const hints = useHints();
   const mode = getMode(props.modeId);
+  const locked = useSelectedStageLocked();
   const variants = useSettings((s) => s.setup.variants);
   const variantId = getVariant(mode, variants[mode.id] ?? mode.defaultVariant).id;
   const [best, setBest] = useState<HighScoreEntry | null>(null);
@@ -99,6 +151,7 @@ export function ModeSetupScreen(props: { modeId: ModeId; onStart: () => void }):
   return (
     <MenuScreen title={mode.name} subtitle={mode.tagline} onBack={() => goBack()} testId="mode-setup" footer={<ControlHints hints={hints} />}>
       <div className="setup-rows">
+        {mode.stageSelectable ? <WorldRow /> : null}
         {mode.variants.length > 1 ? (
           <ChoiceRow
             label="Rules"
@@ -120,7 +173,7 @@ export function ModeSetupScreen(props: { modeId: ModeId; onStart: () => void }):
         ) : null}
       </div>
       <div className="setup-actions">
-        <Button tone="primary" onClick={props.onStart} autoFocus testId="setup-start">
+        <Button tone="primary" onClick={props.onStart} autoFocus disabled={mode.stageSelectable && locked} testId="setup-start">
           Start
         </Button>
       </div>

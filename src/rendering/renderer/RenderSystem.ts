@@ -12,6 +12,11 @@ import { PostPipeline } from '../postprocessing/PostPipeline';
 import { frameUniforms } from '../shaders/uniforms';
 import type { BoardRect, GameView, ViewFrame } from '../view';
 import { PerfMonitor } from './PerfMonitor';
+import { BurstSystem } from '../particles/BurstSystem';
+import { FeedbackDirector } from '../fx/FeedbackDirector';
+import { EnvironmentHost } from '../environments/EnvironmentHost';
+import { createAudioFeatures, type AudioFeatures } from '../../audio/analysis/features';
+import type { GameSignals, QualityInfo } from '../../sdk/types';
 import { loadBlockGeometry } from '../board/blockLibrary';
 import { createRoundedBlock } from '../board/blockGeometry';
 import { perfStore } from './perfStore';
@@ -74,7 +79,19 @@ export class RenderSystem implements GameView {
   readonly post: PostPipeline;
   readonly perf: PerfMonitor;
   readonly backdrop = new DefaultBackdrop();
+  readonly bursts = new BurstSystem(32768);
+  readonly feedback: FeedbackDirector;
+  readonly environments: EnvironmentHost;
   readonly adapter: AdapterInfo;
+  private readonly idleAudio: AudioFeatures = createAudioFeatures();
+  readonly signals: { danger: number; combo: number; backToBack: number; level: number; clearPulse: number; progress: number } = {
+    danger: 0,
+    combo: -1,
+    backToBack: -1,
+    level: 1,
+    clearPulse: 0,
+    progress: 0,
+  };
   private readonly hooks = new Set<RenderHook>();
   private renderScale = 1;
   private cssWidth = 1;
@@ -95,6 +112,10 @@ export class RenderSystem implements GameView {
     this.boardRoot.add(this.board.group);
     this.scene.add(this.backdrop.group, this.worldRoot, this.lights.group, this.boardRoot, this.fxRoot);
     this.post = new PostPipeline(renderer, this.scene, this.cameraRig.camera);
+    this.feedback = new FeedbackDirector(this.bursts, this.cameraRig, createRoundedBlock());
+    this.fxRoot.add(this.bursts.object, this.feedback.ghosts);
+    this.environments = new EnvironmentHost(this);
+    this.feedback.onStageEvent = (e) => this.environments.onGameEvent(e);
     this.perf = new PerfMonitor(renderer, adapter.backend === 'webgpu');
     renderer.onDeviceLost = (info) => {
       console.warn('[render] GPU device lost', info);
@@ -147,6 +168,17 @@ export class RenderSystem implements GameView {
     pmrem.dispose();
   }
 
+  /** Quality information environment components scale with. */
+  quality(): QualityInfo {
+    const s = this.settings;
+    return {
+      detail: s?.graphics.environmentDetail ?? 'high',
+      particles: s?.graphics.particleDensity ?? 1,
+      reflections: s?.graphics.reflections ?? 'low',
+      reducedMotion: s ? reducedMotion(s) : false,
+    };
+  }
+
   private blockDesign = 'procedural';
 
   /** Switches the block geometry to a Blender-authored design (falls back to procedural). */
@@ -158,7 +190,9 @@ export class RenderSystem implements GameView {
       geometry?.dispose();
       return;
     }
-    this.board.setBlockGeometry(geometry ?? createRoundedBlock());
+    const g = geometry ?? createRoundedBlock();
+    this.board.setBlockGeometry(g);
+    this.feedback.setGeometry(g);
   }
 
   addHook(hook: RenderHook): () => void {
@@ -187,6 +221,10 @@ export class RenderSystem implements GameView {
     });
     this.lights.setShadowQuality(g.shadows);
     this.board.setPalette(paletteFor(s.accessibility.highContrast));
+    this.feedback.piecePalette = paletteFor(s.accessibility.highContrast);
+    this.feedback.settings = { intensity: s.gameplay.effectsIntensity, reducedMotion: reducedMotion(s), screenEffects: s.accessibility.screenEffects * (s.graphics.screenSpaceEffects ? 1 : 0.4) };
+    this.bursts.density = Math.max(0.05, g.particleDensity);
+    this.environments.reactivity = { ...s.reactivity };
     this.board.setGlyphs(s.accessibility.pieceGlyphs);
     this.board.showGhost = s.gameplay.ghost;
     this.board.setGhostOpacity(s.gameplay.ghostOpacity);
@@ -242,11 +280,34 @@ export class RenderSystem implements GameView {
     const t0 = performance.now();
     const time = frame.now / 1000;
     frameUniforms.time.value = time;
-    frameUniforms.danger.value += ((frame.engine && frame.engine.board.stackHeight() >= 16 ? 1 : 0) - frameUniforms.danger.value) * Math.min(1, frame.dt * 4);
-    frameUniforms.clearPulse.value = Math.max(0, frameUniforms.clearPulse.value - frame.dt * 2.5);
-    frameUniforms.beatPulse.value = Math.max(0, frameUniforms.beatPulse.value - frame.dt * 3);
+    const engine = frame.engine;
+    const audio = frame.audio ?? this.idleAudio;
+    const sig = this.signals;
+    const dangerTarget = engine ? Math.min(1, Math.max(0, (engine.board.stackHeight() - 12) / 6)) : 0;
+    sig.danger += (dangerTarget - sig.danger) * Math.min(1, frame.dt * 4);
+    sig.combo = engine?.combo ?? -1;
+    sig.backToBack = engine && engine.backToBackActive ? engine.backToBackCount : -1;
+    sig.level = engine?.level ?? 1;
+    sig.progress = frame.progress ?? 0;
+    frameUniforms.danger.value = sig.danger;
+    frameUniforms.clearPulse.value = Math.max(0, frameUniforms.clearPulse.value - frame.dt * 2.2);
+    sig.clearPulse = frameUniforms.clearPulse.value;
+    frameUniforms.comboLevel.value = Math.min(1, Math.max(0, sig.combo) / 8);
+    // Music features → shared shader uniforms (zero when audio reactivity is off).
+    const react = this.settings?.reactivity.enabled ?? true;
+    frameUniforms.bass.value = react ? audio.bass : 0;
+    frameUniforms.mid.value = react ? audio.mid : 0;
+    frameUniforms.treble.value = react ? audio.treble : 0;
+    frameUniforms.energy.value = react ? audio.overallEnergy : 0;
+    frameUniforms.flux.value = react ? audio.spectralFlux : 0;
+    frameUniforms.beatPulse.value = react ? audio.beatPulse : 0;
+    frameUniforms.barPulse.value = react ? audio.barPulse : 0;
+    frameUniforms.beatPhase.value = audio.beatPhase;
+    frameUniforms.sectionIntensity.value = audio.sectionIntensity;
 
-    this.board.sync(frame.engine, frame.events, time);
+    this.feedback.handle(frame.events, engine, time);
+    this.board.sync(engine, frame.events, time);
+    this.environments.update(frame.dt, time, audio, frame.beats ?? [], sig as GameSignals);
     for (const hook of this.hooks) hook.update(frame);
     this.lights.update(frame.dt, frameUniforms.beatPulse.value, frameUniforms.clearPulse.value, frameUniforms.reactivity.value);
     this.cameraRig.update(frame.dt, time, frameUniforms.beatPulse.value);
@@ -300,9 +361,12 @@ export class RenderSystem implements GameView {
     });
   }
 
-  /** Precompiles shaders for everything currently in the scene (call during loading). */
-  async warmUp(): Promise<void> {
-    await this.renderer.compileAsync(this.scene, this.cameraRig.camera);
+  /**
+   * Renders one frame through the post pipeline to compile every material with the same MRT
+   * layout used in play (compileAsync would compile against a non-MRT target).
+   */
+  warmUpFrame(): void {
+    this.post.render();
   }
 
   get currentSettings(): Settings | null {
@@ -310,6 +374,9 @@ export class RenderSystem implements GameView {
   }
 
   dispose(): void {
+    this.environments.dispose();
+    this.feedback.dispose();
+    this.bursts.dispose();
     this.post.dispose();
     this.board.dispose();
     this.backdrop.dispose();

@@ -28,7 +28,7 @@ export interface BlockMaterialPreset {
 export const BLOCK_PRESETS = {
   /** Default: polished prism glass with a lit core. */
   prism: { roughness: 0.2, metalness: 0.05, clearcoat: 1, clearcoatRoughness: 0.06, emissive: 0.1, core: 0.32, edgeGlow: 0.55, edgeColor: null, rim: 0.22, surfaceNoise: 0.02, ao: 0.5, albedo: 0.85, musicGlow: 0.3, envIntensity: 1 },
-  pearlGlass: { roughness: 0.12, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.04, emissive: 0.12, core: 0.75, edgeGlow: 0.45, edgeColor: [0.85, 0.95, 1], rim: 0.6, surfaceNoise: 0.01, ao: 0.4, albedo: 0.6, musicGlow: 0.4, envIntensity: 1.2 },
+  pearlGlass: { roughness: 0.12, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.04, emissive: 0.07, core: 0.36, edgeGlow: 0.4, edgeColor: [0.85, 0.95, 1], rim: 0.32, surfaceNoise: 0.01, ao: 0.45, albedo: 0.72, musicGlow: 0.35, envIntensity: 1.1 },
   forgedMetal: { roughness: 0.38, metalness: 0.85, clearcoat: 0.3, clearcoatRoughness: 0.3, emissive: 0.05, core: 0.15, edgeGlow: 1.3, edgeColor: [1, 0.55, 0.18], rim: 0.2, surfaceNoise: 0.12, ao: 0.6, albedo: 0.9, musicGlow: 0.55, envIntensity: 1.1 },
   stellarGlass: { roughness: 0.08, metalness: 0.1, clearcoat: 1, clearcoatRoughness: 0.03, emissive: 0.1, core: 0.9, edgeGlow: 0.6, edgeColor: null, rim: 0.7, surfaceNoise: 0, ao: 0.35, albedo: 0.45, musicGlow: 0.5, envIntensity: 0.9 },
   frostedCrystal: { roughness: 0.45, metalness: 0, clearcoat: 0.6, clearcoatRoughness: 0.35, emissive: 0.22, core: 0.6, edgeGlow: 0.5, edgeColor: [0.9, 1, 0.92], rim: 0.5, surfaceNoise: 0.06, ao: 0.4, albedo: 0.85, musicGlow: 0.3, envIntensity: 0.8 },

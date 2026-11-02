@@ -59,7 +59,7 @@ export function createPlateMaterial(): { material: MeshBasicNodeMaterial; u: Pla
     tint: uniform(new Vector3(0.006, 0.006, 0.018)),
     accent: uniform(new Vector3(0.45, 0.55, 1)),
     grid: uniform(1),
-    opacity: uniform(0.86),
+    opacity: uniform(0.93),
   };
   const st = uv().mul(vec2(10, 20));
   const cell = fract(st);

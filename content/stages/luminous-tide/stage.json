@@ -1,0 +1,344 @@
+{
+  "schemaVersion": 1,
+  "id": "luminous-tide",
+  "name": "Luminous Tide",
+  "description": "A twilight ocean at the edge of the world. Plankton glow with every note and the tide answers your clears.",
+  "order": 10,
+  "tags": [
+    "ocean",
+    "calm",
+    "night"
+  ],
+  "intensity": 0.45,
+  "recommendedQuality": "high",
+  "palette": {
+    "accent": "#3cf2d0",
+    "secondary": "#7fb8ff",
+    "highlight": "#c9fff4",
+    "fog": "#04121f",
+    "plate": "#020a12"
+  },
+  "fog": {
+    "color": "#04121f",
+    "density": 0.0032
+  },
+  "backdrop": {
+    "top": "#030a1f",
+    "bottom": "#01040a",
+    "glow": "#0d3550"
+  },
+  "lighting": {
+    "key": {
+      "color": "#cfe0ff",
+      "intensity": 1.6,
+      "azimuth": -30,
+      "elevation": 42
+    },
+    "rim": {
+      "color": "#3cf2d0",
+      "intensity": 1.8
+    },
+    "ambient": {
+      "sky": "#1d3a66",
+      "ground": "#03121c",
+      "intensity": 0.85
+    },
+    "accents": [
+      {
+        "color": "#3cf2d0",
+        "intensity": 26,
+        "x": -9,
+        "y": -7,
+        "z": 6
+      },
+      {
+        "color": "#7f8cff",
+        "intensity": 22,
+        "x": 9,
+        "y": 8,
+        "z": 6
+      }
+    ],
+    "beatResponse": 0.35
+  },
+  "grade": {
+    "saturation": 1.12,
+    "contrast": 1.04,
+    "tint": [
+      0.95,
+      1.02,
+      1.05
+    ],
+    "vignette": 0.42,
+    "bloomThreshold": 0.18,
+    "bloomRadius": 0.5,
+    "toneMapping": "aces",
+    "envIntensity": 0.28,
+    "exposure": 0.86
+  },
+  "camera": {
+    "pitch": 5,
+    "yaw": 0,
+    "sway": 0.8,
+    "targetY": 0
+  },
+  "blocks": {
+    "geometry": "soft",
+    "material": "pearlGlass"
+  },
+  "environment": {
+    "layers": [
+      {
+        "id": "sky",
+        "type": "sky",
+        "params": {
+          "top": "#030a1f",
+          "horizon": "#12355a",
+          "bottom": "#01040a",
+          "horizonGlow": 0.9,
+          "horizonWidth": 0.14,
+          "stars": 0.6,
+          "nebula": 0.22,
+          "nebulaA": "#0f3a5a",
+          "nebulaB": "#2a2a7a",
+          "nebulaScale": 1.8,
+          "disc": {
+            "direction": [
+              0.55,
+              0.2,
+              -1
+            ],
+            "color": "#e4ecff",
+            "size": 1.3,
+            "halo": 10,
+            "intensity": 1
+          }
+        },
+        "bind": [
+          {
+            "target": "glow",
+            "feature": "bass",
+            "amount": 0.35,
+            "attackMs": 80,
+            "releaseMs": 600
+          }
+        ]
+      },
+      {
+        "id": "ocean",
+        "type": "water",
+        "params": {
+          "y": -13,
+          "deep": "#01040a",
+          "shallow": "#04172a",
+          "skyTop": "#071430",
+          "skyHorizon": "#123150",
+          "glow": "#2bd9c0",
+          "glowStrength": 0.28,
+          "amplitude": 0.3,
+          "wavelength": 26,
+          "speed": 0.42,
+          "moonDirection": [
+            0.55,
+            0.2,
+            -1
+          ]
+        },
+        "bind": [
+          {
+            "target": "amplitude",
+            "feature": "bass",
+            "amount": 0.55,
+            "attackMs": 120,
+            "releaseMs": 900
+          },
+          {
+            "target": "glow",
+            "feature": "beatPulse",
+            "amount": 0.8,
+            "attackMs": 20,
+            "releaseMs": 350
+          }
+        ]
+      },
+      {
+        "id": "plankton",
+        "type": "particles",
+        "params": {
+          "count": 6000,
+          "center": [
+            0,
+            -5,
+            -40
+          ],
+          "size": [
+            180,
+            26,
+            120
+          ],
+          "color": "#3cf2d0",
+          "colorB": "#7fb8ff",
+          "minSize": 0.05,
+          "maxSize": 0.18,
+          "velocity": [
+            0.3,
+            0.22,
+            0.1
+          ],
+          "turbulence": 0.7,
+          "twinkle": 0.7,
+          "brightness": 1.5,
+          "shape": "soft",
+          "seed": 4
+        },
+        "bind": [
+          {
+            "target": "brightness",
+            "feature": "treble",
+            "amount": 0.9,
+            "category": "particles",
+            "attackMs": 25,
+            "releaseMs": 220
+          },
+          {
+            "target": "size",
+            "feature": "bass",
+            "amount": 0.3,
+            "category": "particles",
+            "attackMs": 60,
+            "releaseMs": 500
+          },
+          {
+            "target": "turbulence",
+            "feature": "spectralFlux",
+            "amount": 0.6,
+            "category": "particles"
+          }
+        ]
+      },
+      {
+        "id": "horizon-motes",
+        "type": "particles",
+        "params": {
+          "count": 1500,
+          "center": [
+            0,
+            12,
+            -170
+          ],
+          "size": [
+            420,
+            60,
+            160
+          ],
+          "color": "#bfe9ff",
+          "minSize": 0.25,
+          "maxSize": 0.7,
+          "velocity": [
+            0.5,
+            0,
+            0
+          ],
+          "turbulence": 0.2,
+          "twinkle": 1,
+          "brightness": 1.1,
+          "shape": "star",
+          "seed": 9
+        },
+        "bind": [
+          {
+            "target": "brightness",
+            "feature": "highMid",
+            "amount": 0.7,
+            "category": "particles",
+            "attackMs": 20,
+            "releaseMs": 300
+          }
+        ],
+        "minDetail": "medium"
+      },
+      {
+        "id": "pillars",
+        "type": "beams",
+        "params": {
+          "count": 7,
+          "radius": 120,
+          "y": -13,
+          "z": -150,
+          "arc": 150,
+          "height": 170,
+          "width": 1.6,
+          "color": "#7fffe9",
+          "base": 0.18,
+          "pulse": 1.1,
+          "sequence": 4,
+          "seed": 2
+        },
+        "bind": [
+          {
+            "target": "intensity",
+            "feature": "sectionIntensity",
+            "amount": 0.6,
+            "category": "lighting",
+            "attackMs": 300,
+            "releaseMs": 1200
+          }
+        ]
+      },
+      {
+        "id": "sea-haze",
+        "type": "clouds",
+        "params": {
+          "count": 30,
+          "center": [
+            0,
+            -7,
+            -120
+          ],
+          "spread": [
+            520,
+            10,
+            160
+          ],
+          "size": [
+            70,
+            150
+          ],
+          "color": "#0d3b52",
+          "colorB": "#16306a",
+          "opacity": 0.22,
+          "drift": [
+            0.8,
+            0,
+            0
+          ],
+          "seed": 5
+        },
+        "minDetail": "medium"
+      }
+    ]
+  },
+  "effects": {
+    "lineClear": {
+      "effect": "tideSpray",
+      "params": {}
+    },
+    "landing": {
+      "shape": "bubble"
+    }
+  },
+  "music": {
+    "bpm": 84,
+    "beatsPerBar": 4,
+    "tracks": []
+  },
+  "ambience": {
+    "preset": "ocean"
+  },
+  "sfx": {
+    "preset": "glass"
+  },
+  "unlock": {
+    "type": "always"
+  }
+}

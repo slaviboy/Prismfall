@@ -1,0 +1,329 @@
+{
+  "schemaVersion": 1,
+  "id": "celestial-drift",
+  "name": "Celestial Drift",
+  "description": "Adrift among nebulae, a ringed giant turning below. Pulsars keep time with the music.",
+  "order": 90,
+  "tags": [
+    "space",
+    "nebula",
+    "vast"
+  ],
+  "intensity": 0.6,
+  "recommendedQuality": "high",
+  "palette": {
+    "accent": "#b57cff",
+    "secondary": "#5ca8ff",
+    "highlight": "#f1e6ff",
+    "fog": "#06031a",
+    "plate": "#05030f"
+  },
+  "fog": {
+    "color": "#06031a",
+    "density": 0.0008
+  },
+  "backdrop": {
+    "top": "#05031a",
+    "bottom": "#010008",
+    "glow": "#2a1260"
+  },
+  "lighting": {
+    "key": {
+      "color": "#fff1dc",
+      "intensity": 2.6,
+      "azimuth": 45,
+      "elevation": 25
+    },
+    "rim": {
+      "color": "#b57cff",
+      "intensity": 2.2
+    },
+    "ambient": {
+      "sky": "#2a1a5a",
+      "ground": "#05030f",
+      "intensity": 0.8
+    },
+    "accents": [
+      {
+        "color": "#b57cff",
+        "intensity": 34,
+        "x": -9,
+        "y": 6,
+        "z": 6
+      },
+      {
+        "color": "#5ca8ff",
+        "intensity": 30,
+        "x": 9,
+        "y": -7,
+        "z": 6
+      }
+    ],
+    "beatResponse": 0.45
+  },
+  "grade": {
+    "saturation": 1.15,
+    "contrast": 1.06,
+    "tint": [
+      1.02,
+      0.98,
+      1.06
+    ],
+    "vignette": 0.45,
+    "bloomThreshold": 0.16,
+    "bloomRadius": 0.55,
+    "toneMapping": "aces",
+    "envIntensity": 0.25
+  },
+  "camera": {
+    "pitch": 2,
+    "yaw": -4,
+    "sway": 1.1,
+    "targetY": 0
+  },
+  "blocks": {
+    "geometry": "faceted",
+    "material": "stellarGlass"
+  },
+  "environment": {
+    "layers": [
+      {
+        "id": "sky",
+        "type": "sky",
+        "params": {
+          "top": "#04021a",
+          "horizon": "#0c0630",
+          "bottom": "#020010",
+          "horizonGlow": 0.25,
+          "horizonWidth": 0.3,
+          "stars": 1,
+          "starSize": 0.8,
+          "nebula": 1.1,
+          "nebulaA": "#5a1a9a",
+          "nebulaB": "#1a6ab4",
+          "nebulaScale": 1.6,
+          "nebulaDrift": 0.006
+        },
+        "bind": [
+          {
+            "target": "nebula",
+            "feature": "lowMid",
+            "amount": 0.35,
+            "attackMs": 200,
+            "releaseMs": 1400
+          },
+          {
+            "target": "stars",
+            "feature": "treble",
+            "amount": 0.4,
+            "attackMs": 30,
+            "releaseMs": 300
+          }
+        ]
+      },
+      {
+        "id": "giant",
+        "type": "planet",
+        "params": {
+          "position": [
+            -300,
+            -150,
+            -560
+          ],
+          "radius": 120,
+          "colorA": "#c78a5e",
+          "colorB": "#4a2e7a",
+          "bands": 11,
+          "atmosphere": "#9fb8ff",
+          "atmosphereStrength": 0.7,
+          "lightDirection": [
+            1,
+            0.35,
+            0.5
+          ],
+          "rotationSpeed": 0.012,
+          "tilt": 0.42,
+          "ring": {
+            "inner": 155,
+            "outer": 260,
+            "color": "#d9c4ff",
+            "opacity": 0.5
+          }
+        },
+        "bind": [
+          {
+            "target": "atmosphere",
+            "feature": "bass",
+            "amount": 0.45,
+            "category": "lighting",
+            "attackMs": 100,
+            "releaseMs": 900
+          }
+        ]
+      },
+      {
+        "id": "near-stars",
+        "type": "particles",
+        "params": {
+          "count": 5000,
+          "center": [
+            0,
+            0,
+            -60
+          ],
+          "size": [
+            220,
+            140,
+            140
+          ],
+          "color": "#dfe6ff",
+          "colorB": "#c9a8ff",
+          "minSize": 0.06,
+          "maxSize": 0.28,
+          "velocity": [
+            0,
+            0,
+            2.2
+          ],
+          "turbulence": 0.1,
+          "twinkle": 0.8,
+          "brightness": 1.3,
+          "shape": "star",
+          "seed": 21
+        },
+        "bind": [
+          {
+            "target": "speed",
+            "feature": "bass",
+            "amount": 1.2,
+            "category": "particles",
+            "attackMs": 80,
+            "releaseMs": 900
+          },
+          {
+            "target": "brightness",
+            "feature": "highMid",
+            "amount": 0.7,
+            "category": "particles"
+          }
+        ]
+      },
+      {
+        "id": "nebula-depth",
+        "type": "clouds",
+        "params": {
+          "count": 46,
+          "center": [
+            40,
+            20,
+            -260
+          ],
+          "spread": [
+            700,
+            260,
+            260
+          ],
+          "size": [
+            90,
+            220
+          ],
+          "color": "#4a1a8a",
+          "colorB": "#1a5aa4",
+          "opacity": 0.3,
+          "drift": [
+            1.2,
+            0.2,
+            0
+          ],
+          "seed": 13
+        },
+        "minDetail": "medium"
+      },
+      {
+        "id": "pulsars",
+        "type": "emitter",
+        "params": {
+          "positions": [
+            [
+              120,
+              60,
+              -300
+            ],
+            [
+              -200,
+              90,
+              -340
+            ],
+            [
+              210,
+              -40,
+              -320
+            ]
+          ],
+          "trigger": "beat",
+          "count": 14,
+          "shape": "star",
+          "color": "#e7d6ff",
+          "colorB": "#9fd0ff",
+          "intensity": 3,
+          "size": 2.4,
+          "speed": 2,
+          "spread": 1,
+          "gravity": 0,
+          "drag": 0.5,
+          "life": 0.9
+        }
+      },
+      {
+        "id": "orbit-rings",
+        "type": "rings",
+        "params": {
+          "count": 10,
+          "radius": 18,
+          "growth": 1.22,
+          "spacing": 18,
+          "startZ": -10,
+          "thickness": 0.04,
+          "color": "#8f6bff",
+          "base": 0.03,
+          "pulse": 0.45,
+          "speed": 3
+        },
+        "bind": [
+          {
+            "target": "intensity",
+            "feature": "sectionIntensity",
+            "amount": 0.8,
+            "category": "lighting",
+            "attackMs": 400,
+            "releaseMs": 1500
+          }
+        ],
+        "minDetail": "medium"
+      }
+    ]
+  },
+  "effects": {
+    "lineClear": {
+      "effect": "supernova",
+      "params": {}
+    },
+    "landing": {
+      "shape": "star"
+    }
+  },
+  "music": {
+    "bpm": 92,
+    "beatsPerBar": 4,
+    "tracks": []
+  },
+  "ambience": {
+    "preset": "space"
+  },
+  "sfx": {
+    "preset": "crystal"
+  },
+  "unlock": {
+    "type": "always"
+  }
+}

@@ -6,7 +6,7 @@ import type { ModeId } from '../game/modes/modes';
 import { getMode, getVariant } from '../game/modes/modes';
 import { Hud } from './hud/Hud';
 import { PauseOverlay } from './menus/PauseOverlay';
-import { BootScreen, CreditsScreen, HighScoresScreen, MainMenu, ModeSelectScreen, ModeSetupScreen, ResultsScreen } from './menus/screens';
+import { BootScreen, CreditsScreen, HighScoresScreen, LoadingScreen, MainMenu, ModeSelectScreen, ModeSetupScreen, ResultsScreen } from './menus/screens';
 import { SettingsScreen } from './settings/SettingsScreen';
 import { useNavScope } from './navigation/useNavScope';
 import { reducedMotion } from '../settings/store';
@@ -90,6 +90,7 @@ export function App(): ReactNode {
       {screen === 'main' ? <MainMenu /> : null}
       {screen === 'modes' ? <ModeSelectScreen onPick={pickMode} /> : null}
       {screen === 'setup' ? <ModeSetupScreen modeId={lastMode} onStart={start} /> : null}
+      {screen === 'loading' ? <LoadingScreen /> : null}
       {screen === 'results' ? <ResultsScreen /> : null}
       {screen === 'highscores' ? <HighScoresScreen /> : null}
       {screen === 'settings' ? <SettingsScreen /> : null}
