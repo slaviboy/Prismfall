@@ -10,6 +10,7 @@ import {
   instancedBufferAttribute,
   length,
   max,
+  mrt,
   min,
   mix,
   mod,
@@ -30,6 +31,8 @@ import type { BlockMaterialPreset } from './blockPresets';
 /** Floats per instance in the packed buffer: [r, g, b, glyph] [aoMask, dropRows, dropTime, lockTime]. */
 export const BLOCK_STRIDE = 8;
 const HALF = 0.47;
+/** Fraction of block glow that reaches the bloom pass. */
+const BLOOM_SHARE = 0.35;
 
 
 export interface BlockMaterialHandle {
@@ -40,6 +43,8 @@ export interface BlockMaterialHandle {
   readonly spawnTime: FloatUniform;
   readonly glyphs: FloatUniform;
   readonly dropDuration: FloatUniform;
+  /** Player's Block glow setting: scales self-illumination. */
+  readonly glowScale: FloatUniform;
   apply(preset: BlockMaterialPreset): void;
 }
 
@@ -67,6 +72,7 @@ export function createBlockMaterial(buffer: InstancedInterleavedBuffer, preset: 
   const spawnTime = uniform(-1000);
   const glyphs = uniform(0);
   const dropDuration = uniform(0.12);
+  const glowScale = uniform(0.6);
   const t = frameUniforms.time;
 
   // Per-cell shading uses the raw geometry position: on an InstancedMesh, positionLocal already
@@ -136,12 +142,16 @@ export function createBlockMaterial(buffer: InstancedInterleavedBuffer, preset: 
     .add(edgeTint.mul(edge.mul(u.edgeGlow).mul(float(1).add(music))))
     .mul(ao)
     .mul(mix(float(1), float(0.35), glyphMask))
-    .mul(intensity);
+    .mul(intensity)
+    .mul(glowScale);
 
   const material = new MeshPhysicalNodeMaterial();
   material.positionNode = lifted;
   material.colorNode = vec4(albedo, 1);
   material.emissiveNode = glow;
+  // Blocks feed only part of their glow to bloom: full-strength halos merged neighbouring blocks
+  // into a bright haze that was tiring to look at.
+  material.mrtNode = mrt({ emissive: vec4(glow.mul(BLOOM_SHARE), 1) });
 
   const handle: BlockMaterialHandle = {
     material,
@@ -149,6 +159,7 @@ export function createBlockMaterial(buffer: InstancedInterleavedBuffer, preset: 
     spawnTime,
     glyphs,
     dropDuration,
+    glowScale,
     apply(next: BlockMaterialPreset): void {
       material.roughness = next.roughness;
       material.metalness = next.metalness;

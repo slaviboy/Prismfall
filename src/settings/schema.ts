@@ -127,6 +127,7 @@ export const settingsSchema = z.object({
       fpsCap: e(['display', 'half', 'third', '30', '60', '120', '144'] as const, 'display'),
       antialias: e(['none', 'fxaa', 'smaa', 'msaa'] as const, 'msaa'),
       bloom: n(0, 2, 1),
+      blockGlow: n(0, 1.5, 0.6),
       shadows: e(['off', 'low', 'medium', 'high'] as const, 'medium'),
       particleDensity: n(0, 2, 1),
       environmentDetail: e(['low', 'medium', 'high', 'ultra'] as const, 'high'),

@@ -1,3 +1,4 @@
+import { campaignSchema, type Campaign } from './campaign';
 import { z } from 'zod';
 import { SDK_VERSION } from '../sdk/version';
 import { registries } from '../sdk/registry';
@@ -14,6 +15,7 @@ const MUSIC_MODULES = import.meta.glob('/content/**/music/*.ts') as Record<strin
 const ASSET_URLS = import.meta.glob('/content/**/*.{glb,gltf,png,jpg,jpeg,webp,avif,ogg,mp3,wav,flac,m4a,opus}', { eager: true, query: '?url', import: 'default' }) as Record<string, string>;
 const JSON_FILES = import.meta.glob('/content/**/music/*.json', { eager: true, import: 'default' }) as Record<string, unknown>;
 const PROFILES = import.meta.glob('/content/shared/reactivity/*.json', { eager: true, import: 'default' }) as Record<string, unknown>;
+const CAMPAIGNS = import.meta.glob('/content/campaigns/*.json', { eager: true, import: 'default' }) as Record<string, unknown>;
 
 export const ENGINE_VERSION_STRING = '1.0.0';
 
@@ -133,6 +135,32 @@ export function reactivityProfileFiles(): Record<string, unknown> {
 export function reactivityProfile(name: string): Binding[] {
   const raw = PROFILES[`/content/shared/reactivity/${name}.json`] as { bindings?: Binding[] } | undefined;
   return raw?.bindings ?? [];
+}
+
+export interface CampaignInfo {
+  readonly campaign: Campaign | null;
+  readonly errors: readonly string[];
+}
+
+/**
+ * A campaign (content/campaigns/<id>.json), validated against its schema and the discovered
+ * stages: every leg must name an available stage, and a stage may appear only once.
+ */
+export function getCampaign(id: string): CampaignInfo {
+  const raw = CAMPAIGNS[`/content/campaigns/${id}.json`];
+  if (raw === undefined) return { campaign: null, errors: [`campaign "${id}" not found`] };
+  const parsed = campaignSchema.safeParse(raw);
+  if (!parsed.success) return { campaign: null, errors: parsed.error.issues.map((i) => `${i.path.join('.') || '(root)'}: ${i.message}`) };
+  const errors: string[] = [];
+  const seen = new Set<string>();
+  for (const area of parsed.data.areas) {
+    for (const leg of area.legs) {
+      if (!getStage(leg.stage)?.available) errors.push(`area "${area.id}": stage "${leg.stage}" is missing or unavailable`);
+      if (seen.has(leg.stage)) errors.push(`stage "${leg.stage}" appears in more than one leg`);
+      seen.add(leg.stage);
+    }
+  }
+  return { campaign: errors.length ? null : parsed.data, errors };
 }
 
 /** Clears the discovery cache (tests, hot reload). */

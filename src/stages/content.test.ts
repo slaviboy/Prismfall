@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { registerBuiltinComponents } from '../rendering/environments/builtins';
 import { registerBuiltinEffects } from '../rendering/fx/lineClearEffects';
 import { registries } from '../sdk/registry';
-import { discoverStages, reactivityProfileFiles, resetStageCache } from './registry';
+import { discoverStages, getCampaign, reactivityProfileFiles, resetStageCache } from './registry';
 import { reactivityProfileSchema, satisfiesRange, stageManifestSchema } from './schema';
 import { validateManifest } from './validate';
 
@@ -38,6 +38,12 @@ describe('shipped content', () => {
       expect(parsed.success, parsed.success ? '' : parsed.error.message).toBe(true);
     });
   }
+
+  it('the Voyage campaign is valid and every leg names an available stage', () => {
+    const info = getCampaign('voyage');
+    expect(info.errors, info.errors.join('\n')).toEqual([]);
+    expect(info.campaign?.areas.length).toBeGreaterThan(0);
+  });
 
   it('contains no placeholder content in release builds', () => {
     const env = (globalThis as { process?: { env: Record<string, string | undefined> } }).process?.env;

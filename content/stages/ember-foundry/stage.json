@@ -418,7 +418,8 @@
     "preset": "metal"
   },
   "unlock": {
-    "type": "always"
+    "type": "voyageLeg",
+    "leg": "ember-foundry"
   },
   "thumbnail": "previews/thumb.jpg"
 }

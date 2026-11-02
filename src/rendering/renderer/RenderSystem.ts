@@ -228,6 +228,7 @@ export class RenderSystem implements GameView {
     this.board.setGlyphs(s.accessibility.pieceGlyphs);
     this.board.showGhost = s.gameplay.ghost;
     this.board.setGhostOpacity(s.gameplay.ghostOpacity);
+    this.board.setBlockGlow(s.graphics.blockGlow);
     this.board.setGrid(s.gameplay.grid);
     this.board.showHold = s.gameplay.showHold;
     this.board.showNext = s.gameplay.showNext;

@@ -203,6 +203,11 @@ export class BoardView {
     this.ghost.opacity.value = opacity;
   }
 
+  /** Block glow setting: self-illumination of settled, active and preview blocks. */
+  setBlockGlow(v: number): void {
+    for (const set of [this.settled, this.active, this.pods]) set.handle.glowScale.value = v;
+  }
+
   setGrid(on: boolean): void {
     this.plate.u.grid.value = on ? 1 : 0;
   }

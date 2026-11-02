@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "voyage",
+  "name": "Voyage",
+  "areas": [
+    {
+      "id": "first-light",
+      "name": "First Light",
+      "description": "Calm water and a slow pulse to find your rhythm.",
+      "legs": [{ "stage": "luminous-tide", "lines": 12, "level": 1 }]
+    },
+    {
+      "id": "under-pressure",
+      "name": "Under Pressure",
+      "description": "Heat, machinery and a harder beat.",
+      "legs": [{ "stage": "ember-foundry", "lines": 16, "level": 5 }]
+    },
+    {
+      "id": "far-reaches",
+      "name": "Far Reaches",
+      "description": "Out past the planets, where the speed climbs.",
+      "legs": [{ "stage": "celestial-drift", "lines": 18, "level": 9 }]
+    }
+  ],
+  "difficulties": {
+    "relaxed": { "linesScale": 0.75, "levelOffset": -2 },
+    "standard": { "linesScale": 1, "levelOffset": 0 },
+    "intense": { "linesScale": 1.35, "levelOffset": 3 }
+  }
+}

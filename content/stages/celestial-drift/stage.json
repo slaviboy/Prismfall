@@ -330,7 +330,8 @@
     "preset": "crystal"
   },
   "unlock": {
-    "type": "always"
+    "type": "voyageLeg",
+    "leg": "celestial-drift"
   },
   "thumbnail": "previews/thumb.jpg"
 }

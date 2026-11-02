@@ -177,6 +177,7 @@ export const GRAPHICS_TAB: TabDef = {
     { kind: 'group', label: 'Image quality' },
     { kind: 'choice', section: 'graphics', key: 'antialias', label: 'Anti-aliasing', description: 'MSAA is replaced by SMAA automatically while ambient occlusion or depth of field is on.', options: [{ value: 'none', label: 'Off' }, { value: 'fxaa', label: 'FXAA' }, { value: 'smaa', label: 'SMAA' }, { value: 'msaa', label: 'MSAA 4×' }] },
     { kind: 'toggle', section: 'graphics', key: 'postProcessing', label: 'Post-processing', description: 'Bloom, colour grading and screen effects.' },
+    { kind: 'slider', section: 'graphics', key: 'blockGlow', label: 'Block glow', description: 'How brightly the pieces glow on their own. Lower values give calmer, more solid blocks.', min: 0, max: 1.5, step: 0.05, format: percent },
     { kind: 'slider', section: 'graphics', key: 'bloom', label: 'Bloom intensity', min: 0, max: 2, step: 0.05, format: percent, when: (s) => s.graphics.postProcessing },
     { kind: 'choice', section: 'graphics', key: 'shadows', label: 'Shadow quality', options: [{ value: 'off', label: 'Off' }, { value: 'low', label: 'Low' }, { value: 'medium', label: 'Medium' }, { value: 'high', label: 'High' }] },
     { kind: 'toggle', section: 'graphics', key: 'ambientOcclusion', label: 'Ambient occlusion', description: 'Screen-space contact shadows (GTAO).', when: (s) => s.graphics.postProcessing },
