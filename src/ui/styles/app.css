@@ -1395,3 +1395,169 @@ kbd {
   color: var(--amber);
   font-size: 13px;
 }
+
+
+/* ------------------------------------------------------------ world select */
+
+.stage-art {
+  display: block;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: var(--night);
+}
+
+.stage-art.generated {
+  background: radial-gradient(120% 90% at 30% 20%, var(--art-a) 0%, transparent 60%), var(--art-b);
+}
+
+.world-list {
+  gap: 10px;
+}
+
+.world-card {
+  display: grid;
+  grid-template-columns: clamp(132px, 9vw, 184px) 1fr;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+  max-width: 560px;
+  padding: 6px;
+  background: none;
+  border: 0;
+  color: var(--haze);
+  text-align: left;
+  cursor: pointer;
+}
+
+.world-card-art {
+  width: 100%;
+  border: 1px solid rgba(238, 240, 255, 0.14);
+}
+
+.world-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.world-card-name {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(20px, 2.6vh, 30px);
+  line-height: 1.15;
+}
+
+.world-card-meta {
+  font-size: 14px;
+  color: var(--haze-dim);
+}
+
+.world-card:focus,
+.world-card:hover {
+  color: var(--starlight);
+}
+
+.world-card:focus .world-card-name {
+  font-weight: 450;
+}
+
+.world-card:focus .world-card-art {
+  border-color: var(--starlight);
+}
+
+.world-card.is-selected .world-card-meta::before {
+  content: 'Selected. ';
+  color: var(--aqua);
+}
+
+.world-card.is-locked .world-card-art {
+  filter: grayscale(0.85) brightness(0.55);
+}
+
+.menu-aside:has(.world-details) {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 0 var(--gutter) clamp(40px, 9vh, 110px);
+  pointer-events: none;
+  /* Soft corner vignette for legibility over any world (no hard-edged box). */
+  background: radial-gradient(ellipse 62% 58% at 100% 100%, rgba(var(--night-rgb), 0.82) 0%, rgba(var(--night-rgb), 0.45) 45%, transparent 78%);
+}
+
+.world-details {
+  max-width: 54ch;
+  text-align: right;
+}
+
+.world-details-name {
+  margin: 0 0 10px;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(34px, 5.4vh, 64px);
+  line-height: 1.02;
+}
+
+.world-details-desc,
+.world-details-music,
+.world-details-lock {
+  margin: 0 0 8px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--haze);
+}
+
+.world-details-lock {
+  color: var(--amber);
+}
+
+/* World card on the mode setup screen. */
+.setup-world {
+  display: grid;
+  grid-template-columns: clamp(150px, 10vw, 210px) 1fr;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+  max-width: 560px;
+  padding: 6px;
+  background: none;
+  border: 0;
+  color: var(--haze);
+  text-align: left;
+  cursor: pointer;
+}
+
+.setup-world-art {
+  width: 100%;
+  border: 1px solid rgba(238, 240, 255, 0.14);
+}
+
+.setup-world-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.setup-world-label {
+  font-size: 14px;
+  color: var(--haze-dim);
+}
+
+.setup-world-name {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(22px, 2.8vh, 32px);
+  color: var(--starlight);
+}
+
+.setup-world-desc {
+  font-size: 14px;
+}
+
+.setup-world:focus .setup-world-art,
+.setup-world:hover .setup-world-art {
+  border-color: var(--starlight);
+}
+
+.setup-world:focus .setup-world-desc {
+  color: var(--starlight);
+}

@@ -332,5 +332,6 @@
   },
   "unlock": {
     "type": "always"
-  }
+  },
+  "thumbnail": "previews/thumb.jpg"
 }

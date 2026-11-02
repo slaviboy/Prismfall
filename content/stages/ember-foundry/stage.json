@@ -30,7 +30,7 @@
   "lighting": {
     "key": {
       "color": "#ffe2c4",
-      "intensity": 2.0,
+      "intensity": 2,
       "azimuth": 35,
       "elevation": 38
     },
@@ -41,7 +41,7 @@
     "ambient": {
       "sky": "#3a1a10",
       "ground": "#0a0302",
-      "intensity": 1.0
+      "intensity": 1
     },
     "accents": [
       {
@@ -146,7 +146,7 @@
               "preset": "emissive",
               "color": "#4a1a06",
               "emissive": "#ffb040",
-              "emissiveIntensity": 2.0,
+              "emissiveIntensity": 2,
               "musicGlow": 0.4
             }
           ],
@@ -419,5 +419,6 @@
   },
   "unlock": {
     "type": "always"
-  }
+  },
+  "thumbnail": "previews/thumb.jpg"
 }

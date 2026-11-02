@@ -148,7 +148,9 @@ export class GameShell {
     this.stageManager = manager;
     manager.onActivate = (info) => {
       hudStore.setState({ stageName: info.manifest?.name ?? '' });
-      void this.loadStageAudio(info);
+      // While browsing worlds, the music follows only if music previews are on.
+      const browsing = ['stages', 'setup'].includes(appStore.getState().screen);
+      if (!browsing || getSettings().audio.musicPreview) void this.loadStageAudio(info);
     };
     // Rebuild environments when their quality inputs change.
     let rebuildTimer: ReturnType<typeof setTimeout> | null = null;
@@ -383,6 +385,9 @@ export class GameShell {
     this.stopReplay();
     this.lastOptions = options;
     await this.ensureStage(options.stageId);
+    // The world may have been previewed without its music (music previews off).
+    const stageInfo = getStage(options.stageId);
+    if (stageInfo?.available && this.audio.stageId !== options.stageId) await this.loadStageAudio(stageInfo);
     const s = getSettings();
     const mode = getMode(options.modeId);
     const config: SessionConfig = {

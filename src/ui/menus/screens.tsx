@@ -12,9 +12,10 @@ import { ControlHints, MenuScreen } from './MenuScreen';
 import { useNavScope } from '../navigation/useNavScope';
 import { BRAND } from '../../config/branding';
 import { useLatest } from '../useLatest';
-import { availableStages, getStage } from '../../stages/registry';
+import { getStage } from '../../stages/registry';
 import { isStageUnlocked, unlockHint } from '../../stages/progression';
 import { PracticeOptions } from './PracticeOptions';
+import { StageArt, orderedStages } from './StageSelect';
 
 function useHints(extra: readonly { keys: string; label: string }[] = []): readonly { keys: string; label: string }[] {
   const { confirm, back } = useConfirmBackLabels();
@@ -89,31 +90,26 @@ export function ModeSelectScreen(props: { onPick: (id: ModeId) => void }): React
   );
 }
 
-/** Stage choice with live preview behind the menu. */
+/** The chosen world as a card; opens world selection. */
 function WorldRow(): ReactNode {
   const stageId = useSettings((s) => s.setup.stageId);
   const unlockAll = useSettings((s) => s.setup.unlockAll);
   const progress = useProgress((s) => s.progress);
-  const stages = availableStages();
+  const stages = orderedStages();
   if (stages.length === 0) return null;
-  const current = getStage(stageId)?.manifest ?? stages[0]?.manifest;
-  const locked = current ? !isStageUnlocked(current, progress, unlockAll) : false;
+  const info = getStage(stageId) ?? stages[0];
+  const m = info?.manifest;
+  const locked = m ? !isStageUnlocked(m, progress, unlockAll) : false;
   const name = (id: string): string => getStage(id)?.manifest?.name ?? id;
   return (
-    <ChoiceRow
-      label="World"
-      description={locked && current ? unlockHint(current, name) : (current?.description ?? '')}
-      value={current?.id ?? stageId}
-      options={stages.map((st) => ({
-        value: st.id,
-        label: `${st.manifest?.name ?? st.id}${st.manifest && !isStageUnlocked(st.manifest, progress, unlockAll) ? ' (locked)' : ''}`,
-      }))}
-      onChange={(id) => {
-        updateSection('setup', { stageId: id });
-        shell.stageManager?.preview(id);
-      }}
-      testId="setup-world"
-    />
+    <button type="button" className="setup-world" data-focusable onClick={() => navigate('stages')} onMouseEnter={(e) => e.currentTarget.focus({ preventScroll: true })} data-testid="setup-world">
+      <StageArt info={info} className="setup-world-art" />
+      <span className="setup-world-text">
+        <span className="setup-world-label">World</span>
+        <span className="setup-world-name">{m?.name ?? stageId}</span>
+        <span className="setup-world-desc">{locked && m ? unlockHint(m, name) : 'Change world'}</span>
+      </span>
+    </button>
   );
 }
 
