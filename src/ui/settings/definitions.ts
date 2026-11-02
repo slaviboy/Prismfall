@@ -129,3 +129,86 @@ export function registerTab(tab: TabDef, before?: TabId): void {
   if (idx >= 0) TABS.splice(idx, 0, tab);
   else TABS.push(tab);
 }
+
+const scalePct = (v: number): string => `${Math.round(v * 100)}%`;
+
+export const GRAPHICS_TAB: TabDef = {
+  id: 'graphics',
+  label: 'Graphics',
+  inGame: true,
+  resets: ['graphics'],
+  rows: [
+    {
+      kind: 'choice',
+      section: 'graphics',
+      key: 'preset',
+      label: 'Quality preset',
+      description: 'Sets every option below. Changing any of them switches to Custom.',
+      options: [
+        { value: 'low', label: 'Low' },
+        { value: 'medium', label: 'Medium' },
+        { value: 'high', label: 'High' },
+        { value: 'ultra', label: 'Ultra' },
+        { value: 'custom', label: 'Custom' },
+      ],
+    },
+    { kind: 'custom', id: 'graphicsInfo' },
+    { kind: 'group', label: 'Resolution and frame rate' },
+    { kind: 'slider', section: 'graphics', key: 'renderScale', label: 'Render resolution', description: 'Rendered pixels relative to your display. Below 100% is upscaled; above 100% supersamples.', min: 0.5, max: 2, step: 0.05, format: scalePct },
+    { kind: 'choice', section: 'graphics', key: 'upscaler', label: 'Upscaling', description: 'How lower render resolutions are scaled up to the display.', options: [{ value: 'fsr1', label: 'FSR 1 (sharper)' }, { value: 'bilinear', label: 'Bilinear' }] },
+    { kind: 'toggle', section: 'graphics', key: 'dynamicResolution', label: 'Dynamic resolution', description: 'Lowers render resolution automatically when the frame rate drops below the target.' },
+    { kind: 'slider', section: 'graphics', key: 'dynamicTargetFps', label: 'Dynamic resolution target', min: 30, max: 240, step: 1, format: (v) => `${v} fps`, when: (s) => s.graphics.dynamicResolution },
+    {
+      kind: 'choice',
+      section: 'graphics',
+      key: 'fpsCap',
+      label: 'Frame rate limit',
+      description: 'The browser synchronises to your display (VSync) and cannot exceed its refresh rate. Limits that do not divide the refresh rate evenly cause judder.',
+      options: [
+        { value: 'display', label: 'Display refresh' },
+        { value: 'half', label: 'Half refresh' },
+        { value: 'third', label: 'Third refresh' },
+        { value: '30', label: '30 fps' },
+        { value: '60', label: '60 fps' },
+        { value: '120', label: '120 fps' },
+        { value: '144', label: '144 fps' },
+      ],
+    },
+    { kind: 'group', label: 'Image quality' },
+    { kind: 'choice', section: 'graphics', key: 'antialias', label: 'Anti-aliasing', description: 'MSAA is replaced by SMAA automatically while ambient occlusion or depth of field is on.', options: [{ value: 'none', label: 'Off' }, { value: 'fxaa', label: 'FXAA' }, { value: 'smaa', label: 'SMAA' }, { value: 'msaa', label: 'MSAA 4×' }] },
+    { kind: 'toggle', section: 'graphics', key: 'postProcessing', label: 'Post-processing', description: 'Bloom, colour grading and screen effects.' },
+    { kind: 'slider', section: 'graphics', key: 'bloom', label: 'Bloom intensity', min: 0, max: 2, step: 0.05, format: percent, when: (s) => s.graphics.postProcessing },
+    { kind: 'choice', section: 'graphics', key: 'shadows', label: 'Shadow quality', options: [{ value: 'off', label: 'Off' }, { value: 'low', label: 'Low' }, { value: 'medium', label: 'Medium' }, { value: 'high', label: 'High' }] },
+    { kind: 'toggle', section: 'graphics', key: 'ambientOcclusion', label: 'Ambient occlusion', description: 'Screen-space contact shadows (GTAO).', when: (s) => s.graphics.postProcessing },
+    { kind: 'choice', section: 'graphics', key: 'reflections', label: 'Reflection quality', options: [{ value: 'off', label: 'Off' }, { value: 'low', label: 'Low' }, { value: 'high', label: 'High' }, { value: 'ultra', label: 'Ultra' }] },
+    { kind: 'toggle', section: 'graphics', key: 'depthOfField', label: 'Depth of field', description: 'Softly blurs the distant world. The playfield always stays sharp.', when: (s) => s.graphics.postProcessing },
+    { kind: 'slider', section: 'graphics', key: 'motionBlur', label: 'Motion blur', description: 'World motion only, never applied to pieces.', min: 0, max: 1, step: 0.05, format: percent, when: (s) => s.graphics.postProcessing },
+    { kind: 'toggle', section: 'graphics', key: 'screenSpaceEffects', label: 'Screen-space effects', description: 'Shockwave distortion and light streaks on big clears.' },
+    { kind: 'group', label: 'World' },
+    { kind: 'slider', section: 'graphics', key: 'particleDensity', label: 'Particle density', min: 0, max: 2, step: 0.05, format: percent },
+    { kind: 'choice', section: 'graphics', key: 'environmentDetail', label: 'Environment detail', options: [{ value: 'low', label: 'Low' }, { value: 'medium', label: 'Medium' }, { value: 'high', label: 'High' }, { value: 'ultra', label: 'Ultra' }] },
+    { kind: 'group', label: 'Renderer' },
+    { kind: 'choice', section: 'graphics', key: 'backend', label: 'Graphics API', description: 'Applies after reloading the page. Auto uses WebGPU when available, otherwise WebGL 2.', options: [{ value: 'auto', label: 'Auto' }, { value: 'webgpu', label: 'WebGPU' }, { value: 'webgl2', label: 'WebGL 2' }] },
+    { kind: 'toggle', section: 'graphics', key: 'showPerfOverlay', label: 'Performance overlay', description: 'Frame rate, frame time, GPU time and renderer details.' },
+    { kind: 'custom', id: 'graphicsActions' },
+  ],
+};
+
+export const CAMERA_TAB: TabDef = {
+  id: 'camera',
+  label: 'Camera',
+  inGame: true,
+  resets: ['camera'],
+  rows: [
+    { kind: 'slider', section: 'camera', key: 'zoom', label: 'Zoom', description: 'Never crops the playfield, hold or next pieces.', min: 0.8, max: 1.25, step: 0.01, format: percent },
+    { kind: 'slider', section: 'camera', key: 'zoomSensitivity', label: 'Zoom sensitivity', description: 'Mouse wheel zoom speed during play.', min: 0.1, max: 2, step: 0.05, format: percent },
+    { kind: 'slider', section: 'camera', key: 'distance', label: 'Camera distance', min: -4, max: 6, step: 0.1, format: (v) => (v === 0 ? 'Default' : `${v > 0 ? '+' : ''}${v.toFixed(1)}`) },
+    { kind: 'slider', section: 'camera', key: 'fov', label: 'Field of view', description: 'Lower values flatten perspective; the playfield size stays the same.', min: 30, max: 70, step: 1, format: (v) => `${v}°` },
+    { kind: 'toggle', section: 'camera', key: 'shake', label: 'Camera shake' },
+    { kind: 'slider', section: 'camera', key: 'shakeIntensity', label: 'Shake intensity', min: 0, max: 1, step: 0.05, format: percent, when: (s) => s.camera.shake },
+    { kind: 'slider', section: 'camera', key: 'movementIntensity', label: 'Camera movement', description: 'Gentle sway and beat emphasis.', min: 0, max: 1, step: 0.05, format: percent },
+  ],
+};
+
+registerTab(GRAPHICS_TAB, 'interface');
+registerTab(CAMERA_TAB, 'interface');

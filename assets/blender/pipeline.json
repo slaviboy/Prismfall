@@ -1,0 +1,6 @@
+{
+  "$comment": "Blender asset pipeline: generators run headless, exports are optimised into content/.",
+  "generators": [
+    { "script": "blocks.py", "outputs": [{ "from": "assets/blender/exports/blocks", "to": "content/shared/blocks" }] }
+  ]
+}

@@ -10,6 +10,8 @@ import { BootScreen, CreditsScreen, HighScoresScreen, MainMenu, ModeSelectScreen
 import { SettingsScreen } from './settings/SettingsScreen';
 import { useNavScope } from './navigation/useNavScope';
 import { reducedMotion } from '../settings/store';
+import { PerfOverlay } from './hud/PerfOverlay';
+import './settings/graphicsPanels';
 
 function Toasts(): ReactNode {
   const toasts = useApp((s) => s.toasts);
@@ -95,6 +97,7 @@ export function App(): ReactNode {
       {screen === 'game' || screen === 'replay' ? <Hud /> : null}
       {screen === 'game' ? <PauseOverlay /> : null}
       {screen === 'replay' ? <ReplayControls /> : null}
+      <PerfOverlay />
       <Toasts />
     </div>
   );

@@ -4,7 +4,7 @@ import { getMode, highScoreKey, type ModeId } from '../game/modes/modes';
 import { InputManager } from '../input/inputManager';
 import type { ActionEvent } from '../input/types';
 import type { InputAction } from '../settings/schema';
-import { getSettings, handlingFromSettings, replaceSettings, settingsStore, subscribeSettings } from '../settings/store';
+import { getSettings, handlingFromSettings, replaceSettings, settingsStore, subscribeSettings, updateSection } from '../settings/store';
 import { openSaveBackend, requestPersistentStorage, type SaveBackend } from '../storage/backend';
 import {
   HighScoreRepository,
@@ -17,6 +17,7 @@ import {
 } from '../storage/repositories';
 import { paletteFor } from '../config/palette';
 import { DebugView } from '../rendering/debug/DebugView';
+import { RenderSystem } from '../rendering/renderer/RenderSystem';
 import type { GameView } from '../rendering/view';
 import { GameSession, ReplaySession, type SessionConfig } from './GameSession';
 import { appStore, goBack, hudStore, navigate, pushCallout, toast, type GameResults } from './stores';
@@ -47,6 +48,8 @@ export class GameShell {
   statsRepo!: StatsRepository;
 
   view: GameView | null = null;
+  renderSystem: RenderSystem | null = null;
+  private lastRender = 0;
   session: GameSession | null = null;
   replaySession: ReplaySession | null = null;
   private lastOptions: StartOptions | null = null;
@@ -55,6 +58,7 @@ export class GameShell {
   private lastFrame = 0;
   private saveTimer: ReturnType<typeof setTimeout> | null = null;
   private readonly frameListeners = new Set<FrameListener>();
+  private readonly pendingEvents: GameEvent[] = [];
   private readonly eventListeners = new Set<(events: readonly GameEvent[]) => void>();
 
   async init(canvas: HTMLCanvasElement): Promise<void> {
@@ -75,13 +79,44 @@ export class GameShell {
 
     this.setupPersistence();
     this.setupInput();
-    this.view = this.createView(canvas);
+    this.view = await this.createView(canvas);
     window.addEventListener('resize', this.handleResize);
+    window.addEventListener('wheel', this.handleWheel, { passive: true });
     this.handleResize();
     this.rafId = requestAnimationFrame(this.frame);
   }
 
-  protected createView(canvas: HTMLCanvasElement): GameView {
+  /** URL overrides: ?view=debug2d (Canvas2D dev view), ?backend=webgl2|webgpu. */
+  private static urlParam(name: string): string | null {
+    return new URLSearchParams(location.search).get(name);
+  }
+
+  protected async createView(canvas: HTMLCanvasElement): Promise<GameView> {
+    if (GameShell.urlParam('view') === 'debug2d') return this.createDebugView(canvas);
+    const pref = (GameShell.urlParam('backend') as 'webgpu' | 'webgl2' | null) ?? getSettings().graphics.backend;
+    try {
+      const system = await RenderSystem.create(canvas, pref);
+      this.renderSystem = system;
+      system.applySettings(getSettings());
+      settingsStore.subscribe((state, prev) => {
+        const a = state.settings;
+        const b = prev.settings;
+        if (a.graphics !== b.graphics || a.gameplay !== b.gameplay || a.accessibility !== b.accessibility || a.camera !== b.camera || a.reactivity !== b.reactivity) {
+          system.applySettings(a);
+        }
+      });
+      system.onLost = (reason) => void this.recoverRenderer(canvas, reason);
+      await system.setBlockDesign(GameShell.urlParam('block') ?? 'framed');
+      appStore.setState({ renderer: { backend: system.kind, adapter: system.adapterLabel, fallback: system.adapter.isFallbackAdapter } });
+      return system;
+    } catch (err) {
+      console.error('[shell] 3D renderer failed to start; using the debug view', err);
+      toast('3D rendering is unavailable in this browser. Showing the simple playfield view.', 'warning', 8000);
+      return this.createDebugView(canvas);
+    }
+  }
+
+  private createDebugView(canvas: HTMLCanvasElement): GameView {
     const view = new DebugView(canvas, paletteFor(getSettings().accessibility.highContrast));
     const apply = (): void => {
       const s = getSettings();
@@ -97,6 +132,24 @@ export class GameShell {
     settingsStore.subscribe(apply);
     appStore.setState({ renderer: { backend: 'canvas2d', adapter: 'Canvas 2D (debug view)', fallback: false } });
     return view;
+  }
+
+  /** GPU device lost (driver reset, sleep): pause and rebuild the renderer on a fresh canvas. */
+  private async recoverRenderer(canvas: HTMLCanvasElement, reason: string): Promise<void> {
+    this.pause();
+    toast(`The graphics device was reset (${reason}). Restoring…`, 'warning', 6000);
+    const old = this.view;
+    this.view = null;
+    this.renderSystem = null;
+    try {
+      old?.dispose();
+    } catch {
+      /* already lost */
+    }
+    const fresh = canvas.cloneNode(false) as HTMLCanvasElement;
+    canvas.replaceWith(fresh);
+    this.view = await this.createView(fresh);
+    this.handleResize();
   }
 
   dispose(): void {
@@ -421,6 +474,24 @@ export class GameShell {
     return this.session?.elapsedMs ?? this.replaySession?.engine.tick ?? 0;
   }
 
+  /** Frame limiter: simulation and input run every rAF; only rendering is capped. */
+  private shouldRender(now: number): boolean {
+    const cap = getSettings().graphics.fpsCap;
+    if (cap === 'display') return true;
+    const refresh = this.renderSystem?.perf.refreshHz ?? 60;
+    const target = cap === 'half' ? refresh / 2 : cap === 'third' ? refresh / 3 : Number(cap);
+    if (!(target > 0) || target >= refresh - 0.5) return true;
+    return now - this.lastRender >= 1000 / target - 1.5;
+  }
+
+  /** Mouse-wheel camera zoom during play (Camera → zoom sensitivity). */
+  private readonly handleWheel = (e: WheelEvent): void => {
+    if (!this.session || appStore.getState().paused) return;
+    const cam = getSettings().camera;
+    const zoom = Math.min(1.25, Math.max(0.8, cam.zoom - e.deltaY * 0.0004 * cam.zoomSensitivity));
+    if (Math.abs(zoom - cam.zoom) > 1e-4) updateSection('camera', { zoom: Math.round(zoom * 100) / 100 });
+  };
+
   private readonly handleResize = (): void => {
     this.view?.resize();
     hudStore.setState({ boardRect: this.view?.boardRect() ?? null });
@@ -442,7 +513,16 @@ export class GameShell {
       this.eventListeners.forEach((l) => l(events));
     }
     if (engine) this.syncHud(t);
-    this.view?.render({ now: t, dt, engine, events, paused: appStore.getState().paused });
+    this.renderSystem?.tickPerf(t);
+    if (this.shouldRender(t)) {
+      this.view?.render({ now: t, dt: Math.min(0.1, (t - (this.lastRender || t)) / 1000), engine, events: this.pendingEvents.length > 0 ? [...this.pendingEvents, ...events] : events, paused: appStore.getState().paused });
+      this.pendingEvents.length = 0;
+      this.lastRender = t;
+      hudStore.setState({ boardRect: this.view?.boardRect() ?? null });
+    } else if (events.length > 0) {
+      // Keep events for the next rendered frame so effects are never lost.
+      this.pendingEvents.push(...events);
+    }
     this.frameListeners.forEach((l) => l(now, dt));
     if (session && session.status === 'finished' && !this.finishing) {
       const outcome = session.engine.phase === 'complete' ? 'complete' : 'gameOver';

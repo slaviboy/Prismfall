@@ -1,0 +1,51 @@
+{
+  "generator": "assets/blender/scripts/blocks.py",
+  "unit": "1 cell = 1 m",
+  "variants": {
+    "soft": {
+      "file": "soft.glb",
+      "triangles": 428,
+      "dimensions": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "chamfer": {
+      "file": "chamfer.glb",
+      "triangles": 92,
+      "dimensions": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "faceted": {
+      "file": "faceted.glb",
+      "triangles": 120,
+      "dimensions": [
+        1.14,
+        1.14,
+        1.14
+      ]
+    },
+    "pillow": {
+      "file": "pillow.glb",
+      "triangles": 768,
+      "dimensions": [
+        1.011,
+        1.011,
+        1.011
+      ]
+    },
+    "framed": {
+      "file": "framed.glb",
+      "triangles": 236,
+      "dimensions": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    }
+  }
+}

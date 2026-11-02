@@ -1037,3 +1037,54 @@ kbd {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ----------------------------------------------------------------- perf overlay & info */
+
+.perf-overlay {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(var(--night-rgb), 0.78);
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--haze);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+  max-width: 460px;
+}
+
+.perf-overlay strong {
+  color: var(--aqua);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 18px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 24px;
+  margin: 10px 0 6px;
+}
+
+.info-grid div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.info-grid dt {
+  color: var(--haze-dim);
+  font-size: 13px;
+}
+
+.info-grid dd {
+  margin: 0;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
