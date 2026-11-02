@@ -330,7 +330,15 @@
   "music": {
     "bpm": 84,
     "beatsPerBar": 4,
-    "tracks": []
+    "tracks": [
+      {
+        "id": "luminous-tide-moonwater",
+        "title": "Moonwater",
+        "kind": "composition",
+        "src": "music/main.ts"
+      }
+    ],
+    "defaultTrack": "luminous-tide-moonwater"
   },
   "ambience": {
     "preset": "ocean"

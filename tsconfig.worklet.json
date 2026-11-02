@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ES2023"],
+    "types": []
+  },
+  "include": ["src/**/*.worklet.ts", "src/audio/analysis/worklet-env.d.ts"],
+  "exclude": ["src/**/*.test.ts"]
+}

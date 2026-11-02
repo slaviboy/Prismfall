@@ -393,7 +393,15 @@
   "music": {
     "bpm": 128,
     "beatsPerBar": 4,
-    "tracks": []
+    "tracks": [
+      {
+        "id": "ember-foundry-anvil-pulse",
+        "title": "Anvil Pulse",
+        "kind": "composition",
+        "src": "music/main.ts"
+      }
+    ],
+    "defaultTrack": "ember-foundry-anvil-pulse"
   },
   "ambience": {
     "preset": "foundry"

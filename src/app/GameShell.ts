@@ -30,7 +30,10 @@ import { registerBuiltinEffects } from '../rendering/fx/lineClearEffects';
 import { StageManager } from '../stages/StageManager';
 import { availableStages, getStage } from '../stages/registry';
 import { isStageUnlocked } from '../stages/progression';
-import { MetronomeFeatureSource, type AudioFeatureSource, type BeatEvent } from '../audio/analysis/features';
+import type { AudioFeatureSource, BeatEvent } from '../audio/analysis/features';
+import { AudioSystem, type StageAudio } from '../audio/AudioSystem';
+import type { Composition } from '../audio/sequencer/composition';
+import { loadMusicModule, type StageInfo } from '../stages/registry';
 
 export interface StartOptions {
   readonly modeId: ModeId;
@@ -57,8 +60,11 @@ export class GameShell {
   view: GameView | null = null;
   renderSystem: RenderSystem | null = null;
   stageManager: StageManager | null = null;
-  /** Music feature source (metronome stand-in until the audio engine is running). */
-  features: AudioFeatureSource = new MetronomeFeatureSource(100);
+  readonly audio = new AudioSystem();
+  /** Music features: real analysis while music plays, metronome stand-in otherwise. */
+  get features(): AudioFeatureSource {
+    return this.audio.features;
+  }
   private readonly pendingBeats: BeatEvent[] = [];
   private lastRender = 0;
   session: GameSession | null = null;
@@ -90,6 +96,10 @@ export class GameShell {
 
     this.setupPersistence();
     this.setupInput();
+    this.audio.applySettings(getSettings());
+    settingsStore.subscribe((state, prev) => {
+      if (state.settings.audio !== prev.settings.audio || state.settings.reactivity !== prev.settings.reactivity) this.audio.applySettings(state.settings);
+    });
     registerBuiltinComponents();
     registerBuiltinEffects();
     this.view = await this.createView(canvas);
@@ -136,12 +146,8 @@ export class GameShell {
     const manager = new StageManager(system);
     this.stageManager = manager;
     manager.onActivate = (info) => {
-      const music = info.manifest?.music;
-      if (music && this.features instanceof MetronomeFeatureSource) {
-        this.features.setBpm(music.bpm);
-        this.features.beatsPerBar = music.beatsPerBar;
-      }
       hudStore.setState({ stageName: info.manifest?.name ?? '' });
+      void this.loadStageAudio(info);
     };
     // Rebuild environments when their quality inputs change.
     let rebuildTimer: ReturnType<typeof setTimeout> | null = null;
@@ -154,6 +160,56 @@ export class GameShell {
     );
     // Show the attract world behind the menus as soon as possible.
     void manager.show(this.menuStageId(), { transition: 0 });
+  }
+
+  /** Builds the stage's audio description (composition module, ambience, SFX palette). */
+  private async loadStageAudio(info: StageInfo): Promise<void> {
+    const m = info.manifest;
+    if (!m) return;
+    const trackSpec = m.music.tracks.find((t) => t.id === m.music.defaultTrack) ?? m.music.tracks[0];
+    let composition: Composition | null = null;
+    if (trackSpec?.kind === 'composition') {
+      try {
+        composition = (await loadMusicModule(info, trackSpec.src)) as Composition;
+      } catch (err) {
+        console.warn('[audio] could not load stage music', err);
+      }
+    }
+    const stageAudio: StageAudio = {
+      id: m.id,
+      bpm: composition?.bpm ?? m.music.bpm,
+      beatsPerBar: composition?.beatsPerBar ?? m.music.beatsPerBar,
+      composition,
+      file: null,
+      ambience: m.ambience?.preset ?? null,
+      ambienceLevel: m.ambience?.level ?? 1,
+      sfxPreset: m.sfx.preset,
+    };
+    await this.audio.setStage(stageAudio);
+  }
+
+  /** Starts audio from a user gesture (boot screen, first input). */
+  unlockAudio(): void {
+    if (this.audio.unlocked) return;
+    void this.audio.unlock().then((ok) => appStore.setState({ audioUnlocked: ok }));
+  }
+
+  /** Gamepad rumble scaled by the controller settings. */
+  rumble(strong: number, weak: number, ms: number): void {
+    const c = getSettings().controller;
+    if (!c.rumble || this.input.lastDevice !== 'gamepad') return;
+    this.input.gamepad.rumble(strong * c.rumbleStrength, weak * c.rumbleStrength, ms);
+  }
+
+  private hapticsFor(events: readonly GameEvent[]): void {
+    for (const e of events) {
+      if (e.type === 'hardDrop') this.rumble(0.25, 0.45, 70);
+      else if (e.type === 'lineClear') {
+        const k = Math.min(1, e.lines / 4 + (e.spin !== 'none' ? 0.3 : 0) + (e.perfectClear ? 0.5 : 0));
+        this.rumble(0.3 + k * 0.6, 0.4 + k * 0.4, 90 + k * 260);
+      } else if (e.type === 'gameOver') this.rumble(0.8, 0.6, 600);
+      else if (e.type === 'levelUp') this.rumble(0.2, 0.5, 160);
+    }
   }
 
   /** The stage shown behind menus: the last selection if unlocked, else the first available. */
@@ -395,6 +451,7 @@ export class GameShell {
     const s = this.session;
     if (!s || s.status === 'finished' || appStore.getState().paused) return;
     s.pause(performance.now());
+    this.audio.pause();
     appStore.setState({ paused: true, pauseView: 'menu' });
     this.input.setContext('menu');
   }
@@ -404,6 +461,7 @@ export class GameShell {
     if (!s || !appStore.getState().paused) return;
     appStore.setState({ paused: false });
     this.input.setContext('gameplay');
+    this.audio.resume();
     s.resume(performance.now(), getSettings().gameplay.resumeCountdown);
   }
 
@@ -424,6 +482,7 @@ export class GameShell {
   }
 
   private endSessionView(): void {
+    if (this.audio.director.paused) this.audio.resume();
     this.session = null;
     this.stopReplay();
     hudStore.setState({ visible: false, callouts: [] });
@@ -592,7 +651,9 @@ export class GameShell {
     if (events.length > 0) {
       for (const c of describeEvents(events)) pushCallout(c);
       this.eventListeners.forEach((l) => l(events));
+      this.hapticsFor(events);
     }
+    if (engine) this.audio.onGameEvents(events, engine, dt);
     if (engine) this.syncHud(t);
     this.renderSystem?.tickPerf(t);
     if (this.shouldRender(t)) {
@@ -630,6 +691,8 @@ export class GameShell {
     const intro = this.session?.introPhase(now) ?? null;
     const countdown = this.session?.countdownValue(now) ?? null;
     const danger = e.board.stackHeight() >= e.board.visibleRows - 3;
+    if (intro !== h.intro && intro !== null) this.audio.play(intro === 'go' ? 'go' : 'countdown');
+    if (countdown !== h.countdown && countdown !== null) this.audio.play('countdown');
     if (
       h.score !== e.score ||
       h.level !== e.level ||

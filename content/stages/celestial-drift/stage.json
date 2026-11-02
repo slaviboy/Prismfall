@@ -315,7 +315,15 @@
   "music": {
     "bpm": 92,
     "beatsPerBar": 4,
-    "tracks": []
+    "tracks": [
+      {
+        "id": "celestial-drift-orbit-of-glass",
+        "title": "Orbit of Glass",
+        "kind": "composition",
+        "src": "music/main.ts"
+      }
+    ],
+    "defaultTrack": "celestial-drift-orbit-of-glass"
   },
   "ambience": {
     "preset": "space"

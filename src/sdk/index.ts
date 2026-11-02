@@ -31,6 +31,21 @@ export { colorUniform, floatUniform, linear, seeded, scaledCount, zColor, zVec3 
 export { runRecipe, makeRecipeEffect, BASE_RECIPE, type ClearRecipe } from '../rendering/fx/lineClearEffects';
 export { resolveBlockPreset, BLOCK_PRESETS, type BlockMaterialPreset } from '../rendering/materials/blockPresets';
 export { z } from 'zod';
+export {
+  composition,
+  hold,
+  arp,
+  bassline,
+  beat,
+  melody,
+  stab,
+  once,
+  type Composition,
+  type InstrumentSpec,
+  type SectionSpec,
+  type PartGenerator,
+} from '../audio/sequencer/composition';
+export type { FileTrackMeta } from '../audio/music-director/tracks';
 
 import type { StageModule } from './types';
 

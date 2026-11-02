@@ -86,7 +86,7 @@ export function App(): ReactNode {
 
   return (
     <div className={`ui-layer ${animations ? 'animated' : 'still'}`} data-screen={screen}>
-      {screen === 'boot' ? <BootScreen onStart={() => navigate('main', true)} /> : null}
+      {screen === 'boot' ? <BootScreen onStart={() => { shell.unlockAudio(); navigate('main', true); }} /> : null}
       {screen === 'main' ? <MainMenu /> : null}
       {screen === 'modes' ? <ModeSelectScreen onPick={pickMode} /> : null}
       {screen === 'setup' ? <ModeSetupScreen modeId={lastMode} onStart={start} /> : null}
