@@ -12,6 +12,9 @@ export class OnsetDetector {
   private prev = 0;
   private prevPrev = 0;
   private prevTime = 0;
+  /** Decaying maximum of recent flux: decay tails of a hit can't exceed a fraction of the hit. */
+  private recentPeak = 0;
+  private lastPushTime = 0;
 
   constructor(
     private readonly k = 1.6,
@@ -37,7 +40,10 @@ export class OnsetDetector {
   /** Feeds one flux value; returns the onset strength (>0) for the previous frame if it was an onset. */
   push(flux: number, time: number): { onset: boolean; strength: number; time: number } {
     const { median, mad } = this.medianMad();
-    const threshold = Math.max(this.floor, median + this.k * mad * 1.4826);
+    const dt = Math.max(0, time - this.lastPushTime);
+    this.lastPushTime = time;
+    this.recentPeak = Math.max(this.recentPeak * Math.exp(-dt / 0.6), this.prev);
+    const threshold = Math.max(this.floor, median + this.k * mad * 1.4826, this.recentPeak * 0.35);
     const candidate = this.prev;
     const isPeak = candidate > threshold && candidate >= this.prevPrev && candidate > flux;
     const result = { onset: false, strength: 0, time: this.prevTime };
