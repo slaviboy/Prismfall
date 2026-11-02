@@ -14,13 +14,40 @@ export const FRAME = {
   size: BAND_COUNT + BAR_COUNT + 4,
 } as const;
 
+/** Magnitude compression for flux: bins below about -60 dBFS contribute almost nothing. */
+const FLUX_GAMMA = 1000;
+
+/** log(1 + γ·|X|) compression of a bin magnitude (full-scale sine ≈ 0.8). */
+export function fluxCompress(mag: number): number {
+  return Math.log10(1 + FLUX_GAMMA * mag);
+}
+
+/**
+ * Half-wave rectified spectral flux between compressed spectra, averaged over bins from
+ * `first`. Each bin is compared with the maximum of its neighbours in the previous frame,
+ * which suppresses vibrato and detuned-unison beating. Copies `cur` into `prev`.
+ */
+export function rectifiedFlux(cur: Float32Array, prev: Float32Array, first: number): number {
+  const last = cur.length - 1;
+  let flux = 0;
+  for (let k = first; k <= last; k++) {
+    const ref = Math.max(prev[k - 1] as number, prev[k] as number, prev[Math.min(last, k + 1)] as number);
+    const d = (cur[k] as number) - ref;
+    if (d > 0) flux += d;
+  }
+  prev.set(cur);
+  return flux / (last - first + 1);
+}
+
 /** Bands below this frequency use the long (high-resolution) FFT. */
 const SPLIT_HZ = 250;
 
 /**
  * Multi-resolution spectral analysis of a mono stream in fixed hops:
- * a long FFT (default 4096) resolves sub-bass and bass, a short FFT (1024) gives responsive
- * flux, centroid and high bands. Allocation-free per hop.
+ * a long FFT (default 4096) resolves sub-bass and bass, a short FFT (2048) gives responsive
+ * flux, centroid and high bands. 2048 rather than 1024 because a 21 ms window is shorter than
+ * one cycle of a 40 Hz sub, whose power then swings with phase and fakes onsets (measured on the
+ * acceptance corpus: bass-heavy onset F 0.64 -> 0.95). Allocation-free per hop.
  */
 export class FrameAnalyzer {
   readonly hop: number;
@@ -37,6 +64,8 @@ export class FrameAnalyzer {
   private readonly longPow: Float32Array;
   private readonly shortPow: Float32Array;
   private readonly prevLog: Float32Array;
+  private readonly curLog: Float32Array;
+  private readonly fluxFirstBin: number;
   private readonly bandsLong: BandMapper;
   private readonly bandsShort: BandMapper;
   private readonly barsLong: BandMapper;
@@ -48,7 +77,7 @@ export class FrameAnalyzer {
   private readonly tmpBars = new Float32Array(BAR_COUNT);
   private readonly tmpBarsS = new Float32Array(BAR_COUNT);
 
-  constructor(sampleRate: number, longSize = 4096, shortSize = 1024, hop = 512) {
+  constructor(sampleRate: number, longSize = 4096, shortSize = 2048, hop = 512, fluxMinHz = 0) {
     this.sampleRate = sampleRate;
     this.hop = hop;
     this.history = new Float32Array(longSize);
@@ -63,6 +92,8 @@ export class FrameAnalyzer {
     this.longPow = new Float32Array(longSize / 2 + 1);
     this.shortPow = new Float32Array(shortSize / 2 + 1);
     this.prevLog = new Float32Array(shortSize / 2 + 1);
+    this.curLog = new Float32Array(shortSize / 2 + 1);
+    this.fluxFirstBin = Math.max(1, Math.round((fluxMinHz * shortSize) / sampleRate));
     const bars = logBars(BAR_COUNT);
     this.bandsLong = new BandMapper(sampleRate, longSize, DEFAULT_BANDS);
     this.bandsShort = new BandMapper(sampleRate, shortSize, DEFAULT_BANDS);
@@ -116,21 +147,18 @@ export class FrameAnalyzer {
     out[FRAME.rms] = 20 * Math.log10(Math.max(1e-7, Math.sqrt(sum / Math.max(1, n))));
     out[FRAME.peak] = 20 * Math.log10(Math.max(1e-7, peak));
 
-    // Spectral flux (half-wave rectified log-magnitude rise) and centroid from the short FFT.
-    let flux = 0;
+    // Spectral flux and centroid from the short FFT.
     let wsum = 0;
     let psum = 0;
     const binHz = this.sampleRate / s;
-    for (let k = 1; k < this.shortPow.length; k++) {
+    const cur = this.curLog;
+    for (let k = 0; k < cur.length; k++) {
       const p = this.shortPow[k] as number;
-      const lg = Math.log10(1e-12 + p * shortScale);
-      const d = lg - (this.prevLog[k] as number);
-      if (d > 0) flux += d;
-      this.prevLog[k] = lg;
+      cur[k] = fluxCompress(Math.sqrt(p * shortScale));
       wsum += k * binHz * p;
       psum += p;
     }
-    out[FRAME.flux] = flux / this.shortPow.length;
+    out[FRAME.flux] = rectifiedFlux(cur, this.prevLog, this.fluxFirstBin);
     out[FRAME.centroid] = psum > 1e-14 ? wsum / psum : 0;
   }
 }

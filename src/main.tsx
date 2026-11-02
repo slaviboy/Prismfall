@@ -40,7 +40,7 @@ async function boot(): Promise<void> {
     </StrictMode>,
   );
   if (__PRISMFALL_HOOKS__) {
-    (window as unknown as Record<string, unknown>).__PRISMFALL__ = { shell, appStore, hudStore, settingsStore, progressStore, navigator, updateSection, getSettings, perfStore };
+    (window as unknown as Record<string, unknown>).__PRISMFALL__ = { shell, appStore, hudStore, settingsStore, progressStore, navigator, updateSection, getSettings, perfStore, lab: () => import('./audio/lab/AudioLab') };
   }
 }
 

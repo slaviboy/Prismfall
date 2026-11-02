@@ -21,15 +21,20 @@ class PrismfallAnalysisProcessor extends AudioWorkletProcessor {
   private frames: Float32Array;
   private times: Float64Array;
   private count = 0;
+  /** Batch buffers returned by the main thread (no allocation once the pool is warm). */
+  private readonly pool: { frames: Float32Array; times: Float64Array }[] = [];
 
   constructor(options: { processorOptions?: Options }) {
     super();
-    const o = options.processorOptions ?? { longSize: 4096, shortSize: 1024, hop: 512 };
+    const o = options.processorOptions ?? { longSize: 4096, shortSize: 2048, hop: 512 };
     this.hop = o.hop;
     this.analyzer = new FrameAnalyzer(sampleRate, o.longSize, o.shortSize, o.hop);
     this.buffer = new Float32Array(o.hop);
     this.frames = new Float32Array(FRAME.size * BATCH);
     this.times = new Float64Array(BATCH);
+    this.port.onmessage = (e: { data: { frames: Float32Array; times: Float64Array } }) => {
+      if (this.pool.length < 8) this.pool.push(e.data);
+    };
   }
 
   process(inputs: Float32Array[][]): boolean {
@@ -46,8 +51,9 @@ class PrismfallAnalysisProcessor extends AudioWorkletProcessor {
         this.count++;
         if (this.count === BATCH) {
           this.port.postMessage({ frames: this.frames, times: this.times }, [this.frames.buffer, this.times.buffer]);
-          this.frames = new Float32Array(FRAME.size * BATCH);
-          this.times = new Float64Array(BATCH);
+          const reuse = this.pool.pop();
+          this.frames = reuse?.frames ?? new Float32Array(FRAME.size * BATCH);
+          this.times = reuse?.times ?? new Float64Array(BATCH);
           this.count = 0;
         }
       }

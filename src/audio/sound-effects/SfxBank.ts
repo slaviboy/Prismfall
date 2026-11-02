@@ -194,19 +194,8 @@ export class SfxBank {
     if (!ctx) return;
     const key = `${presetName}:${keyRoot}`;
     if (key === this.currentKey) return;
-    const preset = SFX_PRESETS[presetName] ?? (SFX_PRESETS.glass as SfxPreset);
-    const root = 48 + keyRoot;
     const entries = await Promise.all(
-      SFX_IDS.map(async (id) => {
-        if (overrides[id]) return [id, overrides[id] as AudioBuffer] as const;
-        const recipe = RECIPES[id];
-        const offline = new OfflineAudioContext(2, Math.ceil(recipe.length * ctx.sampleRate), ctx.sampleRate);
-        const gain = offline.createGain();
-        gain.gain.value = 0.9;
-        gain.connect(offline.destination);
-        recipe.render(offline, gain, preset, root);
-        return [id, await offline.startRendering()] as const;
-      }),
+      SFX_IDS.map(async (id) => [id, overrides[id] ?? (await renderSfx(id, presetName, keyRoot, ctx.sampleRate))] as const),
     );
     this.buffers = new Map(entries);
     this.currentKey = key;
@@ -251,14 +240,33 @@ export class SfxBank {
   }
 }
 
-/** Exposed for offline loudness checks (audio acceptance tests). */
-export function renderRecipe(ctx: OfflineAudioContext, id: SfxId, presetName: string, keyRoot: number): void {
-  const gain = ctx.createGain();
-  gain.gain.value = 0.9;
-  gain.connect(ctx.destination);
-  RECIPES[id].render(ctx, gain, SFX_PRESETS[presetName] ?? (SFX_PRESETS.glass as SfxPreset), 48 + keyRoot);
-}
+/** Peak ceiling of every rendered effect (dBFS): layered transients never clip before the mix. */
+const SFX_CEILING_DB = -1.5;
 
-export function recipeLength(id: SfxId): number {
-  return RECIPES[id].length;
+/**
+ * Renders one effect offline for a preset and key root (0..11), then attenuates it if its peak
+ * exceeds the ceiling. Used by the bank and by the audio acceptance tests.
+ */
+export async function renderSfx(id: SfxId, presetName: string, keyRoot: number, sampleRate: number): Promise<AudioBuffer> {
+  const recipe = RECIPES[id];
+  const offline = new OfflineAudioContext(2, Math.ceil(recipe.length * sampleRate), sampleRate);
+  const gain = offline.createGain();
+  gain.gain.value = 0.9;
+  gain.connect(offline.destination);
+  recipe.render(offline, gain, SFX_PRESETS[presetName] ?? (SFX_PRESETS.glass as SfxPreset), 48 + keyRoot);
+  const buffer = await offline.startRendering();
+  let peak = 0;
+  for (let ch = 0; ch < buffer.numberOfChannels; ch++) {
+    const d = buffer.getChannelData(ch);
+    for (let i = 0; i < d.length; i++) peak = Math.max(peak, Math.abs(d[i] as number));
+  }
+  const ceiling = Math.pow(10, SFX_CEILING_DB / 20);
+  if (peak > ceiling) {
+    const k = ceiling / peak;
+    for (let ch = 0; ch < buffer.numberOfChannels; ch++) {
+      const d = buffer.getChannelData(ch);
+      for (let i = 0; i < d.length; i++) d[i] = (d[i] as number) * k;
+    }
+  }
+  return buffer;
 }

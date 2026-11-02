@@ -28,14 +28,14 @@ function clickTrack(bpm: number, seconds: number, offset = 0.05): { signal: Floa
   for (let t = offset; t < seconds; t += 60 / bpm) {
     onsets.push(t);
     const start = Math.round(t * SR);
-    for (let i = 0; i < 0.08 * SR && start + i < out.length; i++) out[start + i] += rnd() * 1.2 * Math.exp(-i / (0.012 * SR));
+    for (let i = 0; i < 0.08 * SR && start + i < out.length; i++) out[start + i] = (out[start + i] as number) + rnd() * 1.2 * Math.exp(-i / (0.012 * SR));
   }
   return { signal: out, onsets };
 }
 
 /** Runs the analyzer over a whole signal in hops, yielding (frame, time). */
 function analyze(signal: Float32Array, cb: (frame: Float32Array, time: number) => void): void {
-  const analyzer = new FrameAnalyzer(SR, 4096, 1024, HOP);
+  const analyzer = new FrameAnalyzer(SR, 4096, 2048, HOP);
   const frame = new Float32Array(FRAME.size);
   for (let i = 0; i + HOP <= signal.length; i += HOP) {
     analyzer.process(signal.subarray(i, i + HOP), frame);

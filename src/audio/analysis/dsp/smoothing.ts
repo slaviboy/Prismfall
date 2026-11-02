@@ -35,36 +35,47 @@ export class PeakHold {
 }
 
 /**
- * Adaptive normalisation of a dB level into 0..1. The ceiling follows peaks quickly and relaxes
- * slowly; the floor follows lows slowly. A minimum window keeps quiet passages from being
- * amplified into noise, and a gate maps near-silence to zero.
+ * Level-adaptive normaliser for dB signals. A slow mean tracks the typical level and a
+ * fast-attack/slow-release peak tracks the loud moments: the typical level maps to `rest`
+ * (about 0.45) and peaks map to 1, so steady material sits mid-scale and accents stand out.
+ * The mapped window is at least `minRangeDb` wide, so quiet noise is never stretched to full
+ * scale, and anything at or below the gate reads 0.
  */
 export class AdaptiveNormalizer {
-  private floor: number;
-  private ceiling: number;
+  private mean = 0;
+  private peak = 0;
+  private low = 0;
+  private primed = false;
   constructor(
     private readonly minRangeDb = 24,
     private readonly gateDb = -70,
-    initialFloor = -60,
-    initialCeiling = -20,
-  ) {
-    this.floor = initialFloor;
-    this.ceiling = initialCeiling;
-  }
+    private readonly rest = 0.45,
+  ) {}
 
   update(db: number, dt: number): number {
-    if (db > this.ceiling) this.ceiling += (db - this.ceiling) * (1 - Math.exp(-dt / 0.05));
-    else this.ceiling += (db - this.ceiling) * (1 - Math.exp(-dt / 6));
-    if (db < this.floor) this.floor += (db - this.floor) * (1 - Math.exp(-dt / 0.6));
-    else this.floor += (db - this.floor) * (1 - Math.exp(-dt / 12));
-    const floor = Math.max(this.floor, this.gateDb);
-    const range = Math.max(this.minRangeDb, this.ceiling - floor);
-    if (db <= this.gateDb) return 0;
-    return Math.max(0, Math.min(1, (db - (this.ceiling - range)) / range));
+    if (db <= this.gateDb || !Number.isFinite(db)) return 0;
+    if (!this.primed) {
+      this.mean = this.peak = this.low = db;
+      this.primed = true;
+    }
+    // The mean rises faster than it falls, so a quiet passage reads quiet for a while.
+    this.mean += (db - this.mean) * (1 - Math.exp(-dt / (db > this.mean ? 2.5 : 6)));
+    this.peak += (db - this.peak) * (1 - Math.exp(-dt / (db > this.peak ? 0.03 : 3)));
+    this.peak = Math.max(this.peak, this.mean);
+    this.low += (db - this.low) * (1 - Math.exp(-dt / (db < this.low ? 0.3 : 8)));
+    this.low = Math.min(this.low, this.mean);
+    const half = Math.max(this.minRangeDb / 2, this.peak - this.mean);
+    const v = this.rest + ((1 - this.rest) * (db - this.mean)) / half;
+    return Math.max(0, Math.min(1, v));
+  }
+
+  /** Typical level (dB) of the signal. */
+  get level(): number {
+    return this.mean;
   }
 
   get dynamicRangeDb(): number {
-    return this.ceiling - this.floor;
+    return this.peak - this.low;
   }
 }
 

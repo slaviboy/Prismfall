@@ -27,6 +27,30 @@ export const DEFAULT_TUNING: ProcessorTuning = {
 
 const BAND_KEYS = ['subBass', 'bass', 'lowMid', 'mid', 'highMid', 'treble'] as const;
 
+/** Per-band weight of an attack in the onset accent: snare body and crack count as much as kick sub (listeners lock to the backbeat), hats little. */
+const ACCENT_WEIGHTS = [0.6, 0.6, 1, 1, 0.6, 0.15] as const;
+/** Attack rise is measured against the minimum of this many previous frames (≈85 ms at 48 kHz). */
+const ACCENT_FRAMES = 8;
+
+/**
+ * Flux of a clear drum hit at nominal mix level; flux is scaled against its recent peaks but
+ * never against less than this, so smooth or quiet music doesn't read as turbulent.
+ */
+const FLUX_REF = 0.05;
+
+/** Ratio of a positive signal to its recent peak (instant attack, exponential release). */
+class PeakRatio {
+  private peak = 0;
+  constructor(
+    private readonly ref: number,
+    private readonly releaseS: number,
+  ) {}
+  update(x: number, dt: number): number {
+    this.peak = x > this.peak ? x : this.peak * Math.exp(-dt / this.releaseS);
+    return Math.min(1, x / Math.max(this.peak, this.ref));
+  }
+}
+
 /**
  * Turns raw analysis frames into the normalised, smoothed AudioFeatures fields:
  * bands, RMS, flux, transients, centroid, quiet detection, spectrum, onsets and tempo.
@@ -40,7 +64,9 @@ export class FeatureProcessor {
   private readonly fluxEnv = new EnvelopeFollower(4, 120);
   private readonly transientEnv = new EnvelopeFollower(2, 160);
   private readonly centroidEnv = new EnvelopeFollower(80, 400);
-  private readonly fluxScale = new AdaptiveNormalizer(18, -200, -60, -20);
+  private readonly fluxScale = new PeakRatio(FLUX_REF, 8);
+  /** Long-term loudness reference (dBFS) for quiet-passage detection. */
+  private loudRef = -30;
   private readonly onsets = new OnsetDetector();
   readonly tempo: TempoTracker;
   private readonly hopSeconds: number;
@@ -48,6 +74,16 @@ export class FeatureProcessor {
   /** Raw (unsmoothed) normalised band values of the last frame, for the debug dashboard. */
   readonly rawBands = new Float32Array(BAND_COUNT);
   readonly peakBands = new Float32Array(BAND_COUNT);
+  /** Recent band levels (dB) for attack accents: ACCENT_FRAMES × BAND_COUNT ring. */
+  private readonly bandHistory = new Float32Array(ACCENT_FRAMES * BAND_COUNT).fill(-120);
+  private historyIndex = 0;
+  /** Low-band (kick) and mid-band (snare) parts of the last accent. */
+  private accentLow = 0;
+  private accentMid = 0;
+  /** Raw spectral flux of the last frame (debug/tests). */
+  rawFlux = 0;
+  /** Detection latency of the analysis window, subtracted from reported onset times. */
+  onsetLatencyS = 0;
   lastOnsetTime = -Infinity;
   onsetCount = 0;
   tuning: ProcessorTuning = DEFAULT_TUNING;
@@ -89,23 +125,29 @@ export class FeatureProcessor {
     f.dynamicRange = this.rmsNorm.dynamicRangeDb;
 
     const flux = frame[FRAME.flux] as number;
-    const fluxNorm = silent ? 0 : this.fluxScale.update(20 * Math.log10(flux + 1e-9), dt);
+    this.rawFlux = flux;
+    const fluxNorm = silent ? 0 : this.fluxScale.update(flux, dt);
     f.spectralFlux = this.fluxEnv.update(fluxNorm, dt);
     const onset = this.onsets.push(silent ? 0 : flux, time);
     if (onset.onset) {
-      this.lastOnsetTime = onset.time;
+      this.lastOnsetTime = onset.time - this.onsetLatencyS;
       this.onsetCount++;
       this.transientEnv.value = Math.max(this.transientEnv.value, 0.4 + onset.strength * 0.6);
     }
     f.transientIntensity = this.transientEnv.update(0, dt);
-    this.tempo.push(onset.onset ? 0.3 + onset.strength : fluxNorm * 0.3, time);
+    // Onsets are reported one hop late (look-ahead) on top of the window latency.
+    this.tempo.latencyS = this.onsetLatencyS + this.hopSeconds;
+    const accent = onset.onset ? this.accent(frame) : 0;
+    this.tempo.push(onset.onset ? 1 : 0, time, accent, this.accentLow, this.accentMid);
+    this.recordBands(frame);
 
     const centroidHz = frame[FRAME.centroid] as number;
     const bright = centroidHz > 0 ? Math.max(0, Math.min(1, Math.log2(centroidHz / 200) / Math.log2(8000 / 200))) : 0;
     f.spectralCentroid = this.centroidEnv.update(bright, dt);
 
-    // Quiet passage: low level for more than half a second.
-    this.quietTime = level < 0.18 ? this.quietTime + dt : 0;
+    // Quiet passage: well below the long-term loudness (or simply soft) for over half a second.
+    if (!silent) this.loudRef += (rmsDb - this.loudRef) * (1 - Math.exp(-dt / (rmsDb > this.loudRef ? 4 : 20)));
+    this.quietTime = silent || rmsDb < this.loudRef - 10 || rmsDb < -50 ? this.quietTime + dt : 0;
     f.quiet = this.quietTime > 0.5;
 
     const up = 1 - Math.exp(-dt / 0.012);
@@ -118,5 +160,31 @@ export class FeatureProcessor {
     }
 
     f.estimatedBpm = this.tempo.bpm;
+  }
+
+  /**
+   * Weighted attack size: each band's rise (dB) over its minimum in the last ~85 ms. Also splits
+   * it into a low part (sub-bass, bass: kicks) and a mid part (low-mid to high-mid: snares).
+   */
+  private accent(frame: Float32Array): number {
+    let a = 0;
+    this.accentLow = 0;
+    this.accentMid = 0;
+    for (let b = 0; b < BAND_COUNT; b++) {
+      let min = Infinity;
+      for (let i = 0; i < ACCENT_FRAMES; i++) min = Math.min(min, this.bandHistory[i * BAND_COUNT + b] as number);
+      const rise = Math.max(0, Math.min(30, (frame[FRAME.bands + b] as number) - min));
+      const v = (ACCENT_WEIGHTS[b] as number) * rise;
+      a += v;
+      if (b < 2) this.accentLow += v;
+      else if (b < 5) this.accentMid += v;
+    }
+    return a;
+  }
+
+  private recordBands(frame: Float32Array): void {
+    const base = this.historyIndex * BAND_COUNT;
+    for (let b = 0; b < BAND_COUNT; b++) this.bandHistory[base + b] = frame[FRAME.bands + b] as number;
+    this.historyIndex = (this.historyIndex + 1) % ACCENT_FRAMES;
   }
 }

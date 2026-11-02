@@ -3,11 +3,14 @@ import type { AudioEngine } from '../engine/AudioEngine';
 import type { AudioFeatures } from './features';
 import { BandMapper, DEFAULT_BANDS, logBars, powerToDb } from './dsp/bands';
 import { FeatureProcessor, type ProcessorTuning } from './dsp/featureProcessor';
-import { BAND_COUNT, BAR_COUNT, FRAME } from './dsp/frameAnalyzer';
+import { BAND_COUNT, BAR_COUNT, FRAME, fluxCompress, rectifiedFlux } from './dsp/frameAnalyzer';
 
 export type AnalysisPath = 'worklet' | 'analyser' | 'none';
 
 const HOP = 512;
+const SHORT_FFT = 2048;
+/** Analyser magnitudes (|X|/N, Blackman) scaled to the worklet's calibration (full-scale sine ≈ 0.8). */
+const ANALYSER_MAG_SCALE = 3.9;
 
 interface QueuedFrame {
   time: number;
@@ -31,7 +34,8 @@ export class AnalysisEngine {
   private readonly pool: Float32Array[] = [];
   private freq: Float32Array<ArrayBuffer> = new Float32Array(0);
   private time: Float32Array<ArrayBuffer> = new Float32Array(0);
-  private prevDb: Float32Array = new Float32Array(0);
+  private prevLog: Float32Array = new Float32Array(0);
+  private curLog: Float32Array = new Float32Array(0);
   private bands: BandMapper | null = null;
   private bars: BandMapper | null = null;
   private readonly frame = new Float32Array(FRAME.size);
@@ -63,7 +67,8 @@ export class AnalysisEngine {
     this.analyser = analyser;
     this.freq = new Float32Array(analyser.frequencyBinCount);
     this.time = new Float32Array(fftSize);
-    this.prevDb = new Float32Array(analyser.frequencyBinCount).fill(-110);
+    this.prevLog = new Float32Array(analyser.frequencyBinCount);
+    this.curLog = new Float32Array(analyser.frequencyBinCount);
     this.bands = new BandMapper(ctx.sampleRate, fftSize, DEFAULT_BANDS);
     this.bars = new BandMapper(ctx.sampleRate, fftSize, logBars(BAR_COUNT));
     // Rebuild the processor for the real sample rate (hop duration drives tempo estimation).
@@ -80,9 +85,14 @@ export class AnalysisEngine {
           numberOfOutputs: 0,
           channelCount: 2,
           channelCountMode: 'explicit',
-          processorOptions: { longSize: fftSize, shortSize: 1024, hop: HOP },
+          processorOptions: { longSize: fftSize, shortSize: SHORT_FFT, hop: HOP },
         });
-        node.port.onmessage = (e: MessageEvent<{ frames: Float32Array; times: Float64Array }>) => this.receive(e.data.frames, e.data.times);
+        node.port.onmessage = (e: MessageEvent<{ frames: Float32Array<ArrayBuffer>; times: Float64Array<ArrayBuffer> }>) => {
+          this.receive(e.data.frames, e.data.times);
+          // Hand the batch buffers back so the audio thread never allocates.
+          node.port.postMessage({ frames: e.data.frames, times: e.data.times }, [e.data.frames.buffer, e.data.times.buffer]);
+        };
+        this.processor.onsetLatencyS = (SHORT_FFT + HOP) / 2 / ctx.sampleRate;
         this.engine.analysisTap.connect(node);
         this.node = node;
         this.path = 'worklet';
@@ -92,6 +102,7 @@ export class AnalysisEngine {
       }
     }
     this.path = 'analyser';
+    this.processor.onsetLatencyS = fftSize / 2 / ctx.sampleRate;
     return this.path;
   }
 
@@ -140,7 +151,6 @@ export class AnalysisEngine {
     const n = this.freq.length;
     if (this.power.length === 0) this.power.push(new Float32Array(n + 1));
     const power = this.power[0] as Float32Array;
-    let flux = 0;
     let wsum = 0;
     let psum = 0;
     const binHz = (this.engine.ctx?.sampleRate ?? 48000) / this.fftSize;
@@ -148,12 +158,11 @@ export class AnalysisEngine {
       const db = this.freq[k] as number;
       const p = Math.pow(10, db / 10);
       power[k] = p;
-      const d = (db - (this.prevDb[k] as number)) / 20;
-      if (d > 0) flux += d;
-      this.prevDb[k] = db;
+      this.curLog[k] = fluxCompress(ANALYSER_MAG_SCALE * Math.sqrt(p));
       wsum += k * binHz * p;
       psum += p;
     }
+    const flux = rectifiedFlux(this.curLog, this.prevLog, 1);
     (this.bands as BandMapper).energies(power, this.bandOut);
     for (let b = 0; b < BAND_COUNT; b++) this.frame[FRAME.bands + b] = powerToDb((this.bandOut[b] as number) * 2);
     (this.bars as BandMapper).energies(power, this.barOut);
@@ -167,7 +176,7 @@ export class AnalysisEngine {
     }
     this.frame[FRAME.rms] = 20 * Math.log10(Math.max(1e-7, Math.sqrt(sum / this.time.length)));
     this.frame[FRAME.peak] = 20 * Math.log10(Math.max(1e-7, peak));
-    this.frame[FRAME.flux] = (flux / n) * 0.05;
+    this.frame[FRAME.flux] = flux;
     this.frame[FRAME.centroid] = psum > 0 ? wsum / psum : 0;
     this.processor.process(this.frame, this.engine.now, f, Math.max(1 / 480, dt));
   }
