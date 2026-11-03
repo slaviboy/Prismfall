@@ -121,7 +121,7 @@ export class EnvironmentHost {
     }
     this.current = env;
     this.applyLook(env.manifest, seconds > 0.001);
-    blockGeometry?.(env.manifest.blocks.geometry);
+    void blockGeometry;
     if (seconds > 0.6) this.render.feedback.stageTransition(env.manifest.palette.accent);
   }
 
@@ -134,7 +134,7 @@ export class EnvironmentHost {
     r.setToneMapping(m.grade.toneMapping, m.grade.exposure);
     r.scene.environmentIntensity = m.grade.envIntensity;
     const preset: BlockMaterialPreset = resolveBlockPreset(m.blocks.material, m.blocks.overrides as Partial<BlockMaterialPreset>);
-    r.board.setPreset(preset);
+    r.setStageBlocks(preset, m.blocks.palette ?? null, m.blocks.geometry);
     const accent = new Color(m.palette.accent).convertSRGBToLinear();
     const plate = new Color(m.palette.plate).convertSRGBToLinear();
     r.board.setAccent([accent.r, accent.g, accent.b], [plate.r, plate.g, plate.b]);

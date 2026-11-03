@@ -17,6 +17,7 @@ import {
   normalView,
   positionGeometry,
   positionLocal,
+  round,
   positionViewDirection,
   sin,
   smoothstep,
@@ -27,6 +28,7 @@ import {
 } from 'three/tsl';
 import { frameUniforms, type FloatUniform } from '../shaders/uniforms';
 import type { BlockMaterialPreset } from './blockPresets';
+import { buildSurface, type BlockSurface } from './blockSurfaces';
 
 /** Floats per instance in the packed buffer: [r, g, b, glyph] [aoMask, dropRows, dropTime, lockTime]. */
 export const BLOCK_STRIDE = 8;
@@ -45,6 +47,8 @@ export interface BlockMaterialHandle {
   readonly dropDuration: FloatUniform;
   /** Player's Block glow setting: scales self-illumination. */
   readonly glowScale: FloatUniform;
+  /** Surface kind baked into this material (a different surface needs a new material). */
+  readonly surface: BlockSurface;
   apply(preset: BlockMaterialPreset): void;
 }
 
@@ -133,13 +137,17 @@ export function createBlockMaterial(buffer: InstancedInterleavedBuffer, preset: 
   // Piece colour with a saturation lift, so lighting, clearcoat and bloom can't bleach it.
   const raw = a0.xyz;
   const base = max(mix(vec3(dot(raw, vec3(0.2126, 0.7152, 0.0722))), raw, u.saturation), 0);
+  // Themed surface pattern; the cell position (rounded instance translation) varies it per block.
+  const seed = round(positionLocal.sub(positionGeometry));
+  const surf = buildSurface(preset.surface, { p, seed, base, ndv, edge, time: t, music: frameUniforms.bass.mul(0.6).add(frameUniforms.beatPulse.mul(0.4)).mul(frameUniforms.reactivity) });
   const music = frameUniforms.bass.mul(0.6).add(frameUniforms.beatPulse.mul(0.4)).mul(u.musicGlow).mul(frameUniforms.reactivity);
-  const albedo = base.mul(u.albedo).mul(ao).mul(surface).mul(mix(float(1), float(0.3), glyphMask));
+  const albedo = surf.albedo.mul(u.albedo).mul(ao).mul(surface).mul(mix(float(1), float(0.3), glyphMask));
   // A preset edge colour only tints the piece colour (at most 40 %); pure white edges washed blocks out.
   const edgeTint = mix(mix(base, u.edgeColor, 0.4), base, u.edgeUsePiece);
   const glow = base
     .mul(u.emissive.add(core).add(rim).add(music).add(flash.mul(1.4)).add(spawnPulse))
     .add(edgeTint.mul(edge.mul(u.edgeGlow).mul(float(1).add(music))))
+    .add(surf.emissive)
     .mul(ao)
     .mul(mix(float(1), float(0.35), glyphMask))
     .mul(intensity)
@@ -148,6 +156,7 @@ export function createBlockMaterial(buffer: InstancedInterleavedBuffer, preset: 
   const material = new MeshPhysicalNodeMaterial();
   material.positionNode = lifted;
   material.colorNode = vec4(albedo, 1);
+  if (surf.roughness) material.roughnessNode = surf.roughness;
   material.emissiveNode = glow;
   // Blocks feed only part of their glow to bloom: full-strength halos merged neighbouring blocks
   // into a bright haze that was tiring to look at.
@@ -160,6 +169,7 @@ export function createBlockMaterial(buffer: InstancedInterleavedBuffer, preset: 
     glyphs,
     dropDuration,
     glowScale,
+    surface: preset.surface,
     apply(next: BlockMaterialPreset): void {
       material.roughness = next.roughness;
       material.metalness = next.metalness;

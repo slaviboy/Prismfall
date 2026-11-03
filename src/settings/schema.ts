@@ -129,6 +129,8 @@ export const settingsSchema = z.object({
       antialias: e(['none', 'fxaa', 'smaa', 'msaa'] as const, 'msaa'),
       bloom: n(0, 2, 1),
       blockGlow: n(0, 1.5, 0.6),
+      /** 'stage' = each world's block theme; 'classic' = traditional colours and glass blocks everywhere. */
+      blockStyle: e(['stage', 'classic'] as const, 'stage'),
       shadows: e(['off', 'low', 'medium', 'high'] as const, 'medium'),
       particleDensity: n(0, 2, 1),
       environmentDetail: e(['low', 'medium', 'high', 'ultra'] as const, 'high'),

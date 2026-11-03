@@ -120,6 +120,8 @@ export const stageManifestSchema = z.object({
       geometry: z.string().default('framed'),
       material: z.string().default('prism'),
       overrides: z.record(z.string(), z.unknown()).default({}),
+      /** Theme colours for the seven pieces (each keeps its hue family so pieces stay distinct). */
+      palette: z.object({ I: color, O: color, T: color, S: color, Z: color, J: color, L: color }).optional(),
     })
     .prefault({}),
   environment: z.object({ layers: z.array(layerSchema).min(1) }),

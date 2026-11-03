@@ -47,7 +47,7 @@ class InstanceSet {
   readonly data: Float32Array;
   readonly buffer: InstancedInterleavedBuffer;
   readonly mesh: InstancedMesh;
-  readonly handle: BlockMaterialHandle;
+  handle: BlockMaterialHandle;
 
   constructor(geometry: BufferGeometry, capacity: number, preset: BlockMaterialPreset) {
     this.data = new Float32Array(capacity * BLOCK_STRIDE);
@@ -71,6 +71,23 @@ class InstanceSet {
     d[o + 5] = dropRows;
     d[o + 6] = dropTime;
     d[o + 7] = lockTime;
+  }
+
+  /** Applies a preset; a different surface kind compiles a new material (keeping glow and glyph state). */
+  setPreset(preset: BlockMaterialPreset): void {
+    if (preset.surface === this.handle.surface) {
+      this.handle.apply(preset);
+      return;
+    }
+    const old = this.handle;
+    const next = createBlockMaterial(this.buffer, preset);
+    next.glowScale.value = old.glowScale.value;
+    next.glyphs.value = old.glyphs.value;
+    next.intensity.value = old.intensity.value;
+    next.dropDuration.value = old.dropDuration.value;
+    this.handle = next;
+    this.mesh.material = next.material;
+    old.material.dispose();
   }
 
   commit(count: number): void {
@@ -196,7 +213,7 @@ export class BoardView {
   }
 
   setPreset(preset: BlockMaterialPreset): void {
-    for (const set of [this.settled, this.active, this.pods]) set.handle.apply(preset);
+    for (const set of [this.settled, this.active, this.pods]) set.setPreset(preset);
   }
 
   setGhostOpacity(opacity: number): void {

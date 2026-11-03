@@ -2,12 +2,12 @@ import { ACESFilmicToneMapping, AgXToneMapping, Group, NeutralToneMapping, PMREM
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import type { Settings } from '../../settings/schema';
 import { reducedMotion } from '../../settings/store';
-import { paletteFor } from '../../config/palette';
+import { DEFAULT_PALETTE, paletteFor, type PiecePalette } from '../../config/palette';
 import { BoardView } from '../board/BoardView';
 import { CameraRig } from '../camera/CameraRig';
 import { DefaultBackdrop } from '../environments/DefaultBackdrop';
 import { LightRig } from '../lighting/LightRig';
-import { resolveBlockPreset } from '../materials/blockPresets';
+import { resolveBlockPreset, type BlockMaterialPreset } from '../materials/blockPresets';
 import { PostPipeline } from '../postprocessing/PostPipeline';
 import { frameUniforms } from '../shaders/uniforms';
 import type { BoardRect, GameView, ViewFrame } from '../view';
@@ -182,6 +182,25 @@ export class RenderSystem implements GameView {
   private blockDesign = 'procedural';
 
   /** Switches the block geometry to a Blender-authored design (falls back to procedural). */
+  /** The active stage's block theme (preset, colours, geometry); combined with settings in applyBlockStyle. */
+  private stageBlocks: { preset: BlockMaterialPreset; palette: PiecePalette | null; geometry: string } = { preset: resolveBlockPreset('prism'), palette: null, geometry: 'framed' };
+
+  setStageBlocks(preset: BlockMaterialPreset, palette: PiecePalette | null, geometry: string): void {
+    this.stageBlocks = { preset, palette, geometry };
+    this.applyBlockStyle();
+  }
+
+  /** Stage theme, or classic colours and glass blocks; high contrast always wins for colours. */
+  private applyBlockStyle(): void {
+    const s = this.settings;
+    const classic = s?.graphics.blockStyle === 'classic';
+    const palette = s?.accessibility.highContrast ? paletteFor(true) : classic || !this.stageBlocks.palette ? DEFAULT_PALETTE : this.stageBlocks.palette;
+    this.board.setPalette(palette);
+    this.feedback.piecePalette = palette;
+    this.board.setPreset(classic ? resolveBlockPreset('prism') : this.stageBlocks.preset);
+    void this.setBlockDesign(classic ? 'framed' : this.stageBlocks.geometry);
+  }
+
   async setBlockDesign(id: string): Promise<void> {
     if (id === this.blockDesign) return;
     this.blockDesign = id;
@@ -220,8 +239,7 @@ export class RenderSystem implements GameView {
       screenEffects: s.accessibility.screenEffects,
     });
     this.lights.setShadowQuality(g.shadows);
-    this.board.setPalette(paletteFor(s.accessibility.highContrast));
-    this.feedback.piecePalette = paletteFor(s.accessibility.highContrast);
+    this.applyBlockStyle();
     this.feedback.settings = { intensity: s.gameplay.effectsIntensity, reducedMotion: reducedMotion(s), screenEffects: s.accessibility.screenEffects * (s.graphics.screenSpaceEffects ? 1 : 0.4) };
     this.bursts.density = Math.max(0.05, g.particleDensity);
     this.environments.reactivity = { ...s.reactivity };
