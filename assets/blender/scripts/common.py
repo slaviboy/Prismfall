@@ -115,7 +115,7 @@ def save_blend(path: str) -> None:
 
 def write_metadata(path: str, data: dict) -> None:
     ensure_dir(os.path.dirname(path))
-    with open(path, "w", encoding="utf-8") as fh:
+    with open(path, "w", encoding="utf-8", newline="\n") as fh:
         json.dump(data, fh, indent=2)
 
 

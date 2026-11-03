@@ -13,6 +13,10 @@ export const SCALES = {
   phrygianDominant: [0, 1, 4, 5, 7, 8, 10],
   pentatonicMinor: [0, 3, 5, 7, 10],
   pentatonicMajor: [0, 2, 4, 7, 9],
+  /** Japanese "in" (miyako-bushi) pentatonic: melancholic, with a minor second. */
+  inScale: [0, 1, 5, 7, 8],
+  /** Japanese "yo" pentatonic: open and bright. */
+  yoScale: [0, 2, 5, 7, 9],
 } as const;
 
 export type ScaleName = keyof typeof SCALES;

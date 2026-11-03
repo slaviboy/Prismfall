@@ -48,6 +48,8 @@ export const heightfieldSchema = z.object({
   base: z.number().default(-14),
   seed: z.number().default(1),
   layers: z.array(heightLayerSchema).default([]),
+  /** Optional lowest height above `base` (valleys flatten into meadows); clearings may still go below. */
+  floor: z.number().optional(),
   /** Keeps the area under and around the board low and calm. */
   clearing: z
     .object({ center: z.tuple([z.number(), z.number()]).default([0, 0]), radius: z.number().default(30), falloff: z.number().default(40), depth: z.number().default(0) })
@@ -200,6 +202,11 @@ export function createHeightfield(params: HeightfieldParams): (x: number, z: num
   return (x: number, z: number): number => {
     let h = 0;
     for (const f of layers) h += f(x, z);
+    if (params.floor !== undefined && h < params.floor) {
+      // Soft floor: valleys ease into flats instead of cutting off sharply.
+      const d = params.floor - h;
+      h = params.floor - d / (1 + d);
+    }
     if (clearing) {
       const d = Math.hypot(x - clearing.center[0], z - clearing.center[1]);
       const k = smooth((d - clearing.radius) / clearing.falloff);

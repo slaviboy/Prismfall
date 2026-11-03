@@ -1,0 +1,105 @@
+import { arp, bassline, beat, composition, hold, melody, once } from '@prismfall/sdk';
+
+/**
+ * "Lanterns on Still Water": original Japanese-inspired ambient music in the in-scale. Koto-like
+ * plucks, a breathy shakuhachi-like lead, woodblocks and soft taiko over warm pads and strings.
+ */
+export default composition({
+  id: 'ancient-garden-lanterns',
+  title: 'Lanterns on Still Water',
+  bpm: 82,
+  beatsPerBar: 4,
+  key: 'D',
+  scale: 'inScale',
+  swing: 0.08,
+  space: { decay: 5.5, wet: 0.42, damping: 0.45 },
+  stinger: 'koto',
+  instruments: {
+    pad: { kind: 'pad', wave: 'triangle', voices: 3, detune: 6, cutoff: 1300, attack: 2.4, release: 4.5, gain: 0.32, reverb: 0.7 },
+    strings: { kind: 'strings', wave: 'sawtooth', voices: 3, detune: 10, cutoff: 1200, attack: 1.8, release: 3.5, gain: 0.28, reverb: 0.75, layer: 0.35 },
+    koto: { kind: 'pluck', wave: 'triangle', cutoff: 3200, envAmount: 2.4, decay: 0.9, gain: 0.32, reverb: 0.45, delay: 0.3, pan: -0.2 },
+    kotoHigh: { kind: 'pluck', wave: 'triangle', cutoff: 3800, envAmount: 2, decay: 0.6, gain: 0.22, reverb: 0.5, delay: 0.4, pan: 0.3, layer: 0.3 },
+    flute: { kind: 'lead', wave: 'sine', cutoff: 2600, envAmount: 0.4, attack: 0.18, decay: 1.6, gain: 0.26, reverb: 0.7, delay: 0.3, glide: 0.09, layer: 0.25 },
+    bell: { kind: 'bell', ratio: 2.76, index: 0.8, decay: 3.4, gain: 0.18, reverb: 0.8, layer: 0.5 },
+    sub: { kind: 'sub', gain: 0.4, duck: 0.2, layer: 0.3 },
+    taiko: { kind: 'tom', tone: 64, decay: 0.5, gain: 0.55, reverb: 0.4, layer: 0.35 },
+    block: { kind: 'perc', gain: 0.28, pan: 0.25, layer: 0.3 },
+    rim: { kind: 'tom', tone: 420, decay: 0.06, gain: 0.2, pan: -0.3, layer: 0.5 },
+    shaker: { kind: 'shaker', gain: 0.14, pan: 0.35, layer: 0.6 },
+    riser: { kind: 'riser', gain: 0.32, reverb: 0.6 },
+    impact: { kind: 'impact', gain: 0.38, reverb: 0.8 },
+  },
+  sections: [
+    {
+      name: 'mist on the pond',
+      kind: 'intro',
+      bars: 8,
+      intensity: 0.15,
+      chords: ['i', 'iv', 'i', 'v'],
+      parts: {
+        pad: hold({ octave: 3, voicing: 'open', vel: 0.48 }),
+        koto: melody("1:4 2:2 3:2 4:8 | 3:4 2:4 1:8 | 5:4 4:2 3:2 2:4 1:4 | 1:16", { octave: 4, vel: 0.5 }),
+      },
+    },
+    {
+      name: 'garden path',
+      kind: 'verse',
+      bars: 16,
+      intensity: 0.42,
+      chords: ['i', 'iv', 'iii', 'i', 'v', 'iv', 'ii', 'i'],
+      parts: {
+        pad: hold({ octave: 3, voicing: 'open', vel: 0.44 }),
+        kotoHigh: arp({ rate: 2, octave: 5, span: 1, order: 'pendulum', vel: 0.36 }),
+        flute: melody("5:8 4:4 3:4 | 2:12 1:4 | 3:6 4:2 5:8 | 4:8 3:8", { octave: 4, vel: 0.48 }),
+        sub: bassline('x.......x.......', { octave: 1 }),
+        taiko: beat('X.......x.......'),
+        block: beat('....x.....x.x...', { vel: 0.6 }),
+      },
+    },
+    {
+      name: 'wind rises',
+      kind: 'build',
+      bars: 4,
+      intensity: 0.62,
+      chords: ['iv', 'v', 'iv', 'v'],
+      parts: {
+        strings: hold({ octave: 3, voicing: 'open', vel: 0.48 }),
+        koto: arp({ rate: 1, octave: 4, span: 2, order: 'up', vel: 0.4 }),
+        taiko: beat('X...x...X...x...', { fillLastBar: 'X.x.X.x.XxXxXXXX' }),
+        riser: once({ dur: 64, vel: 0.55 }),
+      },
+    },
+    {
+      name: 'blossom storm',
+      kind: 'drop',
+      bars: 16,
+      intensity: 0.84,
+      chords: ['i', 'iv', 'iii', 'i', 'v', 'iv', 'ii', 'v'],
+      parts: {
+        impact: once({ dur: 4, vel: 0.6 }),
+        pad: hold({ octave: 3, voicing: 'open', vel: 0.42 }),
+        strings: hold({ octave: 3, voicing: 'spread', vel: 0.46 }),
+        bell: hold({ octave: 5, voicing: 'close', vel: 0.3, every: 4 }),
+        flute: melody("5:6 4:2 3:4 4:4 | 5:8 1':8 | 5:4 4:4 3:4 2:4 | 1:16 | 3:6 4:2 5:4 4:4 | 3:8 2:8 | 3:4 2:4 1:4 2:4 | 1:16", { octave: 4, vel: 0.55 }),
+        koto: arp({ rate: 2, octave: 4, span: 2, order: 'pendulum', vel: 0.38 }),
+        sub: bassline('x.....x...x.....', { octave: 1, fifths: 0.2 }),
+        taiko: beat('X.....x...X.....'),
+        block: beat('..x.x...x.x.x..x', { vel: 0.6 }),
+        rim: beat('....x.......x...', { vel: 0.7 }),
+        shaker: beat('x.x.x.x.x.x.x.x.', { vel: 0.4, prob: 0.8 }),
+      },
+    },
+    {
+      name: 'still water',
+      kind: 'break',
+      bars: 8,
+      intensity: 0.25,
+      chords: ['iv', 'i', 'v', 'i'],
+      parts: {
+        pad: hold({ octave: 3, voicing: 'open', vel: 0.44 }),
+        koto: melody("1':4 5:4 4:4 3:4 | 4:8 3:8 | 2:4 1:4 2:4 3:4 | 1:16", { octave: 4, vel: 0.46 }),
+      },
+    },
+  ],
+  loopFrom: 1,
+});

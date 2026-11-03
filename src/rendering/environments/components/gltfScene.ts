@@ -21,6 +21,8 @@ const schema = z.object({
   snapToGround: z.boolean().default(false),
   /** How far snapped objects sink below the lowest ground point under them. */
   sink: z.number().default(0.5),
+  /** Per-object snapping: `highest` for things that span dips (bridges), `center` for small props. */
+  snapRules: z.array(z.object({ match: z.string(), mode: z.enum(['lowest', 'center', 'highest', 'fixed']), sink: z.number().optional(), y: z.number().optional() })).default([]),
 });
 
 type Params = z.infer<typeof schema>;
@@ -77,10 +79,13 @@ export const gltfSceneComponent: ComponentFactory<Params> = {
         box.setFromObject(child);
         const cx = (box.min.x + box.max.x) / 2;
         const cz = (box.min.z + box.max.z) / 2;
-        let ground = Infinity;
-        for (const [x, z] of [[cx, cz], [box.min.x, box.min.z], [box.max.x, box.min.z], [box.min.x, box.max.z], [box.max.x, box.max.z]] as const) ground = Math.min(ground, ctx.ground.height(x, z));
+        const rule = p.snapRules.find((r) => new RegExp(r.match, 'i').test(child.name));
+        const mode = rule?.mode ?? 'lowest';
+        const samples = [[cx, cz], [box.min.x, box.min.z], [box.max.x, box.min.z], [box.min.x, box.max.z], [box.max.x, box.max.z]].map(([x, z]) => ctx.ground.height(x as number, z as number));
+        // 'fixed' rests the object at an explicit height (a bridge over water spans no ground at all).
+        const ground = mode === 'fixed' ? (rule?.y ?? 0) : mode === 'center' ? (samples[0] as number) : mode === 'highest' ? Math.max(...samples) : Math.min(...samples);
         const worldBase = new Vector3().setFromMatrixPosition(child.matrixWorld).y;
-        child.position.y += (ground - p.sink - worldBase) / root.scale.y;
+        child.position.y += (ground - (rule?.sink ?? p.sink) - worldBase) / root.scale.y;
       }
       root.updateMatrixWorld(true);
     }

@@ -54,6 +54,15 @@
           "to": "content/stages/frozen-kingdom/models"
         }
       ]
+    },
+    {
+      "script": "japan_kit.py",
+      "outputs": [
+        {
+          "from": "assets/blender/exports/japan",
+          "to": "content/stages/ancient-garden/models"
+        }
+      ]
     }
   ]
 }

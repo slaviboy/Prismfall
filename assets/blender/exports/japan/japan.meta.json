@@ -1,0 +1,20 @@
+{
+  "generator": "assets/blender/scripts/japan_kit.py",
+  "objects": [
+    "pagoda",
+    "shrine_hall",
+    "gate",
+    "bridge",
+    "gate_far"
+  ],
+  "triangles": 4284,
+  "materials": [
+    "lacquer",
+    "woodDark",
+    "roofTile",
+    "plaster",
+    "gold",
+    "lanternPaper"
+  ],
+  "license": "Original work for Prismfall"
+}
