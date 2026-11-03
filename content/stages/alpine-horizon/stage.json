@@ -772,7 +772,8 @@
     "material": "mineral"
   },
   "unlock": {
-    "type": "always"
+    "type": "voyageLeg",
+    "leg": "alpine-horizon"
   },
   "thumbnail": "previews/thumb.jpg"
 }

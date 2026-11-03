@@ -642,7 +642,8 @@
     "material": "obsidian"
   },
   "unlock": {
-    "type": "always"
+    "type": "voyageLeg",
+    "leg": "ember-core"
   },
   "thumbnail": "previews/thumb.jpg"
 }

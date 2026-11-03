@@ -50,7 +50,7 @@ export default composition({
       parts: {
         warm: hold({ octave: 3, voicing: 'open', vel: 0.45 }),
         pad: hold({ octave: 3, voicing: 'spread', vel: 0.38, every: 2 }),
-        seq: arp({ rate: 2, octave: 5, span: 2, order: 'up', vel: 0.34 }),
+        seq: arp({ rate: 2, octave: 4, span: 2, order: 'up', vel: 0.34 }),
         sub: bassline('x...............', { octave: 1 }),
         tick: beat('..x...x...x...x.', { vel: 0.45, prob: 0.7 }),
       },
@@ -63,7 +63,7 @@ export default composition({
       chords: ['IV', 'V', 'vi', 'V'],
       parts: {
         strings: hold({ octave: 3, voicing: 'spread', vel: 0.5 }),
-        seq: arp({ rate: 1, octave: 5, span: 2, order: 'up', vel: 0.36 }),
+        seq: arp({ rate: 1, octave: 4, span: 2, order: 'up', vel: 0.36 }),
         snap: beat('....x.......x...', { fillLastBar: '..x.x.x.xxxxxxxx' }),
         riser: once({ dur: 64, vel: 0.55 }),
       },
@@ -81,7 +81,7 @@ export default composition({
         strings: hold({ octave: 3, voicing: 'open', vel: 0.46 }),
         sparkle: hold({ octave: 5, voicing: 'close', vel: 0.28, every: 2 }),
         lead: melody("5:8 6:4 5:4 | 3:8 2:8 | 4:6 3:2 2:4 1:4 | 2:16 | 5:8 1':4 7:4 | 6:8 5:8 | 4:4 3:4 2:4 3:4 | 1:16", { octave: 4, vel: 0.5 }),
-        seq: arp({ rate: 2, octave: 5, span: 2, order: 'pendulum', vel: 0.3 }),
+        seq: arp({ rate: 2, octave: 4, span: 2, order: 'pendulum', vel: 0.3 }),
         sub: bassline('x.......x.......', { octave: 1, fifths: 0.2 }),
         kick: beat('x.........x.....'),
         snap: beat('....x.......x...'),

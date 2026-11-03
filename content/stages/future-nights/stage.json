@@ -628,7 +628,8 @@
     "material": "neon"
   },
   "unlock": {
-    "type": "always"
+    "type": "voyageLeg",
+    "leg": "future-nights"
   },
   "thumbnail": "previews/thumb.jpg"
 }

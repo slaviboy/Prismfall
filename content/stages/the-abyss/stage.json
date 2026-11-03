@@ -820,7 +820,8 @@
     "material": "water"
   },
   "unlock": {
-    "type": "always"
+    "type": "voyageLeg",
+    "leg": "the-abyss"
   },
   "thumbnail": "previews/thumb.jpg"
 }

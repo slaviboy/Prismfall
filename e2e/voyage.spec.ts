@@ -35,35 +35,35 @@ test.describe('voyage', () => {
 
     await page.getByTestId('area-first-light').click();
     await expect.poll(() => hooks<string>(page, 'h.shell.session?.status'), { timeout: 20_000 }).toBe('running');
-    await expect(page.getByTestId('hud-voyage')).toContainText('Leg 1 of 3: Luminous Tide');
+    await expect(page.getByTestId('hud-voyage')).toContainText('Leg 1 of 12: Luminous Tide');
     const plan = await hooks<{ stage: string; endLines: number; level: number }[]>(page, 'h.shell.voyage.plan.legs.map((l) => ({ stage: l.stage, endLines: l.endLines, level: l.level }))');
-    expect(plan.map((l) => l.stage)).toEqual(['luminous-tide', 'ember-foundry', 'celestial-drift']);
+    expect(plan.map((l) => l.stage)).toEqual(['luminous-tide', 'ancient-garden', 'frozen-kingdom', 'alpine-horizon', 'moving-sands', 'enchanted-wilderness', 'the-abyss', 'ember-foundry', 'ember-core', 'northern-lights', 'future-nights', 'celestial-drift']);
 
     // Reach the first leg's goal with a real line clear: the next world arrives on a bar line.
     await setUpOneLineClear(page, (plan[0] as { endLines: number }).endLines - 1);
     await page.keyboard.press('Space');
-    await expect(page.getByTestId('hud-voyage')).toContainText('Leg 2 of 3: Ember Foundry', { timeout: 5000 });
+    await expect(page.getByTestId('hud-voyage')).toContainText('Leg 2 of 12: Ancient Garden', { timeout: 5000 });
     await expect.poll(() => hooks<number>(page, 'h.shell.session.engine.level')).toBeGreaterThanOrEqual((plan[1] as { level: number }).level);
-    await expect.poll(() => hooks<string | null>(page, 'h.shell.stageManager.activeId'), { timeout: 15_000 }).toBe('ember-foundry');
-    await expect.poll(() => hooks<string | null>(page, 'h.shell.audio.stageId'), { timeout: 15_000 }).toBe('ember-foundry');
+    await expect.poll(() => hooks<string | null>(page, 'h.shell.stageManager.activeId'), { timeout: 15_000 }).toBe('ancient-garden');
+    await expect.poll(() => hooks<string | null>(page, 'h.shell.audio.stageId'), { timeout: 15_000 }).toBe('ancient-garden');
     // The board carried over the transition.
     expect(await hooks<string>(page, 'h.shell.session.status')).toBe('running');
 
     // Jump to the last leg and finish the journey.
-    const total = (plan[2] as { endLines: number }).endLines;
+    const total = (plan[11] as { endLines: number }).endLines;
     await setUpOneLineClear(page, total - 1);
     await page.waitForTimeout(200);
-    await expect(page.getByTestId('hud-voyage')).toContainText('Leg 3 of 3: Celestial Drift', { timeout: 5000 });
+    await expect(page.getByTestId('hud-voyage')).toContainText('Leg 12 of 12: Deep Cosmos', { timeout: 5000 });
     await setUpOneLineClear(page, total - 1);
     await page.keyboard.press('Space');
     await expect(page.getByTestId('results-screen')).toBeVisible({ timeout: 15_000 });
     await expect(page.getByTestId('results-screen')).toContainText('Voyage complete');
-    await expect(page.getByTestId('results-legs')).toHaveText('3 of 3');
+    await expect(page.getByTestId('results-legs')).toHaveText('12 of 12');
     await expect(page.getByTestId('results-unlocked')).toContainText('Ember Foundry');
-    await expect(page.getByTestId('results-unlocked')).toContainText('Celestial Drift');
+    await expect(page.getByTestId('results-unlocked')).toContainText('Deep Cosmos');
     const progress = await hooks<{ legs: string[]; areas: string[] }>(page, '({ legs: h.progressStore.getState().progress.voyage.completedLegs, areas: h.progressStore.getState().progress.voyage.completedAreas })');
-    expect(progress.legs.sort()).toEqual(['celestial-drift', 'ember-foundry', 'luminous-tide']);
-    expect(progress.areas.length).toBe(3);
+    expect(progress.legs.length).toBe(12);
+    expect(progress.areas.length).toBe(4);
 
     // The unlocks persist: the worlds are open in world select and every area can be a start.
     await page.getByTestId('results-menu').click();

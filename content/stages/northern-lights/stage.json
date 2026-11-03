@@ -783,7 +783,8 @@
     "material": "aurora"
   },
   "unlock": {
-    "type": "always"
+    "type": "voyageLeg",
+    "leg": "northern-lights"
   },
   "thumbnail": "previews/thumb.jpg"
 }

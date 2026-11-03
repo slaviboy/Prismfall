@@ -897,7 +897,8 @@
     "material": "organic"
   },
   "unlock": {
-    "type": "always"
+    "type": "voyageLeg",
+    "leg": "enchanted-wilderness"
   },
   "thumbnail": "previews/thumb.jpg"
 }

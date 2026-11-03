@@ -3,7 +3,7 @@
   "id": "ember-foundry",
   "name": "Ember Foundry",
   "description": "A forge hall deep underground. Gears turn, pistons strike on the downbeat and every clear throws sparks.",
-  "order": 50,
+  "order": 48,
   "tags": [
     "industrial",
     "fire",
