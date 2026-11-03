@@ -1,0 +1,25 @@
+{
+  "uid": "4f143d7d1718414fb70609607a7f528c",
+  "name": "El Palacio Palenque/Palenque's Palace",
+  "page": "https://sketchfab.com/3d-models/el-palacio-palenquepalenques-palace-4f143d7d1718414fb70609607a7f528c",
+  "author": {
+    "name": "Daniel Bolaños",
+    "username": "dbolanos414",
+    "profile": "https://sketchfab.com/dbolanos414"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"El Palacio Palenque/Palenque's Palace\" by Daniel Bolaños (https://sketchfab.com/3d-models/el-palacio-palenquepalenques-palace-4f143d7d1718414fb70609607a7f528c), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 163264,
+  "vertices": 82410,
+  "animations": 0,
+  "files": [
+    {
+      "path": "palenque-palace.gltf.zip",
+      "md5": "60094b1f3a8b004b1dfa0634d0eb4b71",
+      "size": 22725754,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

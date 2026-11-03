@@ -393,6 +393,427 @@ In game, use the material preset `keep` for `pyramidStone` to show the textures.
 | Animation | None |
 | Used by | Tradewind Cove sand islands and the lagoon floor seen through the shallows (tiled at 22 m and 6 m) |
 
+### Toposcope Sunset (Poly Haven HDRI)
+
+| Field | Value |
+|---|---|
+| Asset name | Toposcope Sunset |
+| Source URL | https://polyhaven.com/a/toposcope_sunset |
+| Author | Dario Barresi |
+| Original download URL | see `assets/external/polyhaven/toposcope_sunset/source.json` (tonemapped JPG and 16k HDR, with MD5s) |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | Tonemapped equirectangular JPG, 8192 x 4096; 16k HDR for the detail band |
+| Modifications | Band cropped to elevations -10 to +24 degrees (8192 x 774), unsharp mask; detail crop of u 0.2778 to 0.6222 from the 16k HDR, tone-matched (5643 x 1547) (`scripts/fetch-panorama.ts`); both then graded by `scripts/panorama_grade.py` (preset `ember`): the clear dusk sky becomes a dark red-amber glow, brightest along the horizon and near black higher up (heavily blurred and dithered there so it cannot band), the land dark desaturated warm stone; WebP quality 86 (band) and 90 (detail) |
+| Final format | `content/stages/wardens-spire/textures/toposcope_sunset_band.webp`, `toposcope_sunset_detail.webp` |
+| Animation | None (the storm deck drifts over it) |
+| Used by | The Warden's Spire sky (`panorama`, offset 0.45: the vast plain and far ranges of the Karoo seen from the Valley of Desolation, the conical peak to the left); the 3D land covers the photo's foreground, so it gives the far horizon and the glow under the storm |
+
+### Dark Rock 02 (Poly Haven texture)
+
+| Field | Value |
+|---|---|
+| Asset name | Dark Rock 02 |
+| Source URL | https://polyhaven.com/a/dark_rock_02 |
+| Author | Amal Kumar |
+| Original download URL | see `assets/external/polyhaven/dark_rock_02/source.json` |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | 2k diffuse and OpenGL normal JPGs (2048 x 2048, a 2 m patch of dark fractured rock) |
+| Modifications | Diffuse to WebP quality 84; normal scaled to 1024 x 1024, WebP quality 90 |
+| Final format | `content/stages/wardens-spire/textures/dark_rock_02_diff.webp`, `dark_rock_02_normal.webp` |
+| Animation | None |
+| Used by | The Warden's Spire: the basalt of the land (triplanar at 5.5, 13, 37 and 71 m), the citadel's stone (15 and 70 m), the cage and the ruins; darkened and desaturated in the shaders |
+
+### Quarry Wall (Poly Haven texture)
+
+| Field | Value |
+|---|---|
+| Asset name | Quarry Wall |
+| Source URL | https://polyhaven.com/a/quarry_wall |
+| Author | Dimitrios Savva |
+| Original download URL | see `assets/external/polyhaven/quarry_wall/source.json` |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | 2k diffuse and OpenGL normal JPGs (2048 x 2048, a 1.8 m patch of rough-hewn grey rock) |
+| Modifications | Diffuse to WebP quality 84; normal scaled to 1024 x 1024, WebP quality 90 |
+| Final format | `content/stages/wardens-spire/textures/quarry_wall_diff.webp`, `quarry_wall_normal.webp` |
+| Animation | None |
+| Used by | The Warden's Spire land: a large-scale variation of the basalt (lighter ashen stone, 9 m tiles) |
+
+### The Warden's Spire citadel, cage and ruins (`citadel.glb`, `warden.glb`, `ruins.glb`, original)
+
+| Field | Value |
+|---|---|
+| Asset name | The Warden's citadel, its ring cage, and the ruins of the land |
+| Source | `assets/blender/scripts/spire_kit.py` (Blender 5.2, headless); scene saved as `assets/blender/source/environments/wardens_spire.blend` |
+| Licence | Original work for Prismfall |
+| Original format | Extruded and tapered prisms, blade buttresses, struts and voussoir rings built by script, with angle-limited bevels; three material names per kit (stone, metal, glow); no textures |
+| Modifications | glTF-Transform optimise (meshopt, no simplification, names kept); `citadel_lod1.glb` is the same silhouette without slits, piers, platforms and bevels |
+| Final format | `content/stages/wardens-spire/models/citadel.glb`, `citadel_lod1.glb`, `warden.glb`, `ruins.glb`, `spire.meta.json` |
+| Animation | The cage's rings, collar and shutters are separate objects pivoting at the cage centre; the game turns them |
+| Used by | The Warden's Spire (`wardenSpireCitadel`, `wardenSpireWarden`, `wardenSpireLand`) |
+
+### Rainforest Trail (Poly Haven HDRI)
+
+| Field | Value |
+|---|---|
+| Asset name | Rainforest Trail |
+| Source URL | https://polyhaven.com/a/rainforest_trail |
+| Author | Dimitrios Savva (photography), Jarod Guest (processing) |
+| Original download URL | see `assets/external/polyhaven/rainforest_trail/source.json` |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | Tonemapped equirectangular JPG, 8192 x 4096; 16k HDR for the detail band; the 4k HDR lights the Blender bake (git-ignored) |
+| Modifications | Band cropped to elevations -12 to +56 degrees (8192 x 1547), unsharp mask, WebP quality 86; detail crop of u 0.4133 to 0.7466 from the 16k HDR, tone-matched (5461 x 3095, WebP quality 90) (`scripts/fetch-panorama.ts`) |
+| Final format | `content/stages/lost-kingdom/textures/rainforest_trail_band.webp`, `rainforest_trail_detail.webp` |
+| Animation | None |
+| Used by | The Lost Kingdom sky (`panorama`, offset 0.58: a subtropical rainforest with mossy trunks and a sunlit canopy around the whole plaza); the same photograph (4k HDR) is the sky light of the Cycles bake, and the pool reflects the band |
+
+### Mossy Sandstone (Poly Haven texture)
+
+| Field | Value |
+|---|---|
+| Asset name | Mossy Sandstone |
+| Source URL | https://polyhaven.com/a/mossy_sandstone |
+| Author | Dimitrios Savva |
+| Original download URL | see `assets/external/polyhaven/mossy_sandstone/source.json` (fetched by `assets/blender/scripts/fetch_polyhaven_textures.py`) |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | 2k JPGs: diffuse, ARM, OpenGL normal, displacement (a 1.9 m patch of cut blocks) |
+| Modifications | Mixed in Blender shaders (box-projected at real scale, recoloured, blended with moss, streaks and stucco) and baked by Cycles into The Lost Kingdom's group textures; never shipped as is |
+| Final format | baked into `content/stages/lost-kingdom/models/*.glb` |
+| Animation | None |
+| Used by | The Lost Kingdom: the facing stones of the terraces, stair and temple (desaturated towards limestone) |
+
+### Castle Wall Varriation (Poly Haven texture)
+
+| Field | Value |
+|---|---|
+| Asset name | Castle Wall Varriation |
+| Source URL | https://polyhaven.com/a/castle_wall_varriation |
+| Author | Rob Tuytel |
+| Original download URL | see `assets/external/polyhaven/castle_wall_varriation/source.json` (fetched by `assets/blender/scripts/fetch_polyhaven_textures.py`) |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | 2k JPGs: diffuse, ARM, normal, displacement (2 m of rubble masonry) |
+| Modifications | Mixed in Blender shaders (box-projected at real scale, recoloured, blended with moss, streaks and stucco) and baked by Cycles into The Lost Kingdom's group textures; never shipped as is |
+| Final format | baked into `content/stages/lost-kingdom/models/*.glb` |
+| Animation | None |
+| Used by | The Lost Kingdom: the exposed rubble core where facing stones fell away |
+
+### Worn Mossy Plasterwall (Poly Haven texture)
+
+| Field | Value |
+|---|---|
+| Asset name | Worn Mossy Plasterwall |
+| Source URL | https://polyhaven.com/a/worn_mossy_plasterwall |
+| Author | Amal Kumar |
+| Original download URL | see `assets/external/polyhaven/worn_mossy_plasterwall/source.json` (fetched by `assets/blender/scripts/fetch_polyhaven_textures.py`) |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | 2k JPGs: diffuse, ARM, normal, displacement (1.8 m) |
+| Modifications | Mixed in Blender shaders (box-projected at real scale, recoloured, blended with moss, streaks and stucco) and baked by Cycles into The Lost Kingdom's group textures; never shipped as is |
+| Final format | baked into `content/stages/lost-kingdom/models/*.glb` |
+| Animation | None |
+| Used by | The Lost Kingdom: stucco remnants and plaster floor patches |
+
+### Mossy Rock (Poly Haven texture)
+
+| Field | Value |
+|---|---|
+| Asset name | Mossy Rock |
+| Source URL | https://polyhaven.com/a/mossy_rock |
+| Author | Rob Tuytel |
+| Original download URL | see `assets/external/polyhaven/mossy_rock/source.json` (fetched by `assets/blender/scripts/fetch_polyhaven_textures.py`) |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | 2k JPGs: diffuse, ARM, normal, displacement (3 m) |
+| Modifications | Mixed in Blender shaders (box-projected at real scale, recoloured, blended with moss, streaks and stucco) and baked by Cycles into The Lost Kingdom's group textures; never shipped as is |
+| Final format | baked into `content/stages/lost-kingdom/models/*.glb` |
+| Animation | None |
+| Used by | The Lost Kingdom: the karst outcrop |
+
+### Lichen Rock (Poly Haven texture)
+
+| Field | Value |
+|---|---|
+| Asset name | Lichen Rock |
+| Source URL | https://polyhaven.com/a/lichen_rock |
+| Author | Rico Cilliers |
+| Original download URL | see `assets/external/polyhaven/lichen_rock/source.json` (fetched by `assets/blender/scripts/fetch_polyhaven_textures.py`) |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | 2k JPGs: diffuse, ARM, normal, displacement (2 m) |
+| Modifications | Mixed in Blender shaders (box-projected at real scale, recoloured, blended with moss, streaks and stucco) and baked by Cycles into The Lost Kingdom's group textures; never shipped as is |
+| Final format | baked into `content/stages/lost-kingdom/models/*.glb` |
+| Animation | None |
+| Used by | The Lost Kingdom: the karst outcrop (mixed with Mossy Rock) |
+
+### Brown Mud Leaves 01 (Poly Haven texture)
+
+| Field | Value |
+|---|---|
+| Asset name | Brown Mud Leaves 01 |
+| Source URL | https://polyhaven.com/a/brown_mud_leaves_01 |
+| Author | Rob Tuytel |
+| Original download URL | see `assets/external/polyhaven/brown_mud_leaves_01/source.json` (fetched by `assets/blender/scripts/fetch_polyhaven_textures.py`) |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | 2k JPGs: diffuse, ARM, normal, displacement (1.3 m) |
+| Modifications | Mixed in Blender shaders (box-projected at real scale, recoloured, blended with moss, streaks and stucco) and baked by Cycles into The Lost Kingdom's group textures; never shipped as is |
+| Final format | baked into `content/stages/lost-kingdom/models/*.glb` |
+| Animation | None |
+| Used by | The Lost Kingdom: the plaza floor and the soil on the terraces |
+
+### Mossy Stone Wall (Poly Haven texture)
+
+| Field | Value |
+|---|---|
+| Asset name | Mossy Stone Wall |
+| Source URL | https://polyhaven.com/a/mossy_stone_wall |
+| Author | Amal Kumar |
+| Original download URL | see `assets/external/polyhaven/mossy_stone_wall/source.json` (fetched by `assets/blender/scripts/fetch_polyhaven_textures.py`) |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | 2k JPGs: diffuse, ARM, normal, displacement (2 m) |
+| Modifications | Mixed in Blender shaders (box-projected at real scale, recoloured, blended with moss, streaks and stucco) and baked by Cycles into The Lost Kingdom's group textures; never shipped as is |
+| Final format | baked into `content/stages/lost-kingdom/models/*.glb` |
+| Animation | None |
+| Used by | The Lost Kingdom: flagstones of the plaza floor |
+
+### Japanese Hackberry Bark (Poly Haven texture)
+
+| Field | Value |
+|---|---|
+| Asset name | Japanese Hackberry Bark |
+| Source URL | https://polyhaven.com/a/japanese_hackberry_bark |
+| Author | Charlotte Baglioni |
+| Original download URL | see `assets/external/polyhaven/japanese_hackberry_bark/source.json` (fetched by `assets/blender/scripts/fetch_polyhaven_textures.py`) |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | 2k JPGs: diffuse, ARM, normal, displacement (1.9 m) |
+| Modifications | Mixed in Blender shaders (box-projected at real scale, recoloured, blended with moss, streaks and stucco) and baked by Cycles into The Lost Kingdom's group textures; never shipped as is |
+| Final format | baked into `content/stages/lost-kingdom/models/*.glb` |
+| Animation | None |
+| Used by | The Lost Kingdom: the strangler fig and its roots |
+
+### Rainforest plant scans (Poly Haven models)
+
+| Field | Value |
+|---|---|
+| Asset name | Fern 02, Calathea Orbifolia 01, Anthurium Botany 01, Pachira Aquatica 01 |
+| Source URL | https://polyhaven.com/a/fern_02, https://polyhaven.com/a/calathea_orbifolia_01, https://polyhaven.com/a/anthurium_botany_01, https://polyhaven.com/a/pachira_aquatica_01 |
+| Author | see each `assets/external/polyhaven/<id>/source.json` |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | 1k glTF with alpha-cut leaves |
+| Modifications | `import_external.py --split` (one object per plant, alpha maps wired), placed 7,960 times in `lost_kingdom.py` at 1.6 to 3.6 times their size (tropical undergrowth), exported with linked duplicates; glTF-Transform turns them into GPU instancing and simplifies them to 45 % |
+| Final format | `content/stages/lost-kingdom/models/vegetation.glb` |
+| Animation | None (the game sways them) |
+| Used by | The Lost Kingdom undergrowth (`jungleFoliage`) |
+
+### Sketchfab models in The Lost Kingdom
+
+| Field | Value |
+|---|---|
+| Asset name | "El Palacio Palenque/Palenque's Palace" (Daniel Bolaños), "Structure B1, Cahal Pech, Belize" (csantasilia), "Scarlet Macaw" (Mateus Schwaab), "Toucan Bird" (sevketkabatas), "Hummingbird – Rigged, 6 Animations (Open Bill)" (Animal Animator), "Animated Flying Fluttering Butterfly Loop" (LasquetiSpice), "Ulysses Butterfly" (eb78), "Mexico Maya Relief: K'inich Ahkal" (Aphva) |
+| Source URL | see each `assets/external/sketchfab/<name>/source.json` (pages, authors, licences, archive MD5s) |
+| Licence | CC BY 4.0, except "Ulysses Butterfly" (CC BY-SA 4.0) and the relief (CC0) |
+| Attribution requirements | Title, author, URL and licence (in ASSET_LICENSES.md and on the Credits screen) |
+| Original format | glTF archives downloaded by the owner |
+| Modifications | `scripts/fetch-sketchfab.ts --zip` (GLB, simplified to the triangle cap, meshopt, WebP); the butterfly's specular-glossiness material converted to metal-roughness; the two architecture scans stood upright, scaled, simplified (60k and 35k triangles), given diffuse materials from their photographed textures and baked with the plaza's light into `escarpment.glb` and `north.glb` |
+| Final format | `content/shared/creatures/scarlet-macaw.glb`, `toucan.glb`, `hummingbird.glb`, `fluttering-butterfly.glb`, `ulysses-butterfly.glb`, `maya-relief-kinich-ahkal.glb`; `content/stages/lost-kingdom/models/escarpment.glb`, `north.glb` |
+| Animation | The animals' own clips (Fly01, Take 01, Forward Flight, Hover, Flower Feeding, the butterflies' wingbeats) drive their particles |
+| Used by | The Lost Kingdom: macaws, a toucan, a hummingbird and butterflies drawn only as particles from their real surfaces (`model`, `render: "particles"`); the relief set in a recessed wall (`model`, solid); the palace on the outcrop and Structure B1 behind the plaza |
+
+### The Lost Kingdom architecture (`pyramid.glb`, `floor.glb`, `plaza.glb`, `escarpment.glb`, `north.glb`, original plus scans)
+
+| Field | Value |
+|---|---|
+| Asset name | The Great Pyramid, the plaza, the outcrop with spillway and pool, stelae, altars, the panel wall |
+| Source | `assets/blender/scripts/lost_kingdom.py` (Blender 5.2, headless, Cycles on the GPU); scene saved as `assets/blender/source/environments/lost-kingdom.blend`; `lost_kingdom_optimize.sh` writes the stage files |
+| Licence | Original work for Prismfall (textures derived from the CC0 photographs above; the two scans as credited) |
+| Original format | Lofted Peten terrace profiles with inset corners, a chipped stepped stair, booleaned temple with a corbel-arched doorway and roof-comb voids, displaced karst rock, slumped corners, talus and rubble, draped strangler-fig roots; each group joined, faces hidden from the eye removed, unwrapped for an even texel density on screen (the floor in a log-polar layout) |
+| Modifications | Baked per group: albedo (RGB) with the canopy-dappled direct sun (alpha), and sky light plus sun bounce (RGB) with a carved-glyph mask (alpha); glTF-Transform (WebP quality 90, meshopt) |
+| Final format | `content/stages/lost-kingdom/models/pyramid.glb` (4096 px), `floor.glb` (4096), `plaza.glb` (2048), `escarpment.glb` (4096), `north.glb` (2048); `content/stages/lost-kingdom/textures/canopy_dapple.webp` |
+| Animation | None (the game drifts the sun patches with the leaves and warms the glyphs with the music) |
+| Used by | The Lost Kingdom (`lostKingdomRuins`) |
+
+### Freight Station (Poly Haven HDRI)
+
+| Field | Value |
+|---|---|
+| Asset name | Freight Station |
+| Source URL | https://polyhaven.com/a/freight_station |
+| Author | Sergej Majboroda |
+| Original download URL | see `assets/external/polyhaven/freight_station/source.json` (tonemapped JPG and 16k HDR, with MD5s) |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | Tonemapped equirectangular JPG, 8192 x 4096; 16k HDR (16384 x 8192) for the detail band |
+| Modifications | Band cropped to elevations -32 to +40 degrees (8192 x 1638), unsharp mask; detail crop of u 0.3906 to 0.7795 from the 16k HDR, tone-matched (6372 x 3276) (`scripts/fetch-panorama.ts`). Then graded by `scripts/red_horizon_assets.py grade`: sky luminance kept and recoloured as soot lit red from below with a hot glow where the sun burns through, land desaturated to 35 % and darkened to dusk; a land mask (silhouettes much darker than the sky above them, eroded by a pixel) in the alpha channel; WebP quality 90. Also a 1024 x 512 full-sphere copy with the same grade for reflections |
+| Final format | `content/stages/red-horizon/textures/freight_station_band.webp`, `freight_station_detail.webp`, `red_horizon_env.webp` |
+| Animation | None (the sky shader drifts smoke over it and lights it with explosions) |
+| Used by | Red Horizon sky (`redHorizonSky`, offset 0.585: an abandoned freight yard with gantry cranes, poles and a lattice light tower, the low sun behind the board); the land mask writes depth at 240 m so the 3D ruins, factory and walkers stand behind the real tree line; the blurred band colours the haze; the full-sphere copy is the machines' and ruins' reflection environment |
+
+### Concrete Layers 02 (Poly Haven texture)
+
+| Field | Value |
+|---|---|
+| Asset name | Concrete Layers 02 |
+| Source URL | https://polyhaven.com/a/concrete_layers_02 |
+| Author | Rob Tuytel |
+| Original download URL | see `assets/external/polyhaven/concrete_layers_02/source.json` |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | 1k diffuse, OpenGL normal and roughness JPGs (1024 x 1024, weathered board-formed concrete) |
+| Modifications | Diffuse to WebP quality 88; normal X and Y with roughness packed into one WebP quality 92 (`scripts/red_horizon_assets.py textures`) |
+| Final format | `content/stages/red-horizon/textures/concrete_albedo.webp`, `concrete_nr.webp` |
+| Animation | None |
+| Used by | Red Horizon ruins, highway and debris (triplanar, 2.7 m tiles), desaturated and sooted in the shader |
+
+### Rusty Metal 04 (Poly Haven texture)
+
+| Field | Value |
+|---|---|
+| Asset name | Rusty Metal 04 |
+| Source URL | https://polyhaven.com/a/rusty_metal_04 |
+| Author | Amal Kumar |
+| Original download URL | see `assets/external/polyhaven/rusty_metal_04/source.json` |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | 1k diffuse, OpenGL normal and roughness JPGs (1024 x 1024, heavily rusted steel with paint remnants) |
+| Modifications | Diffuse to WebP quality 88; normal X and Y with roughness packed into one WebP quality 92 (`scripts/red_horizon_assets.py textures`) |
+| Final format | `content/stages/red-horizon/textures/rust_albedo.webp`, `rust_nr.webp` |
+| Animation | None |
+| Used by | Red Horizon rebar, wrecks, the lattice mast and rusted cladding |
+
+### Metal Plate 02 (Poly Haven texture)
+
+| Field | Value |
+|---|---|
+| Asset name | Metal Plate 02 |
+| Source URL | https://polyhaven.com/a/metal_plate_02 |
+| Author | Rob Tuytel |
+| Original download URL | see `assets/external/polyhaven/metal_plate_02/source.json` |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | 1k diffuse, OpenGL normal and roughness JPGs (1024 x 1024, corroded steel plates) |
+| Modifications | Diffuse to WebP quality 88; normal X and Y with roughness packed into one WebP quality 92 (`scripts/red_horizon_assets.py textures`) |
+| Final format | `content/stages/red-horizon/textures/steel_albedo.webp`, `steel_nr.webp` |
+| Animation | None |
+| Used by | Red Horizon factory cladding and frames, the colossus hull plates |
+
+### Blue Metal Plate (Poly Haven texture)
+
+| Field | Value |
+|---|---|
+| Asset name | Blue Metal Plate |
+| Source URL | https://polyhaven.com/a/blue_metal_plate |
+| Author | Rob Tuytel |
+| Original download URL | see `assets/external/polyhaven/blue_metal_plate/source.json` |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | 1k diffuse, OpenGL normal and roughness JPGs (1024 x 1024, scratched painted steel panel) |
+| Modifications | Diffuse to WebP quality 88; normal X and Y with roughness packed into one WebP quality 92 (`scripts/red_horizon_assets.py textures`) |
+| Final format | `content/stages/red-horizon/textures/armour_albedo.webp`, `armour_nr.webp` |
+| Animation | None |
+| Used by | Red Horizon machine armour: its luminance drives wear and scratches on gunmetal paint, its normals and roughness the micro-detail |
+
+### Asphalt 02 (Poly Haven texture)
+
+| Field | Value |
+|---|---|
+| Asset name | Asphalt 02 |
+| Source URL | https://polyhaven.com/a/asphalt_02 |
+| Author | Rob Tuytel |
+| Original download URL | see `assets/external/polyhaven/asphalt_02/source.json` |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | 1k diffuse, OpenGL normal and roughness JPGs (1024 x 1024, cracked, weathered asphalt) |
+| Modifications | Diffuse to WebP quality 88; normal X and Y with roughness packed into one WebP quality 92 (`scripts/red_horizon_assets.py textures`) |
+| Final format | `content/stages/red-horizon/textures/asphalt_albedo.webp`, `asphalt_nr.webp` |
+| Animation | None |
+| Used by | Red Horizon foreground yard surface (`ground.ts`), with procedural puddles reflecting the sky and fires |
+
+### Burned Ground 01 (Poly Haven texture)
+
+| Field | Value |
+|---|---|
+| Asset name | Burned Ground 01 |
+| Source URL | https://polyhaven.com/a/burned_ground_01 |
+| Author | Rob Tuytel |
+| Original download URL | see `assets/external/polyhaven/burned_ground_01/source.json` |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | 1k diffuse, OpenGL normal and roughness JPGs (1024 x 1024, scorched earth and ash) |
+| Modifications | Diffuse to WebP quality 88; normal X and Y with roughness packed into one WebP quality 92 (`scripts/red_horizon_assets.py textures`) |
+| Final format | `content/stages/red-horizon/textures/burnt_albedo.webp`, `burnt_nr.webp` |
+| Animation | None |
+| Used by | Red Horizon foreground: scorch patches, crater floors and rims, rail sleepers (`ground.ts`) |
+
+### Red Horizon machines, ruins and factory (`sentinel.glb`, `drone.glb`, `colossus.glb`, `ruins.glb`, `factory.glb`, original)
+
+| Field | Value |
+|---|---|
+| Asset name | The sentinel (humanoid machine, three sensor heads), the recon drone, the colossus (hexapod walking refinery), the ruined city kit and the assembly factory |
+| Source | `assets/blender/scripts/red_horizon_kit.py` with `red_horizon_machines.py` and `red_horizon_world.py` (Blender 5.2, headless); scene saved as `assets/blender/source/environments/red_horizon.blend` |
+| Licence | Original work for Prismfall (original designs: no franchise machines, no skull faces) |
+| Original format | Bevelled boxes, cylinders, lofts, shells, domes and swept tubes built by script; machines carry a per-vertex bone (`_BONE`) and `*.rig.json` (bones, pistons); towers from slab and column grids with supported damage, fractured-concrete debris cut by random planes; Blender material names map to the game's materials; no textures |
+| Modifications | glTF-Transform optimise (meshopt, no simplification, names kept); `sentinel_lod.glb` is the light model |
+| Final format | `content/stages/red-horizon/models/*.glb`, `*.rig.json` |
+| Animation | Posed every frame on the CPU (gaits, IK, pistons, sensors) and skinned on the GPU; factory arm links, gantry and fan rotors are separate objects the game moves |
+| Used by | Red Horizon (`redHorizonSentinels`, `redHorizonDrones`, `redHorizonColossus`, `redHorizonScenery`, `redHorizonFactory`) |
+
+### Kloofendal 28d Misty (Poly Haven HDRI)
+
+| Field | Value |
+|---|---|
+| Asset name | Kloofendal 28d Misty |
+| Source URL | https://polyhaven.com/a/kloofendal_28d_misty |
+| Author | Greg Zaal, Jenelle van Heerden |
+| Original download URL | see `assets/external/polyhaven/kloofendal_28d_misty/source.json` |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | Tonemapped equirectangular JPG, 8192 x 4096; 16k HDR for the detail band |
+| Modifications | Band cropped to elevations -10 to +40 degrees (8192 x 1138), unsharp mask; detail crop of u 0.4946 to 0.8835 from the 16k HDR, tone-matched (6372 x 2275) (`scripts/fetch-panorama.ts`); both then given a cold moonlight grade (saturation 0.28, gamma 1.85, channel gains 0.90/0.97/1.07) so the veiled sun reads as a moon behind fog; WebP quality 86 (band) and 90 (detail) |
+| Final format | `content/stages/the-veil/textures/kloofendal_28d_misty_band.webp`, `kloofendal_28d_misty_detail.webp` |
+| Animation | None |
+| Used by | The Veil sky (`panorama`, offset 0.689, declared elevations -18 to +32 so the veiled sun sits low ahead-left as the moon); the Veil fog reads a small blurred copy of the band at runtime, so the fog in every direction has the photo's own colour there |
+
+### The Veil ground and kit textures (Poly Haven textures)
+
+| Field | Value |
+|---|---|
+| Asset names | Mud Forest (eye-candy.xyz), Forest Leaves 02 (Rob Tuytel), Bark Willow 02 (Charlotte Baglioni), Dark Planks (Rob Tuytel), Rough Wood (Rob Tuytel), Old Stone Wall (Charlotte Baglioni) |
+| Source URLs | https://polyhaven.com/a/mud_forest, https://polyhaven.com/a/forest_leaves_02, https://polyhaven.com/a/bark_willow_02, https://polyhaven.com/a/dark_planks, https://polyhaven.com/a/rough_wood, https://polyhaven.com/a/old_stone_wall |
+| Original download URL | each `assets/external/polyhaven/<id>/source.json` (2k JPG diffuse, OpenGL normal and ARM maps, MD5s) |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | 2048 x 2048 JPG maps |
+| Modifications | Ground: Mud Forest diffuse to WebP quality 84 (2k), its normal and ARM maps and the Forest Leaves 02 maps downsampled to 1024 px, WebP 86. Kit: the bark, plank, beam and stone maps are wired into the Blender materials of `veil_kit.py` and embedded in `trees.glb`, `ruins.glb` and `monuments.glb` (glTF-Transform caps them at 1024 px, WebP) |
+| Final format | `content/stages/the-veil/textures/mud_forest_*.webp`, `forest_leaves_02_*.webp`; embedded in `content/stages/the-veil/models/trees.glb`, `ruins.glb`, `monuments.glb` |
+| Animation | None |
+| Used by | The Veil: the terrain (mud and leaf litter, blended by noise and slope, darker and glossy where wet), the dead trees, the ruined timber and the far stonework |
+
+### The Veil photoscans (Poly Haven models)
+
+| Field | Value |
+|---|---|
+| Asset names | Boulder 01 (Rico Cilliers), Dead Tree Trunk 02 (Jenelle van Heerden, photography; Rico Cilliers, processing), Rock Moss Set 01 (Kless Gyzen), Root Cluster 02 (Jenelle van Heerden), Tree Stump 02 (Rob Tuytel), Dry Branches Medium 01 (Rico Cilliers) |
+| Source URLs | https://polyhaven.com/a/boulder_01, https://polyhaven.com/a/dead_tree_trunk_02, https://polyhaven.com/a/rock_moss_set_01, https://polyhaven.com/a/root_cluster_02, https://polyhaven.com/a/tree_stump_02, https://polyhaven.com/a/dry_branches_medium_01 |
+| Original download URL | each `assets/external/polyhaven/<id>/source.json` (1k glTF) |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Modifications | `assets/blender/scripts/import_external.py` (as `scripts/process-external.ts` runs it): decimated to 4,000 to 6,000 triangles (Boulder 01 keeps 28,124), origin at the bottom centre, textures capped at 1024 px; Rock Moss Set 01 split into six rocks; glTF-Transform optimise (meshopt, WebP). Contact sheets in `assets/blender/exports/scans/<id>.preview.png` |
+| Final format | `content/stages/the-veil/models/boulder_01.glb`, `dead_tree_trunk_02.glb`, `rock_moss_set_01.glb`, `root_cluster_02.glb`, `tree_stump_02.glb`, `dry_branches_medium_01.glb` |
+| Animation | None |
+| Used by | The Veil scenery: rocks, stumps, roots, fallen trunks and dead branches around the viewer and through the lowland, lit by the moon and fogged. The downloads are git-ignored (restored by `scripts/fetch-polyhaven.ts`); only `source.json` is committed |
+
+### The Veil creatures, dead trees, ruins and monuments (`strider.glb`, `hollow.glb`, `colossus.glb`, `ray.glb`, `trees.glb`, `ruins.glb`, `monuments.glb`, original)
+
+Generated by `assets/blender/scripts/veil_creatures.py` and `veil_kit.py` (Blender 5.2, headless; sources `assets/blender/source/veil_creatures.blend`, `veil_kit.blend`; previews `assets/blender/previews/veil_*.png`) and optimised with glTF-Transform. Original designs for Prismfall: the strider (a stilt-legged giant quadruped with a hanging skull and dorsal quills, 29 bones), the hollow (a nine-metre antlered biped, 35 bones), the colossus (a spired giant, 24 bones), the fog ray (a flat soaring body with a whip tail), six near and two far dead-tree variants, a collapsed cabin, a lookout tower, a boardwalk, a fence, a stone gate and three stone needles. The kit uses the Poly Haven textures listed above; the creatures carry vertex colours only. Licence: Original work for Prismfall (textures CC0 1.0).
+
 ## Space imagery
 
 ### The Milky Way panorama (ESO)
@@ -426,3 +847,149 @@ In game, use the material preset `keep` for `pyramidStone` to show the textures.
 | Final format | `content/stages/celestial-drift/textures/gas_giant_map.webp` (WebP quality 92) |
 | Animation | The planet turns slowly; the sun direction moves with game progress |
 | Used by | Deep Cosmos ringed giant (`planet` component with `map`, graded cooler: saturation 0.82, tint #eef1ff) |
+
+## Sketchfab animals drawn as particles
+CC BY 4.0 models from Sketchfab, imported by `scripts/fetch-sketchfab.ts --zip` from archives the owner downloaded. Every one is shown only as particles sampled from its surface (`model` component, `render: "particles"`), never as a solid mesh.
+
+### Realistic Animated Elk 3D Model (`elk`)
+
+| Field | Value |
+|---|---|
+| Asset name | Realistic Animated Elk 3D Model |
+| Source URL | https://sketchfab.com/3d-models/realistic-animated-elk-3d-model-787834f9caa2474d9f1814b807c072d7 |
+| Author | WildMesh 3D |
+| Licence | CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) |
+| Attribution requirements | Credit "Realistic Animated Elk 3D Model" by WildMesh 3D, with the link and licence (ASSET_LICENSES.md and the credits) |
+| Modifications | packed to GLB, meshopt compression, WebP textures (at most 1024 px); specular-glossiness materials converted to metal-roughness; converted to particles |
+| Final format | `content/shared/creatures/elk.glb` (source record: `assets/external/sketchfab/elk/source.json`) |
+| Used by | Northern Lights |
+
+### Camel (`dromedary`)
+
+| Field | Value |
+|---|---|
+| Asset name | Camel |
+| Source URL | https://sketchfab.com/3d-models/camel-99af7daa5baf450ea7b809937937e6d5 |
+| Author | eb78 |
+| Licence | CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) |
+| Attribution requirements | Credit "Camel" by eb78, with the link and licence (ASSET_LICENSES.md and the credits) |
+| Modifications | packed to GLB, meshopt compression, WebP textures (at most 1024 px); textures capped at 1024 px; converted to particles |
+| Final format | `content/shared/creatures/dromedary.glb` (source record: `assets/external/sketchfab/dromedary/source.json`) |
+| Used by | Moving Sands |
+
+### Blue whale (`blue-whale`)
+
+| Field | Value |
+|---|---|
+| Asset name | Blue whale |
+| Source URL | https://sketchfab.com/3d-models/blue-whale-a7969d8046754fa1b90f989ef451df1c |
+| Author | dannzjs |
+| Licence | CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) |
+| Attribution requirements | Credit "Blue whale" by dannzjs, with the link and licence (ASSET_LICENSES.md and the credits) |
+| Modifications | packed to GLB, meshopt compression, WebP textures (at most 1024 px); converted to particles |
+| Final format | `content/shared/creatures/blue-whale.glb` (source record: `assets/external/sketchfab/blue-whale/source.json`) |
+| Used by | The Abyss |
+
+### Humpback Whale (Idle) (`humpback-whale`)
+
+| Field | Value |
+|---|---|
+| Asset name | Humpback Whale (Idle) |
+| Source URL | https://sketchfab.com/3d-models/humpback-whale-idle-bd64878acb0844b2be796ee91855c69e |
+| Author | Connlan_Immure |
+| Licence | CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) |
+| Attribution requirements | Credit "Humpback Whale (Idle)" by Connlan_Immure, with the link and licence (ASSET_LICENSES.md and the credits) |
+| Modifications | packed to GLB, meshopt compression, WebP textures (at most 1024 px); converted to particles |
+| Final format | `content/shared/creatures/humpback-whale.glb` (source record: `assets/external/sketchfab/humpback-whale/source.json`) |
+| Used by | The Abyss |
+
+### Model 53A - Flatback Sea Turtle (`sea-turtle`)
+
+| Field | Value |
+|---|---|
+| Asset name | Model 53A - Flatback Sea Turtle |
+| Source URL | https://sketchfab.com/3d-models/model-53a-flatback-sea-turtle-442372b7f02b4730882d41d959726156 |
+| Author | DigitalLife3D |
+| Licence | CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) |
+| Attribution requirements | Credit "Model 53A - Flatback Sea Turtle" by DigitalLife3D, with the link and licence (ASSET_LICENSES.md and the credits) |
+| Modifications | packed to GLB, meshopt compression, WebP textures (at most 1024 px); specular-glossiness materials converted to metal-roughness; its flippers are swung procedurally (the archive has no swim clip); converted to particles |
+| Final format | `content/shared/creatures/sea-turtle.glb` (source record: `assets/external/sketchfab/sea-turtle/source.json`) |
+| Used by | The Abyss |
+
+### Alpha wolf (`wolf`)
+
+| Field | Value |
+|---|---|
+| Asset name | Alpha wolf |
+| Source URL | https://sketchfab.com/3d-models/alpha-wolf-eabfb1220f3d4c4c88f3216bcf3d3bd0 |
+| Author | PrinceAli |
+| Licence | CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) |
+| Attribution requirements | Credit "Alpha wolf" by PrinceAli, with the link and licence (ASSET_LICENSES.md and the credits) |
+| Modifications | packed to GLB, meshopt compression, WebP textures (at most 1024 px); converted to particles |
+| Final format | `content/shared/creatures/wolf.glb` (source record: `assets/external/sketchfab/wolf/source.json`) |
+| Used by | Frozen Kingdom |
+
+### Zombie Walk Test (`zombie-walker`)
+
+| Field | Value |
+|---|---|
+| Asset name | Zombie Walk Test |
+| Source URL | https://sketchfab.com/3d-models/zombie-walk-test-165fd9342c364216bfdd8c2f1102223c |
+| Author | OSCAR CREATIVO |
+| Licence | CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) |
+| Attribution requirements | Credit "Zombie Walk Test" by OSCAR CREATIVO, with the link and licence (ASSET_LICENSES.md and the credits) |
+| Modifications | packed to GLB, meshopt compression, WebP textures (at most 1024 px); specular-glossiness material converted to metal-roughness; converted to particles |
+| Final format | `content/shared/creatures/zombie-walker.glb` (source record: `assets/external/sketchfab/zombie-walker/source.json`) |
+| Used by | Dead Acre |
+
+### .fuse female zombie 1 (`zombie-woman`)
+
+| Field | Value |
+|---|---|
+| Asset name | .fuse female zombie 1 |
+| Source URL | https://sketchfab.com/3d-models/fuse-female-zombie-1-98415df5d3124381a46ccef5c2e02b71 |
+| Author | Leonardo Carvalho |
+| Licence | CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) |
+| Attribution requirements | Credit ".fuse female zombie 1" by Leonardo Carvalho, with the link and licence (ASSET_LICENSES.md and the credits) |
+| Modifications | packed to GLB, meshopt compression, WebP textures (at most 1024 px); converted to particles |
+| Final format | `content/shared/creatures/zombie-woman.glb` (source record: `assets/external/sketchfab/zombie-woman/source.json`) |
+| Used by | Dead Acre |
+
+### animated EAGLE (`bald-eagle`)
+
+| Field | Value |
+|---|---|
+| Asset name | animated EAGLE |
+| Source URL | https://sketchfab.com/3d-models/animated-eagle-8fb150270adb45aa9653e857f3fa351b |
+| Author | Asim3d |
+| Licence | CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) |
+| Attribution requirements | Credit "animated EAGLE" by Asim3d, with the link and licence (ASSET_LICENSES.md and the credits) |
+| Modifications | packed to GLB, meshopt compression, WebP textures (at most 1024 px); converted to particles |
+| Final format | `content/shared/creatures/bald-eagle.glb` (source record: `assets/external/sketchfab/bald-eagle/source.json`) |
+| Used by | Alpine Horizon |
+
+### Animated Deer (`red-deer`)
+
+| Field | Value |
+|---|---|
+| Asset name | Animated Deer |
+| Source URL | https://sketchfab.com/3d-models/animated-deer-4cff1e63f4e941198b3d56300b3393b9 |
+| Author | igor-lir |
+| Licence | CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) |
+| Attribution requirements | Credit "Animated Deer" by igor-lir, with the link and licence (ASSET_LICENSES.md and the credits) |
+| Modifications | packed to GLB, meshopt compression, WebP textures (at most 1024 px); its 148 morph targets (vertex animation) drive the particles; converted to particles |
+| Final format | `content/shared/creatures/red-deer.glb` (source record: `assets/external/sketchfab/red-deer/source.json`) |
+| Used by | Enchanted Wilderness |
+
+### Dolphin (`dolphin`)
+
+| Field | Value |
+|---|---|
+| Asset name | Dolphin |
+| Source URL | https://sketchfab.com/3d-models/dolphin-c24dc835a6aa4d3c827450513525cdb8 |
+| Author | Alex_Pfe |
+| Licence | CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) |
+| Attribution requirements | Credit "Dolphin" by Alex_Pfe, with the link and licence (ASSET_LICENSES.md and the credits) |
+| Modifications | packed to GLB, meshopt compression, WebP textures (at most 1024 px); simplified from 188,492 to 43,615 triangles; its animated splash cubes are not drawn; converted to particles |
+| Final format | `content/shared/creatures/dolphin.glb` (source record: `assets/external/sketchfab/dolphin/source.json`) |
+| Used by | Tradewind Cove |

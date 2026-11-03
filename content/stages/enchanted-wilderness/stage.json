@@ -131,6 +131,65 @@
         "bind": []
       },
       {
+        "id": "red-deer",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/red-deer.glb",
+          "render": "particles",
+          "animation": {
+            "clip": "GltfAnimation 0",
+            "speed": 1,
+            "vary": 0.1
+          },
+          "instances": [
+            {
+              "position": [
+                -30.4,
+                -16.9,
+                -31.6
+              ],
+              "yaw": 0,
+              "scale": 0.82,
+              "snapToGround": false
+            },
+            {
+              "position": [
+                27.3,
+                -16.6,
+                -49.6
+              ],
+              "yaw": 180,
+              "scale": 0.8,
+              "snapToGround": false
+            }
+          ],
+          "particles": {
+            "count": 11000,
+            "size": 0.1,
+            "brightness": 1.15,
+            "tint": "#c5c4c8",
+            "colorMix": 0.05,
+            "blend": "normal",
+            "jitter": 0.003,
+            "spread": 2,
+            "wind": [
+              0.6,
+              0.4,
+              0
+            ],
+            "bloom": 0.02,
+            "shading": 0.6,
+            "light": [
+              0.2,
+              1,
+              0.6
+            ],
+            "seed": 61
+          }
+        },
+        "bind": []
+      },
+      {
         "id": "fireflies",
         "type": "fireflies",
         "params": {

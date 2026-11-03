@@ -1,0 +1,25 @@
+{
+  "uid": "b543785d9b324280b56a72a3136a0271",
+  "name": "Structure B1, Cahal Pech, Belize",
+  "page": "https://sketchfab.com/3d-models/structure-b1-cahal-pech-belize-b543785d9b324280b56a72a3136a0271",
+  "author": {
+    "name": "csantasilia",
+    "username": "csantasilia",
+    "profile": "https://sketchfab.com/csantasilia"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Structure B1, Cahal Pech, Belize\" by csantasilia (https://sketchfab.com/3d-models/structure-b1-cahal-pech-belize-b543785d9b324280b56a72a3136a0271), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 126965,
+  "vertices": 64272,
+  "animations": 0,
+  "files": [
+    {
+      "path": "cahal-pech-b1.gltf.zip",
+      "md5": "2885e40d5edbfbdcb6d01da81d25aef2",
+      "size": 26650729,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

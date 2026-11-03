@@ -1,0 +1,25 @@
+{
+  "uid": "a7969d8046754fa1b90f989ef451df1c",
+  "name": "Blue whale",
+  "page": "https://sketchfab.com/3d-models/blue-whale-a7969d8046754fa1b90f989ef451df1c",
+  "author": {
+    "name": "dannzjs",
+    "username": "dannzjs",
+    "profile": "https://sketchfab.com/dannzjs"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Blue whale\" by dannzjs (https://sketchfab.com/3d-models/blue-whale-a7969d8046754fa1b90f989ef451df1c), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 21868,
+  "vertices": 10936,
+  "animations": 1,
+  "files": [
+    {
+      "path": "blue-whale.gltf.zip",
+      "md5": "c54a1655d48108a9d568238435cec4e8",
+      "size": 9293675,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

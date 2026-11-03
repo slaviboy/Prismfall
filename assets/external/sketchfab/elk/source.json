@@ -1,0 +1,25 @@
+{
+  "uid": "787834f9caa2474d9f1814b807c072d7",
+  "name": "Realistic Animated Elk 3D Model",
+  "page": "https://sketchfab.com/3d-models/realistic-animated-elk-3d-model-787834f9caa2474d9f1814b807c072d7",
+  "author": {
+    "name": "WildMesh 3D",
+    "username": "WildMesh_3D",
+    "profile": "https://sketchfab.com/WildMesh_3D"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Realistic Animated Elk 3D Model\" by WildMesh 3D (https://sketchfab.com/3d-models/realistic-animated-elk-3d-model-787834f9caa2474d9f1814b807c072d7), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 7886,
+  "vertices": 4003,
+  "animations": 53,
+  "files": [
+    {
+      "path": "elk.gltf.zip",
+      "md5": "664022c7525c172331e390fb910cb50e",
+      "size": 5244079,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

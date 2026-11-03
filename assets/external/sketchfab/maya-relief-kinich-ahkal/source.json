@@ -1,0 +1,25 @@
+{
+  "uid": "4fef2ab0aa324f0397ccdfcc92563d0e",
+  "name": "Mexico Maya Relief: K'inich Ahkal",
+  "page": "https://sketchfab.com/3d-models/mexico-maya-relief-kinich-ahkal-4fef2ab0aa324f0397ccdfcc92563d0e",
+  "author": {
+    "name": "Aphva",
+    "username": "Aphva",
+    "profile": "https://sketchfab.com/Aphva"
+  },
+  "licence": "CC0 Public Domain",
+  "licenceUrl": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "attribution": "\"Mexico Maya Relief: K'inich Ahkal\" by Aphva (https://sketchfab.com/3d-models/mexico-maya-relief-kinich-ahkal-4fef2ab0aa324f0397ccdfcc92563d0e), CC0 Public Domain",
+  "downloaded": "2026-11-03",
+  "faces": 121606,
+  "vertices": 61245,
+  "animations": 0,
+  "files": [
+    {
+      "path": "maya-relief-kinich-ahkal.gltf.zip",
+      "md5": "8ce60f0e462910c1300c6af35e35593f",
+      "size": 27332885,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

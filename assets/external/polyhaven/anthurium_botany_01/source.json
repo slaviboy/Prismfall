@@ -1,0 +1,69 @@
+{
+  "id": "anthurium_botany_01",
+  "name": "Anthurium Botany 01",
+  "source": "Poly Haven",
+  "page": "https://polyhaven.com/a/anthurium_botany_01",
+  "api": {
+    "info": "https://api.polyhaven.com/info/anthurium_botany_01",
+    "files": "https://api.polyhaven.com/files/anthurium_botany_01"
+  },
+  "authors": {
+    "Rob Tuytel": "scanning",
+    "Rico Cilliers": "modeling"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "polycount": 4134,
+  "dimensionsMm": [
+    2806.4264059066772,
+    1800.9886145591736,
+    506.7181019112468
+  ],
+  "resolution": "1k",
+  "format": "glTF 2.0 (.gltf + .bin + JPEG textures)",
+  "gltf": "anthurium_botany_01_1k.gltf",
+  "gltfUrl": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/anthurium_botany_01/anthurium_botany_01_1k.gltf",
+  "filesHash": "9a9818247596717d5d754411c5e63f1d8655f2cc",
+  "files": [
+    {
+      "path": "anthurium_botany_01_1k.gltf",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/anthurium_botany_01/anthurium_botany_01_1k.gltf",
+      "size": 10675,
+      "md5": "2a55f9ff4645ec45971e4796acad5d1f"
+    },
+    {
+      "path": "textures/anthurium_botany_01_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/anthurium_botany_01/anthurium_botany_01_nor_gl_1k.jpg",
+      "size": 494107,
+      "md5": "b9f023a3bf6f30ed293a35722ab14f06"
+    },
+    {
+      "path": "textures/anthurium_botany_01_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/anthurium_botany_01/anthurium_botany_01_arm_1k.jpg",
+      "size": 542795,
+      "md5": "2c48d7e4b92b422a68c2ce579351de50"
+    },
+    {
+      "path": "anthurium_botany_01.bin",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/anthurium_botany_01/anthurium_botany_01.bin",
+      "size": 1744256,
+      "md5": "121f1e490c98ea71ebb1a61a2246c585"
+    },
+    {
+      "path": "textures/anthurium_botany_01_diff_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/anthurium_botany_01/anthurium_botany_01_diff_1k.jpg",
+      "size": 448508,
+      "md5": "b78dfe5b3c265e5d9290c0f75a2801f3"
+    },
+    {
+      "path": "textures/anthurium_botany_01_alpha_1k.png",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/png/1k/anthurium_botany_01/anthurium_botany_01_alpha_1k.png",
+      "size": 45560,
+      "md5": "2eeff7ab974784e30a9efa30abea8f3d"
+    }
+  ],
+  "alphaMaps": {
+    "Alpha": "textures/anthurium_botany_01_alpha_1k.png"
+  },
+  "downloaded": "2026-11-03"
+}

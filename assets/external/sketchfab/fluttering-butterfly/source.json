@@ -1,0 +1,25 @@
+{
+  "uid": "80f8d9a6dadc411e89ca366cb0cfb0d9",
+  "name": "Animated Flying Fluttering Butterfly Loop",
+  "page": "https://sketchfab.com/3d-models/animated-flying-fluttering-butterfly-loop-80f8d9a6dadc411e89ca366cb0cfb0d9",
+  "author": {
+    "name": "LasquetiSpice",
+    "username": "LasquetiSpice",
+    "profile": "https://sketchfab.com/LasquetiSpice"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Animated Flying Fluttering Butterfly Loop\" by LasquetiSpice (https://sketchfab.com/3d-models/animated-flying-fluttering-butterfly-loop-80f8d9a6dadc411e89ca366cb0cfb0d9), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 9356,
+  "vertices": 4774,
+  "animations": 1,
+  "files": [
+    {
+      "path": "fluttering-butterfly.gltf.zip",
+      "md5": "73369b70ae8e54beb610ef5edd7806ae",
+      "size": 7202312,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

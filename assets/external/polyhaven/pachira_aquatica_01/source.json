@@ -1,0 +1,79 @@
+{
+  "id": "pachira_aquatica_01",
+  "name": "Pachira Aquatica 01",
+  "source": "Poly Haven",
+  "page": "https://polyhaven.com/a/pachira_aquatica_01",
+  "api": {
+    "info": "https://api.polyhaven.com/info/pachira_aquatica_01",
+    "files": "https://api.polyhaven.com/files/pachira_aquatica_01"
+  },
+  "authors": {
+    "Rob Tuytel": "scanning",
+    "Rico Cilliers": "modeling"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "polycount": 76914,
+  "dimensionsMm": [
+    6869.021415710449,
+    997.0420598983765,
+    1904.0735084563494
+  ],
+  "resolution": "1k",
+  "format": "glTF 2.0 (.gltf + .bin + JPEG textures)",
+  "gltf": "pachira_aquatica_01_1k.gltf",
+  "gltfUrl": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/pachira_aquatica_01/pachira_aquatica_01_1k.gltf",
+  "filesHash": "26f491dc4d71f09717217df3cdec865c546926f2",
+  "files": [
+    {
+      "path": "pachira_aquatica_01_1k.gltf",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/pachira_aquatica_01/pachira_aquatica_01_1k.gltf",
+      "size": 13730,
+      "md5": "52839b556e333d0ec6460051e2723447"
+    },
+    {
+      "path": "textures/pachira_aquatica_01_bark_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/pachira_aquatica_01/pachira_aquatica_01_bark_nor_gl_1k.jpg",
+      "size": 723624,
+      "md5": "de36315221e10e1d594946a825678eae"
+    },
+    {
+      "path": "textures/pachira_aquatica_01_leaves_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/pachira_aquatica_01/pachira_aquatica_01_leaves_nor_gl_1k.jpg",
+      "size": 490166,
+      "md5": "ce579513b75d94b077eb45107f78a513"
+    },
+    {
+      "path": "textures/pachira_aquatica_01_leaves_diff_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/pachira_aquatica_01/pachira_aquatica_01_leaves_diff_1k.jpg",
+      "size": 320484,
+      "md5": "32dde4e411de4fcaf3d4b88fb3a72913"
+    },
+    {
+      "path": "textures/pachira_aquatica_01_bark_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/pachira_aquatica_01/pachira_aquatica_01_bark_arm_1k.jpg",
+      "size": 588614,
+      "md5": "3b3a69f6e56a58eef1b3f314c855b2a8"
+    },
+    {
+      "path": "textures/pachira_aquatica_01_bark_diff_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/pachira_aquatica_01/pachira_aquatica_01_bark_diff_1k.jpg",
+      "size": 592488,
+      "md5": "70e2a72e0146e333f40ce8d2c36ddb7c"
+    },
+    {
+      "path": "textures/pachira_aquatica_01_leaves_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/pachira_aquatica_01/pachira_aquatica_01_leaves_arm_1k.jpg",
+      "size": 372937,
+      "md5": "dd5afb417b488286d57ba5bf5fb71192"
+    },
+    {
+      "path": "pachira_aquatica_01.bin",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/pachira_aquatica_01/pachira_aquatica_01.bin",
+      "size": 2036788,
+      "md5": "4e3aa7e0cfa77099421a2b3b65211f1c"
+    }
+  ],
+  "alphaMaps": {},
+  "downloaded": "2026-11-03"
+}

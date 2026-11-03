@@ -1,0 +1,25 @@
+{
+  "uid": "98415df5d3124381a46ccef5c2e02b71",
+  "name": ".fuse female zombie 1",
+  "page": "https://sketchfab.com/3d-models/fuse-female-zombie-1-98415df5d3124381a46ccef5c2e02b71",
+  "author": {
+    "name": "Leonardo Carvalho",
+    "username": "livrosparacriancas",
+    "profile": "https://sketchfab.com/livrosparacriancas"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\".fuse female zombie 1\" by Leonardo Carvalho (https://sketchfab.com/3d-models/fuse-female-zombie-1-98415df5d3124381a46ccef5c2e02b71), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 21519,
+  "vertices": 12086,
+  "animations": 1,
+  "files": [
+    {
+      "path": "zombie-woman.gltf.zip",
+      "md5": "4ff240533383f6db467a642078162de0",
+      "size": 7030508,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

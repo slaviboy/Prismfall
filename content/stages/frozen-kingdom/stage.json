@@ -331,6 +331,82 @@
         ]
       },
       {
+        "id": "wolf",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/wolf.glb",
+          "render": "particles",
+          "animation": {
+            "clip": "Armature|Intimidation Walk",
+            "stride": 270
+          },
+          "instances": [
+            {
+              "position": [
+                -74,
+                0,
+                -35
+              ],
+              "scale": 0.0066,
+              "walk": {
+                "to": [
+                  -29,
+                  0,
+                  -48
+                ],
+                "via": [
+                  [
+                    -60,
+                    0,
+                    -40
+                  ],
+                  [
+                    -46,
+                    0,
+                    -44
+                  ]
+                ],
+                "smooth": true,
+                "speed": 1.62,
+                "fade": 0.1,
+                "ease": 1.4,
+                "stops": [
+                  {
+                    "at": 0.5,
+                    "for": 4.17,
+                    "clip": "Armature|Howl"
+                  }
+                ]
+              }
+            }
+          ],
+          "particles": {
+            "count": 16000,
+            "size": 0.11,
+            "brightness": 2.5,
+            "tint": "#8f877d",
+            "colorMix": 0.45,
+            "blend": "normal",
+            "jitter": 0.01,
+            "spread": 5,
+            "wind": [
+              1.2,
+              0.8,
+              0.2
+            ],
+            "bloom": 0.02,
+            "shading": 0.6,
+            "light": [
+              -0.3,
+              0.9,
+              0.8
+            ],
+            "seed": 31
+          }
+        },
+        "bind": []
+      },
+      {
         "id": "snowfall",
         "type": "particles",
         "params": {

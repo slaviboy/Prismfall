@@ -1,0 +1,25 @@
+{
+  "uid": "0bb61160866b4811bd79b6d11e3d8907",
+  "name": "Scarlet Macaw",
+  "page": "https://sketchfab.com/3d-models/scarlet-macaw-0bb61160866b4811bd79b6d11e3d8907",
+  "author": {
+    "name": "Mateus Schwaab",
+    "username": "Mehrus",
+    "profile": "https://sketchfab.com/Mehrus"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Scarlet Macaw\" by Mateus Schwaab (https://sketchfab.com/3d-models/scarlet-macaw-0bb61160866b4811bd79b6d11e3d8907), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 1136,
+  "vertices": 569,
+  "animations": 3,
+  "files": [
+    {
+      "path": "scarlet-macaw.gltf.zip",
+      "md5": "175f7e4cd160d2d675f4ad06924df1f8",
+      "size": 524283,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

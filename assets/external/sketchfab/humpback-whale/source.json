@@ -1,0 +1,25 @@
+{
+  "uid": "bd64878acb0844b2be796ee91855c69e",
+  "name": "Humpback Whale (Idle)",
+  "page": "https://sketchfab.com/3d-models/humpback-whale-idle-bd64878acb0844b2be796ee91855c69e",
+  "author": {
+    "name": "Connlan_Immure",
+    "username": "Connlan_Immure",
+    "profile": "https://sketchfab.com/Connlan_Immure"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Humpback Whale (Idle)\" by Connlan_Immure (https://sketchfab.com/3d-models/humpback-whale-idle-bd64878acb0844b2be796ee91855c69e), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 6592,
+  "vertices": 3298,
+  "animations": 1,
+  "files": [
+    {
+      "path": "humpback-whale.gltf.zip",
+      "md5": "96dab996d418e2ca36f0b1d131decbe7",
+      "size": 25011307,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

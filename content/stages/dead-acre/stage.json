@@ -178,6 +178,280 @@
         ]
       },
       {
+        "id": "shamblers",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/zombie-walker.glb",
+          "render": "particles",
+          "animation": {
+            "clip": "ANIMATION ZOMBIE",
+            "inPlace": true
+          },
+          "instances": [
+            {
+              "position": [
+                -50,
+                -1.05,
+                -14
+              ],
+              "scale": 0.58,
+              "snapToGround": false,
+              "walk": {
+                "to": [
+                  -17,
+                  -1.05,
+                  -15
+                ],
+                "via": [
+                  [
+                    -40,
+                    -1.05,
+                    -13
+                  ],
+                  [
+                    -30,
+                    -1.05,
+                    -14
+                  ]
+                ],
+                "smooth": true,
+                "speed": 0.34,
+                "phase": 0.1,
+                "fade": 0.16,
+                "tilt": false
+              }
+            },
+            {
+              "position": [
+                -56,
+                -1.05,
+                -24
+              ],
+              "scale": 0.6,
+              "snapToGround": false,
+              "walk": {
+                "to": [
+                  -21,
+                  -1.05,
+                  -23
+                ],
+                "via": [
+                  [
+                    -45,
+                    -1.05,
+                    -22
+                  ],
+                  [
+                    -34,
+                    -1.05,
+                    -22
+                  ]
+                ],
+                "smooth": true,
+                "speed": 0.3,
+                "phase": 0.55,
+                "fade": 0.16,
+                "tilt": false
+              }
+            },
+            {
+              "position": [
+                52,
+                -1.05,
+                -19
+              ],
+              "scale": 0.57,
+              "snapToGround": false,
+              "walk": {
+                "to": [
+                  19,
+                  -1.05,
+                  -19
+                ],
+                "via": [
+                  [
+                    42,
+                    -1.05,
+                    -18
+                  ],
+                  [
+                    31,
+                    -1.05,
+                    -18
+                  ]
+                ],
+                "smooth": true,
+                "speed": 0.36,
+                "phase": 0.3,
+                "fade": 0.16,
+                "tilt": false
+              }
+            }
+          ],
+          "particles": {
+            "tint": "#353b39",
+            "colorMix": 0.45,
+            "blend": "normal",
+            "jitter": 0.006,
+            "spread": 1.6,
+            "wind": [
+              0.5,
+              0.35,
+              0.2
+            ],
+            "bloom": 0.02,
+            "shading": 0.8,
+            "light": [
+              0.35,
+              1,
+              0.6
+            ],
+            "count": 6000,
+            "size": 0.06,
+            "brightness": 0.3,
+            "seed": 41
+          }
+        },
+        "bind": []
+      },
+      {
+        "id": "shambler-women",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/zombie-woman.glb",
+          "render": "particles",
+          "animation": {
+            "clip": "mixamo.com",
+            "inPlace": true
+          },
+          "instances": [
+            {
+              "position": [
+                -52,
+                -1.05,
+                -10
+              ],
+              "scale": 0.54,
+              "snapToGround": false,
+              "walk": {
+                "to": [
+                  -16,
+                  -1.05,
+                  -11
+                ],
+                "via": [
+                  [
+                    -42,
+                    -1.05,
+                    -9
+                  ],
+                  [
+                    -31,
+                    -1.05,
+                    -10
+                  ]
+                ],
+                "smooth": true,
+                "speed": 0.32,
+                "phase": 0.72,
+                "fade": 0.16,
+                "tilt": false
+              }
+            },
+            {
+              "position": [
+                50,
+                -1.05,
+                -12
+              ],
+              "scale": 0.55,
+              "snapToGround": false,
+              "walk": {
+                "to": [
+                  16,
+                  -1.05,
+                  -14
+                ],
+                "via": [
+                  [
+                    40,
+                    -1.05,
+                    -12
+                  ],
+                  [
+                    29,
+                    -1.05,
+                    -13
+                  ]
+                ],
+                "smooth": true,
+                "speed": 0.33,
+                "phase": 0.05,
+                "fade": 0.16,
+                "tilt": false
+              }
+            },
+            {
+              "position": [
+                56,
+                -1.05,
+                -26
+              ],
+              "scale": 0.53,
+              "snapToGround": false,
+              "walk": {
+                "to": [
+                  21,
+                  -1.05,
+                  -26
+                ],
+                "via": [
+                  [
+                    45,
+                    -1.05,
+                    -25
+                  ],
+                  [
+                    34,
+                    -1.05,
+                    -25
+                  ]
+                ],
+                "smooth": true,
+                "speed": 0.3,
+                "phase": 0.6,
+                "fade": 0.16,
+                "tilt": false
+              }
+            }
+          ],
+          "particles": {
+            "tint": "#4a5452",
+            "colorMix": 0.18,
+            "blend": "normal",
+            "jitter": 0.006,
+            "spread": 1.6,
+            "wind": [
+              0.5,
+              0.35,
+              0.2
+            ],
+            "bloom": 0.02,
+            "shading": 0.8,
+            "light": [
+              0.35,
+              1,
+              0.6
+            ],
+            "count": 6000,
+            "size": 0.06,
+            "brightness": 0.6,
+            "seed": 42
+          }
+        },
+        "bind": []
+      },
+      {
         "id": "crows",
         "type": "deadAcreCrows",
         "params": {

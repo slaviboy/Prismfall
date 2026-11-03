@@ -1,0 +1,25 @@
+{
+  "uid": "c24dc835a6aa4d3c827450513525cdb8",
+  "name": "Dolphin",
+  "page": "https://sketchfab.com/3d-models/dolphin-c24dc835a6aa4d3c827450513525cdb8",
+  "author": {
+    "name": "Alex_Pfe",
+    "username": "Alex_Pfe",
+    "profile": "https://sketchfab.com/Alex_Pfe"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Dolphin\" by Alex_Pfe (https://sketchfab.com/3d-models/dolphin-c24dc835a6aa4d3c827450513525cdb8), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 188492,
+  "vertices": 101640,
+  "animations": 1,
+  "files": [
+    {
+      "path": "dolphin.gltf.zip",
+      "md5": "827a3bfbad177e988f091c4fa3ad0eb4",
+      "size": 12070934,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

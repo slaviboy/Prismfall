@@ -36,3 +36,38 @@ assets/external/eso/*/*.tif
 assets/external/sketchfab/*/*.zip
 assets/external/sketchfab/*/gltf/
 assets/external/sketchfab/*/*.raw.glb
+
+# The Veil: large originals are not committed; their URLs and MD5s are in each source.json, and
+# scripts/fetch-panorama.ts, fetch-polyhaven.ts and fetch-polyhaven-textures.ts restore them.
+assets/external/polyhaven/kloofendal_28d_misty/*.jpg
+assets/external/polyhaven/mud_forest/*.jpg
+assets/external/polyhaven/forest_leaves_02/*.jpg
+assets/external/polyhaven/bark_willow_02/*.jpg
+assets/external/polyhaven/dark_planks/*.jpg
+assets/external/polyhaven/rough_wood/*.jpg
+assets/external/polyhaven/old_stone_wall/*.jpg
+assets/external/polyhaven/boulder_01/*
+!assets/external/polyhaven/boulder_01/source.json
+assets/external/polyhaven/dead_tree_trunk_02/*
+!assets/external/polyhaven/dead_tree_trunk_02/source.json
+assets/external/polyhaven/rock_moss_set_01/*
+!assets/external/polyhaven/rock_moss_set_01/source.json
+assets/external/polyhaven/root_cluster_02/*
+!assets/external/polyhaven/root_cluster_02/source.json
+assets/external/polyhaven/tree_stump_02/*
+!assets/external/polyhaven/tree_stump_02/source.json
+assets/external/polyhaven/dry_branches_medium_01/*
+!assets/external/polyhaven/dry_branches_medium_01/source.json
+# The Veil raw Blender exports (rebuilt by veil_kit.py / veil_creatures.py; the optimised GLBs ship).
+assets/blender/exports/veil/*.glb
+
+# The owner's downloaded Sketchfab zips at the folder top (fetch-sketchfab.ts --zip imports them into <name>/).
+assets/external/sketchfab/*.zip
+# Large Poly Haven originals (2k texture sets, tonemapped panoramas): each source.json has the URL and MD5.
+assets/external/polyhaven/*/*_2k.jpg
+assets/external/polyhaven/*/*_tonemapped.jpg
+# The Lost Kingdom: the .blend and the raw bakes are rebuilt by lost_kingdom.py; the optimised GLBs ship in content/.
+assets/blender/source/environments/lost-kingdom.blend
+assets/blender/exports/lost_kingdom/*.glb
+assets/blender/exports/lost_kingdom/textures/
+assets/blender/exports/lost_kingdom/scans/*.glb

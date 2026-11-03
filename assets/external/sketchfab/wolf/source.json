@@ -1,0 +1,25 @@
+{
+  "uid": "eabfb1220f3d4c4c88f3216bcf3d3bd0",
+  "name": "Alpha wolf",
+  "page": "https://sketchfab.com/3d-models/alpha-wolf-eabfb1220f3d4c4c88f3216bcf3d3bd0",
+  "author": {
+    "name": "PrinceAli",
+    "username": "PrinceAli",
+    "profile": "https://sketchfab.com/PrinceAli"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Alpha wolf\" by PrinceAli (https://sketchfab.com/3d-models/alpha-wolf-eabfb1220f3d4c4c88f3216bcf3d3bd0), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 6542,
+  "vertices": 4336,
+  "animations": 2,
+  "files": [
+    {
+      "path": "wolf.gltf.zip",
+      "md5": "ccd193fa1015ff2f1986c424ce0bd9b4",
+      "size": 3844701,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

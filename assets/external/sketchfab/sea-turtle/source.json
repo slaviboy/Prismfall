@@ -1,0 +1,25 @@
+{
+  "uid": "442372b7f02b4730882d41d959726156",
+  "name": "Model 53A - Flatback Sea Turtle",
+  "page": "https://sketchfab.com/3d-models/model-53a-flatback-sea-turtle-442372b7f02b4730882d41d959726156",
+  "author": {
+    "name": "DigitalLife3D",
+    "username": "DigitalLife3D",
+    "profile": "https://sketchfab.com/DigitalLife3D"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Model 53A - Flatback Sea Turtle\" by DigitalLife3D (https://sketchfab.com/3d-models/model-53a-flatback-sea-turtle-442372b7f02b4730882d41d959726156), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 34736,
+  "vertices": 17474,
+  "animations": 1,
+  "files": [
+    {
+      "path": "sea-turtle.gltf.zip",
+      "md5": "03ef8b841818279100a6007f376cd303",
+      "size": 31793517,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

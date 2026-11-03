@@ -50,8 +50,12 @@ In use:
 | Folded Sky | Montorfano (Andreas Mischok) | -32..40, the whole surroundings | 16k |
 | Dead Acre | Kloppenheim 04 (Greg Zaal), night-graded | -32..40, the whole surroundings | 16k |
 | Tradewind Cove | Spiaggia di Mondello (Andreas Mischok) | -10..40, a 3D lagoon and sand islands in front | 20k |
+| The Warden's Spire | Toposcope Sunset (Dario Barresi), graded to a storm dusk with `scripts/panorama_grade.py` | -10..24, a 3D volcanic land and citadel in front; the photo gives the far plain, ranges and the glow under the storm | 16k |
 | Future Nights | Shanghai Bund (Greg Zaal) | -5.9..40, a 3D river in front: `occlude` 1500 and a `matte` ring end the water at the far bank and hide the photo's promenade | 16k |
+| The Lost Kingdom | Rainforest Trail (Dimitrios Savva, Jarod Guest) | -12..56, the whole surroundings; 3D ruins, plaza and plants in front, and the same photograph lights the Blender bake | 16k |
 | Ashen Vigil | Aarfontein Pan (Dario Barresi) | -32..40, the whole surroundings, through the stage's own `ashenSky` (the built-in `occlude` classifier reads the warm horizon glow as land, so the stage measures the skyline column by column instead) | 16k |
+| Red Horizon | Freight Station (Sergej Majboroda), smoke-and-fire graded by `scripts/red_horizon_assets.py` | -32..40, the whole surroundings, through the stage's own `redHorizonSky`: the grade stores a land mask in the alpha channel (silhouettes much darker than the sky above them, eroded a pixel), which writes depth at 240 m | 16k |
+| The Veil | Kloofendal 28d Misty (Greg Zaal, Jenelle van Heerden), moonlight-graded | -18..32 declared, under a 3D lowland, marsh and ridges with ray-marched fog | 16k |
 
 ## Space imagery
 

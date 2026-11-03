@@ -1,0 +1,35 @@
+{
+  "id": "rainforest_trail",
+  "kind": "hdri",
+  "name": "Rainforest Trail",
+  "page": "https://polyhaven.com/a/rainforest_trail",
+  "api": {
+    "info": "https://api.polyhaven.com/info/rainforest_trail",
+    "files": "https://api.polyhaven.com/files/rainforest_trail"
+  },
+  "authors": {
+    "Dimitrios Savva": "Photography",
+    "Jarod Guest": "Processing"
+  },
+  "licence": "CC0 1.0",
+  "licenceUrl": "https://polyhaven.com/license",
+  "files": [
+    {
+      "path": "rainforest_trail_tonemapped.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/HDRIs/extra/Tonemapped%20JPG/rainforest_trail.jpg",
+      "md5": "49d096d86ce66b36f70f2601ca2adc0e",
+      "size": 76530078
+    }
+  ],
+  "downloaded": "2026-11-03",
+  "derived": [
+    {
+      "path": "content/stages/lost-kingdom/textures/rainforest_trail_band.webp",
+      "how": "ffmpeg crop=8192:1547:0:774 (elevations -12..56 deg), unsharp 5:5:0.6, libwebp quality 86"
+    },
+    {
+      "path": "content/stages/lost-kingdom/textures/rainforest_trail_detail.webp",
+      "how": "16k HDR https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/16k%2B/rainforest_trail_16k.hdr (md5 1167348faf1162110bf935b6522729fd): crop 5461x3095 (uRange 0.4133..0.7466), tone curve matched to the tonemapped JPG (scripts/panorama_match.py), libwebp quality 90"
+    }
+  ]
+}

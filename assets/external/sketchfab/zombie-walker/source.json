@@ -1,0 +1,25 @@
+{
+  "uid": "165fd9342c364216bfdd8c2f1102223c",
+  "name": "Zombie Walk Test",
+  "page": "https://sketchfab.com/3d-models/zombie-walk-test-165fd9342c364216bfdd8c2f1102223c",
+  "author": {
+    "name": "OSCAR CREATIVO",
+    "username": "oscar_creativo",
+    "profile": "https://sketchfab.com/oscar_creativo"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Zombie Walk Test\" by OSCAR CREATIVO (https://sketchfab.com/3d-models/zombie-walk-test-165fd9342c364216bfdd8c2f1102223c), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 32880,
+  "vertices": 16737,
+  "animations": 1,
+  "files": [
+    {
+      "path": "zombie-walker.gltf.zip",
+      "md5": "74315f962917626d547599db592a8f5e",
+      "size": 5349999,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

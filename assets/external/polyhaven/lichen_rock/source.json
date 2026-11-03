@@ -1,0 +1,42 @@
+{
+  "id": "lichen_rock",
+  "kind": "texture",
+  "name": "Lichen Rock",
+  "page": "https://polyhaven.com/a/lichen_rock",
+  "api": {
+    "info": "https://api.polyhaven.com/info/lichen_rock",
+    "files": "https://api.polyhaven.com/files/lichen_rock"
+  },
+  "authors": {
+    "Rico Cilliers": "All"
+  },
+  "licence": "CC0 1.0",
+  "licenceUrl": "https://polyhaven.com/license",
+  "files": [
+    {
+      "path": "lichen_rock_arm_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/lichen_rock/lichen_rock_arm_2k.jpg",
+      "md5": "ca53b5e011dfb7d0b8fed989b44d9b40",
+      "size": 2978561
+    },
+    {
+      "path": "lichen_rock_diffuse_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/lichen_rock/lichen_rock_diff_2k.jpg",
+      "md5": "5625c90a7b55058b7d89e180376a7cda",
+      "size": 4010129
+    },
+    {
+      "path": "lichen_rock_disp_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/lichen_rock/lichen_rock_disp_2k.jpg",
+      "md5": "8feedb29e0fc7d10a29ed915bb571865",
+      "size": 961417
+    },
+    {
+      "path": "lichen_rock_nor_gl_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/lichen_rock/lichen_rock_nor_gl_2k.jpg",
+      "md5": "801690ee8bbc1d4aa2f16af2d49acc26",
+      "size": 4844348
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

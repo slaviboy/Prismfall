@@ -1,0 +1,42 @@
+{
+  "id": "mossy_sandstone",
+  "kind": "texture",
+  "name": "Mossy Sandstone",
+  "page": "https://polyhaven.com/a/mossy_sandstone",
+  "api": {
+    "info": "https://api.polyhaven.com/info/mossy_sandstone",
+    "files": "https://api.polyhaven.com/files/mossy_sandstone"
+  },
+  "authors": {
+    "Dimitrios Savva": "All"
+  },
+  "licence": "CC0 1.0",
+  "licenceUrl": "https://polyhaven.com/license",
+  "files": [
+    {
+      "path": "mossy_sandstone_arm_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/mossy_sandstone/mossy_sandstone_arm_2k.jpg",
+      "md5": "f7e1297d5cd54953f7bd380ff181bc2d",
+      "size": 2536245
+    },
+    {
+      "path": "mossy_sandstone_diffuse_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/mossy_sandstone/mossy_sandstone_diff_2k.jpg",
+      "md5": "57e86ce79e3d82db2bdbd1fce50e26f2",
+      "size": 2968054
+    },
+    {
+      "path": "mossy_sandstone_disp_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/mossy_sandstone/mossy_sandstone_disp_2k.jpg",
+      "md5": "760e94360a5470f82cf9cbd1783339ef",
+      "size": 814619
+    },
+    {
+      "path": "mossy_sandstone_nor_gl_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/mossy_sandstone/mossy_sandstone_nor_gl_2k.jpg",
+      "md5": "1a0e638c4953f042a3f24ab8e943990b",
+      "size": 4249813
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

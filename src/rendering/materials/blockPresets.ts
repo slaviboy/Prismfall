@@ -68,6 +68,10 @@ export const BLOCK_PRESETS = {
   rosetteLacquer: { surface: 'rosette', roughness: 0.4, metalness: 0.15, clearcoat: 0.6, clearcoatRoughness: 0.15, emissive: 0, core: 0, edgeGlow: 0.05, edgeColor: [1, 0.9, 0.7], rim: 0.06, surfaceNoise: 0, ao: 0.6, albedo: 1, musicGlow: 0.05, envIntensity: 0.6, saturation: 1.02 },
   glassMarble: { surface: 'marble', roughness: 0.03, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.02, emissive: 0.02, core: 0.08, edgeGlow: 0, edgeColor: null, rim: 0.22, surfaceNoise: 0, ao: 0.3, albedo: 1, musicGlow: 0.2, envIntensity: 0.75, saturation: 1.06 },
   paperLantern: { surface: 'lantern', roughness: 0.88, metalness: 0, clearcoat: 0, clearcoatRoughness: 1, emissive: 0, core: 0, edgeGlow: 0.03, edgeColor: [1, 0.9, 0.75], rim: 0.04, surfaceNoise: 0, ao: 0.55, albedo: 1, musicGlow: 0.15, envIntensity: 0.35, saturation: 1.02 },
+  wardenBasalt: { surface: 'basalt', roughness: 0.34, metalness: 0.15, clearcoat: 0.55, clearcoatRoughness: 0.12, emissive: 0, core: 0, edgeGlow: 0.04, edgeColor: [1, 0.55, 0.3], rim: 0.08, surfaceNoise: 0, ao: 0.6, albedo: 1, musicGlow: 0.12, envIntensity: 0.6, saturation: 1.06 },
+  smokedVeil: { surface: 'veil', roughness: 0.42, metalness: 0.04, clearcoat: 0.35, clearcoatRoughness: 0.38, emissive: 0, core: 0.04, edgeGlow: 0.06, edgeColor: [0.78, 0.86, 1], rim: 0.12, surfaceNoise: 0, ao: 0.45, albedo: 1, musicGlow: 0.1, envIntensity: 0.28, saturation: 1.04 },
+  carvedJade: { surface: 'jade', roughness: 0.22, metalness: 0, clearcoat: 0.8, clearcoatRoughness: 0.12, emissive: 0, core: 0.03, edgeGlow: 0.04, edgeColor: [1, 0.85, 0.5], rim: 0.1, surfaceNoise: 0, ao: 0.55, albedo: 1, musicGlow: 0.08, envIntensity: 0.55, saturation: 1.06 },
+  machinedGunmetal: { surface: 'machined', roughness: 0.28, metalness: 0.92, clearcoat: 0.3, clearcoatRoughness: 0.18, emissive: 0, core: 0, edgeGlow: 0, edgeColor: null, rim: 0.05, surfaceNoise: 0, ao: 0.6, albedo: 1, musicGlow: 0.08, envIntensity: 1.0, saturation: 1.08 },
 } satisfies Record<string, BlockMaterialPreset>;
 
 export type BlockPresetId = keyof typeof BLOCK_PRESETS;

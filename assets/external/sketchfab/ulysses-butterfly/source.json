@@ -1,0 +1,25 @@
+{
+  "uid": "1155effb97564974aa0553db3d5eed57",
+  "name": "Ulysses Butterfly",
+  "page": "https://sketchfab.com/3d-models/ulysses-butterfly-1155effb97564974aa0553db3d5eed57",
+  "author": {
+    "name": "eb78",
+    "username": "E.A.Cornell",
+    "profile": "https://sketchfab.com/E.A.Cornell"
+  },
+  "licence": "CC Attribution-ShareAlike",
+  "licenceUrl": "http://creativecommons.org/licenses/by-sa/4.0/",
+  "attribution": "\"Ulysses Butterfly\" by eb78 (https://sketchfab.com/3d-models/ulysses-butterfly-1155effb97564974aa0553db3d5eed57), CC Attribution-ShareAlike",
+  "downloaded": "2026-11-03",
+  "faces": 11116,
+  "vertices": 5692,
+  "animations": 1,
+  "files": [
+    {
+      "path": "ulysses-butterfly.gltf.zip",
+      "md5": "3af93fed44c714aa6e25d2d34fff567a",
+      "size": 4349532,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "uid": "eb77223ebfd946e69fb58ffe9ad32adf",
+  "name": "Toucan Bird",
+  "page": "https://sketchfab.com/3d-models/toucan-bird-eb77223ebfd946e69fb58ffe9ad32adf",
+  "author": {
+    "name": "sevketkabatas",
+    "username": "sevketkabatas6153",
+    "profile": "https://sketchfab.com/sevketkabatas6153"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Toucan Bird\" by sevketkabatas (https://sketchfab.com/3d-models/toucan-bird-eb77223ebfd946e69fb58ffe9ad32adf), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 18958,
+  "vertices": 9851,
+  "animations": 1,
+  "files": [
+    {
+      "path": "toucan.gltf.zip",
+      "md5": "37d5db3eb047bb55e1e9375063b0dcbb",
+      "size": 3454547,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

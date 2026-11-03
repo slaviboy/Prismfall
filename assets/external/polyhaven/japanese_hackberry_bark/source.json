@@ -1,0 +1,42 @@
+{
+  "id": "japanese_hackberry_bark",
+  "kind": "texture",
+  "name": "Japanese Hackberry Bark",
+  "page": "https://polyhaven.com/a/japanese_hackberry_bark",
+  "api": {
+    "info": "https://api.polyhaven.com/info/japanese_hackberry_bark",
+    "files": "https://api.polyhaven.com/files/japanese_hackberry_bark"
+  },
+  "authors": {
+    "Charlotte Baglioni": "All"
+  },
+  "licence": "CC0 1.0",
+  "licenceUrl": "https://polyhaven.com/license",
+  "files": [
+    {
+      "path": "japanese_hackberry_bark_arm_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/japanese_hackberry_bark/japanese_hackberry_bark_arm_2k.jpg",
+      "md5": "5f8d297b3eaaa5d104a05391baee6c2b",
+      "size": 2495916
+    },
+    {
+      "path": "japanese_hackberry_bark_diffuse_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/japanese_hackberry_bark/japanese_hackberry_bark_diff_2k.jpg",
+      "md5": "d913ed01faea2f776d46d49e041db940",
+      "size": 4735539
+    },
+    {
+      "path": "japanese_hackberry_bark_disp_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/japanese_hackberry_bark/japanese_hackberry_bark_disp_2k.jpg",
+      "md5": "6e95d79f129f50a09e6225e5ebef37d1",
+      "size": 1397510
+    },
+    {
+      "path": "japanese_hackberry_bark_nor_gl_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/japanese_hackberry_bark/japanese_hackberry_bark_nor_gl_2k.jpg",
+      "md5": "b3e48bc69fae37a4cca41b04cb6d7182",
+      "size": 5172589
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

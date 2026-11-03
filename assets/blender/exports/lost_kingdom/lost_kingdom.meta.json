@@ -1,0 +1,89 @@
+{
+  "generator": "assets/blender/scripts/lost_kingdom.py",
+  "license": "Original work for Prismfall (textures derived from CC0 Poly Haven photographs)",
+  "groups": {
+    "plaza": {
+      "sunEff": 3.334,
+      "envScale": 2.0,
+      "res": 2048,
+      "resLight": 1024,
+      "triangles": 22765,
+      "albedoMean": [
+        0.1356,
+        0.1205,
+        0.0825
+      ]
+    },
+    "pyramid": {
+      "sunEff": 3.3593,
+      "envScale": 2.0,
+      "res": 4096,
+      "resLight": 2048,
+      "triangles": 120384,
+      "albedoMean": [
+        0.1528,
+        0.1296,
+        0.0789
+      ]
+    },
+    "floor": {
+      "sunEff": 3.2032,
+      "envScale": 2.0,
+      "res": 4096,
+      "resLight": 2048,
+      "triangles": 107564,
+      "albedoMean": [
+        0.1232,
+        0.1004,
+        0.0463
+      ]
+    },
+    "escarpment": {
+      "sunEff": 3.8922,
+      "envScale": 2.0,
+      "res": 4096,
+      "resLight": 2048,
+      "triangles": 56486,
+      "albedoMean": [
+        0.1465,
+        0.138,
+        0.1012
+      ]
+    },
+    "north": {
+      "sunEff": 0.9649,
+      "envScale": 2.0,
+      "res": 2048,
+      "resLight": 1024,
+      "triangles": 24414,
+      "albedoMean": [
+        0.2012,
+        0.2047,
+        0.1636
+      ]
+    }
+  },
+  "plants": 7960,
+  "sun": {
+    "direction": [
+      0.0,
+      0.788,
+      0.6157
+    ],
+    "color": [
+      1.0,
+      0.949999988079071,
+      0.8399999737739563
+    ],
+    "strength": 13.0
+  },
+  "canopy": {
+    "z": 42.0,
+    "rect": [
+      -180.0,
+      -120.0,
+      220.0,
+      280.0
+    ]
+  }
+}

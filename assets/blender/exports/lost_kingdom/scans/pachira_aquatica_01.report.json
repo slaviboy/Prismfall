@@ -1,0 +1,194 @@
+{
+  "name": "pachira_aquatica_01",
+  "input": "assets/external/polyhaven/pachira_aquatica_01/pachira_aquatica_01_1k.gltf",
+  "output": "assets/blender/exports/lost_kingdom/scans/pachira_aquatica_01.glb",
+  "droppedLods": [],
+  "sourceTriangles": 76914,
+  "targetTriangles": 24000,
+  "triangles": 23996,
+  "vertices": 18218,
+  "dimensions": {
+    "width": 1.0545,
+    "depth": 0.9977,
+    "height": 1.6485
+  },
+  "objects": [
+    {
+      "name": "pachira_aquatica_01_a",
+      "sourceTriangles": 13453,
+      "triangles": 4198,
+      "dimensions": {
+        "width": 0.2325,
+        "depth": 0.241,
+        "height": 0.851
+      }
+    },
+    {
+      "name": "pachira_aquatica_01_b",
+      "sourceTriangles": 584,
+      "triangles": 182,
+      "dimensions": {
+        "width": 0.1542,
+        "depth": 0.2309,
+        "height": 0.5838
+      }
+    },
+    {
+      "name": "pachira_aquatica_01_c",
+      "sourceTriangles": 3496,
+      "triangles": 1090,
+      "dimensions": {
+        "width": 0.5941,
+        "depth": 0.4947,
+        "height": 1.0016
+      }
+    },
+    {
+      "name": "pachira_aquatica_01_d",
+      "sourceTriangles": 3764,
+      "triangles": 1174,
+      "dimensions": {
+        "width": 0.6014,
+        "depth": 0.4322,
+        "height": 1.6267
+      }
+    },
+    {
+      "name": "pachira_aquatica_01_a4",
+      "sourceTriangles": 9714,
+      "triangles": 3030,
+      "dimensions": {
+        "width": 0.7439,
+        "depth": 0.6465,
+        "height": 0.7413
+      }
+    },
+    {
+      "name": "pachira_aquatica_01_b5",
+      "sourceTriangles": 4507,
+      "triangles": 1405,
+      "dimensions": {
+        "width": 0.5031,
+        "depth": 0.6083,
+        "height": 0.5186
+      }
+    },
+    {
+      "name": "pachira_aquatica_01_c6",
+      "sourceTriangles": 17055,
+      "triangles": 5322,
+      "dimensions": {
+        "width": 0.9753,
+        "depth": 0.9237,
+        "height": 0.894
+      }
+    },
+    {
+      "name": "pachira_aquatica_01_d7",
+      "sourceTriangles": 24341,
+      "triangles": 7595,
+      "dimensions": {
+        "width": 1.0545,
+        "depth": 0.9977,
+        "height": 1.6485
+      }
+    }
+  ],
+  "origin": "bottom centre of the bounding box of each object, every object at the origin",
+  "maxTexture": 1024,
+  "alphaModes": {
+    "pachira_aquatica_01_bark": "OPAQUE",
+    "pachira_aquatica_01_leaves": "OPAQUE"
+  },
+  "alphaChanges": {},
+  "occlusionAddedFromArm": [
+    "pachira_aquatica_01_bark",
+    "pachira_aquatica_01_leaves"
+  ],
+  "materials": [
+    {
+      "name": "pachira_aquatica_01_bark",
+      "textures": {
+        "Base Color": [
+          "pachira_aquatica_01_bark_diff"
+        ],
+        "Roughness": [
+          "pachira_aquatica_01_bark_rough"
+        ],
+        "Metallic": [
+          "pachira_aquatica_01_bark_rough"
+        ],
+        "Normal": [
+          "pachira_aquatica_01_bark_nor_gl"
+        ],
+        "Occlusion": [
+          "pachira_aquatica_01_bark_rough"
+        ]
+      }
+    },
+    {
+      "name": "pachira_aquatica_01_leaves",
+      "textures": {
+        "Base Color": [
+          "pachira_aquatica_01_leaves_diff-pachira_aquatica_01_leaves_alpha"
+        ],
+        "Roughness": [
+          "pachira_aquatica_01_leaves_rough"
+        ],
+        "Metallic": [
+          "pachira_aquatica_01_leaves_rough"
+        ],
+        "Normal": [
+          "pachira_aquatica_01_leaves_nor_gl"
+        ],
+        "Occlusion": [
+          "pachira_aquatica_01_leaves_rough"
+        ]
+      }
+    }
+  ],
+  "textures": [
+    {
+      "name": "pachira_aquatica_01_bark_diff",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "pachira_aquatica_01_bark_nor_gl",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "pachira_aquatica_01_bark_rough",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "pachira_aquatica_01_leaves_diff-pachira_aquatica_01_leaves_alpha",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "pachira_aquatica_01_leaves_nor_gl",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "pachira_aquatica_01_leaves_rough",
+      "size": [
+        1024,
+        1024
+      ]
+    }
+  ]
+}

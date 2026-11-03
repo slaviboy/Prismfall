@@ -1,0 +1,123 @@
+{
+  "name": "fern_02",
+  "input": "assets/external/polyhaven/fern_02/fern_02_1k.gltf",
+  "output": "assets/blender/exports/lost_kingdom/scans/fern_02.glb",
+  "droppedLods": [],
+  "sourceTriangles": 6232,
+  "targetTriangles": 6232,
+  "triangles": 6232,
+  "vertices": 4160,
+  "dimensions": {
+    "width": 0.9897,
+    "depth": 0.8937,
+    "height": 0.4277
+  },
+  "objects": [
+    {
+      "name": "fern_02_a",
+      "sourceTriangles": 784,
+      "triangles": 784,
+      "dimensions": {
+        "width": 0.5519,
+        "depth": 0.6134,
+        "height": 0.2868
+      }
+    },
+    {
+      "name": "fern_02_b",
+      "sourceTriangles": 2384,
+      "triangles": 2384,
+      "dimensions": {
+        "width": 0.9897,
+        "depth": 0.8937,
+        "height": 0.4277
+      }
+    },
+    {
+      "name": "fern_02_c",
+      "sourceTriangles": 2248,
+      "triangles": 2248,
+      "dimensions": {
+        "width": 0.8743,
+        "depth": 0.7652,
+        "height": 0.349
+      }
+    },
+    {
+      "name": "fern_02_d",
+      "sourceTriangles": 816,
+      "triangles": 816,
+      "dimensions": {
+        "width": 0.5728,
+        "depth": 0.5933,
+        "height": 0.2131
+      }
+    }
+  ],
+  "origin": "bottom centre of the bounding box of each object, every object at the origin",
+  "maxTexture": 1024,
+  "alphaModes": {
+    "fern_02": "MASK"
+  },
+  "alphaChanges": {
+    "fern_02": "MASK (JPEG without alpha) -> MASK from fern_02_alpha_1k.png"
+  },
+  "occlusionAddedFromArm": [
+    "fern_02"
+  ],
+  "materials": [
+    {
+      "name": "fern_02",
+      "textures": {
+        "Base Color": [
+          "fern_02_diff-fern_02_alpha"
+        ],
+        "Roughness": [
+          "fern_02_rough"
+        ],
+        "Metallic": [
+          "fern_02_rough"
+        ],
+        "Normal": [
+          "fern_02_nor_gl"
+        ],
+        "Alpha": [
+          "fern_02_alpha_1k.png"
+        ],
+        "Occlusion": [
+          "fern_02_rough"
+        ]
+      }
+    }
+  ],
+  "textures": [
+    {
+      "name": "fern_02_alpha_1k.png",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "fern_02_diff-fern_02_alpha",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "fern_02_nor_gl",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "fern_02_rough",
+      "size": [
+        1024,
+        1024
+      ]
+    }
+  ]
+}

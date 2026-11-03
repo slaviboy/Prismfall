@@ -1,0 +1,143 @@
+{
+  "name": "anthurium_botany_01",
+  "input": "assets/external/polyhaven/anthurium_botany_01/anthurium_botany_01_1k.gltf",
+  "output": "assets/blender/exports/lost_kingdom/scans/anthurium_botany_01.glb",
+  "droppedLods": [],
+  "sourceTriangles": 67152,
+  "targetTriangles": 4134,
+  "triangles": 4133,
+  "vertices": 2760,
+  "dimensions": {
+    "width": 0.8973,
+    "depth": 1.1424,
+    "height": 0.5026
+  },
+  "objects": [
+    {
+      "name": "anthurium_botany_01_a",
+      "sourceTriangles": 15808,
+      "triangles": 973,
+      "dimensions": {
+        "width": 0.8973,
+        "depth": 1.1424,
+        "height": 0.5026
+      }
+    },
+    {
+      "name": "anthurium_botany_01_b",
+      "sourceTriangles": 15544,
+      "triangles": 956,
+      "dimensions": {
+        "width": 0.7566,
+        "depth": 0.5718,
+        "height": 0.4713
+      }
+    },
+    {
+      "name": "anthurium_botany_01_c",
+      "sourceTriangles": 9072,
+      "triangles": 558,
+      "dimensions": {
+        "width": 0.6008,
+        "depth": 0.6581,
+        "height": 0.358
+      }
+    },
+    {
+      "name": "anthurium_botany_01_d",
+      "sourceTriangles": 10360,
+      "triangles": 638,
+      "dimensions": {
+        "width": 0.4804,
+        "depth": 0.3496,
+        "height": 0.3016
+      }
+    },
+    {
+      "name": "anthurium_botany_01_e",
+      "sourceTriangles": 7664,
+      "triangles": 472,
+      "dimensions": {
+        "width": 0.3196,
+        "depth": 0.29,
+        "height": 0.1578
+      }
+    },
+    {
+      "name": "anthurium_botany_01_f",
+      "sourceTriangles": 8704,
+      "triangles": 536,
+      "dimensions": {
+        "width": 0.3119,
+        "depth": 0.2786,
+        "height": 0.1389
+      }
+    }
+  ],
+  "origin": "bottom centre of the bounding box of each object, every object at the origin",
+  "maxTexture": 1024,
+  "alphaModes": {
+    "anthurium_botany_01": "MASK"
+  },
+  "alphaChanges": {
+    "anthurium_botany_01": "MASK (JPEG without alpha) -> MASK from anthurium_botany_01_alpha_1k.png"
+  },
+  "occlusionAddedFromArm": [
+    "anthurium_botany_01"
+  ],
+  "materials": [
+    {
+      "name": "anthurium_botany_01",
+      "textures": {
+        "Base Color": [
+          "anthurium_botany_01_diff"
+        ],
+        "Roughness": [
+          "anthurium_botany_01_rough"
+        ],
+        "Metallic": [
+          "anthurium_botany_01_rough"
+        ],
+        "Normal": [
+          "anthurium_botany_01_nor_gl"
+        ],
+        "Alpha": [
+          "anthurium_botany_01_alpha_1k.png"
+        ],
+        "Occlusion": [
+          "anthurium_botany_01_rough"
+        ]
+      }
+    }
+  ],
+  "textures": [
+    {
+      "name": "anthurium_botany_01_alpha_1k.png",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "anthurium_botany_01_diff",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "anthurium_botany_01_nor_gl",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "anthurium_botany_01_rough",
+      "size": [
+        1024,
+        1024
+      ]
+    }
+  ]
+}

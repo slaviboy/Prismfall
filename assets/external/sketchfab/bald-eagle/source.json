@@ -1,0 +1,25 @@
+{
+  "uid": "8fb150270adb45aa9653e857f3fa351b",
+  "name": "animated EAGLE",
+  "page": "https://sketchfab.com/3d-models/animated-eagle-8fb150270adb45aa9653e857f3fa351b",
+  "author": {
+    "name": "Asim3d",
+    "username": "Asim3d",
+    "profile": "https://sketchfab.com/Asim3d"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"animated EAGLE\" by Asim3d (https://sketchfab.com/3d-models/animated-eagle-8fb150270adb45aa9653e857f3fa351b), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 3858,
+  "vertices": 1962,
+  "animations": 1,
+  "files": [
+    {
+      "path": "bald-eagle.gltf.zip",
+      "md5": "6b1eab25e59d671e27b22b38ebcdcb63",
+      "size": 2001970,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

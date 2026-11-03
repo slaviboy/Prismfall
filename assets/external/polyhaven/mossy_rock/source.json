@@ -1,0 +1,42 @@
+{
+  "id": "mossy_rock",
+  "kind": "texture",
+  "name": "Mossy Rock",
+  "page": "https://polyhaven.com/a/mossy_rock",
+  "api": {
+    "info": "https://api.polyhaven.com/info/mossy_rock",
+    "files": "https://api.polyhaven.com/files/mossy_rock"
+  },
+  "authors": {
+    "Rob Tuytel": "All"
+  },
+  "licence": "CC0 1.0",
+  "licenceUrl": "https://polyhaven.com/license",
+  "files": [
+    {
+      "path": "mossy_rock_arm_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/mossy_rock/mossy_rock_arm_2k.jpg",
+      "md5": "7aa8634ba2202439a413113c9e617b83",
+      "size": 3799947
+    },
+    {
+      "path": "mossy_rock_diffuse_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/mossy_rock/mossy_rock_diff_2k.jpg",
+      "md5": "8e55bbeeef1db0d2d0cae85515812c46",
+      "size": 4535360
+    },
+    {
+      "path": "mossy_rock_disp_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/mossy_rock/mossy_rock_disp_2k.jpg",
+      "md5": "d22857010ae3d07e42c5548126cf386c",
+      "size": 644550
+    },
+    {
+      "path": "mossy_rock_nor_gl_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/mossy_rock/mossy_rock_nor_gl_2k.jpg",
+      "md5": "e6b611c8a6f8e3276e7f5491c8e66a0f",
+      "size": 4033031
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

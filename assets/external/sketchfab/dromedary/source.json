@@ -1,0 +1,25 @@
+{
+  "uid": "99af7daa5baf450ea7b809937937e6d5",
+  "name": "Camel",
+  "page": "https://sketchfab.com/3d-models/camel-99af7daa5baf450ea7b809937937e6d5",
+  "author": {
+    "name": "eb78",
+    "username": "E.A.Cornell",
+    "profile": "https://sketchfab.com/E.A.Cornell"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Camel\" by eb78 (https://sketchfab.com/3d-models/camel-99af7daa5baf450ea7b809937937e6d5), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 25914,
+  "vertices": 17880,
+  "animations": 3,
+  "files": [
+    {
+      "path": "dromedary.gltf.zip",
+      "md5": "20f72eda9f6b1ece754834f41d78484c",
+      "size": 63506715,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "uid": "4cff1e63f4e941198b3d56300b3393b9",
+  "name": "Animated Deer",
+  "page": "https://sketchfab.com/3d-models/animated-deer-4cff1e63f4e941198b3d56300b3393b9",
+  "author": {
+    "name": "igor-lir",
+    "username": "igor-lir",
+    "profile": "https://sketchfab.com/igor-lir"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Animated Deer\" by igor-lir (https://sketchfab.com/3d-models/animated-deer-4cff1e63f4e941198b3d56300b3393b9), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 31744,
+  "vertices": 16298,
+  "animations": 1,
+  "files": [
+    {
+      "path": "red-deer.gltf.zip",
+      "md5": "4b967aff2e6002c7c49d7a0008536fd9",
+      "size": 23249652,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

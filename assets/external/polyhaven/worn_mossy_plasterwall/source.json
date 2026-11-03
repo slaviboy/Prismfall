@@ -1,0 +1,42 @@
+{
+  "id": "worn_mossy_plasterwall",
+  "kind": "texture",
+  "name": "Worn Mossy Plasterwall",
+  "page": "https://polyhaven.com/a/worn_mossy_plasterwall",
+  "api": {
+    "info": "https://api.polyhaven.com/info/worn_mossy_plasterwall",
+    "files": "https://api.polyhaven.com/files/worn_mossy_plasterwall"
+  },
+  "authors": {
+    "Amal Kumar": "All"
+  },
+  "licence": "CC0 1.0",
+  "licenceUrl": "https://polyhaven.com/license",
+  "files": [
+    {
+      "path": "worn_mossy_plasterwall_arm_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/worn_mossy_plasterwall/worn_mossy_plasterwall_arm_2k.jpg",
+      "md5": "50996a2b9a1c0b083394dc6853e9025f",
+      "size": 2997553
+    },
+    {
+      "path": "worn_mossy_plasterwall_diffuse_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/worn_mossy_plasterwall/worn_mossy_plasterwall_diff_2k.jpg",
+      "md5": "efce8e2f4012ed4afcffdcf9ee5f47db",
+      "size": 3987892
+    },
+    {
+      "path": "worn_mossy_plasterwall_disp_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/worn_mossy_plasterwall/worn_mossy_plasterwall_disp_2k.jpg",
+      "md5": "6afe7c462641aebad074ac070a115ffd",
+      "size": 1624923
+    },
+    {
+      "path": "worn_mossy_plasterwall_nor_gl_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/worn_mossy_plasterwall/worn_mossy_plasterwall_nor_gl_2k.jpg",
+      "md5": "812cd2fd290d20c21cb7e7b48a2d8d4e",
+      "size": 3874111
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

@@ -1,0 +1,42 @@
+{
+  "id": "castle_wall_varriation",
+  "kind": "texture",
+  "name": "Castle Wall Variation",
+  "page": "https://polyhaven.com/a/castle_wall_varriation",
+  "api": {
+    "info": "https://api.polyhaven.com/info/castle_wall_varriation",
+    "files": "https://api.polyhaven.com/files/castle_wall_varriation"
+  },
+  "authors": {
+    "Rob Tuytel": "All"
+  },
+  "licence": "CC0 1.0",
+  "licenceUrl": "https://polyhaven.com/license",
+  "files": [
+    {
+      "path": "castle_wall_varriation_arm_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/castle_wall_varriation/castle_wall_varriation_arm_2k.jpg",
+      "md5": "f9a02f854276847889fbcc0517371d26",
+      "size": 922380
+    },
+    {
+      "path": "castle_wall_varriation_diffuse_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/castle_wall_varriation/castle_wall_varriation_diff_2k.jpg",
+      "md5": "cfbd25a5724d449587079c65a7097afc",
+      "size": 2386019
+    },
+    {
+      "path": "castle_wall_varriation_disp_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/castle_wall_varriation/castle_wall_varriation_disp_2k.jpg",
+      "md5": "a4746e4e49e894c590e4c621f8432a93",
+      "size": 533905
+    },
+    {
+      "path": "castle_wall_varriation_nor_gl_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/castle_wall_varriation/castle_wall_varriation_nor_gl_2k.jpg",
+      "md5": "2cd29f8ff4ec186842b7219dc0495039",
+      "size": 3537669
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

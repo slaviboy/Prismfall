@@ -1,0 +1,133 @@
+{
+  "name": "calathea_orbifolia_01",
+  "input": "assets/external/polyhaven/calathea_orbifolia_01/calathea_orbifolia_01_1k.gltf",
+  "output": "assets/blender/exports/lost_kingdom/scans/calathea_orbifolia_01.glb",
+  "droppedLods": [],
+  "sourceTriangles": 16688,
+  "targetTriangles": 9000,
+  "triangles": 8993,
+  "vertices": 5280,
+  "dimensions": {
+    "width": 0.6006,
+    "depth": 0.5256,
+    "height": 0.4244
+  },
+  "objects": [
+    {
+      "name": "calathea_orbifolia_01_a",
+      "sourceTriangles": 5904,
+      "triangles": 3183,
+      "dimensions": {
+        "width": 0.6006,
+        "depth": 0.5256,
+        "height": 0.4244
+      }
+    },
+    {
+      "name": "calathea_orbifolia_01_b",
+      "sourceTriangles": 3446,
+      "triangles": 1858,
+      "dimensions": {
+        "width": 0.3474,
+        "depth": 0.4403,
+        "height": 0.3032
+      }
+    },
+    {
+      "name": "calathea_orbifolia_01_c",
+      "sourceTriangles": 3542,
+      "triangles": 1908,
+      "dimensions": {
+        "width": 0.3752,
+        "depth": 0.3838,
+        "height": 0.284
+      }
+    },
+    {
+      "name": "calathea_orbifolia_01_d",
+      "sourceTriangles": 1802,
+      "triangles": 970,
+      "dimensions": {
+        "width": 0.2264,
+        "depth": 0.1631,
+        "height": 0.1304
+      }
+    },
+    {
+      "name": "calathea_orbifolia_01_e",
+      "sourceTriangles": 1994,
+      "triangles": 1074,
+      "dimensions": {
+        "width": 0.2128,
+        "depth": 0.2516,
+        "height": 0.1516
+      }
+    }
+  ],
+  "origin": "bottom centre of the bounding box of each object, every object at the origin",
+  "maxTexture": 1024,
+  "alphaModes": {
+    "calathea_orbifolia_01": "MASK"
+  },
+  "alphaChanges": {
+    "calathea_orbifolia_01": "MASK (JPEG without alpha) -> MASK from calathea_orbifolia_01_alpha_1k.png"
+  },
+  "occlusionAddedFromArm": [
+    "calathea_orbifolia_01"
+  ],
+  "materials": [
+    {
+      "name": "calathea_orbifolia_01",
+      "textures": {
+        "Base Color": [
+          "calathea_orbifolia_01_diff"
+        ],
+        "Roughness": [
+          "calathea_orbifolia_01_rough"
+        ],
+        "Metallic": [
+          "calathea_orbifolia_01_rough"
+        ],
+        "Normal": [
+          "calathea_orbifolia_01_nor_gl"
+        ],
+        "Alpha": [
+          "calathea_orbifolia_01_alpha_1k.png"
+        ],
+        "Occlusion": [
+          "calathea_orbifolia_01_rough"
+        ]
+      }
+    }
+  ],
+  "textures": [
+    {
+      "name": "calathea_orbifolia_01_alpha_1k.png",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "calathea_orbifolia_01_diff",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "calathea_orbifolia_01_nor_gl",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "calathea_orbifolia_01_rough",
+      "size": [
+        1024,
+        1024
+      ]
+    }
+  ]
+}

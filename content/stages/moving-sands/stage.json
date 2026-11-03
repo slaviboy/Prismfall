@@ -395,6 +395,267 @@
         "bind": []
       },
       {
+        "id": "camel-caravan",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/dromedary.glb",
+          "render": "particles",
+          "animation": {
+            "clip": "Armature|WalkCycle",
+            "stride": 0.66
+          },
+          "instances": [
+            {
+              "position": [
+                152,
+                0,
+                -104
+              ],
+              "scale": 4.5,
+              "yaw": 180,
+              "walk": {
+                "to": [
+                  42,
+                  0,
+                  -96
+                ],
+                "via": [
+                  [
+                    125,
+                    0,
+                    -102
+                  ],
+                  [
+                    98,
+                    0,
+                    -100
+                  ],
+                  [
+                    70,
+                    0,
+                    -98
+                  ]
+                ],
+                "smooth": true,
+                "speed": 2.97,
+                "phase": 0.0,
+                "fade": 0.08
+              }
+            },
+            {
+              "position": [
+                152,
+                0,
+                -102.8
+              ],
+              "scale": 4.32,
+              "yaw": 180,
+              "walk": {
+                "to": [
+                  42,
+                  0,
+                  -94.8
+                ],
+                "via": [
+                  [
+                    125,
+                    0,
+                    -100.8
+                  ],
+                  [
+                    98,
+                    0,
+                    -98.8
+                  ],
+                  [
+                    70,
+                    0,
+                    -96.8
+                  ]
+                ],
+                "smooth": true,
+                "speed": 2.97,
+                "phase": 0.8643,
+                "fade": 0.08
+              }
+            },
+            {
+              "position": [
+                152,
+                0,
+                -104.8
+              ],
+              "scale": 4.63,
+              "yaw": 180,
+              "walk": {
+                "to": [
+                  42,
+                  0,
+                  -96.8
+                ],
+                "via": [
+                  [
+                    125,
+                    0,
+                    -102.8
+                  ],
+                  [
+                    98,
+                    0,
+                    -100.8
+                  ],
+                  [
+                    70,
+                    0,
+                    -98.8
+                  ]
+                ],
+                "smooth": true,
+                "speed": 2.97,
+                "phase": 0.7285,
+                "fade": 0.08
+              }
+            },
+            {
+              "position": [
+                152,
+                0,
+                -103.4
+              ],
+              "scale": 4.41,
+              "yaw": 180,
+              "walk": {
+                "to": [
+                  42,
+                  0,
+                  -95.4
+                ],
+                "via": [
+                  [
+                    125,
+                    0,
+                    -101.4
+                  ],
+                  [
+                    98,
+                    0,
+                    -99.4
+                  ],
+                  [
+                    70,
+                    0,
+                    -97.4
+                  ]
+                ],
+                "smooth": true,
+                "speed": 2.97,
+                "phase": 0.5928,
+                "fade": 0.08
+              }
+            },
+            {
+              "position": [
+                152,
+                0,
+                -105.0
+              ],
+              "scale": 4.73,
+              "yaw": 180,
+              "walk": {
+                "to": [
+                  42,
+                  0,
+                  -97.0
+                ],
+                "via": [
+                  [
+                    125,
+                    0,
+                    -103.0
+                  ],
+                  [
+                    98,
+                    0,
+                    -101.0
+                  ],
+                  [
+                    70,
+                    0,
+                    -99.0
+                  ]
+                ],
+                "smooth": true,
+                "speed": 2.97,
+                "phase": 0.457,
+                "fade": 0.08
+              }
+            },
+            {
+              "position": [
+                152,
+                0,
+                -103.6
+              ],
+              "scale": 4.19,
+              "yaw": 180,
+              "walk": {
+                "to": [
+                  42,
+                  0,
+                  -95.6
+                ],
+                "via": [
+                  [
+                    125,
+                    0,
+                    -101.6
+                  ],
+                  [
+                    98,
+                    0,
+                    -99.6
+                  ],
+                  [
+                    70,
+                    0,
+                    -97.6
+                  ]
+                ],
+                "smooth": true,
+                "speed": 2.97,
+                "phase": 0.3213,
+                "fade": 0.08
+              }
+            }
+          ],
+          "particles": {
+            "count": 8000,
+            "exclude": "CamelHair",
+            "size": 0.115,
+            "brightness": 2.0,
+            "tint": "#d4dcff",
+            "colorMix": 0.08,
+            "blend": "normal",
+            "jitter": 0.01,
+            "spread": 6,
+            "wind": [
+              3,
+              0.6,
+              0.6
+            ],
+            "bloom": 0.04,
+            "shading": 0.85,
+            "light": [
+              0.45,
+              1,
+              0.35
+            ],
+            "seed": 11
+          }
+        },
+        "bind": []
+      },
+      {
         "id": "blowing-sand",
         "type": "particles",
         "params": {

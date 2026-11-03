@@ -1,0 +1,42 @@
+{
+  "id": "brown_mud_leaves_01",
+  "kind": "texture",
+  "name": "Brown Mud Leaves 01",
+  "page": "https://polyhaven.com/a/brown_mud_leaves_01",
+  "api": {
+    "info": "https://api.polyhaven.com/info/brown_mud_leaves_01",
+    "files": "https://api.polyhaven.com/files/brown_mud_leaves_01"
+  },
+  "authors": {
+    "Rob Tuytel": "All"
+  },
+  "licence": "CC0 1.0",
+  "licenceUrl": "https://polyhaven.com/license",
+  "files": [
+    {
+      "path": "brown_mud_leaves_01_arm_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_mud_leaves_01/brown_mud_leaves_01_arm_2k.jpg",
+      "md5": "62ef9ac8da61a02f78e05d35ad05438d",
+      "size": 3697743
+    },
+    {
+      "path": "brown_mud_leaves_01_diffuse_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_mud_leaves_01/brown_mud_leaves_01_diff_2k.jpg",
+      "md5": "e8b45aee8e00a253eb3a2b08cea89776",
+      "size": 4539452
+    },
+    {
+      "path": "brown_mud_leaves_01_disp_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_mud_leaves_01/brown_mud_leaves_01_disp_2k.jpg",
+      "md5": "cbf64ab799b5d9fa5ef27da55692e563",
+      "size": 1788400
+    },
+    {
+      "path": "brown_mud_leaves_01_nor_gl_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_mud_leaves_01/brown_mud_leaves_01_nor_gl_2k.jpg",
+      "md5": "eb2c704d2889e1e5a53148dc6a2ebdf4",
+      "size": 5688696
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

@@ -342,6 +342,350 @@
         ]
       },
       {
+        "id": "blue-whale",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/blue-whale.glb",
+          "render": "particles",
+          "animation": {
+            "clip": "Take 001",
+            "speed": 1,
+            "vary": 0
+          },
+          "instances": [
+            {
+              "position": [
+                -280,
+                10,
+                -128
+              ],
+              "scale": 2.2,
+              "snapToGround": false,
+              "walk": {
+                "to": [
+                  280,
+                  16,
+                  -120
+                ],
+                "via": [
+                  [
+                    -100,
+                    13,
+                    -136
+                  ],
+                  [
+                    90,
+                    18,
+                    -130
+                  ]
+                ],
+                "smooth": true,
+                "speed": 4.2,
+                "fade": 0.05,
+                "bank": 4
+              }
+            }
+          ],
+          "particles": {
+            "tint": "#9fe0ff",
+            "blend": "normal",
+            "jitter": 0.02,
+            "wind": [
+              0.6,
+              1.2,
+              0.3
+            ],
+            "bloom": 0.05,
+            "shading": 0.8,
+            "light": [
+              -0.25,
+              1,
+              0.2
+            ],
+            "count": 16000,
+            "size": 0.42,
+            "brightness": 2.6,
+            "colorMix": 0.25,
+            "spread": 24,
+            "seed": 21
+          }
+        },
+        "bind": []
+      },
+      {
+        "id": "humpback-whale",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/humpback-whale.glb",
+          "render": "particles",
+          "animation": {
+            "clip": "Take 001",
+            "speed": 1,
+            "vary": 0
+          },
+          "instances": [
+            {
+              "position": [
+                225,
+                -7,
+                -96
+              ],
+              "yaw": 90,
+              "scale": 1.25,
+              "snapToGround": false,
+              "walk": {
+                "to": [
+                  52,
+                  12,
+                  -175
+                ],
+                "via": [
+                  [
+                    160,
+                    -4,
+                    -88
+                  ],
+                  [
+                    105,
+                    -1,
+                    -86
+                  ],
+                  [
+                    70,
+                    3,
+                    -98
+                  ],
+                  [
+                    56,
+                    7,
+                    -128
+                  ]
+                ],
+                "smooth": true,
+                "speed": 3.2,
+                "fade": 0.07,
+                "bank": 14
+              }
+            }
+          ],
+          "particles": {
+            "tint": "#9fe0ff",
+            "blend": "normal",
+            "jitter": 0.02,
+            "wind": [
+              0.6,
+              1.2,
+              0.3
+            ],
+            "bloom": 0.05,
+            "shading": 0.8,
+            "light": [
+              -0.25,
+              1,
+              0.2
+            ],
+            "count": 12000,
+            "size": 0.44,
+            "brightness": 2.2,
+            "colorMix": 0.2,
+            "spread": 16,
+            "seed": 22
+          }
+        },
+        "bind": []
+      },
+      {
+        "id": "sea-turtles",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/sea-turtle.glb",
+          "render": "particles",
+          "flex": [
+            {
+              "match": "^shoulder_L_body_rig$",
+              "axis": [
+                0.15,
+                0.95,
+                0.28
+              ],
+              "degrees": 30,
+              "period": 3.0,
+              "phase": 0,
+              "offset": 4
+            },
+            {
+              "match": "^shoulder_R_body_rig$",
+              "axis": [
+                0.55,
+                -0.83,
+                -0.08
+              ],
+              "degrees": 30,
+              "period": 3.0,
+              "phase": 0,
+              "offset": 4
+            },
+            {
+              "match": "^ulna_[LR]_body_rig$",
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "degrees": 18,
+              "period": 3.0,
+              "phase": 0.25
+            },
+            {
+              "match": "^wrist_[LR]_body_rig$",
+              "axis": [
+                0,
+                1,
+                0
+              ],
+              "degrees": 8,
+              "period": 3.0,
+              "phase": 0.3
+            },
+            {
+              "match": "^thigh_L_body_rig$",
+              "axis": [
+                0.79,
+                -0.59,
+                -0.18
+              ],
+              "degrees": 9,
+              "period": 3.0,
+              "phase": 0.5
+            },
+            {
+              "match": "^thigh_R_body_rig$",
+              "axis": [
+                0.63,
+                0.68,
+                0.36
+              ],
+              "degrees": 9,
+              "period": 3.0,
+              "phase": 0.5
+            },
+            {
+              "match": "^neckBase_body_rig$",
+              "axis": [
+                -1,
+                0,
+                0
+              ],
+              "degrees": 3,
+              "period": 3.0,
+              "phase": 0.1
+            }
+          ],
+          "instances": [
+            {
+              "position": [
+                -175,
+                -6,
+                -96
+              ],
+              "scale": 4.4,
+              "snapToGround": false,
+              "walk": {
+                "to": [
+                  -38,
+                  -3,
+                  -50
+                ],
+                "via": [
+                  [
+                    -130,
+                    -8,
+                    -84
+                  ],
+                  [
+                    -88,
+                    -4,
+                    -70
+                  ],
+                  [
+                    -58,
+                    -6,
+                    -56
+                  ]
+                ],
+                "smooth": true,
+                "speed": 2.2,
+                "phase": 0.15,
+                "fade": 0.1,
+                "bank": 18
+              }
+            },
+            {
+              "position": [
+                178,
+                -8,
+                -84
+              ],
+              "scale": 4.0,
+              "snapToGround": false,
+              "walk": {
+                "to": [
+                  44,
+                  -5,
+                  -44
+                ],
+                "via": [
+                  [
+                    140,
+                    -10,
+                    -76
+                  ],
+                  [
+                    100,
+                    -7,
+                    -64
+                  ],
+                  [
+                    66,
+                    -8,
+                    -52
+                  ]
+                ],
+                "smooth": true,
+                "speed": 2.0,
+                "phase": 0.6,
+                "fade": 0.1,
+                "bank": 18
+              }
+            }
+          ],
+          "particles": {
+            "tint": "#9fe0ff",
+            "blend": "normal",
+            "jitter": 0.02,
+            "wind": [
+              0.6,
+              1.2,
+              0.3
+            ],
+            "bloom": 0.05,
+            "shading": 0.8,
+            "light": [
+              -0.25,
+              1,
+              0.2
+            ],
+            "count": 7000,
+            "size": 0.046,
+            "brightness": 3.0,
+            "colorMix": 0.12,
+            "spread": 4,
+            "seed": 23
+          }
+        },
+        "bind": []
+      },
+      {
         "id": "marine-snow",
         "type": "particles",
         "params": {

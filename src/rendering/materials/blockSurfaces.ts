@@ -27,7 +27,7 @@ import type { Node } from 'three/webgpu';
  * Procedural block surfaces for stage block themes. Every surface keeps the piece colour as its
  * identity (tint, glow or crack colour), so the seven pieces stay distinguishable in any theme.
  */
-export const BLOCK_SURFACES = ['plain', 'wood', 'ice', 'sandstone', 'obsidian', 'emerald', 'cosmic', 'aquatic', 'neon', 'mineral', 'aurora', 'paper', 'lumen', 'dichroic', 'ingot', 'ribbon', 'gel', 'rosette', 'marble', 'lantern'] as const;
+export const BLOCK_SURFACES = ['plain', 'wood', 'ice', 'sandstone', 'obsidian', 'emerald', 'cosmic', 'aquatic', 'neon', 'mineral', 'aurora', 'paper', 'lumen', 'dichroic', 'ingot', 'ribbon', 'gel', 'rosette', 'marble', 'lantern', 'basalt', 'veil', 'jade', 'machined'] as const;
 export type BlockSurface = (typeof BLOCK_SURFACES)[number];
 
 type F = Node<'float'>;
@@ -266,6 +266,82 @@ export function buildSurface(kind: BlockSurface, i: SurfaceInputs): SurfaceOutpu
       const centre = smoothstep(0.03, 0.32, borderDistance(p));
       const light = ndv.pow(2).mul(centre).mul(float(0.36).add(music.mul(0.08))).mul(float(0.82).add(fibres.mul(0.18))).mul(rib.oneMinus());
       return { albedo: cast<V3>(albedo), emissive: cast<V3>(warm.mul(light)), roughness: cast<F>(float(0.88)) };
+    }
+    case 'basalt': {
+      // Dark volcanic stone in the piece colour: fine grain and mottling, a few hairline cracks lit
+      // by molten energy (the piece colour heated towards orange), iron-dark bevels that catch
+      // reflections. The stone tint keeps the seven pieces apart.
+      const grain = mx_noise_float(q.mul(14)).mul(0.5).add(0.5);
+      const mottle = mx_fractal_noise_float(q.mul(2.2), 3, 2, 0.5).mul(0.5).add(0.5);
+      const cells = mx_worley_noise_vec2(q.mul(2.6));
+      const reach = smoothstep(0.3, 0.65, mx_noise_float(q.mul(1.3).add(5.1)).mul(0.5).add(0.5));
+      const crack = smoothstep(0.045, 0.0, cells.y.sub(cells.x)).mul(reach).mul(edge.oneMinus());
+      const stone = base.mul(float(0.36).add(mottle.mul(0.14)).add(grain.mul(0.06)));
+      const iron = vec3(0.09, 0.08, 0.075).add(base.mul(0.06));
+      const albedo = mix(stone, iron, edge.mul(0.7)).mul(float(1).sub(crack.mul(0.5)));
+      const heat = mix(base, vec3(1.0, 0.36, 0.1), 0.45);
+      const emissive = heat.mul(crack.mul(float(0.5).add(music.mul(0.3)))).add(base.mul(ndv.pow(2.5).mul(0.03)));
+      return { albedo: cast<V3>(albedo), emissive: cast<V3>(emissive), roughness: cast<F>(mix(float(0.34).add(grain.mul(0.12)), float(0.2), edge)) };
+    }
+    case 'veil': {
+      // Smoked glass holding a slow drift of mist: charcoal and blue-grey glass tinted by the
+      // piece colour, frosted faces with a faint inner light where the mist thickens, and one fine
+      // lit line just inside every edge. Dense enough that the seven colours stay apart.
+      const drift = vec3(time.mul(0.021), time.mul(0.034), time.mul(-0.017));
+      const mist = mx_fractal_noise_float(q.mul(1.7).add(drift), 3, 2, 0.5).mul(0.5).add(0.5);
+      const d = borderDistance(p);
+      const core = smoothstep(0.03, 0.3, d);
+      const tint = mix(vec3(dot(base, LUMA)), base, 0.9);
+      const smoke = vec3(0.03, 0.036, 0.046);
+      const albedo = mix(smoke, tint.mul(0.46), float(0.58).add(mist.mul(0.22))).mul(mix(float(1), float(0.72), edge));
+      const line = smoothstep(0.022, 0.006, abs(d.sub(0.034)));
+      const inner = tint.mul(mist.mul(core).mul(ndv.pow(1.6)).mul(float(0.16).add(music.mul(0.05))));
+      const emissive = tint.mul(line.mul(0.42)).add(inner);
+      return { albedo: cast<V3>(albedo), emissive: cast<V3>(emissive), roughness: cast<F>(mix(float(0.3).sub(mist.mul(0.06)), float(0.07), edge)) };
+    }
+    case 'jade': {
+      // Carved jade (The Lost Kingdom): polished stone in the piece colour with cloudy mineral
+      // mottling and fine fibrous grain, a carved inset border around each face with a thin gold
+      // inlay in the groove, small stepped-fret notches at the corners, a faint translucent inner
+      // light and fine pitting. The colour stays saturated so the seven pieces read apart.
+      const uv = faceUV(p);
+      const d = borderDistance(p);
+      const cloud = mx_fractal_noise_float(q.mul(2.4), 4, 2, 0.55).mul(0.5).add(0.5);
+      const fibre = mx_noise_float(q.mul(vec3(26, 7, 26))).mul(0.5).add(0.5);
+      const pits = smoothstep(0.8, 1.0, mx_worley_noise_float(q.mul(9.0))).mul(0.35);
+      const groove = smoothstep(0.016, 0.004, abs(d.sub(0.07)));
+      const inlay = smoothstep(0.007, 0.0, abs(d.sub(0.07)));
+      const corner = max(abs(uv.x), abs(uv.y));
+      const fret = step(0.29, min(abs(uv.x), abs(uv.y))).mul(step(corner, 0.36)).mul(step(0.3, corner));
+      const stone = base.mul(float(0.52).add(cloud.mul(0.34)).add(fibre.mul(0.08))).mul(float(1).sub(pits));
+      const carved = stone.mul(float(1).sub(groove.mul(0.45)).sub(fret.mul(0.3)));
+      const gold = vec3(0.82, 0.6, 0.26);
+      const albedo = mix(carved, gold, inlay.mul(0.75)).mul(mix(float(1), float(0.78), edge));
+      const glow = base.mul(ndv.pow(2.2).mul(smoothstep(0.05, 0.3, d)).mul(cloud.mul(0.06).add(0.03).add(music.mul(0.02))));
+      return { albedo: cast<V3>(albedo), emissive: cast<V3>(glow), roughness: cast<F>(mix(float(0.18).add(fibre.mul(0.08)), float(0.42), groove.max(pits))) };
+    }
+    case 'machined': {
+      // Machined gunmetal (Red Horizon): an anodised face plate in the piece colour carrying
+      // fly-cut tool arcs and a brushed grain, bright bare-metal chamfers, an engraved groove with a
+      // fine red-lit line, a small indicator lamp in one corner and the odd fine scratch. Dark
+      // metal, but the colour stays saturated so the seven pieces read apart.
+      const uv = faceUV(p);
+      const d = borderDistance(p);
+      const arcs = sin(length(uv.sub(0.95)).mul(330)).mul(0.5).add(0.5);
+      const brushed = mx_noise_float(q.mul(vec3(2.2, 70, 70))).mul(0.5).add(0.5);
+      const scratch = smoothstep(0.86, 0.95, mx_noise_float(q.mul(vec3(36, 2.5, 36)).add(seed.mul(3.3)))).mul(0.6);
+      const groove = smoothstep(0.014, 0.005, abs(d.sub(0.088)));
+      const line = smoothstep(0.006, 0.0015, abs(d.sub(0.088)));
+      const lampD = length(uv.sub(0.29));
+      const lamp = smoothstep(0.03, 0.017, lampD);
+      const bezel = smoothstep(0.05, 0.036, lampD).sub(lamp).max(0);
+      const plate = mix(base, vec3(dot(base, LUMA)), 0.2).mul(0.6).add(0.025);
+      const bare = vec3(0.34, 0.34, 0.36).add(base.mul(0.08));
+      const face = plate.mul(float(0.9).add(arcs.mul(0.06)).add(brushed.mul(0.06))).add(scratch.mul(0.08));
+      const albedo = mix(face, bare, edge.mul(0.85)).mul(float(1).sub(groove.mul(0.7)).sub(bezel.mul(0.6)));
+      const red = mix(base, vec3(1, 0.1, 0.04), 0.6);
+      const emissive = red.mul(line.mul(float(0.42).add(music.mul(0.12)))).add(mix(base, vec3(1, 0.95, 0.9), 0.35).mul(lamp.mul(0.9)));
+      return { albedo: cast<V3>(albedo), emissive: cast<V3>(emissive), roughness: cast<F>(mix(float(0.24).add(brushed.mul(0.1)).add(scratch.mul(0.1)), float(0.14), edge).add(groove.mul(0.3))) };
     }
     default:
       return { albedo: base, emissive: zero, roughness: null };

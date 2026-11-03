@@ -1,0 +1,161 @@
+import { arp, bassline, beat, composition, hold, melody, once, stab } from '@prismfall/sdk';
+
+/**
+ * "Under the Ceiba": a slow ceremonial piece in A dorian at 84 BPM for a plaza the forest took
+ * back. Deep frame drums and hand drums keep an unhurried procession under warm pads, a wooden
+ * marimba circles the chords, a breathy flute sings a long-breathed tune in the treetops and a
+ * low clay-flute drone answers it. Builds add rattles and a second drum voice; the drop opens the
+ * strings. Original composition for Prismfall; no part imitates any film or game score.
+ */
+const TUNE = "5:6 4:2 3:4 1:4 | 2:8 -:4 1:2 2:2 | 3:6 5:2 4:4 3:4 | 1:12 -:4 | 6,:4 1:4 2:6 3:2 | 4:4 3:2 2:2 1:8 | 2:6 3:2 5:4 4:4 | 3:16";
+const HIGH = "1':6 7:2 5:4 4:4 | 5:8 -:4 4:2 5:2 | 6:6 5:2 4:4 3:4 | 4:12 -:4 | 3:4 4:4 5:6 4:2 | 3:4 2:2 1:2 2:8 | 3:6 4:2 5:4 7:4 | 1':16";
+const CALL = '-:8 5,:2 1:2 2:4 | -:16 | -:8 6,:2 1:2 3:4 | -:16';
+
+export default composition({
+  id: 'lost-kingdom-under-the-ceiba',
+  title: 'Under the Ceiba',
+  bpm: 84,
+  beatsPerBar: 4,
+  key: 'A',
+  scale: 'dorian',
+  swing: 0.08,
+  space: { decay: 4.4, wet: 0.38, damping: 0.55 },
+  stinger: 'marimba',
+  instruments: {
+    pad: { kind: 'pad', wave: 'triangle', voices: 3, detune: 8, cutoff: 1300, attack: 2.4, release: 4, gain: 0.26, reverb: 0.65 },
+    drone: { kind: 'pad', wave: 'sine', voices: 2, detune: 3, cutoff: 700, attack: 3, release: 5, gain: 0.2, reverb: 0.5 },
+    marimba: { kind: 'mallet', ratio: 4, index: 0.9, decay: 0.75, gain: 0.25, pan: -0.15, reverb: 0.42, delay: 0.18 },
+    flute: { kind: 'lead', wave: 'sine', cutoff: 2600, envAmount: 0.25, attack: 0.14, decay: 1.8, gain: 0.21, reverb: 0.6, delay: 0.28, glide: 0.1, layer: 0.25 },
+    ocarina: { kind: 'lead', wave: 'triangle', cutoff: 1500, envAmount: 0.2, attack: 0.09, decay: 1.1, gain: 0.15, pan: 0.3, reverb: 0.55, delay: 0.35, glide: 0.06, layer: 0.45 },
+    strings: { kind: 'strings', wave: 'sawtooth', voices: 4, detune: 10, cutoff: 1100, attack: 2.2, release: 4, gain: 0.19, reverb: 0.7, layer: 0.6 },
+    bass: { kind: 'bass', wave: 'triangle', cutoff: 380, envAmount: 0.7, decay: 0.5, gain: 0.5, duck: 0.1 },
+    sub: { kind: 'sub', gain: 0.27, layer: 0.5 },
+    frame: { kind: 'tom', tone: 70, decay: 0.55, gain: 0.5, reverb: 0.35 },
+    kick: { kind: 'kick', tone: 62, decay: 0.45, gain: 0.48, layer: 0.3 },
+    hand: { kind: 'tom', tone: 210, decay: 0.16, gain: 0.24, pan: 0.3 },
+    lowHand: { kind: 'tom', tone: 140, decay: 0.24, gain: 0.25, pan: -0.3, layer: 0.3 },
+    rattle: { kind: 'shaker', tone: 6200, decay: 0.07, gain: 0.15, pan: -0.35, layer: 0.2 },
+    clave: { kind: 'perc', gain: 0.16, pan: 0.4, layer: 0.4 },
+    riser: { kind: 'riser', gain: 0.22, reverb: 0.7 },
+    impact: { kind: 'impact', gain: 0.3, reverb: 0.75 },
+  },
+  sections: [
+    {
+      name: 'mist on the plaza',
+      kind: 'intro',
+      bars: 8,
+      intensity: 0.18,
+      chords: ['i', 'i', 'IV', 'IV', 'i', 'i', 'VII', 'VII'],
+      parts: {
+        drone: hold({ octave: 2, voicing: 'open', vel: 0.5, every: 4 }),
+        pad: hold({ octave: 3, voicing: 'open', vel: 0.36, every: 2 }),
+        marimba: arp({ rate: 4, octave: 4, span: 2, order: 'pendulum', gate: 1.2, vel: 0.32, ramp: [0.5, 1] }),
+        frame: beat('x...............', { vel: 0.6 }),
+        rattle: beat('..x...x...x...x.', { vel: 0.3, ramp: [0.2, 0.7] }),
+      },
+    },
+    {
+      name: 'procession',
+      kind: 'verse',
+      bars: 16,
+      intensity: 0.4,
+      chords: ['i', 'IV', 'i', 'VII', 'i', 'IV', 'v', 'VII'],
+      parts: {
+        pad: hold({ octave: 3, voicing: 'open', vel: 0.28, every: 2 }),
+        marimba: arp({ rate: 2, octave: 4, span: 2, order: 'pendulum', gate: 1.1, vel: 0.34 }),
+        bass: bassline('x.......x.....x.', { octave: 2, fifths: 0.5, gate: 0.9 }),
+        frame: beat('x.......x.......', { vel: 0.7 }),
+        hand: beat('....x..x....x.xx', { vel: 0.5, prob: 0.85 }),
+        rattle: beat('..x...x...x...x.', { vel: 0.38 }),
+        flute: melody(TUNE, { octave: 4, vel: 0.44 }),
+      },
+    },
+    {
+      name: 'the steps',
+      kind: 'verse',
+      bars: 16,
+      intensity: 0.52,
+      chords: ['i', 'IV', 'i', 'VII', 'III', 'IV', 'v', 'VII'],
+      parts: {
+        pad: hold({ octave: 3, voicing: 'open', vel: 0.26, every: 2 }),
+        marimba: arp({ rate: 2, octave: 4, span: 2, order: 'pendulum', gate: 1.1, vel: 0.32 }),
+        bass: bassline('x.......x...x.x.', { octave: 2, fifths: 0.5, gate: 0.85 }),
+        kick: beat('x.......x.......', { vel: 0.6 }),
+        frame: beat('x.......x..x....', { vel: 0.66 }),
+        hand: beat('....x..x....x.xx', { vel: 0.52 }),
+        lowHand: beat('..x.......x...x.', { vel: 0.45 }),
+        rattle: beat('x.x.x.x.x.x.x.x.', { vel: 0.34 }),
+        clave: beat('x..x..x...x.x...', { vel: 0.4 }),
+        flute: melody(TUNE, { octave: 4, vel: 0.42 }),
+        ocarina: melody(CALL, { octave: 4, vel: 0.4 }),
+      },
+    },
+    {
+      name: 'roots in the stone',
+      kind: 'bridge',
+      bars: 8,
+      intensity: 0.34,
+      chords: ['ii', 'III', 'IV', 'i', 'ii', 'III', 'v', 'VII'],
+      parts: {
+        drone: hold({ octave: 2, voicing: 'open', vel: 0.45, every: 2 }),
+        pad: hold({ octave: 3, voicing: 'spread', vel: 0.32 }),
+        marimba: melody("3:4 5:4 1':8 | 7:4 5:4 3:8 | 4:4 6:4 1':4 6:4 | 5:16 | 3:4 5:4 1':8 | 7:4 5:4 3:8 | 2:4 4:4 5:4 7:4 | 5:16", { octave: 4, vel: 0.42 }),
+        frame: beat('x...............', { vel: 0.55 }),
+        rattle: beat('..x...x...x...x.', { vel: 0.3 }),
+      },
+    },
+    {
+      name: 'gathering',
+      kind: 'build',
+      bars: 4,
+      intensity: 0.62,
+      chords: ['IV', 'v', 'ii', 'VII'],
+      parts: {
+        strings: hold({ octave: 3, voicing: 'open', vel: 0.36 }),
+        marimba: arp({ rate: 1, octave: 4, span: 2, order: 'up', gate: 0.9, vel: 0.32, ramp: [0.5, 1] }),
+        hand: beat('x.x.x.x.x.x.x.x.', { vel: 0.55, ramp: [0.3, 1], fillLastBar: 'x.xxx.xxx.xxxxxx' }),
+        frame: beat('x...x...x...x...', { ramp: [0.4, 0.95] }),
+        bass: bassline('x...x...x...x...', { octave: 2, gate: 0.6 }),
+        riser: once({ vel: 0.45 }),
+      },
+    },
+    {
+      name: 'the summit',
+      kind: 'drop',
+      bars: 16,
+      intensity: 0.8,
+      chords: ['i', 'IV', 'i', 'VII', 'III', 'IV', 'v', 'VII'],
+      parts: {
+        impact: once({ dur: 4, vel: 0.4 }),
+        strings: hold({ octave: 3, voicing: 'open', vel: 0.32, every: 2 }),
+        pad: hold({ octave: 4, voicing: 'open', vel: 0.2, every: 2 }),
+        marimba: arp({ rate: 2, octave: 4, span: 2, order: 'random', gate: 1, vel: 0.3 }),
+        flute: melody(HIGH, { octave: 4, vel: 0.46 }),
+        ocarina: melody(TUNE, { octave: 4, vel: 0.3 }),
+        bass: bassline('x.......x...x.x.', { octave: 2, fifths: 0.5, gate: 0.85 }),
+        sub: bassline('x.........x.....', { octave: 1, gate: 0.9 }),
+        kick: beat('x.......x..x....'),
+        frame: beat('x.......x.......', { vel: 0.7 }),
+        hand: beat('....x..x....x.xx', { vel: 0.55 }),
+        lowHand: beat('..x.......x...x.', { vel: 0.5 }),
+        rattle: beat('x.x.x.x.x.x.x.x.', { vel: 0.38 }),
+        clave: beat('x..x..x...x.x...', { vel: 0.42 }),
+      },
+    },
+    {
+      name: 'rain in the leaves',
+      kind: 'break',
+      bars: 8,
+      intensity: 0.26,
+      chords: ['i', 'III', 'IV', 'VII'],
+      parts: {
+        drone: hold({ octave: 2, voicing: 'open', vel: 0.45, every: 2 }),
+        pad: hold({ octave: 3, voicing: 'open', vel: 0.3 }),
+        marimba: stab('x.......x.......', { octave: 4, voicing: 'spread', gate: 1.6, vel: 0.3 }),
+        ocarina: melody(CALL, { octave: 5, vel: 0.36 }),
+        rattle: beat('..x...x...x...x.', { vel: 0.26 }),
+      },
+    },
+  ],
+  loopFrom: 1,
+});

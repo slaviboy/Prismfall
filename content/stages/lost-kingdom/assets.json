@@ -1,0 +1,158 @@
+{
+  "files": [
+    {
+      "path": "stage.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "SDK module: registers the ruins, undergrowth, waterfall, lianas and light-shaft components, the jade line clear and the canopy entrance"
+    },
+    {
+      "path": "env.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "shared sun, canopy mask sampling and texture loading"
+    },
+    {
+      "path": "ruins.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "baked architecture shader (albedo, dappled sun, sky light, glyph glow)"
+    },
+    {
+      "path": "foliage.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "instanced scanned undergrowth with canopy light and wind"
+    },
+    {
+      "path": "waterfall.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "ballistic waterfall sheets, spray, droplets, foam and the reflecting pool"
+    },
+    {
+      "path": "lianas.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "hanging lianas with a slow breeze"
+    },
+    {
+      "path": "shafts.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "shafts of sunlight through canopy gaps"
+    },
+    {
+      "path": "effects.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "jade-awakening line clear and canopy-fall entrance"
+    },
+    {
+      "path": "music/under-the-ceiba.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "Under the Ceiba composition"
+    },
+    {
+      "path": "music/the-long-count.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "The Long Count composition"
+    },
+    {
+      "path": "textures/rainforest_trail_band.webp",
+      "license": "CC0 1.0",
+      "author": "Dimitrios Savva, Jarod Guest (Poly Haven)",
+      "source": "https://polyhaven.com/a/rainforest_trail",
+      "purpose": "photographic surroundings band"
+    },
+    {
+      "path": "textures/rainforest_trail_detail.webp",
+      "license": "CC0 1.0",
+      "author": "Dimitrios Savva, Jarod Guest (Poly Haven)",
+      "source": "https://polyhaven.com/a/rainforest_trail",
+      "purpose": "high-resolution crop of the visible directions"
+    },
+    {
+      "path": "textures/canopy_dapple.webp",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "assets/blender/scripts/lost_kingdom.py",
+      "purpose": "canopy transmission mask shared by the bake and the live components"
+    },
+    {
+      "path": "models/pyramid.glb",
+      "license": "Original work for Prismfall (textures derived from CC0 Poly Haven photographs)",
+      "author": "Prismfall",
+      "source": "assets/blender/scripts/lost_kingdom.py",
+      "purpose": "the Great Pyramid, baked"
+    },
+    {
+      "path": "models/floor.glb",
+      "license": "Original work for Prismfall (textures derived from CC0 Poly Haven photographs)",
+      "author": "Prismfall",
+      "source": "assets/blender/scripts/lost_kingdom.py",
+      "purpose": "the plaza floor, baked"
+    },
+    {
+      "path": "models/plaza.glb",
+      "license": "Original work for Prismfall (textures derived from CC0 Poly Haven photographs)",
+      "author": "Prismfall",
+      "source": "assets/blender/scripts/lost_kingdom.py",
+      "purpose": "stelae, altars, blocks, panel wall and ceiba, baked"
+    },
+    {
+      "path": "models/escarpment.glb",
+      "license": "Original work for Prismfall; includes \"El Palacio Palenque/Palenque's Palace\" by Daniel Bola\u00f1os, CC BY 4.0",
+      "author": "Prismfall, Daniel Bola\u00f1os",
+      "source": "assets/blender/scripts/lost_kingdom.py; https://sketchfab.com/3d-models/el-palacio-palenquepalenques-palace-4f143d7d1718414fb70609607a7f528c",
+      "purpose": "karst outcrop, spillway, pool and the palace scan, baked"
+    },
+    {
+      "path": "models/north.glb",
+      "license": "CC BY 4.0 (\"Structure B1, Cahal Pech, Belize\" by csantasilia); bake original work for Prismfall",
+      "author": "csantasilia",
+      "source": "https://sketchfab.com/3d-models/structure-b1-cahal-pech-belize-b543785d9b324280b56a72a3136a0271",
+      "purpose": "the temple platform behind the plaza, baked"
+    },
+    {
+      "path": "models/vegetation.glb",
+      "license": "CC0 1.0 (Poly Haven plant scans); placement original work for Prismfall",
+      "author": "Poly Haven; Prismfall",
+      "source": "assets/blender/scripts/lost_kingdom.py",
+      "purpose": "instanced undergrowth"
+    },
+    {
+      "path": "models/hummingbird-bird.glb",
+      "license": "CC BY 4.0 (\"Hummingbird \u2013 Rigged, 6 Animations (Open Bill)\" by Animal Animator)",
+      "author": "Animal Animator",
+      "source": "https://sketchfab.com/3d-models/hummingbird-rigged-6-animations-open-bill-d9b448ac1025485e843d54bebf35390a",
+      "purpose": "the hummingbird without its prop meshes, drawn as particles"
+    },
+    {
+      "path": "haze.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "gradient horizon haze shells"
+    },
+    {
+      "path": "previews/thumb.jpg",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "generated by scripts/thumbnails.ts",
+      "purpose": "world artwork"
+    }
+  ]
+}

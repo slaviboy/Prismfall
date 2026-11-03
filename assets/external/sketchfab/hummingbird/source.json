@@ -1,0 +1,25 @@
+{
+  "uid": "d9b448ac1025485e843d54bebf35390a",
+  "name": "Hummingbird – Rigged, 6 Animations (Open Bill)",
+  "page": "https://sketchfab.com/3d-models/hummingbird-rigged-6-animations-open-bill-d9b448ac1025485e843d54bebf35390a",
+  "author": {
+    "name": "Animal Animator",
+    "username": "animalanimator",
+    "profile": "https://sketchfab.com/animalanimator"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Hummingbird – Rigged, 6 Animations (Open Bill)\" by Animal Animator (https://sketchfab.com/3d-models/hummingbird-rigged-6-animations-open-bill-d9b448ac1025485e843d54bebf35390a), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 52622,
+  "vertices": 26673,
+  "animations": 6,
+  "files": [
+    {
+      "path": "hummingbird.gltf.zip",
+      "md5": "735885719873ab45da9e2d3b9394d6dd",
+      "size": 13039787,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

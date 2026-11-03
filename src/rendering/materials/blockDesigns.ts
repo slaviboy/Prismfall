@@ -37,6 +37,10 @@ export const BLOCK_DESIGNS: readonly BlockDesign[] = [
   { id: 'neon', name: 'Neon', description: 'Smoked glass with a fine lit grid (Future Nights).', material: 'neonGlass', geometry: 'framed' },
   { id: 'forged', name: 'Forged metal', description: 'Hammered metal with hot seams (Ember Foundry).', material: 'forgedMetal', geometry: 'chamfer' },
   { id: 'washi', name: 'Washi', description: 'Soft fibrous paper (Folded Sky).', material: 'washiSheet', geometry: 'chamfer' },
+  { id: 'basalt', name: 'Basalt', description: "Dark volcanic stone veined with molten light, on iron-dark edges (The Warden's Spire).", material: 'wardenBasalt', geometry: 'chamfer' },
+  { id: 'veil', name: 'Veil glass', description: 'Smoked glass holding a slow drift of mist, each edge traced by a fine lit line (The Veil).', material: 'smokedVeil', geometry: 'chamfer' },
+  { id: 'jade', name: 'Carved jade', description: 'Polished jade with a carved border, a thin gold inlay and a faint inner light (The Lost Kingdom).', material: 'carvedJade', geometry: 'chamfer' },
+  { id: 'gunmetal', name: 'Gunmetal', description: 'Machined dark metal in the piece colour: bright chamfers, an engraved red-lit line and a small corner lamp (Red Horizon).', material: 'machinedGunmetal', geometry: 'chamfer' },
 ];
 
 export function getBlockDesign(id: string): BlockDesign | null {
