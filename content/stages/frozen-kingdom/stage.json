@@ -270,6 +270,46 @@
             "releaseMs": 1500
           }
         ]
+      },
+      {
+        "id": "crystal-flakes",
+        "type": "particleShapes",
+        "params": {
+          "count": 10,
+          "particles": 900,
+          "size": [
+            8,
+            14
+          ],
+          "area": {
+            "center": [
+              0,
+              3,
+              -55
+            ],
+            "size": [
+              150,
+              24,
+              50
+            ],
+            "minX": 33
+          },
+          "period": 15,
+          "drift": [
+            0.8,
+            -0.35,
+            0
+          ],
+          "spin": 7,
+          "particleSize": 0.22,
+          "color": "#ffffff",
+          "colorB": "#a8dcff",
+          "brightness": 2.2,
+          "blend": "additive",
+          "bloom": 0.45,
+          "seed": 3
+        },
+        "bind": []
       }
     ]
   },

@@ -11,6 +11,7 @@ import { creatureHerdComponent } from './components/creatureHerd';
 import { lavaComponent } from './components/lava';
 import { modelComponent } from './components/model';
 import { particlesComponent } from './components/particles';
+import { particleShapesComponent } from './components/particleShapes';
 import { planetComponent } from './components/planet';
 import { ridgesComponent } from './components/ridges';
 import { ringsComponent } from './components/rings';
@@ -43,6 +44,7 @@ export const BUILTIN_COMPONENTS: readonly ComponentFactory[] = [
   ridgesComponent,
   conifersComponent,
   modelComponent,
+  particleShapesComponent,
 ] as unknown as readonly ComponentFactory[];
 
 let registered = false;
