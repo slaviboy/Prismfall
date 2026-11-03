@@ -9,12 +9,17 @@ test.describe('practice mode', () => {
     // Gravity: By level -> Custom -> None (two steps right).
     const gravity = page.getByTestId('practice-gravity');
     await gravity.focus();
+    await expect(gravity).toBeFocused();
+    // One step at a time: under a loaded machine two quick presses can land before the first applies.
     await page.keyboard.press('ArrowRight');
+    await expect.poll(() => hooks<string>(page, 'h.getSettings().practice.gravityMode')).toBe('custom');
     await page.keyboard.press('ArrowRight');
     await expect.poll(() => hooks<string>(page, 'h.getSettings().practice.gravityMode')).toBe('none');
     // Drill only I pieces.
     await page.getByTestId('practice-randomizer').focus();
+    await expect(page.getByTestId('practice-randomizer')).toBeFocused();
     await page.keyboard.press('ArrowRight');
+    await expect.poll(() => hooks<string>(page, 'h.getSettings().practice.randomizer')).not.toBe('bag7');
     await page.keyboard.press('ArrowRight');
     await expect.poll(() => hooks<string>(page, 'h.getSettings().practice.randomizer')).toBe('drill');
     // The drill can't be emptied, so add I before removing the default T.

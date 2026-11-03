@@ -79,7 +79,15 @@ export class RenderSystem implements GameView {
   readonly post: PostPipeline;
   readonly perf: PerfMonitor;
   readonly backdrop = new DefaultBackdrop();
+  /** World-space bursts (environment emitters, creature dust). */
   readonly bursts = new BurstSystem(32768);
+  /** Board-space bursts (clears, landings, entrances): they travel with the playfield in VR. */
+  readonly boardBursts = new BurstSystem(16384);
+  /**
+   * When set (VR), replaces the desktop camera and post-processing: called once per frame after
+   * the scene has been updated, to draw it some other way.
+   */
+  presenter: (() => void) | null = null;
   readonly feedback: FeedbackDirector;
   readonly environments: EnvironmentHost;
   readonly adapter: AdapterInfo;
@@ -112,8 +120,9 @@ export class RenderSystem implements GameView {
     this.boardRoot.add(this.board.group);
     this.scene.add(this.backdrop.group, this.worldRoot, this.lights.group, this.boardRoot, this.fxRoot);
     this.post = new PostPipeline(renderer, this.scene, this.cameraRig.camera);
-    this.feedback = new FeedbackDirector(this.bursts, this.cameraRig, createRoundedBlock());
-    this.fxRoot.add(this.bursts.object, this.feedback.ghosts);
+    this.feedback = new FeedbackDirector(this.boardBursts, this.cameraRig, createRoundedBlock());
+    this.fxRoot.add(this.bursts.object);
+    this.boardRoot.add(this.boardBursts.object, this.feedback.ghosts);
     this.environments = new EnvironmentHost(this);
     this.feedback.onStageEvent = (e) => this.environments.onGameEvent(e);
     this.perf = new PerfMonitor(renderer, adapter.backend === 'webgpu');
@@ -242,6 +251,7 @@ export class RenderSystem implements GameView {
     this.applyBlockStyle();
     this.feedback.settings = { intensity: s.gameplay.effectsIntensity, reducedMotion: reducedMotion(s), screenEffects: s.accessibility.screenEffects * (s.graphics.screenSpaceEffects ? 1 : 0.4) };
     this.bursts.density = Math.max(0.05, g.particleDensity);
+    this.boardBursts.density = this.bursts.density;
     this.environments.reactivity = { ...s.reactivity };
     this.board.setGlyphs(s.accessibility.pieceGlyphs);
     this.board.showGhost = s.gameplay.ghost;
@@ -327,9 +337,19 @@ export class RenderSystem implements GameView {
     this.feedback.handle(frame.events, engine, time);
     this.board.sync(engine, frame.events, time);
     this.environments.update(frame.dt, time, audio, frame.beats ?? [], sig as GameSignals);
+    // Environment emitters write world bursts during their update; upload the new spawns once.
+    this.bursts.flush();
     for (const hook of this.hooks) hook.update(frame);
     this.lights.setLevel(sig.level);
     this.lights.update(frame.dt, frameUniforms.beatPulse.value, frameUniforms.clearPulse.value, frameUniforms.reactivity.value);
+    if (this.presenter) {
+      // VR: the headset owns the camera and there is no post-processing pass.
+      const tp = performance.now();
+      this.presenter();
+      this.perf.addCpu('scene update', tp - t0);
+      this.perf.addCpu('render encode', performance.now() - tp);
+      return;
+    }
     this.cameraRig.update(frame.dt, time, frameUniforms.beatPulse.value);
     this.post.setFocusDistance(this.cameraRig.camera.position.length());
     const t1 = performance.now();
@@ -397,6 +417,7 @@ export class RenderSystem implements GameView {
     this.environments.dispose();
     this.feedback.dispose();
     this.bursts.dispose();
+    this.boardBursts.dispose();
     this.post.dispose();
     this.board.dispose();
     this.backdrop.dispose();

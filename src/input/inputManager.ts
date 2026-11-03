@@ -16,6 +16,7 @@ export class InputManager {
   private context: InputContext = 'none';
   private keyboardBindings: Bindings | null = null;
   private gamepadBindings: Bindings | null = null;
+  private xrBindings: Bindings | null = null;
   private swapConfirmBack = false;
   private lookups = new Map<string, Map<string, string[]>>();
   /** action -> controls currently holding it (per context). */
@@ -61,6 +62,17 @@ export class InputManager {
     for (const code of [...keyboard.confirm, ...keyboard.back]) prevent.add(code);
     for (const code of ['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Tab', 'Backspace']) prevent.add(code);
     this.keyboard.preventDefaultCodes = prevent;
+  }
+
+  /** VR controller bindings (see DEFAULT_XR). */
+  setXRBindings(xr: Bindings): void {
+    this.xrBindings = xr;
+    for (const key of [...this.lookups.keys()]) if (key.startsWith('xr:')) this.lookups.delete(key);
+  }
+
+  /** Raw events from VR controllers (polled by the XR manager each XR frame). */
+  handleXR(e: RawInputEvent): void {
+    this.handleRaw(e);
   }
 
   setTuning(tuning: GamepadTuning): void {
@@ -136,7 +148,7 @@ export class InputManager {
     const key = `${device}:${context}`;
     let map = this.lookups.get(key);
     if (!map) {
-      const bindings = device === 'keyboard' ? this.keyboardBindings : this.gamepadBindings;
+      const bindings = device === 'keyboard' ? this.keyboardBindings : device === 'xr' ? this.xrBindings : this.gamepadBindings;
       map = bindings ? buildLookup(bindings, device, context, this.swapConfirmBack) : new Map();
       this.lookups.set(key, map);
     }

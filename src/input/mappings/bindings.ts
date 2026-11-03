@@ -43,6 +43,16 @@ export const MENU_PAD: Record<Exclude<MenuAction, 'confirm' | 'back'>, readonly 
   tabNext: ['button:5'],
 };
 
+/** VR menu navigation with either thumbstick (panels also respond to controller rays). */
+export const MENU_XR: Record<Exclude<MenuAction, 'confirm' | 'back'>, readonly string[]> = {
+  up: ['xr:left:stick-up', 'xr:right:stick-up'],
+  down: ['xr:left:stick-down', 'xr:right:stick-down'],
+  left: ['xr:left:stick-left', 'xr:right:stick-left'],
+  right: ['xr:left:stick-right', 'xr:right:stick-right'],
+  tabPrev: ['xr:left:squeeze'],
+  tabNext: ['xr:right:squeeze'],
+};
+
 export function actionContext(action: InputAction): InputContext {
   return MENU_BINDABLE.includes(action) ? 'menu' : 'gameplay';
 }
@@ -64,7 +74,7 @@ export function buildLookup(
   if (context === 'gameplay') {
     for (const action of GAMEPLAY_ACTIONS) for (const control of bindings[action]) add(control, action);
   } else if (context === 'menu') {
-    const fixed = device === 'keyboard' ? MENU_KEYS : MENU_PAD;
+    const fixed = device === 'keyboard' ? MENU_KEYS : device === 'xr' ? MENU_XR : MENU_PAD;
     for (const [action, controls] of Object.entries(fixed)) for (const control of controls) add(control, action);
     const confirm = swapConfirmBack && device === 'gamepad' ? bindings.back : bindings.confirm;
     const back = swapConfirmBack && device === 'gamepad' ? bindings.confirm : bindings.back;

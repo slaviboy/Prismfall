@@ -1,13 +1,13 @@
 import type { InputAction, MenuDirection } from '../settings/schema';
 
-export type InputDevice = 'keyboard' | 'gamepad';
+export type InputDevice = 'keyboard' | 'gamepad' | 'xr';
 
 /** A device-level control change, before any action mapping. */
 export interface RawInputEvent {
   readonly device: InputDevice;
   /** Gamepad slot index (gamepad only). */
   readonly pad: number;
-  /** KeyboardEvent.code, or "button:<i>" / "axis:<i>:<+|->" in standard-mapping space. */
+  /** KeyboardEvent.code, "button:<i>" / "axis:<i>:<+|->" (standard mapping) or "xr:<hand>:<control>". */
   readonly control: string;
   readonly down: boolean;
   /** performance.now()-compatible timestamp. */

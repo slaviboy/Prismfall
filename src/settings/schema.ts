@@ -65,6 +65,26 @@ export const DEFAULT_GAMEPAD: Record<InputAction, string[]> = {
   back: ['button:1'],
 };
 
+/**
+ * VR controller bindings: "xr:<left|right>:<control>" with controls trigger, squeeze, a, b (right),
+ * x, y (left), stick-press and stick-left/right/up/down (thumbstick or touchpad).
+ */
+export const DEFAULT_XR: Record<InputAction, string[]> = {
+  moveLeft: ['xr:left:stick-left', 'xr:right:stick-left'],
+  moveRight: ['xr:left:stick-right', 'xr:right:stick-right'],
+  softDrop: ['xr:left:stick-down', 'xr:right:stick-down'],
+  hardDrop: ['xr:right:a', 'xr:right:stick-up'],
+  rotateCW: ['xr:right:trigger'],
+  rotateCCW: ['xr:left:trigger'],
+  rotate180: [],
+  hold: ['xr:right:squeeze', 'xr:left:squeeze'],
+  pause: ['xr:left:y', 'xr:right:b'],
+  practiceUndo: ['xr:left:x'],
+  practiceReset: [],
+  confirm: ['xr:right:trigger', 'xr:right:a'],
+  back: ['xr:right:b', 'xr:left:y'],
+};
+
 const bindingsSchema = (defaults: Record<InputAction, string[]>) =>
   z
     .object(Object.fromEntries(INPUT_ACTIONS.map((a) => [a, bindingList(defaults[a])])) as Record<InputAction, ReturnType<typeof bindingList>>)
@@ -103,6 +123,30 @@ export const settingsSchema = z.object({
     .prefault({}),
   keyboard: bindingsSchema(DEFAULT_KEYBOARD),
   gamepad: bindingsSchema(DEFAULT_GAMEPAD),
+  xr: bindingsSchema(DEFAULT_XR),
+  vr: z
+    .object({
+      /** Seated: the board comes to you (local space). Standing: floor-relative layout. */
+      layout: e(['seated', 'standing'] as const, 'seated'),
+      /** Metres from your eyes to the playfield. */
+      boardDistance: n(0.5, 3, 1.1),
+      /** Metres above (+) or below (−) eye level for the playfield centre. */
+      boardHeight: n(-0.6, 0.6, -0.08),
+      /** 1 = the playfield is one metre tall. */
+      boardScale: n(0.5, 2, 1),
+      /** Degrees the playfield leans back. */
+      boardTilt: n(-30, 30, 6),
+      /** Score panel distance in front of the playfield (metres) and size. */
+      hudOffset: n(-0.3, 0.5, 0.04),
+      hudScale: n(0.5, 2, 1),
+      graphics: e(['performance', 'balanced', 'quality'] as const, 'balanced'),
+      haptics: b(true),
+      hapticStrength: n(0, 1, 0.6),
+      /** Darkens the world around the playfield for focus (0 = off). */
+      dimWorld: n(0, 0.8, 0),
+      showRays: b(true),
+    })
+    .prefault({}),
   controller: z
     .object({
       activePadId: z.string().nullable().catch(null).default(null),
