@@ -92,6 +92,8 @@ export class AudioSystem {
   private readonly fileCache = new Map<string, AudioBuffer>();
   /** Track chosen explicitly (Music Room / mode setup); null = the stage's own music. */
   overrideTrack: StageAudio | null = null;
+  /** Advances on every real stage change (see setStage). */
+  private stageToken = 0;
 
   get features(): AudioFeatureSource {
     return this.hub;
@@ -202,8 +204,11 @@ export class AudioSystem {
     this.hub.metronome.setBpm(stage.bpm);
     this.hub.metronome.beatsPerBar = stage.beatsPerBar;
     if (!changed || !this.engine.ready) return;
+    const token = ++this.stageToken;
     this.director.extendHorizon(2500);
     await this.buildSfx(stage);
+    // A different stage may have been set while the sound palette was building.
+    if (token !== this.stageToken) return;
     if (!this.overrideTrack) await this.startStageAudio(stage, 2.5);
     this.ambience.set(stage.ambience ?? '', stage.ambienceLevel);
   }

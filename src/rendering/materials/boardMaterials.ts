@@ -94,7 +94,7 @@ export function createPlateMaterial(): { material: MeshBasicNodeMaterial; u: Pla
   const gy = smoothstep(lineW, 0, min(cell.y, cell.y.oneMinus()));
   const gridLine = max(gx, gy).mul(u.grid);
   const vy = uv().y;
-  const floorGlow = exp(vy.mul(-9)).mul(float(0.35).add(frameUniforms.beatPulse.mul(0.4).mul(frameUniforms.reactivity)));
+  const floorGlow = exp(vy.mul(-9)).mul(0.35);
   const danger = frameUniforms.danger.mul(smoothstep(0.55, 1, vy)).mul(0.5);
   const accent = u.accent;
   const base = u.tint.add(accent.mul(gridLine.mul(0.035))).add(accent.mul(floorGlow.mul(0.06))).add(vec3(0.9, 0.15, 0.25).mul(danger));
@@ -116,7 +116,7 @@ export function createFrameMaterial(): { material: MeshStandardNodeMaterial; acc
   material.metalness = 0.85;
   material.envMapIntensity = 0.25;
   const ndv = clamp(dot(normalView, positionViewDirection), 0, 1);
-  const pulse = float(0.55).add(frameUniforms.beatPulse.mul(0.35).mul(frameUniforms.reactivity)).add(frameUniforms.clearPulse.mul(0.8));
+  const pulse = float(0.55);
   const danger = mix(accent, vec3(1, 0.25, 0.35), frameUniforms.danger.mul(0.85));
   material.emissiveNode = danger.mul(ndv.pow(6).mul(0.32).add(0.035)).mul(pulse).mul(glow);
   return { material, accent, glow };

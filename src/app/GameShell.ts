@@ -215,9 +215,13 @@ export class GameShell {
   }
 
   /** Builds the stage's audio description (composition module, ambience, SFX palette). */
+  /** Increments on every stage-audio request, so a slow load can't replace a newer world's music. */
+  private stageAudioRequest = 0;
+
   private async loadStageAudio(info: StageInfo): Promise<void> {
     const m = info.manifest;
     if (!m) return;
+    const request = ++this.stageAudioRequest;
     const trackSpec = m.music.tracks.find((t) => t.id === m.music.defaultTrack) ?? m.music.tracks[0];
     let composition: Composition | null = null;
     if (trackSpec?.kind === 'composition') {
@@ -243,6 +247,7 @@ export class GameShell {
       })),
       ...this.stageMaterial(m),
     };
+    if (request !== this.stageAudioRequest) return;
     await this.audio.setStage(stageAudio);
   }
 

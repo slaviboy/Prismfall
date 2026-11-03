@@ -7,13 +7,38 @@ test.describe('audio engine', () => {
     await expect.poll(() => hooks<string>(page, 'h.shell.audio.engine.state'), { timeout: 10_000 }).toBe('running');
     await expect.poll(() => hooks<string>(page, 'h.shell.audio.analysisPath'), { timeout: 10_000 }).toBe('worklet');
     await expect.poll(() => hooks<number>(page, 'h.shell.audio.engine.outputRms()'), { timeout: 15_000 }).toBeGreaterThan(0.004);
-    // Features come from real analysis: bands move and beats are reported on the music grid.
-    await page.waitForTimeout(3000);
+    // Features come from real analysis: bands move and beats are reported on the music grid
+    // (the menu world may still be activating, which restarts its music, so wait for beats).
+    await expect.poll(() => hooks<number>(page, 'h.shell.features.features.beat'), { timeout: 15_000 }).toBeGreaterThan(2);
     const f = await hooks<{ bass: number; treble: number; bpm: number; beat: number; section: string }>(page, '({ bass: h.shell.features.features.bass, treble: h.shell.features.features.treble, bpm: h.shell.features.features.bpm, beat: h.shell.features.features.beat, section: h.shell.features.features.section })');
     expect(f.beat).toBeGreaterThan(2);
     expect(f.bpm).toBeGreaterThan(60);
     expect(f.bass + f.treble).toBeGreaterThan(0.02);
     expect(f.section.length).toBeGreaterThan(0);
+  });
+
+  test('the most recently requested world music wins, and a started game plays its own world', async ({ page }) => {
+    await openMenu(page);
+    await expect.poll(() => hooks<string>(page, 'h.shell.audio.engine.state'), { timeout: 10_000 }).toBe('running');
+    // Let the menu world finish activating first (its own music request would be the newest).
+    await expect.poll(() => hooks<string | null>(page, 'h.shell.audio.stageId'), { timeout: 15_000 }).toBe('luminous-tide');
+    // Two overlapping loads: whichever finishes last, the later request must be what plays.
+    await hooks(page, 'Promise.all([h.shell.auditionStage("luminous-tide"), h.shell.auditionStage("moving-sands")])');
+    expect(await hooks<string>(page, 'h.shell.audio.stageId')).toBe('moving-sands');
+    const desertBpm = await hooks<number>(page, 'h.shell.stageManager.stages().find((s) => s.id === "moving-sands").manifest.music.bpm');
+    await expect.poll(() => hooks<number>(page, 'h.shell.audio.director.current?.composition?.bpm ?? 0'), { timeout: 10_000 }).toBe(desertBpm);
+    // Choose the desert in Marathon setup and start: the music must stay the desert's.
+    await page.evaluate(() => (window as unknown as { __PRISMFALL__: { updateSection(s: string, p: unknown): void } }).__PRISMFALL__.updateSection('setup', { unlockAll: true }));
+    await page.getByTestId('menu-play').click();
+    await page.getByTestId('mode-marathon').click();
+    await page.getByTestId('setup-world').click();
+    await page.getByTestId('world-moving-sands').focus();
+    await page.keyboard.press('Enter');
+    await page.getByTestId('setup-start').click();
+    await expect.poll(() => hooks<string>(page, 'h.shell.session?.status'), { timeout: 15_000 }).toBe('running');
+    await page.waitForTimeout(3000);
+    expect(await hooks<string>(page, 'h.shell.audio.stageId')).toBe('moving-sands');
+    expect(await hooks<number>(page, 'h.shell.audio.director.current?.composition?.bpm ?? 0')).toBe(desertBpm);
   });
 
   test('mute silences the output and volume scales it', async ({ page }) => {

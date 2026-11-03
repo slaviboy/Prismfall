@@ -217,7 +217,7 @@ export const CAMERA_TAB: TabDef = {
     { kind: 'slider', section: 'camera', key: 'fov', label: 'Field of view', description: 'Lower values flatten perspective; the playfield size stays the same.', min: 30, max: 70, step: 1, format: (v) => `${v}°` },
     { kind: 'toggle', section: 'camera', key: 'shake', label: 'Camera shake' },
     { kind: 'slider', section: 'camera', key: 'shakeIntensity', label: 'Shake intensity', min: 0, max: 1, step: 0.05, format: percent, when: (s) => s.camera.shake },
-    { kind: 'slider', section: 'camera', key: 'movementIntensity', label: 'Camera movement', description: 'Gentle sway and beat emphasis.', min: 0, max: 1, step: 0.05, format: percent },
+    { kind: 'slider', section: 'camera', key: 'movementIntensity', label: 'Camera movement', description: 'Gentle sway, beat emphasis and push-ins on big clears. Off keeps the playfield still.', min: 0, max: 1, step: 0.05, format: percent },
   ],
 };
 

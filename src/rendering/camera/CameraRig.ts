@@ -33,7 +33,7 @@ const MAX_YAW = 14;
  */
 export class CameraRig {
   readonly camera: PerspectiveCamera;
-  settings: CameraSettings = { zoom: 1, distance: 0, fov: 42, shake: true, shakeIntensity: 0.6, movementIntensity: 0.7, reducedMotion: false };
+  settings: CameraSettings = { zoom: 1, distance: 0, fov: 42, shake: false, shakeIntensity: 0.6, movementIntensity: 0, reducedMotion: false };
   preset: CameraPreset = DEFAULT_CAMERA_PRESET;
   private presetFrom: CameraPreset = DEFAULT_CAMERA_PRESET;
   private presetBlend = 1;

@@ -25,6 +25,17 @@ describe('settings schema', () => {
     expect(settings.keyboard.hardDrop).toEqual(['Space']);
   });
 
+  it('v2 turns camera shake and movement off in older saves, and keeps later choices', () => {
+    const old = migrateSettings({ version: 1, camera: { shake: true, movementIntensity: 0.7, fov: 50 } });
+    expect(old.migrated).toBe(true);
+    expect(old.settings.camera.shake).toBe(false);
+    expect(old.settings.camera.movementIntensity).toBe(0);
+    expect(old.settings.camera.fov).toBe(50);
+    const chosen = migrateSettings({ version: 2, camera: { shake: true, movementIntensity: 0.4 } });
+    expect(chosen.settings.camera.shake).toBe(true);
+    expect(chosen.settings.camera.movementIntensity).toBe(0.4);
+  });
+
   it('replaces invalid values with defaults instead of failing', () => {
     const { settings } = migrateSettings({ gameplay: { dasMs: 'fast', arrMs: -5 }, graphics: { preset: 'insane' } });
     expect(settings.gameplay.dasMs).toBe(167);

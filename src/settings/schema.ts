@@ -4,7 +4,7 @@ import { z } from 'zod';
  * Persistent settings. Every field has a default so partial or older data parses
  * into a complete object; `migrateSettings` handles structural changes between versions.
  */
-export const SETTINGS_VERSION = 1;
+export const SETTINGS_VERSION = 2;
 
 export const INPUT_ACTIONS = [
   'moveLeft',
@@ -198,9 +198,9 @@ export const settingsSchema = z.object({
       zoomSensitivity: n(0.1, 2, 1),
       distance: n(-4, 6, 0),
       fov: n(30, 70, 42),
-      shake: b(true),
+      shake: b(false),
       shakeIntensity: n(0, 1, 0.6),
-      movementIntensity: n(0, 1, 0.7),
+      movementIntensity: n(0, 1, 0),
     })
     .prefault({}),
   audio: z
@@ -317,7 +317,8 @@ export function migrateSettings(raw: unknown): { settings: Settings; migrated: b
   if (raw === null || typeof raw !== 'object') return { settings: defaultSettings(), migrated: false, valid: raw === undefined || raw === null };
   const data = { ...(raw as Record<string, unknown>) };
   const from = typeof data.version === 'number' ? data.version : 0;
-  // Future structural migrations go here: if (from < 2) { ... }
+  // v2: the playfield stays still by default; camera shake and movement become opt-in.
+  if (from < 2 && data.camera && typeof data.camera === 'object') data.camera = { ...(data.camera as Record<string, unknown>), shake: false, movementIntensity: 0 };
   data.version = SETTINGS_VERSION;
   const parsed = settingsSchema.safeParse(data);
   if (!parsed.success) return { settings: defaultSettings(), migrated: false, valid: false };

@@ -26,7 +26,6 @@ import { fsr1 } from 'three/addons/tsl/display/FSR1Node.js';
 import { ao } from 'three/addons/tsl/display/GTAONode.js';
 import { dof } from 'three/addons/tsl/display/DepthOfFieldNode.js';
 import { motionBlur } from 'three/addons/tsl/display/MotionBlur.js';
-import { frameUniforms } from '../shaders/uniforms';
 
 export interface PostSettings {
   enabled: boolean;
@@ -206,7 +205,7 @@ export class PostPipeline {
   /** Per-frame bloom strength (base setting × gameplay pulse, capped by flash reduction). */
   updateFrame(): void {
     if (this.bloomPass) {
-      this.bloomPass.strength.value = this.u.bloomStrength.value * (0.85 + frameUniforms.clearPulse.value * 0.6 * frameUniforms.flashLimit.value);
+      this.bloomPass.strength.value = this.u.bloomStrength.value * 0.85;
     }
   }
 
