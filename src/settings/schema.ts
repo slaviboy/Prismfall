@@ -274,6 +274,8 @@ export const settingsSchema = z.object({
       showCallouts: b(true),
       mirrored: b(false),
       menuAnimations: b(true),
+      /** World select and the level creator build each focused world live (heavy) instead of showing its picture. */
+      liveWorldPreviews: b(false),
     })
     .prefault({}),
   accessibility: z

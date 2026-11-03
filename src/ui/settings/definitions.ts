@@ -86,6 +86,13 @@ export const INTERFACE_TAB: TabDef = {
     { kind: 'toggle', section: 'interface', key: 'showCallouts', label: 'Show clear callouts' },
     { kind: 'toggle', section: 'interface', key: 'showPracticeStats', label: 'Show speed stats in Practice' },
     { kind: 'toggle', section: 'interface', key: 'menuAnimations', label: 'Menu animations' },
+    {
+      kind: 'toggle',
+      section: 'interface',
+      key: 'liveWorldPreviews',
+      label: 'Live world previews',
+      description: 'Builds each world in 3D as you browse them. Off shows a picture instead, so browsing stays smooth.',
+    },
   ],
 };
 

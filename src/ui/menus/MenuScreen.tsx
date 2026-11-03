@@ -11,6 +11,8 @@ export function MenuScreen(props: {
   onTab?: (delta: number) => void;
   children: ReactNode;
   aside?: ReactNode;
+  /** Full-screen layer behind the scrim (a world's picture). */
+  backdrop?: ReactNode;
   wide?: boolean;
   testId?: string;
   footer?: ReactNode;
@@ -18,6 +20,7 @@ export function MenuScreen(props: {
   const ref = useNavScope<HTMLDivElement>({ onBack: props.onBack, onTab: props.onTab });
   return (
     <div className={`menu-screen ${props.wide ? 'wide' : ''}`} data-nav-scope ref={ref} data-testid={props.testId}>
+      {props.backdrop}
       <div className="menu-scrim" aria-hidden />
       <section className="menu-column">
         {props.title ? (

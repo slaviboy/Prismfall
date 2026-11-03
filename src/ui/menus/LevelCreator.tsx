@@ -11,7 +11,7 @@ import { Button, ChoiceRow, MenuItem, MenuList } from '../components/controls';
 import { hoverFocus } from '../navigation/hoverFocus';
 import { useConfirmBackLabels } from '../hints';
 import { ControlHints, MenuScreen } from './MenuScreen';
-import { StageArt, orderedStages } from './StageSelect';
+import { StageArt, WorldBackdrop, liveWorldPreviews, orderedStages } from './StageSelect';
 
 const WORLD_MUSIC = 'stage';
 const WORLD_BLOCKS = 'stage';
@@ -55,7 +55,7 @@ export function LevelCreatorScreen(): ReactNode {
     // Leaving the creator returns to the world's music and the selected world.
     return () => {
       void shell.playTrack(null);
-      shell.stageManager?.preview(getSettings().setup.stageId, 0);
+      if (liveWorldPreviews()) shell.stageManager?.preview(getSettings().setup.stageId, 0);
     };
   }, []);
 
@@ -88,10 +88,11 @@ function LevelEditor(props: { level: CustomLevel; tracks: readonly CatalogTrack[
   const worlds = orderedStages().filter((st) => st.manifest && isStageUnlocked(st.manifest, progress, unlockAll));
   const update = (patch: Partial<CustomLevel>): void => setLevel((l) => ({ ...l, ...patch }));
 
-  // The world shows live behind the menu, like the world list.
+  // The world shows behind the menu like in the world list: live, or as its picture.
+  const live = useSettings((s) => s.interface.liveWorldPreviews);
   useEffect(() => {
-    shell.stageManager?.preview(level.stageId);
-  }, [level.stageId]);
+    if (live) shell.stageManager?.preview(level.stageId);
+  }, [level.stageId, live]);
 
   const pickMusic = (id: string): void => {
     update({ music: id });
@@ -137,6 +138,7 @@ function LevelEditor(props: { level: CustomLevel; tracks: readonly CatalogTrack[
       title={props.isNew ? 'New level' : 'Edit level'}
       onBack={props.onDone}
       testId="level-editor"
+      backdrop={live ? undefined : <WorldBackdrop info={getStage(level.stageId)} />}
       footer={<ControlHints hints={hints} />}
       aside={
         <div className="world-details" data-testid="level-preview">

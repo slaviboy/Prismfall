@@ -23,6 +23,35 @@ export function thumbnailUrl(info: StageInfo | undefined): string | null {
   return m?.thumbnail && info ? resolveAsset(info.dir, m.thumbnail) : null;
 }
 
+/** The wide backdrop render (previews/backdrop.jpg) when the world has one, else its thumbnail. */
+function backdropUrl(info: StageInfo | undefined): string | null {
+  return (info ? resolveAsset(info.dir, 'previews/backdrop.jpg') : null) ?? thumbnailUrl(info);
+}
+
+/** Whether menus build focused worlds live (heavy) rather than showing their pictures. */
+export function liveWorldPreviews(): boolean {
+  return getSettings().interface.liveWorldPreviews;
+}
+
+/**
+ * The focused world's picture behind the menu, crossfading as focus moves. Building each world
+ * live stalls the main thread for up to seconds per world, so menus show this unless the live
+ * previews setting is on.
+ */
+export function WorldBackdrop(props: { info: StageInfo | undefined }): ReactNode {
+  const url = backdropUrl(props.info);
+  const [layers, setLayers] = useState<string[]>(url ? [url] : []);
+  // A new picture joins on top of the last one (state adjusted while rendering, not in an effect).
+  if (url && layers[layers.length - 1] !== url) setLayers([...layers.slice(-1), url]);
+  return (
+    <div className="world-backdrop" aria-hidden>
+      {layers.map((u) => (
+        <img key={u} src={u} alt="" decoding="async" />
+      ))}
+    </div>
+  );
+}
+
 /** Artwork: the rendered thumbnail, or a card painted from the stage palette when none exists. */
 export function StageArt(props: { info: StageInfo | undefined; className?: string }): ReactNode {
   const url = thumbnailUrl(props.info);
@@ -60,14 +89,16 @@ function WorldDetails(props: { info: StageInfo | undefined; locked: boolean }): 
 }
 
 /**
- * World selection: each card previews its world live behind the menu (debounced, at most two
- * environments resident) and, when enabled, crossfades to its music.
+ * World selection: each card shows its world behind the menu, as a picture or, with live
+ * previews on, built live (debounced, at most two environments resident), and, when enabled,
+ * crossfades to its music.
  */
 export function StageSelectScreen(): ReactNode {
   const selected = useSettings((s) => s.setup.stageId);
   const unlockAll = useSettings((s) => s.setup.unlockAll);
   const developer = useSettings((s) => s.developer.enabled);
   const progress = useProgress((s) => s.progress);
+  const live = useSettings((s) => s.interface.liveWorldPreviews);
   const stages = orderedStages();
   const [focusId, setFocusId] = useState(selected);
   const { confirm, back } = useConfirmBackLabels();
@@ -75,7 +106,7 @@ export function StageSelectScreen(): ReactNode {
   const lockedOf = (info: StageInfo): boolean => (info.manifest ? !isStageUnlocked(info.manifest, progress, unlockAll) : true);
 
   const cancel = (): void => {
-    shell.stageManager?.preview(getSettings().setup.stageId, 0);
+    if (live) shell.stageManager?.preview(getSettings().setup.stageId, 0);
     goBack();
   };
   const choose = (info: StageInfo): void => {
@@ -92,6 +123,7 @@ export function StageSelectScreen(): ReactNode {
       title="Choose a world"
       onBack={cancel}
       testId="stage-select"
+      backdrop={live ? undefined : <WorldBackdrop info={focus} />}
       aside={<WorldDetails info={focus} locked={focus ? lockedOf(focus) : false} />}
       footer={
         <ControlHints
@@ -126,7 +158,7 @@ export function StageSelectScreen(): ReactNode {
               data-testid={`world-${info.id}`}
               onFocus={() => {
                 setFocusId(info.id);
-                shell.stageManager?.preview(info.id);
+                if (live) shell.stageManager?.preview(info.id);
               }}
               onMouseEnter={hoverFocus}
               onClick={() => choose(info)}

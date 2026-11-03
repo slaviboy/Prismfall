@@ -1491,6 +1491,41 @@ kbd {
   text-align: right;
 }
 
+/* The focused world's picture (menus without live previews); each new one fades in over the last. */
+.world-backdrop {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: rgb(var(--night-rgb));
+  pointer-events: none;
+}
+
+.world-backdrop img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: world-backdrop-in 0.32s ease-out both;
+}
+
+/* Positioned, so the details paint above the (absolutely positioned) picture. */
+.world-backdrop ~ .menu-aside {
+  position: relative;
+}
+
+@keyframes world-backdrop-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .world-backdrop img {
+    animation-duration: 0.01s;
+  }
+}
+
 .world-details-name {
   margin: 0 0 10px;
   font-family: var(--font-display);

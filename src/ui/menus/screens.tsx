@@ -15,7 +15,7 @@ import { useLatest } from '../useLatest';
 import { getCampaign, getStage } from '../../stages/registry';
 import { isStageUnlocked, unlockHint } from '../../stages/progression';
 import { PracticeOptions } from './PracticeOptions';
-import { StageArt, orderedStages } from './StageSelect';
+import { StageArt, WorldBackdrop, orderedStages } from './StageSelect';
 import { hoverFocus } from '../navigation/hoverFocus';
 import { activeLevel } from '../../app/levels';
 import { VRMenuItem } from '../vr/VRControls';
@@ -160,8 +160,20 @@ export function ModeSetupScreen(props: { modeId: ModeId; onStart: () => void }):
     void shell.highScores.top(highScoreKey(mode.id, variantId), mode.lowerIsBetter, 1).then((t) => setBest(t[0] ?? null));
   }, [mode, variantId]);
   const variant = getVariant(mode, variantId);
+  // Without live previews the chosen world is built when the game starts; until then its picture
+  // stands in for the world still on screen.
+  const stageId = useSettings((s) => s.setup.stageId);
+  const live = useSettings((s) => s.interface.liveWorldPreviews);
+  const picture = mode.stageSelectable && !live && shell.stageManager?.activeId !== stageId;
   return (
-    <MenuScreen title={mode.name} subtitle={mode.tagline} onBack={() => goBack()} testId="mode-setup" footer={<ControlHints hints={hints} />}>
+    <MenuScreen
+      title={mode.name}
+      subtitle={mode.tagline}
+      onBack={() => goBack()}
+      testId="mode-setup"
+      backdrop={picture ? <WorldBackdrop info={getStage(stageId)} /> : undefined}
+      footer={<ControlHints hints={hints} />}
+    >
       <div className="setup-rows">
         {mode.stageSelectable ? <WorldRow /> : null}
         {mode.id === 'practice' ? <PracticeOptions /> : null}

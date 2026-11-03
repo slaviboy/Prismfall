@@ -1,8 +1,9 @@
 /**
  * Stage artwork: renders each stage's world (menu view, no playfield) in Chrome with the real
- * GPU and saves content/stages/<id>/previews/thumb.jpg, recording it as the stage thumbnail.
+ * GPU and saves content/stages/<id>/previews/thumb.jpg, recording it as the stage thumbnail, and
+ * previews/backdrop.jpg (2560×1080), the picture menus show behind world select.
  *
- * Usage: npm run content:thumbnails -- [--stages a,b] [--settle 4]
+ * Usage: npm run content:thumbnails -- [--stages a,b] [--settle 4] [--backdrops-only]
  * Requires a test build (npm run build:test); the preview server is started if needed.
  * --port and --dist capture a private test build instead (as in stage-shots.ts).
  */
@@ -19,6 +20,7 @@ const opt = (name: string, def: string): string => {
 };
 const only = opt('stages', '').split(',').filter(Boolean);
 const settleS = Number(opt('settle', '4'));
+const backdropsOnly = args.includes('--backdrops-only');
 const port = opt('port', '4174');
 const dist = opt('dist', 'dist-test');
 const BASE = `http://localhost:${port}/`;
@@ -62,14 +64,20 @@ try {
     await page.waitForTimeout(settleS * 1000);
     const folder = join(ROOT, s.dir.replace(/^\//, ''));
     mkdirSync(join(folder, 'previews'), { recursive: true });
-    await page.screenshot({ path: join(folder, 'previews/thumb.jpg'), type: 'jpeg', quality: 84 });
+    if (!backdropsOnly) await page.screenshot({ path: join(folder, 'previews/thumb.jpg'), type: 'jpeg', quality: 84 });
+    // The wide picture menus show behind world select when live previews are off (21:9, so the
+    // camera reframes for it; the board-free menu view, like the thumbnail).
+    await page.setViewportSize({ width: 2560, height: 1080 });
+    await page.waitForTimeout(1500);
+    await page.screenshot({ path: join(folder, 'previews/backdrop.jpg'), type: 'jpeg', quality: 80 });
+    await page.setViewportSize({ width: 960, height: 540 });
     const manifestPath = join(folder, 'stage.json');
     const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as Record<string, unknown>;
     if (manifest.thumbnail !== 'previews/thumb.jpg') {
       manifest.thumbnail = 'previews/thumb.jpg';
       writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
     }
-    console.log(`${s.id}: ${s.dir}/previews/thumb.jpg`);
+    console.log(`${s.id}: ${s.dir}/previews/thumb.jpg, backdrop.jpg`);
   }
 } finally {
   await browser.close();

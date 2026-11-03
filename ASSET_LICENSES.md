@@ -250,6 +250,27 @@ Screenshots of the game's own rendering. `scripts/thumbnails.ts` (`npm run conte
 | `content/stages/lost-kingdom/previews/thumb.jpg` | render of the game, `scripts/thumbnails.ts` | Original work for Prismfall |
 | `content/stages/red-horizon/previews/thumb.jpg` | render of the game, `scripts/thumbnails.ts` (also recorded in `content/stages/red-horizon/assets.json`) | Original work for Prismfall |
 | `content/stages/the-veil/previews/thumb.jpg` | render of the game, `scripts/thumbnails.ts` (also recorded in `content/stages/the-veil/assets.json`) | Original work for Prismfall |
+| `content/stages/alpine-horizon/previews/backdrop.jpg` | wide render of the game (2560×1080, the picture behind world select), `scripts/thumbnails.ts` | Original work for Prismfall |
+| `content/stages/ancient-garden/previews/backdrop.jpg` | wide render of the game (2560×1080, the picture behind world select), `scripts/thumbnails.ts` | Original work for Prismfall |
+| `content/stages/ashen-vigil/previews/backdrop.jpg` | wide render of the game (2560×1080, the picture behind world select), `scripts/thumbnails.ts` | Original work for Prismfall |
+| `content/stages/celestial-drift/previews/backdrop.jpg` | wide render of the game (2560×1080, the picture behind world select), `scripts/thumbnails.ts` | Original work for Prismfall |
+| `content/stages/dead-acre/previews/backdrop.jpg` | wide render of the game (2560×1080, the picture behind world select), `scripts/thumbnails.ts` | Original work for Prismfall |
+| `content/stages/ember-core/previews/backdrop.jpg` | wide render of the game (2560×1080, the picture behind world select), `scripts/thumbnails.ts` | Original work for Prismfall |
+| `content/stages/ember-foundry/previews/backdrop.jpg` | wide render of the game (2560×1080, the picture behind world select), `scripts/thumbnails.ts` | Original work for Prismfall |
+| `content/stages/enchanted-wilderness/previews/backdrop.jpg` | wide render of the game (2560×1080, the picture behind world select), `scripts/thumbnails.ts` | Original work for Prismfall |
+| `content/stages/folded-sky/previews/backdrop.jpg` | wide render of the game (2560×1080, the picture behind world select), `scripts/thumbnails.ts` | Original work for Prismfall |
+| `content/stages/frozen-kingdom/previews/backdrop.jpg` | wide render of the game (2560×1080, the picture behind world select), `scripts/thumbnails.ts` | Original work for Prismfall |
+| `content/stages/future-nights/previews/backdrop.jpg` | wide render of the game (2560×1080, the picture behind world select), `scripts/thumbnails.ts` | Original work for Prismfall |
+| `content/stages/last-frontier/previews/backdrop.jpg` | wide render of the game (2560×1080, the picture behind world select), `scripts/thumbnails.ts` | Original work for Prismfall |
+| `content/stages/lost-kingdom/previews/backdrop.jpg` | wide render of the game (2560×1080, the picture behind world select), `scripts/thumbnails.ts` | Original work for Prismfall |
+| `content/stages/luminous-tide/previews/backdrop.jpg` | wide render of the game (2560×1080, the picture behind world select), `scripts/thumbnails.ts` | Original work for Prismfall |
+| `content/stages/moving-sands/previews/backdrop.jpg` | wide render of the game (2560×1080, the picture behind world select), `scripts/thumbnails.ts` | Original work for Prismfall |
+| `content/stages/northern-lights/previews/backdrop.jpg` | wide render of the game (2560×1080, the picture behind world select), `scripts/thumbnails.ts` | Original work for Prismfall |
+| `content/stages/red-horizon/previews/backdrop.jpg` | wide render of the game (2560×1080, the picture behind world select), `scripts/thumbnails.ts` | Original work for Prismfall |
+| `content/stages/the-abyss/previews/backdrop.jpg` | wide render of the game (2560×1080, the picture behind world select), `scripts/thumbnails.ts` | Original work for Prismfall |
+| `content/stages/the-veil/previews/backdrop.jpg` | wide render of the game (2560×1080, the picture behind world select), `scripts/thumbnails.ts` | Original work for Prismfall |
+| `content/stages/tradewind-cove/previews/backdrop.jpg` | wide render of the game (2560×1080, the picture behind world select), `scripts/thumbnails.ts` | Original work for Prismfall |
+| `content/stages/wardens-spire/previews/backdrop.jpg` | wide render of the game (2560×1080, the picture behind world select), `scripts/thumbnails.ts` | Original work for Prismfall |
 
 ## 7. Music, sound effects and ambience
 

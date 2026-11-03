@@ -6,6 +6,7 @@ test.describe('world select', () => {
   test('cards preview their world live; choosing one starts the game there', async ({ page }) => {
     await openMenu(page);
     await page.evaluate(() => (window as unknown as { __PRISMFALL__: { updateSection(s: string, p: unknown): void } }).__PRISMFALL__.updateSection('setup', { unlockAll: true }));
+    await page.evaluate(() => (window as unknown as { __PRISMFALL__: { updateSection(s: string, p: unknown): void } }).__PRISMFALL__.updateSection('interface', { liveWorldPreviews: true }));
     await page.getByTestId('menu-play').click();
     await page.getByTestId('mode-marathon').click();
     await page.getByTestId('setup-world').click();
@@ -67,6 +68,7 @@ test.describe('world select', () => {
   test('backing out restores the selected world; music previews can be turned off', async ({ page }) => {
     await openMenu(page);
     await page.evaluate(() => (window as unknown as { __PRISMFALL__: { updateSection(s: string, p: unknown): void } }).__PRISMFALL__.updateSection('audio', { musicPreview: false }));
+    await page.evaluate(() => (window as unknown as { __PRISMFALL__: { updateSection(s: string, p: unknown): void } }).__PRISMFALL__.updateSection('interface', { liveWorldPreviews: true }));
     await page.getByTestId('menu-play').click();
     await page.getByTestId('mode-zen').click();
     const selected = await hooks<string>(page, 'h.getSettings().setup.stageId');
@@ -81,6 +83,37 @@ test.describe('world select', () => {
     await page.keyboard.press('Escape');
     await expect(page.getByTestId('mode-setup')).toBeVisible();
     await expect.poll(() => hooks<string | null>(page, 'h.shell.stageManager.activeId'), { timeout: 15_000 }).toBe(selected);
+  });
+
+  test('without live previews the cards show pictures and no world is built while browsing', async ({ page }) => {
+    await openMenu(page);
+    await page.evaluate(() => (window as unknown as { __PRISMFALL__: { updateSection(s: string, p: unknown): void } }).__PRISMFALL__.updateSection('setup', { unlockAll: true }));
+    await page.getByTestId('menu-play').click();
+    await page.getByTestId('mode-marathon').click();
+    const selected = await hooks<string>(page, 'h.getSettings().setup.stageId');
+    await expect.poll(() => hooks<string | null>(page, 'h.shell.stageManager.activeId'), { timeout: 15_000 }).toBe(selected);
+    await page.getByTestId('setup-world').click();
+    await expect(page.getByTestId('stage-select')).toBeVisible();
+    const backdrop = page.locator('.world-backdrop img').last();
+    const ids = await hooks<string[]>(page, 'h.shell.stageManager.stages().map((s) => s.id)');
+    const seen = new Set<string>();
+    for (const id of ids.filter((i) => i !== selected).slice(0, 4)) {
+      const before = await backdrop.getAttribute('src');
+      await page.getByTestId(`world-${id}`).focus();
+      await expect.poll(() => backdrop.getAttribute('src')).not.toBe(before);
+      seen.add((await backdrop.getAttribute('src')) ?? '');
+    }
+    expect(seen.size).toBe(4);
+    await page.waitForTimeout(1200);
+    expect(await hooks<string | null>(page, 'h.shell.stageManager.activeId')).toBe(selected);
+    // Choosing a world shows its picture in the setup until the game builds it.
+    const chosen = ids.find((i) => i !== selected) as string;
+    await page.getByTestId(`world-${chosen}`).click();
+    await expect(page.getByTestId('mode-setup')).toBeVisible();
+    await expect(page.locator('.world-backdrop img')).toHaveCount(1);
+    await page.getByTestId('setup-start').click();
+    await expect.poll(() => hooks<string>(page, 'h.shell.session?.status'), { timeout: 20_000 }).toBe('running');
+    expect(await hooks<string | null>(page, 'h.shell.stageManager.activeId')).toBe(chosen);
   });
 
   test('a long world list scrolls to its first and last worlds', async ({ page }) => {
