@@ -237,11 +237,11 @@
               "scale": 0.8,
               "roughness": 0.75,
               "seed": 3,
-              "rock": "#04070a",
-              "snow": "#6a8292",
-              "snowAmount": 0.62,
-              "haze": 0.3,
-              "rim": 0.14
+              "rock": "#010203",
+              "snow": "#020406",
+              "snowAmount": 0.0,
+              "haze": 0.12,
+              "rim": 0.08
             },
             {
               "distance": 380,
@@ -250,11 +250,11 @@
               "scale": 1.1,
               "roughness": 0.65,
               "seed": 8,
-              "rock": "#020406",
-              "snow": "#3e5262",
-              "snowAmount": 0.5,
-              "haze": 0.12,
-              "rim": 0.06
+              "rock": "#010203",
+              "snow": "#020406",
+              "snowAmount": 0.0,
+              "haze": 0.05,
+              "rim": 0.03
             },
             {
               "distance": 250,
@@ -264,8 +264,8 @@
               "roughness": 0.4,
               "seed": 13,
               "rock": "#010203",
-              "snow": "#1e2a34",
-              "snowAmount": 0.35,
+              "snow": "#020406",
+              "snowAmount": 0.0,
               "haze": 0.0,
               "rim": 0.0
             }

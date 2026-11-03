@@ -96,6 +96,7 @@ Real landscape photographs used as the distant horizon of a world (the `panorama
 | File | Origin | Licence |
 |---|---|---|
 | `content/stages/frozen-kingdom/textures/lago_disola_band.webp` | Poly Haven HDRI "Lago d'Isola" (https://polyhaven.com/a/lago_disola) by Andreas Mischok; tonemapped JPG (8192 x 4096) cropped to elevations -6 to +40 degrees (8192 x 1048), WebP quality 86 | CC0 1.0 |
+| `content/stages/moving-sands/textures/rogland_clear_night_band.webp` | Poly Haven HDRI "Rogland Clear Night" (https://polyhaven.com/a/rogland_clear_night) by Greg Zaal; tonemapped JPG (8192 x 4096) cropped to elevations -6 to +40 degrees (8192 x 1047), unsharp mask, WebP quality 86 | CC0 1.0 |
 
 ## 6. Stage thumbnails
 

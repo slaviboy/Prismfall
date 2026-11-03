@@ -1,0 +1,30 @@
+{
+  "id": "rogland_clear_night",
+  "kind": "hdri",
+  "name": "Rogland Clear Night",
+  "page": "https://polyhaven.com/a/rogland_clear_night",
+  "api": {
+    "info": "https://api.polyhaven.com/info/rogland_clear_night",
+    "files": "https://api.polyhaven.com/files/rogland_clear_night"
+  },
+  "authors": {
+    "Greg Zaal": "All"
+  },
+  "licence": "CC0 1.0",
+  "licenceUrl": "https://polyhaven.com/license",
+  "files": [
+    {
+      "path": "rogland_clear_night_tonemapped.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/HDRIs/extra/Tonemapped%20JPG/rogland_clear_night.jpg",
+      "md5": "5565a41460b4f851fcea727d5dcfc009",
+      "size": 53693389
+    }
+  ],
+  "downloaded": "2026-11-03",
+  "derived": [
+    {
+      "path": "content/stages/moving-sands/textures/rogland_clear_night_band.webp",
+      "how": "ffmpeg crop=8192:1047:0:1138 (elevations -6..40 deg), unsharp 5:5:0.6, libwebp quality 86"
+    }
+  ]
+}

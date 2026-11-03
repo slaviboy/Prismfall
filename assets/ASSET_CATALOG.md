@@ -280,3 +280,19 @@ How it is built: each masonry course is a closed, star-shaped footprint loop. It
 
 In game, use the material preset `keep` for `pyramidStone` to show the textures. The other presets replace the material with a flat colour × `COLOR_0`.
 
+### Rogland Clear Night (Poly Haven HDRI)
+
+| Field | Value |
+|---|---|
+| Asset name | Rogland Clear Night |
+| Source URL | https://polyhaven.com/a/rogland_clear_night |
+| Author | Greg Zaal |
+| Original download URL | see `assets/external/polyhaven/rogland_clear_night/source.json` |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | Tonemapped equirectangular JPG, 8192 x 4096 (from the HDRI) |
+| Modifications | Cropped to elevations -6 to +40 degrees (8192 x 1047), unsharp mask 5:5:0.6, WebP quality 86 (`scripts/fetch-panorama.ts`) |
+| Final format | `content/stages/moving-sands/textures/rogland_clear_night_band.webp` |
+| Animation | None |
+| Used by | Moving Sands sky (night desert under the Milky Way) |
+
