@@ -1,0 +1,18 @@
+{
+  "generator": "assets/blender/scripts/ice_kit.py",
+  "objects": [
+    "citadel",
+    "crystal_arch",
+    "rune_a",
+    "rune_b",
+    "rune_c"
+  ],
+  "triangles": 1300,
+  "materials": [
+    "iceWall",
+    "iceDeep",
+    "iceGlow",
+    "snowCap"
+  ],
+  "license": "Original work for Prismfall"
+}

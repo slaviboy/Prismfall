@@ -36,6 +36,24 @@
           "to": "content/stages/moving-sands/models"
         }
       ]
+    },
+    {
+      "script": "flora_kit.py",
+      "outputs": [
+        {
+          "from": "assets/blender/exports/flora",
+          "to": "content/shared/flora"
+        }
+      ]
+    },
+    {
+      "script": "ice_kit.py",
+      "outputs": [
+        {
+          "from": "assets/blender/exports/ice",
+          "to": "content/stages/frozen-kingdom/models"
+        }
+      ]
     }
   ]
 }

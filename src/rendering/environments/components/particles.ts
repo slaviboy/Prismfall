@@ -21,7 +21,7 @@ import type { ComponentFactory } from '../../../sdk/types';
 import { additiveFog } from '../../shaders/uniforms';
 import { colorUniform, floatUniform, scaledCount, seeded, zColor, zVec3 } from './common';
 
-const SHAPES = { soft: 0, star: 1, spark: 2, snow: 3, bubble: 4, streak: 5 } as const;
+const SHAPES = { soft: 0, star: 1, spark: 2, snow: 3, bubble: 4, streak: 5, petal: 6 } as const;
 
 const schema = z.object({
   count: z.number().int().min(1).max(200000).default(4000),
@@ -35,7 +35,11 @@ const schema = z.object({
   turbulence: z.number().default(0.4),
   twinkle: z.number().min(0).max(1).default(0.5),
   brightness: z.number().default(1),
-  shape: z.enum(['soft', 'star', 'spark', 'snow', 'bubble', 'streak']).default('soft'),
+  shape: z.enum(['soft', 'star', 'spark', 'snow', 'bubble', 'streak', 'petal']).default('soft'),
+  /** Streak orientation in degrees (0 = vertical), e.g. driving snow or meteors. */
+  angle: z.number().default(0),
+  /** Tumbling (radians/second) for petals and leaves. */
+  spin: z.number().default(0),
   additive: z.boolean().default(true),
   /** Fraction of particles shown (density modulation, reactive). */
   density: z.number().min(0).max(1).default(1),
@@ -107,6 +111,8 @@ export const particlesComponent: ComponentFactory<ParticleFieldParams> = {
           return smoothstep(1, 0.8, r).mul(smoothstep(0.5, 0.8, r)).add(smoothstep(0.3, 0, length(q.sub(vec2(-0.3, 0.3)))).mul(0.5));
         case SHAPES.streak:
           return smoothstep(0.25, 0, abs(q.x)).mul(smoothstep(1, 0.2, abs(q.y)));
+        case SHAPES.petal:
+          return smoothstep(1, 0.7, length(vec2(q.x.mul(1.8), q.y.add(q.x.mul(q.x).mul(0.4)))));
         default:
           return smoothstep(1, 0, r).pow(1.8);
       }
@@ -117,6 +123,7 @@ export const particlesComponent: ComponentFactory<ParticleFieldParams> = {
     const material = new SpriteNodeMaterial();
     material.positionNode = pos;
     material.scaleNode = p.shape === 'streak' ? vec2(size.mul(0.35), size.mul(3)) : size;
+    if (p.angle !== 0 || p.spin !== 0) material.rotationNode = float((p.angle * Math.PI) / 180).add(time.mul(p.spin).mul(s.x.sub(0.5).mul(2)));
     material.colorNode = p.additive ? vec4(additiveFog(light), 1) : vec4(light, shapeMask.mul(u.presence));
     material.transparent = true;
     material.depthWrite = false;

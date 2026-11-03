@@ -61,11 +61,15 @@ def build_metaballs(name, capsules, ellipsoids, resolution=0.035, threshold=0.6)
         e.size_x = (b - a).length / 2
         e.rotation = Vector((1, 0, 0)).rotation_difference(b - a)
         e.stiffness = 2.0
-    for (c, radii, r) in ellipsoids:
+    for ell in ellipsoids:
+        c, radii, r = ell[0], ell[1], ell[2]
         e = mball.elements.new(type="ELLIPSOID")
         e.co = c
         e.radius = r
         e.size_x, e.size_y, e.size_z = radii
+        if len(ell) > 3:
+            # Optional orientation: align the ellipsoid's x axis with a direction (flat fins, flukes).
+            e.rotation = Vector((1, 0, 0)).rotation_difference(Vector(ell[3]))
         e.stiffness = 2.0
     meta = bpy.data.objects.new(name + "Meta", mball)
     bpy.context.scene.collection.objects.link(meta)
@@ -212,6 +216,132 @@ def camel():
     return obj, rig
 
 
+def rig_json(name, joints, height, stride, bob, sway=0.025, forward="-z"):
+    return {
+        "name": name,
+        "forward": forward,
+        "height": height,
+        "stride": stride,
+        "bob": bob,
+        "sway": sway,
+        "joints": [
+            {"name": j["name"], "pivot": to_gltf(j["pivot"]), "axis": to_gltf(j["axis"]), "amp": j["amp"], "phase": j["phase"], "freq": j["freq"], "bias": j["bias"], "rectify": j["rectify"]}
+            for j in joints
+        ],
+    }
+
+
+def deer():
+    """A slender deer with antlers (forest, aurora reindeer, ice spirits). Walk gait: LH, LF, RH, RF."""
+    V = [
+        (0, -0.55, 1.05),  # 0 hip
+        (0, -0.1, 1.09),  # 1 mid back
+        (0, 0.38, 1.13),  # 2 withers
+        (0, 0.55, 0.96),  # 3 chest
+        (0, 0.6, 1.22),  # 4 neck base
+        (0, 0.82, 1.66),  # 5 poll
+        (0, 1.12, 1.56),  # 6 muzzle
+        (0.14, 0.44, 0.95), (0.14, 0.47, 0.5), (0.14, 0.45, 0.04),  # 7-9 front left shoulder, knee, hoof
+        (-0.14, 0.44, 0.95), (-0.14, 0.47, 0.5), (-0.14, 0.45, 0.04),  # 10-12 front right
+        (0.14, -0.5, 0.96), (0.14, -0.63, 0.5), (0.14, -0.55, 0.04),  # 13-15 back left hip, hock, hoof
+        (-0.14, -0.5, 0.96), (-0.14, -0.63, 0.5), (-0.14, -0.55, 0.04),  # 16-18 back right
+        (0, -0.6, 1.07), (0, -0.76, 0.98),  # 19-20 tail (base inside the haunch)
+        (0.09, 0.82, 1.76), (-0.09, 0.82, 1.76),  # 21-22 ears
+    ]
+    cap = lambda a, b, r: (a, b, r)  # noqa: E731
+    capsules = [
+        cap(V[4], V[5], 0.085), cap(V[3], V[4], 0.12), cap(V[5], V[6], 0.07),
+        cap(V[7], V[8], 0.07), cap(V[8], V[9], 0.04), cap(V[10], V[11], 0.07), cap(V[11], V[12], 0.04),
+        cap(V[13], V[14], 0.085), cap(V[14], V[15], 0.04), cap(V[16], V[17], 0.085), cap(V[17], V[18], 0.04),
+        cap(V[19], V[20], 0.065), cap(V[5], V[21], 0.04), cap(V[5], V[22], 0.04),
+    ]
+    # Antlers: a main beam per side with three tines.
+    antler_segs = []
+    for side in (1, -1):
+        base = (side * 0.05, 0.84, 1.74)
+        beam1 = (side * 0.2, 0.78, 2.0)
+        beam2 = (side * 0.28, 0.66, 2.28)
+        tines = [((side * 0.17, 0.8, 1.94), (side * 0.15, 0.98, 2.12)), (beam1, (side * 0.32, 0.86, 2.24)), (beam2, (side * 0.22, 0.74, 2.42))]
+        capsules += [cap(base, beam1, 0.05), cap(beam1, beam2, 0.044)] + [cap(a, b, 0.036) for a, b in tines]
+        antler_segs += [(base, beam1), (beam1, beam2)] + tines
+    ellipsoids = [
+        ((0, -0.07, 1.02), (0.9, 2.3, 1.05), 0.27),
+        ((0, 0.42, 0.98), (1.0, 1.2, 1.2), 0.22),
+        ((0, -0.46, 1.0), (1.05, 1.1, 1.15), 0.21),
+        ((0, 0.98, 1.6), (0.75, 1.8, 0.85), 0.11),
+    ]
+    obj = build_metaballs("Deer", capsules, ellipsoids, resolution=0.022)
+    joints = [
+        {"name": "neck", "pivot": V[4], "axis": (1, 0, 0), "amp": 0.06, "phase": 0.1, "freq": 2, "bias": 0.0, "rectify": 0},
+        {"name": "fl_hip", "pivot": V[7], "axis": (1, 0, 0), "amp": 0.42, "phase": 0.25, "freq": 1, "bias": 0.0, "rectify": 0},
+        {"name": "fl_knee", "pivot": V[8], "axis": (1, 0, 0), "amp": 0.8, "phase": 0.47, "freq": 1, "bias": 0.0, "rectify": -1},
+        {"name": "fr_hip", "pivot": V[10], "axis": (1, 0, 0), "amp": 0.42, "phase": 0.75, "freq": 1, "bias": 0.0, "rectify": 0},
+        {"name": "fr_knee", "pivot": V[11], "axis": (1, 0, 0), "amp": 0.8, "phase": 0.97, "freq": 1, "bias": 0.0, "rectify": -1},
+        {"name": "bl_hip", "pivot": V[13], "axis": (1, 0, 0), "amp": 0.38, "phase": 0.0, "freq": 1, "bias": 0.0, "rectify": 0},
+        {"name": "bl_hock", "pivot": V[14], "axis": (1, 0, 0), "amp": 0.65, "phase": 0.26, "freq": 1, "bias": 0.0, "rectify": 1},
+        {"name": "br_hip", "pivot": V[16], "axis": (1, 0, 0), "amp": 0.38, "phase": 0.5, "freq": 1, "bias": 0.0, "rectify": 0},
+        {"name": "br_hock", "pivot": V[17], "axis": (1, 0, 0), "amp": 0.65, "phase": 0.76, "freq": 1, "bias": 0.0, "rectify": 1},
+        {"name": "tail", "pivot": V[19], "axis": (0, 0, 1), "amp": 0.3, "phase": 0.0, "freq": 2, "bias": 0.0, "rectify": 0},
+    ]
+    N = -1
+    segments = [
+        (V[0], V[1], N, N), (V[1], V[2], N, N), (V[2], V[3], N, N), (V[3], V[4], 0, N), (V[4], V[5], 0, N), (V[5], V[6], 0, N),
+        (V[5], V[21], 0, N), (V[5], V[22], 0, N),
+        (V[7], V[8], 1, N), (V[8], V[9], 2, 1), (V[10], V[11], 3, N), (V[11], V[12], 4, 3),
+        (V[13], V[14], 5, N), (V[14], V[15], 6, 5), (V[16], V[17], 7, N), (V[17], V[18], 8, 7),
+        (V[0], V[19], 9, N), (V[19], V[20], 9, N),
+    ] + [(a, b, 0, N) for a, b in antler_segs]
+    assign_joints_segments(obj, segments)
+    obj.data.materials.append(make_material("CreatureFur", color=(0.55, 0.4, 0.28), roughness=0.85))
+    return obj, rig_json("deer", joints, 2.4, 1.05, 0.03, 0.02)
+
+
+def whale():
+    """A great whale (ocean depths, star whale in space). Undulates its tail; flippers sweep."""
+    spine = [(0, 6.5, 0), (0, 3.5, 0.3), (0, 0, 0.4), (0, -3.5, 0.2), (0, -6, 0), (0, -8.2, 0)]
+    capsules = [(spine[i], spine[i + 1], r) for i, r in zip(range(5), (1.55, 1.75, 1.6, 1.1, 0.55))]
+    ellipsoids = [((0, 4.6, -0.1), (1.0, 1.8, 0.85), 1.7), ((0, 1.5, 0.1), (1.0, 2.2, 0.9), 1.85)]
+    flukes = []
+    for side in (1, -1):
+        # Flat flukes and flippers: wide, thin ellipsoids pointing along the fin.
+        ellipsoids.append(((side * 1.15, -8.5, 0), (1.0, 0.45, 0.2), 1.45, (side * 2.4, -0.8, 0)))
+        flukes.append(((side * 0.2, -8.2, 0), (side * 2.6, -9.0, 0)))
+        ellipsoids.append(((side * 1.9, 2.5, -0.95), (1.0, 0.4, 0.18), 1.45, (side * 2.4, -1.4, -0.6)))
+    ellipsoids.append(((0, 2.5, -0.7), (1.0, 2.6, 0.7), 1.5))  # throat and belly
+    obj = build_metaballs("Whale", capsules, ellipsoids, resolution=0.085)
+    joints = [
+        {"name": "tail1", "pivot": spine[2], "axis": (1, 0, 0), "amp": 0.06, "phase": 0.0, "freq": 1, "bias": 0.0, "rectify": 0},
+        {"name": "tail2", "pivot": spine[3], "axis": (1, 0, 0), "amp": 0.12, "phase": 0.12, "freq": 1, "bias": 0.0, "rectify": 0},
+        {"name": "fluke", "pivot": spine[4], "axis": (1, 0, 0), "amp": 0.22, "phase": 0.25, "freq": 1, "bias": 0.0, "rectify": 0},
+        {"name": "fin_l", "pivot": (1.2, 3.0, -0.8), "axis": (0, 1, 0), "amp": 0.18, "phase": 0.4, "freq": 1, "bias": 0.0, "rectify": 0},
+        {"name": "fin_r", "pivot": (-1.2, 3.0, -0.8), "axis": (0, 1, 0), "amp": 0.18, "phase": 0.9, "freq": 1, "bias": 0.0, "rectify": 0},
+    ]
+    N = -1
+    segments = [
+        (spine[0], spine[1], N, N), (spine[1], spine[2], N, N), (spine[2], spine[3], 0, N), (spine[3], spine[4], 1, 0), (spine[4], spine[5], 2, 1),
+        ((1.2, 3.0, -0.8), (3.6, 1.6, -1.4), 3, N), ((-1.2, 3.0, -0.8), (-3.6, 1.6, -1.4), 4, N),
+    ] + [(a, b, 2, 1) for a, b in flukes]
+    assign_joints_segments(obj, segments)
+    obj.data.materials.append(make_material("CreatureSkin", color=(0.25, 0.32, 0.4), roughness=0.6))
+    return obj, rig_json("whale", joints, 3.2, 9.0, 0.0, 0.01)
+
+
+def assign_joints_segments(obj, segments):
+    """segments: (a, b, ja, jb) with explicit endpoints."""
+    me = obj.data
+    ja = me.attributes.new("_JA", "FLOAT", "POINT")
+    jb = me.attributes.new("_JB", "FLOAT", "POINT")
+    segs = [(Vector(a), Vector(b), x, y) for a, b, x, y in segments]
+    for v in me.vertices:
+        best = None
+        for (a, b, x, y) in segs:
+            d = seg_dist(v.co, a, b)
+            if best is None or d < best[0]:
+                best = (d, x, y)
+        ja.data[v.index].value = best[1]
+        jb.data[v.index].value = best[2]
+
+
 def export_creature(obj, rig, name):
     path = os.path.join(OUT, f"{name}.glb")
     ensure_dir(OUT)
@@ -235,11 +365,21 @@ def export_creature(obj, rig, name):
 
 def main():
     reset_scene()
-    obj, rig = camel()
-    export_creature(obj, rig, "camel")
+    made = []
+    for build, name, cam, target in [
+        (camel, "camel", (5.5, 0.6, 1.3), (0, 0.35, 1.05)),
+        (deer, "deer", (4.5, 0.6, 1.4), (0, 0.3, 1.1)),
+        (whale, "whale", (26, -2, 6), (0, -1, 0)),
+    ]:
+        obj, rig = build()
+        export_creature(obj, rig, name)
+        made.append((obj, name, cam, target))
     save_blend(os.path.join(SRC, "creatures.blend"))
     if "--no-preview" not in args():
-        render_preview(os.path.join(PREVIEWS, "camel.png"), camera_location=(5.5, 0.6, 1.3), target=(0, 0.35, 1.05), lens=50)
+        for obj, name, cam, target in made:
+            for other, *_ in made:
+                other.hide_render = other is not obj
+            render_preview(os.path.join(PREVIEWS, f"{name}.png"), camera_location=cam, target=target, lens=50)
     print("CREATURES_OK")
 
 

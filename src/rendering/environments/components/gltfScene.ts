@@ -1,30 +1,16 @@
 import type { Object3D} from 'three/webgpu';
-import { AnimationMixer, Box3, Color, Group, Mesh, MeshPhysicalNodeMaterial, MeshStandardNodeMaterial, Vector3, type Material } from 'three/webgpu';
-import { attribute, float, mix, mrt, sin, vec4 } from 'three/tsl';
+import { AnimationMixer, Box3, Group, Mesh, Vector3, type Material } from 'three/webgpu';
 import { z } from 'zod';
 import type { ComponentFactory } from '../../../sdk/types';
-import { colorUniform, floatUniform, zColor, zVec3 } from './common';
-import { revealMask } from './reveal';
-
-const materialRule = z.object({
-  /** Regex tested against the Blender material name. */
-  match: z.string(),
-  preset: z.enum(['darkMetal', 'metal', 'hot', 'emissive', 'glass', 'stone', 'keep']),
-  color: zColor.optional(),
-  emissive: zColor.optional(),
-  emissiveIntensity: z.number().default(1),
-  roughness: z.number().optional(),
-  metalness: z.number().optional(),
-  /** How strongly the emissive part follows the music (0..1). */
-  musicGlow: z.number().default(0.5),
-});
+import { floatUniform, zVec3 } from './common';
+import { createRemapper, materialRuleSchema } from './materialRemap';
 
 const schema = z.object({
   src: z.string(),
   position: zVec3.default([0, 0, 0]),
   rotation: zVec3.default([0, 0, 0]),
   scale: z.number().default(1),
-  materials: z.array(materialRule).default([]),
+  materials: z.array(materialRuleSchema).default([]),
   /** Use baked vertex-colour AO from Blender (COLOR_0) to darken creases. */
   vertexAO: z.boolean().default(true),
   rotate: z.array(z.object({ match: z.string(), axis: z.enum(['x', 'y', 'z']), speed: z.number(), alternate: z.boolean().default(false), beatSync: z.number().default(0) })).default([]),
@@ -57,43 +43,8 @@ export const gltfSceneComponent: ComponentFactory<Params> = {
     root.rotation.set(...p.rotation);
     root.scale.setScalar(p.scale);
     const u = { emissive: floatUniform(1), music: floatUniform(0), presence: floatUniform(1) };
-    const created: Material[] = [];
-    const rules = p.materials.map((r) => ({ ...r, re: new RegExp(r.match, 'i') }));
-
-    const remap = (source: Material, hasAO: boolean): Material => {
-      const rule = rules.find((r) => r.re.test(source.name));
-      if (!rule || rule.preset === 'keep') return source;
-      const baseColor = rule.color ?? ('color' in source && source.color instanceof Color ? `#${source.color.getHexString()}` : '#808080');
-      const physical = rule.preset === 'glass';
-      const mat = physical ? new MeshPhysicalNodeMaterial() : new MeshStandardNodeMaterial();
-      mat.name = source.name;
-      mat.color = new Color(baseColor);
-      const presets: Record<string, [number, number]> = { darkMetal: [0.45, 0.9], metal: [0.3, 1], hot: [0.6, 0.4], emissive: [0.5, 0.1], glass: [0.05, 0], stone: [0.85, 0] };
-      const [rough, metal] = presets[rule.preset] ?? [0.5, 0];
-      mat.roughness = rule.roughness ?? rough;
-      mat.metalness = rule.metalness ?? metal;
-      if (physical) {
-        (mat as MeshPhysicalNodeMaterial).clearcoat = 1;
-        (mat as MeshPhysicalNodeMaterial).transmission = 0;
-      }
-      const ao = hasAO && p.vertexAO ? mix(float(0.35), float(1), attribute<'vec4'>('color', 'vec4').r) : float(1);
-      mat.colorNode = vec4(colorUniform(baseColor).mul(ao), 1);
-      mat.opacityNode = revealMask(u.presence);
-      mat.alphaTest = 0.5;
-      if (rule.emissive) {
-        const flicker = rule.preset === 'hot' ? sin(ctx.uniforms.time.mul(2.3)).mul(0.08).add(0.92) : float(1);
-        const glow = colorUniform(rule.emissive)
-          .mul(rule.emissiveIntensity)
-          .mul(flicker)
-          .mul(float(1).add(u.music.mul(rule.musicGlow)))
-          .mul(u.emissive)
-          .mul(u.presence);
-        mat.emissiveNode = glow;
-        mat.mrtNode = mrt({ emissive: vec4(glow, 1) });
-      }
-      created.push(mat);
-      return mat;
-    };
+    const remapper = createRemapper(p.materials, { time: ctx.uniforms.time, presence: u.presence, music: u.music, emissive: u.emissive }, p.vertexAO);
+    const remap = (m: Material, hasAO: boolean): Material => remapper.remap(m, hasAO);
 
     const rotors: { obj: Object3D; axis: 'x' | 'y' | 'z'; speed: number; beatSync: number }[] = [];
     const pistons: { obj: Object3D; axis: 'x' | 'y' | 'z'; distance: number; beats: number; phase: number; base: number }[] = [];
@@ -158,7 +109,7 @@ export const gltfSceneComponent: ComponentFactory<Params> = {
         u.presence.value = v;
       },
       dispose() {
-        created.forEach((m) => m.dispose());
+        remapper.dispose();
         mixer?.stopAllAction();
         ctx.assets.release(p.src);
       },

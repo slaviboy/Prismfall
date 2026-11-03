@@ -41,7 +41,7 @@ for (const gen of pipeline.generators) {
       const src = join(from, file);
       if (file.endsWith('.glb')) {
         const dst = join(to, file);
-        execFileSync(process.execPath, [join(ROOT, 'node_modules/@gltf-transform/cli/bin/cli.js'), 'optimize', src, dst, '--compress', 'meshopt', '--texture-compress', 'webp', '--simplify', 'false', '--instance', 'false', '--flatten', 'false', '--join', 'false'], { cwd: ROOT, stdio: 'pipe' });
+        execFileSync(process.execPath, [join(ROOT, 'node_modules/@gltf-transform/cli/bin/cli.js'), 'optimize', src, dst, '--compress', 'meshopt', '--texture-compress', 'webp', '--simplify', 'false', '--instance', 'false', '--flatten', 'false', '--join', 'false', '--palette', 'false'], { cwd: ROOT, stdio: 'pipe' });
         console.log(`  ${file}: ${statSync(src).size} B -> ${statSync(dst).size} B`);
       } else if (file.endsWith('.json')) {
         copyFileSync(src, join(to, file));

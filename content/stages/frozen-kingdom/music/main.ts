@@ -1,0 +1,105 @@
+import { arp, bassline, beat, composition, hold, melody, once } from '@prismfall/sdk';
+
+/**
+ * "Glass Meridian": spacious, crystalline music in E Lydian. Glass bells and celesta arpeggios
+ * over slow string swells, a soft choir and delicate electronic ticks. Original composition.
+ */
+export default composition({
+  id: 'frozen-kingdom-glass-meridian',
+  title: 'Glass Meridian',
+  bpm: 76,
+  beatsPerBar: 4,
+  key: 'E',
+  scale: 'lydian',
+  swing: 0.04,
+  space: { decay: 7.5, wet: 0.5, damping: 0.25 },
+  stinger: 'glass',
+  instruments: {
+    pad: { kind: 'pad', wave: 'triangle', voices: 3, detune: 7, cutoff: 1800, attack: 2.8, release: 5, gain: 0.34, reverb: 0.8 },
+    strings: { kind: 'strings', wave: 'sawtooth', voices: 4, detune: 12, cutoff: 1400, attack: 2.2, release: 4.5, gain: 0.32, reverb: 0.85, layer: 0.3 },
+    choir: { kind: 'choir', attack: 2.4, release: 4, gain: 0.24, reverb: 0.9, layer: 0.55 },
+    glass: { kind: 'bell', ratio: 5.4, index: 1.1, decay: 3.2, gain: 0.26, delay: 0.5, reverb: 0.7 },
+    celesta: { kind: 'bell', ratio: 4, index: 0.9, decay: 1.4, gain: 0.22, delay: 0.42, reverb: 0.55, pan: 0.25, layer: 0.25 },
+    keys: { kind: 'epiano', ratio: 1, index: 0.9, decay: 2.4, gain: 0.24, reverb: 0.6, pan: -0.2, layer: 0.45 },
+    sub: { kind: 'sub', gain: 0.42, duck: 0.2, layer: 0.35 },
+    tick: { kind: 'perc', gain: 0.18, pan: 0.3, layer: 0.4 },
+    snap: { kind: 'snare', tone: 220, decay: 0.12, gain: 0.18, reverb: 0.7, layer: 0.5 },
+    kick: { kind: 'kick', tone: 95, decay: 0.42, gain: 0.48, layer: 0.6 },
+    shimmer: { kind: 'hat', tone: 10500, decay: 0.03, gain: 0.14, pan: -0.3, layer: 0.55 },
+    riser: { kind: 'riser', gain: 0.35, reverb: 0.7 },
+    impact: { kind: 'impact', gain: 0.4, reverb: 0.85 },
+  },
+  sections: [
+    {
+      name: 'still air',
+      kind: 'intro',
+      bars: 8,
+      intensity: 0.15,
+      chords: ['Imaj7', 'II', 'Imaj7', 'vii'],
+      parts: {
+        pad: hold({ octave: 3, voicing: 'spread', vel: 0.5 }),
+        glass: melody("5:8 3:8 | 2:12 1:4 | 5:6 6:2 7:8 | 1':16", { octave: 5, vel: 0.42 }),
+      },
+    },
+    {
+      name: 'frost lines',
+      kind: 'verse',
+      bars: 16,
+      intensity: 0.42,
+      chords: ['Imaj7', 'II', 'vi7', 'IV', 'Imaj7', 'II', 'iii', 'V'],
+      parts: {
+        pad: hold({ octave: 3, voicing: 'spread', vel: 0.45 }),
+        strings: hold({ octave: 3, voicing: 'open', vel: 0.4, every: 2 }),
+        celesta: arp({ rate: 2, octave: 5, span: 2, order: 'pendulum', vel: 0.38 }),
+        sub: bassline('x...............', { octave: 1 }),
+        tick: beat('..x...x...x..x..', { vel: 0.6, prob: 0.8 }),
+        shimmer: beat('x.x.x.x.x.x.x.x.', { vel: 0.4, prob: 0.6 }),
+      },
+    },
+    {
+      name: 'gathering',
+      kind: 'build',
+      bars: 4,
+      intensity: 0.62,
+      chords: ['IV', 'V', 'vi', 'II'],
+      parts: {
+        strings: hold({ octave: 3, voicing: 'spread', vel: 0.5 }),
+        celesta: arp({ rate: 1, octave: 5, span: 2, order: 'up', vel: 0.36 }),
+        snap: beat('....x.......x...', { fillLastBar: '..x.x.x.xxxxxxxx' }),
+        riser: once({ dur: 64, vel: 0.6 }),
+      },
+    },
+    {
+      name: 'aurora',
+      kind: 'drop',
+      bars: 16,
+      intensity: 0.82,
+      chords: ['Imaj7', 'II', 'vi7', 'IV', 'Imaj7', 'II', 'IV', 'V'],
+      parts: {
+        impact: once({ dur: 4, vel: 0.65 }),
+        pad: hold({ octave: 3, voicing: 'spread', vel: 0.45 }),
+        strings: hold({ octave: 3, voicing: 'open', vel: 0.48 }),
+        choir: hold({ octave: 4, voicing: 'open', vel: 0.36, every: 2 }),
+        keys: melody("3:6 2:2 1:8 | 5:6 6:2 5:8 | 3:4 4:4 5:4 7:4 | 6:16 | 3:6 2:2 1:8 | 7,:6 1:2 2:8 | 4:4 3:4 2:4 1:4 | 2:16", { octave: 4, vel: 0.52 }),
+        celesta: arp({ rate: 2, octave: 5, span: 2, order: 'pendulum', vel: 0.34 }),
+        sub: bassline('x.......x.......', { octave: 1, fifths: 0.2 }),
+        kick: beat('x.........x.....'),
+        snap: beat('....x.......x...'),
+        tick: beat('..x.x...x.x.x..x', { vel: 0.55 }),
+        shimmer: beat('xxxxxxxxxxxxxxxx', { vel: 0.35, prob: 0.7 }),
+      },
+    },
+    {
+      name: 'thaw',
+      kind: 'break',
+      bars: 8,
+      intensity: 0.25,
+      chords: ['vi7', 'IV', 'Imaj7', 'II'],
+      parts: {
+        pad: hold({ octave: 3, voicing: 'spread', vel: 0.45 }),
+        glass: melody("1':6 7:2 5:8 | 6:6 5:2 3:8 | 2:6 3:2 5:8 | 1:16", { octave: 5, vel: 0.45 }),
+      },
+    },
+  ],
+  loopFrom: 1,
+});

@@ -1,0 +1,190 @@
+{
+  "name": "deer",
+  "forward": "-z",
+  "height": 2.4,
+  "stride": 1.05,
+  "bob": 0.03,
+  "sway": 0.02,
+  "joints": [
+    {
+      "name": "neck",
+      "pivot": [
+        0,
+        1.22,
+        -0.6
+      ],
+      "axis": [
+        1,
+        0,
+        0
+      ],
+      "amp": 0.06,
+      "phase": 0.1,
+      "freq": 2,
+      "bias": 0.0,
+      "rectify": 0
+    },
+    {
+      "name": "fl_hip",
+      "pivot": [
+        0.14,
+        0.95,
+        -0.44
+      ],
+      "axis": [
+        1,
+        0,
+        0
+      ],
+      "amp": 0.42,
+      "phase": 0.25,
+      "freq": 1,
+      "bias": 0.0,
+      "rectify": 0
+    },
+    {
+      "name": "fl_knee",
+      "pivot": [
+        0.14,
+        0.5,
+        -0.47
+      ],
+      "axis": [
+        1,
+        0,
+        0
+      ],
+      "amp": 0.8,
+      "phase": 0.47,
+      "freq": 1,
+      "bias": 0.0,
+      "rectify": -1
+    },
+    {
+      "name": "fr_hip",
+      "pivot": [
+        -0.14,
+        0.95,
+        -0.44
+      ],
+      "axis": [
+        1,
+        0,
+        0
+      ],
+      "amp": 0.42,
+      "phase": 0.75,
+      "freq": 1,
+      "bias": 0.0,
+      "rectify": 0
+    },
+    {
+      "name": "fr_knee",
+      "pivot": [
+        -0.14,
+        0.5,
+        -0.47
+      ],
+      "axis": [
+        1,
+        0,
+        0
+      ],
+      "amp": 0.8,
+      "phase": 0.97,
+      "freq": 1,
+      "bias": 0.0,
+      "rectify": -1
+    },
+    {
+      "name": "bl_hip",
+      "pivot": [
+        0.14,
+        0.96,
+        0.5
+      ],
+      "axis": [
+        1,
+        0,
+        0
+      ],
+      "amp": 0.38,
+      "phase": 0.0,
+      "freq": 1,
+      "bias": 0.0,
+      "rectify": 0
+    },
+    {
+      "name": "bl_hock",
+      "pivot": [
+        0.14,
+        0.5,
+        0.63
+      ],
+      "axis": [
+        1,
+        0,
+        0
+      ],
+      "amp": 0.65,
+      "phase": 0.26,
+      "freq": 1,
+      "bias": 0.0,
+      "rectify": 1
+    },
+    {
+      "name": "br_hip",
+      "pivot": [
+        -0.14,
+        0.96,
+        0.5
+      ],
+      "axis": [
+        1,
+        0,
+        0
+      ],
+      "amp": 0.38,
+      "phase": 0.5,
+      "freq": 1,
+      "bias": 0.0,
+      "rectify": 0
+    },
+    {
+      "name": "br_hock",
+      "pivot": [
+        -0.14,
+        0.5,
+        0.63
+      ],
+      "axis": [
+        1,
+        0,
+        0
+      ],
+      "amp": 0.65,
+      "phase": 0.76,
+      "freq": 1,
+      "bias": 0.0,
+      "rectify": 1
+    },
+    {
+      "name": "tail",
+      "pivot": [
+        0,
+        1.07,
+        0.6
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "amp": 0.3,
+      "phase": 0.0,
+      "freq": 2,
+      "bias": 0.0,
+      "rectify": 0
+    }
+  ]
+}

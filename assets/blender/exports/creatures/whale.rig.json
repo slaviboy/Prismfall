@@ -1,0 +1,100 @@
+{
+  "name": "whale",
+  "forward": "-z",
+  "height": 3.2,
+  "stride": 9.0,
+  "bob": 0.0,
+  "sway": 0.01,
+  "joints": [
+    {
+      "name": "tail1",
+      "pivot": [
+        0,
+        0.4,
+        0
+      ],
+      "axis": [
+        1,
+        0,
+        0
+      ],
+      "amp": 0.06,
+      "phase": 0.0,
+      "freq": 1,
+      "bias": 0.0,
+      "rectify": 0
+    },
+    {
+      "name": "tail2",
+      "pivot": [
+        0,
+        0.2,
+        3.5
+      ],
+      "axis": [
+        1,
+        0,
+        0
+      ],
+      "amp": 0.12,
+      "phase": 0.12,
+      "freq": 1,
+      "bias": 0.0,
+      "rectify": 0
+    },
+    {
+      "name": "fluke",
+      "pivot": [
+        0,
+        0,
+        6
+      ],
+      "axis": [
+        1,
+        0,
+        0
+      ],
+      "amp": 0.22,
+      "phase": 0.25,
+      "freq": 1,
+      "bias": 0.0,
+      "rectify": 0
+    },
+    {
+      "name": "fin_l",
+      "pivot": [
+        1.2,
+        -0.8,
+        -3.0
+      ],
+      "axis": [
+        0,
+        0,
+        -1
+      ],
+      "amp": 0.18,
+      "phase": 0.4,
+      "freq": 1,
+      "bias": 0.0,
+      "rectify": 0
+    },
+    {
+      "name": "fin_r",
+      "pivot": [
+        -1.2,
+        -0.8,
+        -3.0
+      ],
+      "axis": [
+        0,
+        0,
+        -1
+      ],
+      "amp": 0.18,
+      "phase": 0.9,
+      "freq": 1,
+      "bias": 0.0,
+      "rectify": 0
+    }
+  ]
+}
