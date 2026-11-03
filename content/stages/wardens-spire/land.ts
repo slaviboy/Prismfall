@@ -162,10 +162,10 @@ function perlin2(seed: number): (x: number, y: number) => number {
     [p[i], p[j]] = [p[j]!, p[i]!];
   }
   for (let i = 0; i < 512; i++) perm[i] = p[i & 255]!;
-  const grad = (h: number, x: number, y: number) => {
-    const a = (h & 7) * (Math.PI / 4);
-    return Math.cos(a) * x + Math.sin(a) * y;
-  };
+  // The eight gradient directions (k·45°), looked up: the terrain samples this millions of times.
+  const gx = Float64Array.from({ length: 8 }, (_, k) => Math.cos(k * (Math.PI / 4)));
+  const gy = Float64Array.from({ length: 8 }, (_, k) => Math.sin(k * (Math.PI / 4)));
+  const grad = (h: number, x: number, y: number) => gx[h & 7]! * x + gy[h & 7]! * y;
   const fade = (t: number) => t * t * t * (t * (t * 6 - 15) + 10);
   return (x, y) => {
     const X = Math.floor(x);
@@ -180,8 +180,10 @@ function perlin2(seed: number): (x: number, y: number) => number {
     const ab = perm[perm[xi]! + yi + 1]!;
     const ba = perm[perm[xi + 1]! + yi]!;
     const bb = perm[perm[xi + 1]! + yi + 1]!;
-    const l1 = grad(aa, fx, fy) + (grad(ba, fx - 1, fy) - grad(aa, fx, fy)) * u;
-    const l2 = grad(ab, fx, fy - 1) + (grad(bb, fx - 1, fy - 1) - grad(ab, fx, fy - 1)) * u;
+    const gaa = grad(aa, fx, fy);
+    const gab = grad(ab, fx, fy - 1);
+    const l1 = gaa + (grad(ba, fx - 1, fy) - gaa) * u;
+    const l2 = gab + (grad(bb, fx - 1, fy - 1) - gab) * u;
     return (l1 + (l2 - l1) * v) * 1.41;
   };
 }
@@ -556,27 +558,21 @@ export const landComponent: ComponentFactory<Params> = {
     const pos = new Float32Array(rows * cols * 3);
     const crustAttr = new Float32Array(rows * cols * 3);
     const nor = new Float32Array(rows * cols * 3);
+    // The height field is costly (dozens of noise octaves per point): each vertex samples it
+    // once, normals come from the neighbouring vertices, and the browser gets a turn every few
+    // rows so loading never freezes the page.
+    const breathe = (): Promise<void> => new Promise((resolve) => setTimeout(resolve, 0));
     let vi = 0;
     for (let i = 0; i < rows; i++) {
+      if (i % 16 === 15) await breathe();
       const r = radii[i]!;
       for (let j = 0; j < cols; j++) {
         const a = angles[j]! * DEG;
         const x = EYE[0] + Math.sin(a) * r;
         const zz = EYE[2] - Math.cos(a) * r;
-        const h = height(x, zz);
         pos[vi * 3] = x;
-        pos[vi * 3 + 1] = h;
+        pos[vi * 3 + 1] = height(x, zz);
         pos[vi * 3 + 2] = zz;
-        const e = Math.max(0.6, r * 0.004);
-        const hx = height(x + e, zz) - height(x - e, zz);
-        const hz = height(x, zz + e) - height(x, zz - e);
-        const nx = -hx;
-        const ny = 2 * e;
-        const nz = -hz;
-        const nl = Math.hypot(nx, ny, nz);
-        nor[vi * 3] = nx / nl;
-        nor[vi * 3 + 1] = ny / nl;
-        nor[vi * 3 + 2] = nz / nl;
         const cr = plateCrust(x, zz, r);
         // Lava channels and their banks carry no crust cracks.
         const inRiver = fieldAt(field, field.dist, x, zz) < fieldNearest(field, field.width, x, zz) / 2 + 6 ? 0 : 1;
@@ -584,6 +580,34 @@ export const landComponent: ComponentFactory<Params> = {
         crustAttr[vi * 3 + 1] = cr.k * inRiver;
         crustAttr[vi * 3 + 2] = cr.tone;
         vi++;
+      }
+    }
+    // Normals: the cross product of the grid's radial and angular tangents (angles wrap round).
+    for (let i = 0; i < rows; i++) {
+      const i0 = Math.max(0, i - 1) * cols;
+      const i1 = Math.min(rows - 1, i + 1) * cols;
+      for (let j = 0; j < cols; j++) {
+        const v = i * cols + j;
+        const jl = i * cols + ((j + cols - 1) % cols);
+        const jr = i * cols + ((j + 1) % cols);
+        const rx = pos[(i1 + j) * 3]! - pos[(i0 + j) * 3]!;
+        const ry = pos[(i1 + j) * 3 + 1]! - pos[(i0 + j) * 3 + 1]!;
+        const rz = pos[(i1 + j) * 3 + 2]! - pos[(i0 + j) * 3 + 2]!;
+        const ax = pos[jr * 3]! - pos[jl * 3]!;
+        const ay = pos[jr * 3 + 1]! - pos[jl * 3 + 1]!;
+        const az = pos[jr * 3 + 2]! - pos[jl * 3 + 2]!;
+        let nx = ry * az - rz * ay;
+        let ny = rz * ax - rx * az;
+        let nz = rx * ay - ry * ax;
+        if (ny < 0) {
+          nx = -nx;
+          ny = -ny;
+          nz = -nz;
+        }
+        const nl = Math.hypot(nx, ny, nz) || 1;
+        nor[v * 3] = nx / nl;
+        nor[v * 3 + 1] = ny / nl;
+        nor[v * 3 + 2] = nz / nl;
       }
     }
     const index = new Uint32Array((rows - 1) * cols * 6);
