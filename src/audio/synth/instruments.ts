@@ -153,8 +153,26 @@ function choirVoice(ctx: BaseAudioContext, out: AudioNode, s: InstrumentSpec, mi
   return end;
 }
 
+/** Last note per lead instrument (per context), so `glide` can slide from it. */
+const lastLeadNote = new WeakMap<BaseAudioContext, WeakMap<InstrumentSpec, { midi: number; t: number }>>();
+
+/**
+ * Portamento: a lead with `glide` seconds starts each note at the previous note's pitch when that
+ * note began shortly before (a phrase), then slides to the new pitch. Chords (same start) don't glide.
+ */
+function glideFrom(ctx: BaseAudioContext, s: InstrumentSpec, midi: number, t: number): number | null {
+  if (!(s.glide && s.glide > 0)) return null;
+  let notes = lastLeadNote.get(ctx);
+  if (!notes) lastLeadNote.set(ctx, (notes = new WeakMap()));
+  const prev = notes.get(s);
+  notes.set(s, { midi, t });
+  if (!prev || prev.midi === midi || t - prev.t < 0.01 || t - prev.t > 2) return null;
+  return midiToFrequency(prev.midi);
+}
+
 function pluckVoice(ctx: BaseAudioContext, out: AudioNode, s: InstrumentSpec, midi: number, t: number, dur: number, level: number): number {
   const lead = s.kind === 'lead';
+  const from = lead ? glideFrom(ctx, s, midi, t) : null;
   const decay = s.decay ?? (lead ? 0.6 : 0.28);
   const release = s.release ?? (lead ? 0.25 : 0.2);
   const cutoff = s.cutoff ?? (lead ? 2200 : 1200);
@@ -172,7 +190,10 @@ function pluckVoice(ctx: BaseAudioContext, out: AudioNode, s: InstrumentSpec, mi
   for (let i = 0; i < voices; i++) {
     const osc = ctx.createOscillator();
     osc.type = s.wave ?? (lead ? 'sawtooth' : 'square');
-    osc.frequency.value = midiToFrequency(midi);
+    if (from !== null) {
+      osc.frequency.setValueAtTime(from, t);
+      osc.frequency.exponentialRampToValueAtTime(midiToFrequency(midi), t + (s.glide ?? 0));
+    } else osc.frequency.value = midiToFrequency(midi);
     osc.detune.value = voices > 1 ? (i - 0.5) * (s.detune ?? 10) : 0;
     if (lead) {
       const vib = ctx.createOscillator();

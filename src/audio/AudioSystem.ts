@@ -12,7 +12,7 @@ import type { Composition } from './sequencer/composition';
 import { keyRoot } from './sequencer/theory';
 import { Ambience } from './sound-effects/Ambience';
 import { resolveMaterialAudio, type MaterialAudioProfile } from './sound-effects/materialAudio';
-import { SfxBank, type SfxId } from './sound-effects/SfxBank';
+import { SFX_IDS, SfxBank, type SfxId } from './sound-effects/SfxBank';
 
 /** Publishes AudioFeatures: real analysis + music timeline while music plays, metronome otherwise. */
 class FeaturesHub implements AudioFeatureSource {
@@ -58,6 +58,8 @@ export interface StageAudio {
   /** Block impact profile (MaterialAudioProfile) and a key identifying it for caching. */
   readonly material?: MaterialAudioProfile;
   readonly materialKey?: string;
+  /** Recorded replacements for individual sounds: SFX id -> audio file URL (stage `sfx.overrides`). */
+  readonly sfxOverrides?: Readonly<Record<string, string>>;
 }
 
 /**
@@ -139,9 +141,36 @@ export class AudioSystem {
   }
 
   /** Renders the stage's sound palette: tonal preset in the music's key plus its block material. */
-  private buildSfx(stage: StageAudio | null): Promise<void> {
+  private async buildSfx(stage: StageAudio | null): Promise<void> {
     const material = stage?.material ?? resolveMaterialAudio('glass');
-    return this.sfx.build(stage?.sfxPreset ?? 'glass', stage?.composition ? keyRoot(stage.composition.key) : 0, material, stage?.materialKey ?? 'glass');
+    const overrides = await this.loadSfxOverrides(stage?.sfxOverrides ?? {});
+    const key = Object.keys(overrides).length > 0 ? `${stage?.materialKey ?? 'glass'}+${stage?.id ?? ''}` : (stage?.materialKey ?? 'glass');
+    return this.sfx.build(stage?.sfxPreset ?? 'glass', stage?.composition ? keyRoot(stage.composition.key) : 0, material, key, overrides);
+  }
+
+  /** Decodes a stage's recorded sound replacements; unknown ids and unreadable files are skipped. */
+  private async loadSfxOverrides(files: Readonly<Record<string, string>>): Promise<Partial<Record<SfxId, AudioBuffer>>> {
+    const ctx = this.engine.ctx;
+    const out: Partial<Record<SfxId, AudioBuffer>> = {};
+    if (!ctx) return out;
+    for (const [id, url] of Object.entries(files)) {
+      if (!(SFX_IDS as readonly string[]).includes(id)) {
+        console.warn(`[audio] sfx override "${id}" is not a sound id`);
+        continue;
+      }
+      try {
+        let buffer = this.fileCache.get(url);
+        if (!buffer) {
+          const res = await fetch(url);
+          buffer = await ctx.decodeAudioData(await res.arrayBuffer());
+          this.fileCache.set(url, buffer);
+        }
+        out[id as SfxId] = buffer;
+      } catch (err) {
+        console.warn(`[audio] could not load sfx override "${id}"`, err);
+      }
+    }
+    return out;
   }
 
   applySettings(s: Settings): void {

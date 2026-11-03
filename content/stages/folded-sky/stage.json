@@ -449,5 +449,8 @@
   "unlock": {
     "type": "always"
   },
+  "requires": {
+    "sdk": "^1.1.0"
+  },
   "thumbnail": "previews/thumb.jpg"
 }

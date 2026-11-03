@@ -24,7 +24,7 @@ export function unlockHint(manifest: StageManifest, stageName: (id: string) => s
     case 'always':
       return '';
     case 'voyageLeg':
-      return 'Reach this world in Voyage to unlock it.';
+      return "Clear this world's leg in Voyage to unlock it.";
     case 'stageCompleted':
       return `Complete ${stageName(rule.stage)} in Voyage to unlock it.`;
     case 'score':

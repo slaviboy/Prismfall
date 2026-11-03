@@ -252,7 +252,7 @@ Sliders tune sensitivity, treble scale and per-band attack and release live; **C
 
 ## 10. Limitations
 
-- **Other applications' audio can't be analysed.** A browser page can't inspect audio from another program, such as a video player. The only route is a user-granted tab or screen capture with audio (`getDisplayMedia`), planned as an experimental developer option.
+- **Other applications' audio can't be analysed.** A browser page can't inspect audio from another program, such as a video player. The only route is a user-granted tab or screen capture with audio (`getDisplayMedia`). This exists as an experimental developer option: the audio dashboard's "Analyse shared audio" button (`src/audio/analysis/externalCapture.ts`) replaces the game music as the analysis input until sharing stops; the shared sound is never played back.
 - **The corpus is synthetic.** It is rendered by Prismfall's own synthesiser, so it tests the engine against exact ground truth, not against mastered commercial recordings.
 - **Octave errors on ambiguous tempos.** Very slow (≈60 BPM) or very fast (≈174 BPM) music may be detected at double or half tempo. Phase still aligns with the true grid, and Prismfall's own tracks use their exact grid.
 - **Syncopated grooves take longer to lock.** Phase can need up to about six seconds when off-beat accents compete with the backbeat; the first estimate may sit on the off-beat.

@@ -4,7 +4,7 @@ import { goBack, toast } from '../../app/stores';
 import { useProgress } from '../../app/progressStore';
 import type { Progress } from '../../storage/repositories';
 import { isStageUnlocked, unlockHint } from '../../stages/progression';
-import { availableStages, getStage, resolveAsset, type StageInfo } from '../../stages/registry';
+import { availableStages, discoverStages, getStage, resolveAsset, type StageInfo } from '../../stages/registry';
 import type { StageManifest } from '../../stages/schema';
 import { getSettings, updateSection, useSettings } from '../../settings/store';
 import { MenuList } from '../components/controls';
@@ -128,6 +128,26 @@ export function StageSelectScreen(): ReactNode {
             </button>
           );
         })}
+        {/* Worlds that failed validation stay listed with the reason instead of vanishing. */}
+        {discoverStages()
+          .filter((info) => !info.available)
+          .map((info) => (
+            <button
+              key={info.id}
+              type="button"
+              className="world-card is-locked is-unavailable"
+              data-focusable
+              data-testid={`world-${info.id}`}
+              onMouseEnter={hoverFocus}
+              onClick={() => toast(`${info.manifest?.name ?? info.id} is unavailable: ${info.errors.join('; ')}`, 'warning', 6000)}
+            >
+              <StageArt info={info} className="world-card-art" />
+              <span className="world-card-text">
+                <span className="world-card-name">{info.manifest?.name ?? info.id}</span>
+                <span className="world-card-meta">Unavailable ({info.errors[0] ?? 'invalid'})</span>
+              </span>
+            </button>
+          ))}
       </MenuList>
     </MenuScreen>
   );

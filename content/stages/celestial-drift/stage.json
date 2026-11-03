@@ -661,7 +661,8 @@
         "id": "celestial-drift-orbit-of-glass",
         "title": "Orbit of Glass",
         "kind": "composition",
-        "src": "music/main.ts"
+        "src": "music/main.ts",
+        "bpm": 92
       }
     ],
     "defaultTrack": "celestial-drift-leviathan"

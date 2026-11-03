@@ -74,7 +74,7 @@ React is never inside this loop. The HUD updates on events through a zustand van
 - **Board:** instanced meshes. Per-instance data is packed into one interleaved buffer, which keeps every pipeline within 8 vertex buffers.
 - **Particles:** instanced billboards animated statelessly in shaders. Burst effects use a GPU ring buffer that the CPU writes only when an event spawns particles.
 - **Lighting:** a fixed global light rig. Stages only configure it, which avoids shader recompiles in the middle of a game.
-- **Post-processing** (`RenderPipeline`): bloom, colour grading, tone mapping and AA, plus optional GTAO, SSR, DOF and FSR1 depending on quality. MSAA is used only when no depth-based pass is active.
+- **Post-processing** (`RenderPipeline`): bloom, colour grading, tone mapping and AA, plus optional GTAO, DOF and FSR1 depending on quality (no screen-space reflections; reflections come from the environment map and material fresnel). MSAA is used only when no depth-based pass is active.
 
 ## 5. Audio
 
@@ -87,11 +87,11 @@ React is never inside this loop. The HUD updates on events through a zustand van
 
 - A stage is a folder under `content/stages/<id>/`. It contains:
   - `stage.json`, the manifest, versioned and validated with zod;
-  - an optional `stage.ts` that registers custom components, effects or materials through the Content SDK;
+  - an optional `stage.ts` that registers custom environment components, line-clear effects or transitions through the Content SDK (block surfaces and sound presets are chosen from built-ins);
   - music, models, textures and previews;
   - `assets.json` with licence metadata.
 - Vite `import.meta.glob` discovers stages automatically, and the stage-select screen is built from them.
-- Invalid stages show as "Unavailable" with the reason; they never crash the game.
+- Invalid stages are listed as "Unavailable (reason)" in world selection and in Settings → Developer → Content; they never crash the game.
 
 ## 7. Milestones
 

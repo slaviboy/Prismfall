@@ -53,6 +53,7 @@ export interface InstrumentSpec {
   readonly index?: number;
   /** Filter envelope amount in octaves (pluck, bass, lead). */
   readonly envAmount?: number;
+  /** Portamento in seconds for lead voices: notes in a phrase slide from the previous pitch. */
   readonly glide?: number;
   readonly drive?: number;
   /** Pitch for drums (Hz) or brightness. */

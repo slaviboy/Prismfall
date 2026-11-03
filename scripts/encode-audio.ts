@@ -4,8 +4,9 @@
  *   assets/audio/music/<stage-id>/<track>/main.wav (+ stems/<name>.wav) + track.json
  *     → content/stages/<stage-id>/music/<track>.ogg, <track>-<stem>.ogg, <track>.track.json
  *
- * Music is loudness-normalised to about -16 LUFS with -1.5 dBTP true peak (stems keep the main mix's
- * gain so they sum correctly). Masters stay in assets/ (lossless, not shipped). Requires ffmpeg on
+ * Music is loudness-normalised to about -16 LUFS, then peak-limited at -1.5 dBFS on a 4x oversampled
+ * signal, which approximates a -1.5 dBTP true-peak ceiling (Opus encoding can still overshoot by a
+ * fraction of a dB). Stems keep the main mix's gain so they sum correctly. Masters stay in assets/ (lossless, not shipped). Requires ffmpeg on
  * PATH (or FFMPEG_PATH).
  *
  * Usage: npm run audio:encode [-- <stage-id>]
@@ -46,7 +47,7 @@ function measureLufs(file: string): number {
 }
 
 function encode(src: string, dst: string, gainDb: number): void {
-  ffmpeg(['-i', src, '-af', `volume=${gainDb.toFixed(2)}dB,alimiter=limit=0.84:level=false`, '-c:a', 'libopus', '-b:a', '160k', '-vbr', 'on', dst]);
+  ffmpeg(['-i', src, '-af', `volume=${gainDb.toFixed(2)}dB,aresample=192000,alimiter=limit=0.84:level=false,aresample=48000`, '-c:a', 'libopus', '-b:a', '160k', '-vbr', 'on', dst]);
   console.log(`  ${dst.replace(ROOT, '.')}: ${(statSync(dst).size / 1024).toFixed(0)} KiB`);
 }
 

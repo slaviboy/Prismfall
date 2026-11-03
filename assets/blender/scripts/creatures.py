@@ -1,8 +1,8 @@
 """Creature models for Prismfall's living-creature system.
 
-Each creature is a skin-modifier skeleton (organic silhouette from a stick figure with radii),
-subdivided and given per-vertex joint attributes (_JA, _JB: primary and secondary joint index,
--1 = none). The rig file (<name>.rig.json) lists each joint's pivot (glTF y-up space), rotation
+Each creature is built from metaballs (capsules and ellipsoids along a stick figure), converted to
+a mesh and given per-vertex joint attributes (_JA, _JB: primary and secondary joint index,
+-1 = none). `build_skin` (a skin-modifier alternative) is kept but unused. The rig file (<name>.rig.json) lists each joint's pivot (glTF y-up space), rotation
 axis and gait parameters; the game evaluates the rig on the GPU for meshes and surface particles.
 
 Run: blender -b --factory-startup --python assets/blender/scripts/creatures.py

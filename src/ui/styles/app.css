@@ -1487,6 +1487,13 @@ kbd {
   filter: grayscale(0.85) brightness(0.55);
 }
 
+.world-card.is-unavailable .world-card-meta {
+  color: var(--haze-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .menu-aside:has(.world-details) {
   display: flex;
   align-items: flex-end;

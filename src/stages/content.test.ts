@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { registerBuiltinComponents } from '../rendering/environments/builtins';
 import { registerBuiltinEffects } from '../rendering/fx/lineClearEffects';
+import { registerBuiltinTransitions } from '../rendering/fx/transitions';
+import { AMBIENCE_PRESETS } from '../audio/sound-effects/Ambience';
+import { MATERIAL_PROFILES } from '../audio/sound-effects/materialAudio';
+import { SFX_PRESETS } from '../audio/sound-effects/SfxBank';
 import { registries } from '../sdk/registry';
 import { discoverStages, getCampaign, reactivityProfileFiles, resetStageCache } from './registry';
 import { reactivityProfileSchema, satisfiesRange, stageManifestSchema } from './schema';
@@ -23,6 +27,13 @@ describe('shipped content', () => {
       expect(stage.available).toBe(true);
       const m = stage.manifest!;
       expect(registries.lineClearEffects.has(m.effects.lineClear.effect) || !!m.module, `line-clear effect ${m.effects.lineClear.effect}`).toBe(true);
+      // Names that would otherwise fall back silently at runtime (warp, silence, glass).
+      registerBuiltinTransitions();
+      expect(registries.transitions.has(m.effects.transition.effect) || !!m.module, `transition ${m.effects.transition.effect}`).toBe(true);
+      if (m.ambience) expect(AMBIENCE_PRESETS, `ambience preset ${m.ambience.preset}`).toContain(m.ambience.preset);
+      expect(Object.keys(SFX_PRESETS), `sfx preset ${m.sfx.preset}`).toContain(m.sfx.preset);
+      const material = m.sfx.material;
+      if (typeof material === 'string') expect(Object.keys(MATERIAL_PROFILES), `sfx material ${material}`).toContain(material);
       for (const layer of m.environment.layers) {
         const factory = registries.components.get(layer.type);
         if (!factory) continue; // provided by the stage module

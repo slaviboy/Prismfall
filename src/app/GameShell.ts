@@ -237,6 +237,10 @@ export class GameShell {
       ambience: m.ambience?.preset ?? null,
       ambienceLevel: m.ambience?.level ?? 1,
       sfxPreset: m.sfx.preset,
+      sfxOverrides: Object.fromEntries(Object.entries(m.sfx.overrides).flatMap(([id, file]) => {
+        const url = resolveAsset(info.dir, file);
+        return url ? [[id, url] as const] : [];
+      })),
       ...this.stageMaterial(m),
     };
     await this.audio.setStage(stageAudio);
@@ -277,7 +281,7 @@ export class GameShell {
     for (const st of availableStages()) {
       const m = st.manifest;
       if (!m || !isStageUnlocked(m, progress, unlockAll)) continue;
-      for (const t of m.music.tracks) out.push({ id: `stage:${m.id}:${t.id}`, title: t.title, subtitle: m.name, bpm: m.music.bpm, source: 'world' });
+      for (const t of m.music.tracks) out.push({ id: `stage:${m.id}:${t.id}`, title: t.title, subtitle: m.name, bpm: t.bpm ?? m.music.bpm, source: 'world' });
     }
     for (const u of await this.userMusic.list()) out.push({ id: `user:${u.id}`, title: u.name, subtitle: 'Your music', bpm: Math.round(u.analysis.bpm), source: 'user' });
     return out;

@@ -85,6 +85,11 @@ def bake_dirty_vertex_ao(obj, strength: float = 1.0) -> None:
         bpy.ops.paint.vertex_color_dirt(blur_strength=1.0, blur_iterations=1, clean_angle=math.pi, dirt_angle=0.0, dirt_only=False, normalize=True)
     finally:
         bpy.ops.object.mode_set(mode="OBJECT")
+    if strength < 1.0:
+        # Fade the occlusion toward white: 0 = no darkening, 1 = full dirt bake.
+        for value in mesh.color_attributes["AO"].data:
+            r, g, b, a = value.color
+            value.color = (1 - strength * (1 - r), 1 - strength * (1 - g), 1 - strength * (1 - b), a)
 
 
 def export_glb(objects, path: str, *, vertex_colors: bool = False) -> None:

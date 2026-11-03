@@ -68,6 +68,8 @@ const trackSchema = z.object({
   src: z.string(),
   /** Stage-relative track.json metadata for file tracks. */
   meta: z.string().optional(),
+  /** Tempo shown in the Music Room when it differs from the world's `music.bpm`. */
+  bpm: z.number().min(30).max(300).optional(),
   artist: z.string().default('Prismfall'),
 });
 
