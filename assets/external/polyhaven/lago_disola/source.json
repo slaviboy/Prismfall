@@ -25,6 +25,10 @@
     {
       "path": "content/stages/frozen-kingdom/textures/lago_disola_band.webp",
       "how": "ffmpeg crop=8192:1047:0:1138 (elevations -6..40 deg), unsharp 5:5:0.6, libwebp quality 86"
+    },
+    {
+      "path": "content/stages/frozen-kingdom/textures/lago_disola_detail.webp",
+      "how": "20k HDR https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/16k%2B/lago_disola_20k.hdr (md5 4b8d3d52143db2e8b916c9b8c820fba3): crop 8024x2636 (uRange 0.5056..0.8944), tone curve matched to the tonemapped JPG (scripts/panorama_match.py), libwebp quality 90"
     }
   ]
 }

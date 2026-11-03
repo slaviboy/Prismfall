@@ -120,7 +120,14 @@
             "offset": 0.7,
             "exposure": 1.0,
             "fade": 8,
-            "occlude": 500
+            "occlude": 500,
+            "detail": {
+              "src": "textures/lago_disola_detail.webp",
+              "uRange": [
+                0.5056,
+                0.8944
+              ]
+            }
           },
           "dusk": {
             "top": "#03060d",

@@ -23,3 +23,6 @@ reference-capture/
 # External photoscans (npm run assets:scans): the original downloads in assets/external/ are kept as
 # sources of record; the intermediate Blender exports are rebuilt from them.
 assets/blender/exports/scans/*.glb
+
+# Full-resolution HDRIs downloaded to build panorama detail bands (large; URLs and MD5s are in source.json).
+assets/external/polyhaven/*/*.hdr

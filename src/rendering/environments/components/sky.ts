@@ -74,6 +74,11 @@ const schema = z.object({
        * units: land pixels write depth at this distance. 0 = off.
        */
       occlude: z.number().min(0).default(0),
+      /**
+       * A high-resolution crop of the visible directions (same elevations), used inside `uRange`
+       * (fractions of the full panorama width); the band covers everything else.
+       */
+      detail: z.object({ src: z.string(), uRange: z.tuple([z.number(), z.number()]) }).optional(),
     })
     .optional(),
   /**
@@ -94,17 +99,22 @@ export const skyComponent: ComponentFactory<SkyParams> = {
   description: 'Gradient sky dome with stars, nebula and an optional sun or moon disc.',
   schema,
   async create(ctx, p) {
-    let photo: Texture | null = null;
-    if (p.panorama) {
-      const url = ctx.assets.url(p.panorama.src);
-      if (url) {
-        photo = await new TextureLoader().loadAsync(url);
-        photo.colorSpace = SRGBColorSpace;
-        photo.wrapS = RepeatWrapping;
-        photo.minFilter = LinearMipmapLinearFilter;
-        photo.anisotropy = 8;
-      } else console.warn(`[sky] panorama ${p.panorama.src} not found`);
-    }
+    const load = async (src: string, wrap: boolean): Promise<Texture | null> => {
+      const url = ctx.assets.url(src);
+      if (!url) {
+        console.warn(`[sky] panorama ${src} not found`);
+        return null;
+      }
+      const tex = await new TextureLoader().loadAsync(url);
+      tex.colorSpace = SRGBColorSpace;
+      if (wrap) tex.wrapS = RepeatWrapping;
+      tex.minFilter = LinearMipmapLinearFilter;
+      tex.anisotropy = 8;
+      return tex;
+    };
+    const photo = p.panorama ? await load(p.panorama.src, true) : null;
+    // The detail crop costs about 170 MB of video memory; low detail settings skip it.
+    const detailTex = p.panorama?.detail && ctx.quality.detail !== 'low' ? await load(p.panorama.detail.src, false) : null;
     const u = {
       top: colorUniform(p.top),
       horizon: colorUniform(p.horizon),
@@ -143,7 +153,14 @@ export const skyComponent: ComponentFactory<SkyParams> = {
       const turn = atan(dir.x, dir.z.negate()).div(Math.PI * 2).add(pano.offset);
       const v = elev.sub(pano.elevation[0]).div(pano.elevation[1] - pano.elevation[0]);
       const darken = p.dusk ? mix(float(1), float(p.dusk.exposure), u.dusk) : float(1);
-      const sample = texture(photo, vec2(turn, v)).rgb.mul(pano.exposure).mul(darken);
+      let base: Node<'vec3'> = texture(photo, vec2(turn, v)).rgb;
+      if (detailTex && pano.detail) {
+        const [u0, u1] = pano.detail.uRange;
+        const du = fract(turn).sub(u0).div(u1 - u0);
+        const inDetail = smoothstep(0, 0.012, du).mul(smoothstep(1, 0.988, du));
+        base = mix(base, texture(detailTex, vec2(du.clamp(0, 1), v)).rgb, inDetail);
+      }
+      const sample = base.mul(pano.exposure).mul(darken);
       const inBand = smoothstep(pano.elevation[1], pano.elevation[1] - pano.fade, elev).mul(step(pano.elevation[0], elev));
       color = mix(color, sample, inBand);
       // The photo's sky is bluer than its snow and rock; stars appear only there.
@@ -232,6 +249,7 @@ export const skyComponent: ComponentFactory<SkyParams> = {
         mesh.geometry.dispose();
         material.dispose();
         photo?.dispose();
+        detailTex?.dispose();
       },
     };
   },
