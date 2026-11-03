@@ -1,7 +1,7 @@
 import type { DataTexture, InstancedBufferAttribute, MeshStandardNodeMaterial, Texture } from 'three/webgpu';
-import { abs, dot, exp, float, instancedBufferAttribute, mix, mx_noise_float, normalGeometry, normalize, positionGeometry, sin, smoothstep, step, vec3 } from 'three/tsl';
+import { abs, cameraPosition, cross, dot, exp, float, instancedBufferAttribute, length, mix, mx_noise_float, normalGeometry, normalize, positionGeometry, positionWorld, sin, smoothstep, step, texture, vec2, vec3 } from 'three/tsl';
 import type { ShadeOptions } from './shared';
-import { hash, lin, shadeMaterial, triplanar, type F, type Haze, type V3, type World } from './shared';
+import { hash, lin, shadeMaterial, triplanar, type F, type Haze, type V3, type V4, type World } from './shared';
 
 /**
  * Shading for the rigged machines: one material for every part, chosen per vertex by its Blender
@@ -44,6 +44,108 @@ export const SENTINEL_LOOK: MachineLook = {
   lensGlow: 2.2,
   bloom: 0.25,
 };
+
+/** The textured humanoid robot (rig.ts mergeSkinned / blendSkinNode). */
+export interface RobotLook {
+  /** Linear multiplier on the photographed metal: its specular colour where the scan is bright. */
+  metal: string;
+  /** Grime in the scan's dark crevices. */
+  grime: string;
+  lens: string;
+  dust: string;
+  dustHeight: number;
+  lensGlow: number;
+  bloom: number;
+  /** Normal-map strength. */
+  relief: number;
+}
+
+export const ROBOT_LOOK: RobotLook = {
+  metal: '#b8bcc4',
+  grime: '#1a1816',
+  lens: '#ff1a0a',
+  dust: '#4a3a30',
+  dustHeight: 0.45,
+  lensGlow: 2.6,
+  bloom: 0.25,
+  relief: 1,
+};
+
+/**
+ * The humanoid robot's own textures (UV-mapped albedo and normal maps for the body and the head,
+ * chosen per vertex by material id), shaded as worn machined steel: bright metal where the scan is
+ * light, grimy and rougher in its dark crevices, dust on the feet, a little per-unit wear, and the
+ * eyes lit by the optical-sensor controller through the per-instance `optic` attribute:
+ * (intensity, focus, slit scan -1..1, seed).
+ */
+export function robotMaterial(
+  w: World,
+  skin: { position: V3; normal: V3; tangent: V4; rest: V3; uvm: V3 },
+  optic: InstancedBufferAttribute,
+  look: RobotLook,
+  tex: { body: [Texture | null, Texture | null]; head: [Texture | null, Texture | null] },
+  env: Texture | null,
+  backdrop: DataTexture | null,
+  haze: Haze,
+  presence: F,
+): MeshStandardNodeMaterial {
+  const io = instancedBufferAttribute<'vec4'>(optic, 'vec4');
+  const seed = io.w as unknown as F;
+  const mat = skin.uvm.z;
+  const isHead = step(0.5, mat).mul(float(1).sub(step(1.5, mat)));
+  const isEye = step(1.5, mat);
+  // glTF UVs (origin top-left) on stage textures loaded with flipY.
+  const uv = vec2(skin.uvm.x, float(1).sub(skin.uvm.y));
+  const sampleRgb = (t: Texture | null, fallback: number) => (t ? texture(t, uv).rgb : vec3(fallback, fallback, fallback));
+  const scan = mix(sampleRgb(tex.body[0], 0.3), sampleRgb(tex.head[0], 0.3), isHead) as V3;
+  // Specular anti-aliasing: with distance the machine is a few hundred pixels or less, and fine
+  // relief on glossy metal sparkles as it moves; fade the relief and raise the roughness floor.
+  const far = smoothstep(12, 70, length(positionWorld.sub(cameraPosition)));
+  const nTex = mix(sampleRgb(tex.body[1], 0.5).xy, sampleRgb(tex.head[1], 0.5).xy, isHead).mul(2).sub(1).mul(far.mul(-0.75).add(1).mul(look.relief));
+  const lum = dot(scan, vec3(0.2126, 0.7152, 0.0722));
+  const bright = smoothstep(0.03, 0.3, lum);
+  // Per unit: some machines are sooted and duller (seed hash), all a little different.
+  const wear = hash(seed, 3.7).mul(0.45);
+  let albedo = mix(lin(look.grime), scan.mul(lin(look.metal)).mul(1.35), bright).mul(float(1).sub(wear.mul(0.5))) as V3;
+  let rough = mix(float(0.64), float(0.24), bright).add(wear.mul(0.25)).max(far.mul(0.46)) as F;
+  let metal = mix(float(0.45), float(0.96), bright).sub(wear.mul(0.2)) as F;
+  // Dust and soot on the feet and shins (rest height), broken up by noise.
+  const rest = skin.rest;
+  const dustK = smoothstep(look.dustHeight, 0.0, rest.y).mul(0.75).mul(mx_noise_float(rest.mul(9)).mul(0.35).add(0.65));
+  albedo = mix(albedo, albedo.mul(0.5).add(lin(look.dust).mul(0.35)), dustK) as V3;
+  rough = rough.add(dustK.mul(0.3)) as F;
+  metal = metal.mul(float(1).sub(dustK.mul(0.6))) as F;
+  // Eyes: dark red glass, lit by the sensor.
+  albedo = mix(albedo, lin('#140202'), isEye) as V3;
+  rough = mix(rough, float(0.06), isEye).clamp(0.04, 1) as F;
+  metal = mix(metal, float(0), isEye).clamp(0, 1) as F;
+  // Tangent-space normal map (glTF convention: bitangent = cross(N, T) * w).
+  const N = skin.normal;
+  const T0 = skin.tangent.xyz;
+  const T = normalize(T0.sub(N.mul(dot(N, T0))).add(vec3(1e-6, 0, 0)));
+  const B = cross(N, T).mul(skin.tangent.w);
+  const nz = float(1).sub(dot(nTex, nTex)).max(0.04).sqrt();
+  const normal = normalize(mix(T.mul(nTex.x).add(B.mul(nTex.y)).add(N.mul(nz)), N, isEye)) as V3;
+  const intensity = io.x;
+  const focus = io.y;
+  const glow = lin(look.lens).mul(intensity).mul(focus.mul(0.5).add(0.75)).mul(look.lensGlow).mul(isEye) as V3;
+  return shadeMaterial(w, {
+    albedo,
+    roughness: rough,
+    metalness: metal,
+    normal,
+    position: skin.position,
+    glow,
+    bloom: look.bloom,
+    presence,
+    haze,
+    backdrop,
+    env,
+    envIntensity: 1.8,
+    rim: 0.8,
+    local: 1,
+  });
+}
 
 export function machineMaterial(
   w: World,

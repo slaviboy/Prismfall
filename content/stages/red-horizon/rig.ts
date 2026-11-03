@@ -3,13 +3,14 @@ import { Fn, attribute, dot, int, ivec2, normalGeometry, normalize, positionGeom
 import type { V3, V4 } from './shared';
 
 /**
- * Rigid-segment rigs for the Red Horizon machines.
+ * Rigs for the Red Horizon machines.
  *
  * The Blender kit binds every vertex to one bone (`_BONE`) and writes `<name>.rig.json`: bones with
- * their parent and pivot, and hydraulic pistons (an anchor on each of two bones). Here the CPU
- * solves each instance's pose (gait, IK, sensors) into bone matrices, aims every piston's barrel
- * and rod at each other, and uploads all matrices as one float texture; the vertex shader skins
- * the instanced mesh from it. One draw call per machine type and level of detail.
+ * their parent and pivot, and hydraulic pistons (an anchor on each of two bones). The humanoid robot
+ * (scripts/build-red-horizon-robot.ts) instead blends up to four bones per vertex, with the same
+ * rig file. Here the CPU solves each instance's pose (gait, IK, sensors) into bone matrices, aims
+ * every piston's barrel and rod at each other, and uploads all matrices as one float texture; the
+ * vertex shader skins the instanced mesh from it. One draw call per machine type and level of detail.
  */
 
 export interface RigBone {
@@ -31,6 +32,10 @@ export interface RigFile {
   name: string;
   bones: RigBone[];
   pistons: RigPiston[];
+  /** Blended-skin robots: standing height (m), eye lenses (rest position, radius) and finger curl axes by side. */
+  height?: number;
+  eyes?: { side: string; at: [number, number, number]; radius: number }[];
+  curl?: Record<string, [number, number, number]>;
 }
 
 export function parseRig(json: unknown): RigFile | null {
@@ -113,6 +118,73 @@ export function mergeRigged(root: Object3D, rig: RigFile): BufferGeometry {
   return out;
 }
 
+/** Material ids of a blended-skin machine's primitives (scripts/build-red-horizon-robot.ts MATERIALS). */
+export const ROBOT_MATS: Record<string, number> = { robotBody: 0, robotHead: 1, robotEye: 2 };
+
+/**
+ * Merges a blended-skin machine GLB (scripts/build-red-horizon-robot.ts: up to four rig bones per
+ * vertex in JOINTS_0 / WEIGHTS_0, no glTF skin) into one geometry: position, normal, tangent,
+ * `robotUV` = (u, v, material id), `robotJ` (four bone slots) and `robotW` (their weights). Six
+ * vertex buffers, so an instanced material can add one more and stay within eight.
+ */
+export function mergeSkinned(root: Object3D): BufferGeometry {
+  root.updateMatrixWorld(true);
+  const pos: number[] = [];
+  const nrm: number[] = [];
+  const tan: number[] = [];
+  const uvm: number[] = [];
+  const jnt: number[] = [];
+  const wgt: number[] = [];
+  const idx: number[] = [];
+  const v = new Vector3();
+  const nm = new Matrix4();
+  const rot = new Matrix4();
+  root.traverse((o) => {
+    const mesh = o as Mesh;
+    if (!mesh.isMesh) return;
+    const g = mesh.geometry;
+    const p = g.getAttribute('position');
+    const n = g.getAttribute('normal');
+    const t = g.getAttribute('tangent');
+    const uv = g.getAttribute('uv');
+    const j = g.getAttribute('skinIndex');
+    const w = g.getAttribute('skinWeight');
+    if (!p || !n || !t || !uv || !j || !w) throw new Error('[red-horizon] skinned machine mesh lacks normals, tangents, UVs or weights');
+    const material = Array.isArray(mesh.material) ? mesh.material[0] : mesh.material;
+    const matId = ROBOT_MATS[material?.name ?? ''] ?? 0;
+    const base = pos.length / 3;
+    nm.copy(mesh.matrixWorld).invert().transpose();
+    rot.extractRotation(mesh.matrixWorld);
+    for (let i = 0; i < p.count; i++) {
+      v.fromBufferAttribute(p, i).applyMatrix4(mesh.matrixWorld);
+      pos.push(v.x, v.y, v.z);
+      v.fromBufferAttribute(n, i).applyMatrix4(nm).normalize();
+      nrm.push(v.x, v.y, v.z);
+      v.set(t.getX(i), t.getY(i), t.getZ(i)).applyMatrix4(rot).normalize();
+      tan.push(v.x, v.y, v.z, t.getW(i) < 0 ? -1 : 1);
+      uvm.push(uv.getX(i), uv.getY(i), matId);
+      // Weights arrive quantised: renormalise so the blend never shrinks the part.
+      const ws = [w.getX(i), w.getY(i), w.getZ(i), w.getW(i)];
+      const sum = ws[0]! + ws[1]! + ws[2]! + ws[3]! || 1;
+      jnt.push(j.getX(i), j.getY(i), j.getZ(i), j.getW(i));
+      wgt.push(ws[0]! / sum, ws[1]! / sum, ws[2]! / sum, ws[3]! / sum);
+    }
+    const index = g.getIndex();
+    if (index) for (let i = 0; i < index.count; i++) idx.push(base + index.getX(i));
+    else for (let i = 0; i < p.count; i++) idx.push(base + i);
+  });
+  const out = new BufferGeometry();
+  out.setAttribute('position', new BufferAttribute(new Float32Array(pos), 3));
+  out.setAttribute('normal', new BufferAttribute(new Float32Array(nrm), 3));
+  out.setAttribute('tangent', new BufferAttribute(new Float32Array(tan), 4));
+  out.setAttribute('robotUV', new BufferAttribute(new Float32Array(uvm), 3));
+  out.setAttribute('robotJ', new BufferAttribute(new Float32Array(jnt), 4));
+  out.setAttribute('robotW', new BufferAttribute(new Float32Array(wgt), 4));
+  out.setIndex(idx);
+  out.computeBoundingSphere();
+  return out;
+}
+
 /** Instances × bone slots of 3×4 matrices in a float texture (3 texels per bone). */
 export class BoneTexture {
   readonly texture: DataTexture;
@@ -189,6 +261,52 @@ export function skinNode(bones: BoneTexture, prefix: string): { position: V3; no
     return wp;
   })() as unknown as V3;
   return { position, normal: normalize(vNormal) as unknown as V3, rest: vRest as unknown as V3, tag };
+}
+
+/**
+ * Linear-blend skinning from the same bone texture (mergeSkinned geometry): four bones per vertex.
+ * Returns the skinned world position, world normal and tangent (xyz, handedness) as varyings, the
+ * rest position, and the `robotUV` attribute (u, v, material id).
+ */
+export function blendSkinNode(bones: BoneTexture, prefix: string): { position: V3; normal: V3; tangent: V4; rest: V3; uvm: V3 } {
+  const j = attribute('robotJ', 'vec4') as unknown as V4;
+  const wt = attribute('robotW', 'vec4') as unknown as V4;
+  const tangent = attribute('tangent', 'vec4') as unknown as V4;
+  const vNormal = varyingProperty('vec3', `v${prefix}Normal`);
+  const vTangent = varyingProperty('vec4', `v${prefix}Tangent`);
+  const vRest = varyingProperty('vec3', `v${prefix}Rest`);
+  const position = Fn(() => {
+    const row = int(instanceIndex);
+    const rows = (slot: V4['x']): V4[] => {
+      const x = int(slot.add(0.5)).mul(3);
+      return [0, 1, 2].map((k) => textureLoad(bones.texture, ivec2(x.add(k), row)) as unknown as V4);
+    };
+    const a = rows(j.x);
+    const b = rows(j.y);
+    const c = rows(j.z);
+    const d = rows(j.w);
+    const blend = (k: number) => a[k]!.mul(wt.x).add(b[k]!.mul(wt.y)).add(c[k]!.mul(wt.z)).add(d[k]!.mul(wt.w)) as unknown as V4;
+    const r0 = blend(0);
+    const r1 = blend(1);
+    const r2 = blend(2);
+    const p = vec4(positionGeometry, 1);
+    const wp = vec3(dot(r0, p), dot(r1, p), dot(r2, p));
+    const n = normalGeometry;
+    const wn = normalize(vec3(dot(r0.xyz, n), dot(r1.xyz, n), dot(r2.xyz, n)).add(vec3(0, 1e-5, 0)));
+    const t = tangent.xyz;
+    const wtan = vec3(dot(r0.xyz, t), dot(r1.xyz, t), dot(r2.xyz, t)).add(vec3(1e-5, 0, 0));
+    vNormal.assign(wn);
+    vTangent.assign(vec4(wtan, tangent.w));
+    vRest.assign(positionGeometry);
+    return wp;
+  })() as unknown as V3;
+  return {
+    position,
+    normal: normalize(vNormal) as unknown as V3,
+    tangent: vTangent as unknown as V4,
+    rest: vRest as unknown as V3,
+    uvm: attribute('robotUV', 'vec3') as unknown as V3,
+  };
 }
 
 /** Per-bone local motion: rotation (Euler XYZ, radians) about the bone's pivot and an offset. */

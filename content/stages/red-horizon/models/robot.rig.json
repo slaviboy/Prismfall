@@ -1,0 +1,273 @@
+{
+  "name": "robot",
+  "generator": "scripts/build-red-horizon-robot.ts",
+  "source": "\"Terminator T-800 [SFM]\" by rendysix (https://sketchfab.com/3d-models/terminator-t-800-sfm-1fe1a7b91acf4d71a95231a4c1c626d7), CC Attribution",
+  "forward": "-z",
+  "note": "R is the machine's own right (+X when it faces -Z). Bones rotate about their pivots in model axes; weights blend up to four bones.",
+  "height": 2.2,
+  "bones": [
+    {
+      "name": "pelvis",
+      "id": 0,
+      "parent": -1,
+      "pivot": [
+        0,
+        1.2546,
+        0
+      ]
+    },
+    {
+      "name": "spine",
+      "id": 1,
+      "parent": 0,
+      "pivot": [
+        0,
+        1.3079,
+        -0.0046
+      ]
+    },
+    {
+      "name": "torso",
+      "id": 2,
+      "parent": 1,
+      "pivot": [
+        0,
+        1.4816,
+        -0.0045
+      ]
+    },
+    {
+      "name": "neck",
+      "id": 3,
+      "parent": 2,
+      "pivot": [
+        0,
+        1.9386,
+        0.0076
+      ]
+    },
+    {
+      "name": "head",
+      "id": 4,
+      "parent": 3,
+      "pivot": [
+        0,
+        1.9871,
+        -0.0117
+      ]
+    },
+    {
+      "name": "upperR",
+      "id": 5,
+      "parent": 2,
+      "pivot": [
+        0.2513,
+        1.7367,
+        0.0223
+      ]
+    },
+    {
+      "name": "foreR",
+      "id": 6,
+      "parent": 5,
+      "pivot": [
+        0.2784,
+        1.4658,
+        0.0277
+      ]
+    },
+    {
+      "name": "handR",
+      "id": 7,
+      "parent": 6,
+      "pivot": [
+        0.2945,
+        1.1429,
+        -0.011
+      ]
+    },
+    {
+      "name": "fingersR",
+      "id": 8,
+      "parent": 7,
+      "pivot": [
+        0.3119,
+        1.0248,
+        -0.023
+      ]
+    },
+    {
+      "name": "tipsR",
+      "id": 9,
+      "parent": 8,
+      "pivot": [
+        0.3095,
+        0.967,
+        -0.0314
+      ]
+    },
+    {
+      "name": "upperL",
+      "id": 10,
+      "parent": 2,
+      "pivot": [
+        -0.2513,
+        1.7367,
+        0.0223
+      ]
+    },
+    {
+      "name": "foreL",
+      "id": 11,
+      "parent": 10,
+      "pivot": [
+        -0.2784,
+        1.4658,
+        0.0277
+      ]
+    },
+    {
+      "name": "handL",
+      "id": 12,
+      "parent": 11,
+      "pivot": [
+        -0.2945,
+        1.1429,
+        -0.011
+      ]
+    },
+    {
+      "name": "fingersL",
+      "id": 13,
+      "parent": 12,
+      "pivot": [
+        -0.3119,
+        1.0248,
+        -0.023
+      ]
+    },
+    {
+      "name": "tipsL",
+      "id": 14,
+      "parent": 13,
+      "pivot": [
+        -0.3095,
+        0.967,
+        -0.0314
+      ]
+    },
+    {
+      "name": "thighR",
+      "id": 15,
+      "parent": 0,
+      "pivot": [
+        0.1078,
+        1.1654,
+        0.0185
+      ]
+    },
+    {
+      "name": "shinR",
+      "id": 16,
+      "parent": 15,
+      "pivot": [
+        0.1619,
+        0.6503,
+        0.0185
+      ]
+    },
+    {
+      "name": "footR",
+      "id": 17,
+      "parent": 16,
+      "pivot": [
+        0.2138,
+        0.1173,
+        0.0652
+      ]
+    },
+    {
+      "name": "toeR",
+      "id": 18,
+      "parent": 17,
+      "pivot": [
+        0.2651,
+        0.0205,
+        -0.1192
+      ]
+    },
+    {
+      "name": "thighL",
+      "id": 19,
+      "parent": 0,
+      "pivot": [
+        -0.1078,
+        1.1654,
+        0.0185
+      ]
+    },
+    {
+      "name": "shinL",
+      "id": 20,
+      "parent": 19,
+      "pivot": [
+        -0.1619,
+        0.6503,
+        0.0185
+      ]
+    },
+    {
+      "name": "footL",
+      "id": 21,
+      "parent": 20,
+      "pivot": [
+        -0.2138,
+        0.1173,
+        0.0652
+      ]
+    },
+    {
+      "name": "toeL",
+      "id": 22,
+      "parent": 21,
+      "pivot": [
+        -0.2651,
+        0.0205,
+        -0.1192
+      ]
+    }
+  ],
+  "pistons": [],
+  "eyes": [
+    {
+      "side": "R",
+      "at": [
+        0.0382,
+        2.0729,
+        -0.1249
+      ],
+      "radius": 0.0142
+    },
+    {
+      "side": "L",
+      "at": [
+        -0.0382,
+        2.0729,
+        -0.1249
+      ],
+      "radius": 0.0142
+    }
+  ],
+  "curl": {
+    "R": [
+      0.708,
+      0.0048,
+      -0.7061
+    ],
+    "L": [
+      0.708,
+      -0.0048,
+      0.7061
+    ]
+  }
+}

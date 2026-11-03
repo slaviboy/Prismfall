@@ -19,7 +19,7 @@
       "license": "Original work for Prismfall",
       "author": "Prismfall",
       "source": "authored",
-      "purpose": "rigid-segment rigs: merged machine geometry, bone-matrix texture, GPU skinning, CPU pose solver with pistons, two-bone IK"
+      "purpose": "machine rigs: merged rigid-segment and blended-skin geometry, bone-matrix texture, GPU skinning (rigid and four-bone blend), CPU pose solver with pistons, two-bone IK"
     },
     {
       "path": "sensor.ts",
@@ -47,14 +47,21 @@
       "license": "Original work for Prismfall",
       "author": "Prismfall",
       "source": "authored",
-      "purpose": "machine shading by material id"
+      "purpose": "machine shading by material id; the textured robot material"
     },
     {
       "path": "sentinels.ts",
       "license": "Original work for Prismfall",
       "author": "Prismfall",
       "source": "authored",
-      "purpose": "humanoid machines: patrols, sentries, columns, the factory line; gait, IK, hydraulics, sensors"
+      "purpose": "humanoid machines: patrols, sentries, columns, the factory line; gait, leg IK, spine, fingers, sensors"
+    },
+    {
+      "path": "shadows.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "soft ground shadows for the robots: body and foot contact shadows, and shadows cast away from the nearest fire or explosion"
     },
     {
       "path": "drones.ts",
@@ -127,18 +134,18 @@
       "purpose": "Ash Protocol composition"
     },
     {
-      "path": "models/sentinel.glb",
-      "license": "Original work for Prismfall",
-      "author": "Prismfall",
-      "source": "assets/blender/scripts/red_horizon_kit.py",
-      "purpose": "humanoid machine"
+      "path": "models/robot.glb",
+      "license": "CC BY 4.0 (attribution: rendysix)",
+      "author": "rendysix (Sketchfab)",
+      "source": "https://sketchfab.com/3d-models/terminator-t-800-sfm-1fe1a7b91acf4d71a95231a4c1c626d7",
+      "purpose": "humanoid machine (placeholder test robot, a fan model of the Terminator T-800 endoskeleton): relaxed rest pose, folded onto the machine rig with four blended weights, simplified to 27k triangles (scripts/build-red-horizon-robot.ts)"
     },
     {
-      "path": "models/sentinel_lod.glb",
-      "license": "Original work for Prismfall",
-      "author": "Prismfall",
-      "source": "assets/blender/scripts/red_horizon_kit.py",
-      "purpose": "humanoid machine, light model"
+      "path": "models/robot_lod.glb",
+      "license": "CC BY 4.0 (attribution: rendysix)",
+      "author": "rendysix (Sketchfab)",
+      "source": "https://sketchfab.com/3d-models/terminator-t-800-sfm-1fe1a7b91acf4d71a95231a4c1c626d7",
+      "purpose": "humanoid machine, light model (6k triangles)"
     },
     {
       "path": "models/drone.glb",
@@ -169,11 +176,11 @@
       "purpose": "assembly factory kit"
     },
     {
-      "path": "models/sentinel.rig.json",
-      "license": "Original work for Prismfall",
-      "author": "Prismfall",
-      "source": "assets/blender/scripts/red_horizon_kit.py",
-      "purpose": "rig sidecar"
+      "path": "models/robot.rig.json",
+      "license": "CC BY 4.0 (attribution: rendysix)",
+      "author": "rendysix (Sketchfab); rig fold by Prismfall",
+      "source": "scripts/build-red-horizon-robot.ts",
+      "purpose": "rig sidecar: bones, pivots, eye lenses, finger curl axes"
     },
     {
       "path": "models/drone.rig.json",
@@ -265,6 +272,34 @@
       "author": "Rob Tuytel (Poly Haven)",
       "source": "https://polyhaven.com/a/blue_metal_plate",
       "purpose": "normal and roughness, packed"
+    },
+    {
+      "path": "textures/robot_body_albedo.webp",
+      "license": "CC BY 4.0 (attribution: rendysix)",
+      "author": "rendysix (Sketchfab)",
+      "source": "https://sketchfab.com/3d-models/terminator-t-800-sfm-1fe1a7b91acf4d71a95231a4c1c626d7",
+      "purpose": "robot body base colour, WebP 1024"
+    },
+    {
+      "path": "textures/robot_body_normal.webp",
+      "license": "CC BY 4.0 (attribution: rendysix)",
+      "author": "rendysix (Sketchfab)",
+      "source": "https://sketchfab.com/3d-models/terminator-t-800-sfm-1fe1a7b91acf4d71a95231a4c1c626d7",
+      "purpose": "robot body normal map, WebP 1024"
+    },
+    {
+      "path": "textures/robot_head_albedo.webp",
+      "license": "CC BY 4.0 (attribution: rendysix)",
+      "author": "rendysix (Sketchfab)",
+      "source": "https://sketchfab.com/3d-models/terminator-t-800-sfm-1fe1a7b91acf4d71a95231a4c1c626d7",
+      "purpose": "robot head base colour, WebP 1024 (from 2048)"
+    },
+    {
+      "path": "textures/robot_head_normal.webp",
+      "license": "CC BY 4.0 (attribution: rendysix)",
+      "author": "rendysix (Sketchfab)",
+      "source": "https://sketchfab.com/3d-models/terminator-t-800-sfm-1fe1a7b91acf4d71a95231a4c1c626d7",
+      "purpose": "robot head normal map, WebP 512"
     },
     {
       "path": "textures/asphalt_albedo.webp",

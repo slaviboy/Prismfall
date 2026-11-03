@@ -1,0 +1,25 @@
+{
+  "uid": "1fe1a7b91acf4d71a95231a4c1c626d7",
+  "name": "Terminator T-800 [SFM]",
+  "page": "https://sketchfab.com/3d-models/terminator-t-800-sfm-1fe1a7b91acf4d71a95231a4c1c626d7",
+  "author": {
+    "name": "rendysix",
+    "username": "rendysix",
+    "profile": "https://sketchfab.com/rendysix"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Terminator T-800 [SFM]\" by rendysix (https://sketchfab.com/3d-models/terminator-t-800-sfm-1fe1a7b91acf4d71a95231a4c1c626d7), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 130884,
+  "vertices": 70559,
+  "animations": 0,
+  "files": [
+    {
+      "path": "robot-sfm.gltf.zip",
+      "md5": "855e71f592073afe4f36d46c08f7dc21",
+      "size": 12910965,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

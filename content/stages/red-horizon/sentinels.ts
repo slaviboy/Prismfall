@@ -1,11 +1,11 @@
-import { DynamicDrawUsage, Group, InstancedBufferAttribute, Matrix4, Mesh, Quaternion, Vector3 } from 'three/webgpu';
-import { instancedBufferAttribute } from 'three/tsl';
+import { DynamicDrawUsage, Euler, Group, InstancedBufferAttribute, Matrix4, Mesh, Quaternion, Vector3 } from 'three/webgpu';
 import { floatUniform, linear, seeded, z, zColor, zVec3, type ComponentFactory } from '@prismfall/sdk';
-import { SENTINEL_LOOK, machineMaterial } from './metal';
+import { ROBOT_LOOK, robotMaterial } from './metal';
 import { BeamSet, GlintSet } from './optics';
-import { BoneTexture, RigSolver, mergeRigged, parseRig, skinNode, slotCount, twoBone, wrapAngle } from './rig';
+import { BoneTexture, RigSolver, blendSkinNode, mergeSkinned, parseRig, slotCount, twoBone, wrapAngle, type BonePose } from './rig';
 import { SensorController } from './sensor';
-import { GROUND_Y, TAU, VIEWER, backdropTexture, envTexture, release, stageTexture, world, zHaze, type F, type World } from './shared';
+import { GroundShadows } from './shadows';
+import { GROUND_Y, TAU, VIEWER, backdropTexture, envTexture, release, stageTexture, world, type F, type World, zHaze } from './shared';
 
 const zXZ = z.tuple([z.number(), z.number()]);
 
@@ -65,15 +65,17 @@ const schema = z.object({
   lens: zColor.default('#ff1c0c'),
   beamColor: zColor.default('#ff2a12'),
   footsteps: z.boolean().default(true),
+  /**
+   * Ground shadows: `contact` for the pool under the body and the feet, `cast` for the shadow thrown
+   * away from the brightest nearby fire or explosion (the yard is lit by the sky and the fires, not
+   * the sun, so that is where shadows show).
+   */
+  shadows: z.object({ contact: z.number().min(0).max(1).default(0.6), cast: z.number().min(0).max(1).default(0.85) }).prefault({}),
   haze: zHaze,
   seed: z.number().default(3),
 });
 
 type Params = z.infer<typeof schema>;
-
-/** Lens centres per head variant (game coordinates, rest pose). */
-const LENS = [new Vector3(0, 2.3955, -0.235), new Vector3(0, 2.404, -0.195), new Vector3(0.0427, 2.453, -0.196)];
-const LENS_R = [0.018, 0.045, 0.038];
 
 interface Driver {
   /** Moves the agent's root (x, z, heading) and sets its power/slump; returns false to hide it. */
@@ -95,7 +97,6 @@ interface Agent {
   turn: number;
   phase: number;
   cycle: number;
-  variant: number;
   seed: number;
   power: number;
   slump: number;
@@ -104,7 +105,7 @@ interface Agent {
   sensor: SensorController;
   solver: RigSolver;
   driver: Driver;
-  // Hydraulic settle spring (pelvis height and torso pitch) kicked at heel strikes.
+  // Settle spring (pelvis height and torso pitch) kicked at heel strikes.
   sy: number;
   svy: number;
   lastPhase: number;
@@ -263,36 +264,48 @@ class Patrol {
   }
 }
 
+/** Sets a bone's Euler pose to a rotation of `angle` about a rest-space axis. */
+const qTmp = new Quaternion();
+const eTmp = new Euler();
+const vAxis = new Vector3();
+function axisPose(pose: BonePose, axis: [number, number, number], angle: number): void {
+  eTmp.setFromQuaternion(qTmp.setFromAxisAngle(vAxis.set(...axis), angle), 'XYZ');
+  pose.rx = eTmp.x;
+  pose.ry = eTmp.y;
+  pose.rz = eTmp.z;
+}
+
 /**
- * Humanoid machines: original rigid-segment sentinels (Blender kit) walking patrol routes, standing
- * guard, marching in distant columns and coming off the factory line.
+ * Humanoid machines: a rigged endoskeleton robot (scripts/build-red-horizon-robot.ts, from a
+ * Sketchfab model; see ASSET_LICENSES.md) walking patrol routes, standing guard, marching in
+ * distant columns and coming off the factory line.
  *
  * Every machine is posed on the CPU each frame: a heavy gait whose stride follows the measured
  * ground speed, so stance feet stay planted; two-bone leg IK with level feet, heel-off and toe
- * hinge; a pelvis that dips at each heel strike and settles on a damped hydraulic spring; arm swing
- * against the legs; torso twist; and the optical-sensor controller turning the head, racking the
- * lens and pulling the machine round towards explosions. Pistons (knees, ankles, elbows, neck)
- * are re-aimed every frame so their rods slide in the barrels. One skinned, instanced draw call per
- * level of detail; far columns use the light model and update at a third of the rate.
+ * hinge; a pelvis that dips at each heel strike and settles on a damped spring; arm swing against
+ * the legs; a twisting, bending spine; servoing fingers; and the optical-sensor controller turning
+ * the head and lighting the eyes, pulling the machine round towards explosions. The pose goes to a
+ * bone-matrix texture that the vertex shader blends (four bones per vertex). One instanced draw call
+ * per level of detail; far machines use the light model and update at a third of the rate.
  */
 export const sentinelsComponent: ComponentFactory<Params> = {
   type: 'redHorizonSentinels',
   version: 1,
-  description: 'Humanoid machines patrolling, standing guard, marching and leaving the factory line, with planted-foot gaits, hydraulics and scanning optical sensors.',
+  description: 'Humanoid machines patrolling, standing guard, marching and leaving the factory line, with planted-foot gaits and scanning optical sensors.',
   schema,
   async create(ctx, p) {
     const w: World = world(ctx);
-    const rig = parseRig(ctx.assets.json('models/sentinel.rig.json'));
-    if (!rig) throw new Error('sentinel rig missing');
-    const [gltf, gltfLod, env, backdrop, aAlb, aNr, sAlb, sNr] = await Promise.all([
-      ctx.assets.loadGLTF('models/sentinel.glb'),
-      ctx.assets.loadGLTF('models/sentinel_lod.glb'),
+    const rig = parseRig(ctx.assets.json('models/robot.rig.json'));
+    if (!rig?.eyes?.length || !rig.curl) throw new Error('robot rig missing or incomplete');
+    const [gltf, gltfLod, env, backdrop, bAlb, bNrm, hAlb, hNrm] = await Promise.all([
+      ctx.assets.loadGLTF('models/robot.glb'),
+      ctx.assets.loadGLTF('models/robot_lod.glb'),
       envTexture(w),
       backdropTexture(w),
-      stageTexture(w, 'textures/armour_albedo.webp'),
-      stageTexture(w, 'textures/armour_nr.webp', false),
-      stageTexture(w, 'textures/steel_albedo.webp'),
-      stageTexture(w, 'textures/steel_nr.webp', false),
+      stageTexture(w, 'textures/robot_body_albedo.webp'),
+      stageTexture(w, 'textures/robot_body_normal.webp', false),
+      stageTexture(w, 'textures/robot_head_albedo.webp'),
+      stageTexture(w, 'textures/robot_head_normal.webp', false),
     ]);
     const detail = ctx.quality.detail;
     const k = detail === 'low' ? 0.45 : detail === 'medium' ? 0.7 : 1;
@@ -301,42 +314,51 @@ export const sentinelsComponent: ComponentFactory<Params> = {
     const agents: Agent[] = [];
     const counts = [0, 0];
     const bones = rig.bones;
-    const B = (name: string) => bones.find((b) => b.name === name)!.id;
+    const B = (name: string) => {
+      const b = bones.find((x) => x.name === name);
+      if (!b) throw new Error(`robot rig has no bone ${name}`);
+      return b.id;
+    };
+    // Side 0 is the machine's right (+X when it faces -Z), side 1 its left.
+    const SIDE = ['R', 'L'] as const;
     const id = {
       pelvis: B('pelvis'),
+      spine: B('spine'),
       torso: B('torso'),
-      head: [B('headA'), B('headB'), B('headC')],
-      sensor: [B('sensorA'), B('sensorB'), B('sensorC')],
-      thigh: [B('thighL'), B('thighR')],
-      shin: [B('shinL'), B('shinR')],
-      foot: [B('footL'), B('footR')],
-      toe: [B('toeL'), B('toeR')],
-      upper: [B('upperL'), B('upperR')],
-      fore: [B('foreL'), B('foreR')],
-      hand: [B('handL'), B('handR')],
-      fingers: [B('fingersL'), B('fingersR')],
+      neck: B('neck'),
+      head: B('head'),
+      thigh: SIDE.map((s) => B(`thigh${s}`)),
+      shin: SIDE.map((s) => B(`shin${s}`)),
+      foot: SIDE.map((s) => B(`foot${s}`)),
+      toe: SIDE.map((s) => B(`toe${s}`)),
+      upper: SIDE.map((s) => B(`upper${s}`)),
+      fore: SIDE.map((s) => B(`fore${s}`)),
+      hand: SIDE.map((s) => B(`hand${s}`)),
+      fingers: SIDE.map((s) => B(`fingers${s}`)),
+      tips: SIDE.map((s) => B(`tips${s}`)),
     };
+    const curl = SIDE.map((s): [number, number, number] => rig.curl![s] ?? [1, 0, 0]);
     const piv = (i: number) => new Vector3(...bones[i]!.pivot);
-    const hipP = [piv(id.thigh[0]!), piv(id.thigh[1]!)];
-    const kneeP = [piv(id.shin[0]!), piv(id.shin[1]!)];
-    const ankleP = [piv(id.foot[0]!), piv(id.foot[1]!)];
-    const L1 = Math.hypot(kneeP[0]!.y - hipP[0]!.y, kneeP[0]!.z - hipP[0]!.z);
-    const L2 = Math.hypot(ankleP[0]!.y - kneeP[0]!.y, ankleP[0]!.z - kneeP[0]!.z);
-    // Rest angles from straight down, positive forward (-Z).
-    const thigh0 = Math.atan2(-(kneeP[0]!.z - hipP[0]!.z), hipP[0]!.y - kneeP[0]!.y);
-    const shin0 = Math.atan2(-(ankleP[0]!.z - kneeP[0]!.z), kneeP[0]!.y - ankleP[0]!.y);
+    const hipP = id.thigh.map(piv);
+    const kneeP = id.shin.map(piv);
+    const ankleP = id.foot.map(piv);
+    const L1 = hipP[0]!.distanceTo(kneeP[0]!);
+    const L2 = kneeP[0]!.distanceTo(ankleP[0]!);
+    // Rest angles of the leg segments from straight down (positive forward, -Z) and the splay of the
+    // whole leg (positive outward on side 0). The gait works relative to them.
+    const thigh0 = Math.atan2(-(kneeP[0]!.z - hipP[0]!.z), Math.hypot(kneeP[0]!.x - hipP[0]!.x, hipP[0]!.y - kneeP[0]!.y));
+    const shin0 = Math.atan2(-(ankleP[0]!.z - kneeP[0]!.z), Math.hypot(ankleP[0]!.x - kneeP[0]!.x, kneeP[0]!.y - ankleP[0]!.y));
+    const splay0 = SIDE.map((_, s) => Math.atan2(ankleP[s]!.x - hipP[s]!.x, hipP[s]!.y - ankleP[s]!.y));
     const ankleH = ankleP[0]!.y;
+    const eyes = rig.eyes.map((e) => ({ at: new Vector3(...e.at), radius: e.radius }));
+    const eyeMid = eyes.reduce((m, e) => m.add(e.at), new Vector3()).divideScalar(eyes.length);
+    const eyeHeight = eyeMid.y;
+    // Foot soles in rest space (heel under the ankle, ball under the toe hinge) for contact shadows.
+    const heelRest = ankleP.map((v) => new Vector3(v.x, 0, v.z));
+    const ballRest = id.toe.map((t) => new Vector3(bones[t]!.pivot[0], 0, bones[t]!.pivot[2]));
 
     const addAgent = (lod: 0 | 1, x: number, zz: number, heading: number, scale: number, driver: Driver, beamOk: boolean): Agent => {
       const seed = rand();
-      const variant = Math.floor(rand() * 3);
-      const solver = new RigSolver(rig);
-      for (let v = 0; v < 3; v++) {
-        if (v !== variant) {
-          solver.hidden.add(id.head[v]!);
-          solver.hidden.add(id.sensor[v]!);
-        }
-      }
       const a: Agent = {
         lod,
         slot: counts[lod]!++,
@@ -351,15 +373,14 @@ export const sentinelsComponent: ComponentFactory<Params> = {
         v: 0,
         turn: 0,
         phase: rand(),
-        cycle: (1.35 + rand() * 0.3) * Math.sqrt(scale),
-        variant,
+        cycle: (0.98 + rand() * 0.14) * Math.sqrt(scale),
         seed,
         power: 1,
         slump: 0,
         visible: true,
         beam: lod === 0 && beamOk && rand() < p.beams,
         sensor: new SensorController({ seed: Math.floor(seed * 1e6), scanSpeed: 0.22 + rand() * 0.14, yaw: [-1.15, 1.15], pitch: [-0.55, 0.2], restPitch: -0.16 - rand() * 0.14, curiosity: 0.75 }),
-        solver,
+        solver: new RigSolver(rig),
         driver,
         sy: 0,
         svy: 0,
@@ -367,7 +388,7 @@ export const sentinelsComponent: ComponentFactory<Params> = {
         idleT: rand() * 8,
         shift: 0,
         shiftTarget: 0,
-        fingers: 0.35,
+        fingers: 0.3,
         armLift: 0,
         rand: seeded(Math.floor(seed * 1e6) + 3),
       };
@@ -522,47 +543,41 @@ export const sentinelsComponent: ComponentFactory<Params> = {
     const meshes: Mesh[] = [];
     const textures: BoneTexture[] = [];
     const optics: InstancedBufferAttribute[] = [];
-    const seeds: InstancedBufferAttribute[] = [];
     const presence = floatUniform(1);
     const group = new Group();
-    const time = ctx.uniforms.time as unknown as F;
     [gltf, gltfLod].forEach((g, lod) => {
       const count = counts[lod]!;
       if (count === 0) return;
-      const geometry = mergeRigged(g.scene, rig);
+      const geometry = mergeSkinned(g.scene);
       const tex = new BoneTexture(count, slots);
+      // Per instance: (sensor intensity, focus, scan, seed).
       const optic = new InstancedBufferAttribute(new Float32Array(count * 4), 4);
       optic.setUsage(DynamicDrawUsage);
-      const seedAttr = new InstancedBufferAttribute(new Float32Array(count), 1);
-      for (const a of agents) if (a.lod === lod) seedAttr.setX(a.slot, a.seed * 100);
-      const skin = skinNode(tex, `Sentinel${lod}`);
-      const material = machineMaterial(
-        w,
-        { position: skin.position, normal: skin.normal, rest: skin.rest, tag: skin.tag as unknown as { x: F; y: F } },
-        optic,
-        instancedBufferAttribute<'float'>(seedAttr, 'float') as unknown as F,
-        { ...SENTINEL_LOOK, lens: p.lens },
-        { armour: [aAlb, aNr], steel: [sAlb, sNr] },
-        env,
-        backdrop,
-        p.haze,
-        presence as unknown as F,
-        time,
-      );
+      for (const a of agents) if (a.lod === lod) optic.setW(a.slot, a.seed * 100);
+      const skin = blendSkinNode(tex, `Robot${lod}`);
+      const material = robotMaterial(w, skin, optic, { ...ROBOT_LOOK, lens: p.lens }, { body: [bAlb, bNrm], head: [hAlb, hNrm] }, env, backdrop, p.haze, presence as unknown as F);
       const mesh = new Mesh(geometry, material);
       mesh.count = count;
       mesh.frustumCulled = false;
       // Read-only handle for review tools (bone matrices, agents).
-      mesh.userData.redHorizon = { world: w, bones: tex, agents: () => agents.filter((a) => a.lod === lod).map((a) => ({ x: a.x, z: a.z, heading: a.heading, v: a.v, phase: a.phase, variant: a.variant, mode: a.sensor.mode })) };
+      mesh.userData.redHorizon = { world: w, bones: tex, agents: () => agents.filter((a) => a.lod === lod).map((a) => ({ x: a.x, z: a.z, heading: a.heading, v: a.v, phase: a.phase, mode: a.sensor.mode })) };
       group.add(mesh);
       meshes[lod] = mesh;
       textures[lod] = tex;
       optics[lod] = optic;
-      seeds[lod] = seedAttr;
     });
     const beams = new BeamSet(ctx, 16, p.haze, 1);
-    const glints = new GlintSet(agents.length * 1 + 4, p.haze, 2.2, 0.3);
-    group.add(beams.cones, beams.spots, glints.mesh);
+    const glints = new GlintSet(agents.length * eyes.length + 4, p.haze, 2.2, 0.3);
+    const shadows = new GroundShadows(agents.length * 4 + 8, p.haze, presence as unknown as F);
+    group.add(shadows.mesh, beams.cones, beams.spots, glints.mesh);
+    /**
+     * Ground light from the sky and the fill, in the units of the shared local lights (shared.ts
+     * localLight): the open yard is nearly black, so near a fire the fire is most of the light.
+     */
+    const SKY_LIGHT = 0.06;
+    const height = (rig.height ?? 2.2) * 0.95;
+    const heel = new Vector3();
+    const ball = new Vector3();
     const lensCol = linear(p.lens);
     const beamCol = linear(p.beamColor);
 
@@ -577,18 +592,20 @@ export const sentinelsComponent: ComponentFactory<Params> = {
     const camP = VIEWER;
     let frame = 0;
     let stepBudget = 0;
-    const solveAgent = (a: Agent, dt: number, t: number): void => {
+    // Cadence rises with speed (shorter cycles, so the stride stays within the leg's reach).
+    const cycleOf = (a: Agent): number => a.cycle * Math.min(1.15, Math.max(0.78, Math.sqrt(0.9 / Math.max(0.3, a.v))));
+    const solveAgent = (a: Agent, dt: number): void => {
       const P = a.solver;
       P.reset();
       const vel = a.v;
-      const T = a.cycle;
+      const T = cycleOf(a);
       const duty = 0.62;
       const walk = Math.min(1, vel / 0.85);
       // Stride from the measured speed: the stance foot moves back exactly as fast as the body moves on.
       const S = vel * duty * T;
       const turning = Math.min(1, Math.abs(a.turn) / 0.35);
       const lift = 0.085 * Math.max(Math.min(1, vel / 0.35), turning * 0.7);
-      // ---- Hydraulic settle spring: kicked at every heel strike.
+      // ---- Settle spring: kicked at every heel strike.
       const kk = 11;
       a.svy += (-kk * kk * a.sy - 2 * 0.32 * kk * a.svy) * dt;
       a.sy += a.svy * dt;
@@ -597,17 +614,19 @@ export const sentinelsComponent: ComponentFactory<Params> = {
       if (a.idleT <= 0) {
         a.idleT = 3 + a.rand() * 7;
         a.shiftTarget = (a.rand() - 0.5) * 0.06 * (1 - walk);
-        a.fingers = 0.15 + a.rand() * 0.6;
+        a.fingers = 0.15 + a.rand() * 0.55;
         a.armLift = a.rand() < 0.3 ? 0.15 + a.rand() * 0.25 : 0;
       }
       a.shift += (a.shiftTarget - a.shift) * Math.min(1, dt * 1.2);
       const slump = a.slump;
       const ph = a.phase;
       const phases = [ph, (ph + 0.5) % 1];
-      // ---- Pelvis: a lower stance while walking, bob with two dips per cycle, sway onto the stance leg.
-      const drop = 0.035 + 0.075 * walk + slump * 0.06;
-      const bob = -0.018 * walk * (0.5 + 0.5 * Math.cos(phases[0]! * TAU * 2)) + a.sy;
-      const sway = 0.028 * walk * Math.sin(phases[0]! * TAU) + a.shift;
+      // ---- Pelvis: the legs are nearly straight at rest, so a few centimetres of drop bend the knees a
+      // lot. Upright when standing; walking, it vaults over the stance leg (high at mid-stance) and
+      // dips at each heel strike, where both feet are furthest apart. Sways onto the stance leg.
+      const drop = 0.004 + 0.008 * walk + slump * 0.06;
+      const bob = -0.042 * walk * (0.5 + 0.5 * Math.cos(phases[0]! * TAU * 2)) + a.sy;
+      const sway = 0.026 * walk * Math.sin(phases[0]! * TAU) + a.shift;
       const pelvis = P.pose(id.pelvis);
       pelvis.tx = sway;
       pelvis.ty = -drop + bob;
@@ -639,13 +658,15 @@ export const sentinelsComponent: ComponentFactory<Params> = {
         const hx = hip.x + sway;
         const hy = hip.y - drop + bob;
         const hz = hip.z;
-        const ax = sgn * 0.205;
+        // The feet come in a little under the body while walking (the rest stance is wide).
+        const ankle = ankleP[side]!;
+        const ax = ankle.x - sgn * 0.04 * walk;
         const ay = ankleH + fy;
-        const az = fz + 0.02;
+        const az = ankle.z + fz;
         const dxL = ax - hx;
         const dyL = ay - hy;
         const dzL = az - hz;
-        const abd = Math.atan2(dxL, -dyL);
+        const splay = Math.atan2(dxL, -dyL) - splay0[side]!;
         const vert = Math.hypot(dxL, dyL);
         const alpha = Math.atan2(-dzL, vert);
         const D = Math.hypot(dzL, vert);
@@ -654,47 +675,46 @@ export const sentinelsComponent: ComponentFactory<Params> = {
         const shinAbs = alpha - a2;
         const th = P.pose(id.thigh[side]!);
         th.rx = thighAbs - thigh0 - pelvis.rx;
-        th.rz = abd - pelvis.rz;
+        th.rz = splay - pelvis.rz;
         const sh = P.pose(id.shin[side]!);
         sh.rx = shinAbs - shin0 - (thighAbs - thigh0);
         const ft = P.pose(id.foot[side]!);
         ft.rx = footPitch - (shinAbs - shin0);
-        ft.rz = -abd;
+        ft.rz = -splay;
         const toe = P.pose(id.toe[side]!);
         toe.rx = -footPitch * 0.85;
         // ---- Arms: swing against the same-side leg, elbows working, fingers servoing.
         const swing = -0.2 * walk * Math.cos(phi * TAU);
         const up = P.pose(id.upper[side]!);
         up.rx = swing + a.armLift * 0.4 - slump * 0.1;
-        up.rz = sgn * (0.07 + 0.03 * walk);
+        up.rz = sgn * (0.02 + 0.03 * walk);
         const fo = P.pose(id.fore[side]!);
-        fo.rx = 0.22 + 0.12 * walk + 0.06 * walk * Math.sin(phi * TAU - 0.6) + a.armLift - slump * 0.18;
+        fo.rx = 0.06 + 0.06 * walk + 0.05 * walk * Math.sin(phi * TAU - 0.6) + a.armLift * 0.6 - slump * 0.12;
         const hd = P.pose(id.hand[side]!);
-        hd.rx = 0.05 + 0.05 * walk * Math.sin(phi * TAU - 1.2);
-        hd.ry = sgn * 0.1;
-        P.pose(id.fingers[side]!).rx = a.fingers * (1 - slump * 0.6);
+        hd.rx = 0.04 + 0.05 * walk * Math.sin(phi * TAU - 1.2);
+        const grip = a.fingers * (1 - slump * 0.6);
+        axisPose(P.pose(id.fingers[side]!), curl[side]!, grip);
+        axisPose(P.pose(id.tips[side]!), curl[side]!, grip * 1.2);
       }
-      // ---- Torso and head: the sensor leads, the body follows a little.
+      // ---- Spine, neck and head: the sensor leads, the body follows a little.
       const sens = a.sensor;
+      const twist = -0.07 * walk * Math.sin(phases[0]! * TAU) + sens.yaw * 0.22;
+      const lean = 0.02 + 0.04 * walk + slump * 0.34 - a.sy * 1.5;
+      const spine = P.pose(id.spine);
+      spine.ry = twist * 0.4;
+      spine.rx = lean * 0.45;
+      spine.rz = sway * 0.16;
       const torso = P.pose(id.torso);
-      torso.ry = -0.07 * walk * Math.sin(phases[0]! * TAU) + sens.yaw * 0.22;
-      torso.rx = 0.05 + 0.04 * walk + slump * 0.32 - a.sy * 1.5;
-      torso.rz = sway * 0.4;
-      const variant = a.variant;
-      const headPitchShare = variant === 2 ? 0.45 : 1;
-      for (let v = 0; v < 3; v++) {
-        const hp = P.pose(id.head[v]!);
-        hp.ry = sens.yaw * 0.78;
-        hp.rx = sens.pitch * headPitchShare - slump * 0.55;
-        hp.rz = slump * 0.12;
-      }
-      const sA = P.pose(id.sensor[0]!);
-      sA.rx = 0;
-      const sB = P.pose(id.sensor[1]!);
-      sB.rz = sens.focus * 0.9 + t * 0.05;
-      sB.tz = -sens.focus * 0.012;
-      const sC = P.pose(id.sensor[2]!);
-      sC.rx = sens.pitch * (1 - headPitchShare) + sens.focus * 0.06;
+      torso.ry = twist * 0.6;
+      torso.rx = lean * 0.55;
+      torso.rz = sway * 0.24;
+      const neck = P.pose(id.neck);
+      neck.ry = sens.yaw * 0.3;
+      neck.rx = sens.pitch * 0.4 - slump * 0.25;
+      const head = P.pose(id.head);
+      head.ry = sens.yaw * 0.48;
+      head.rx = sens.pitch * 0.6 - slump * 0.3;
+      head.rz = slump * 0.12;
       // ---- Root: on the ground (or the conveyor), facing its heading.
       root.compose(vPos.set(a.x, a.y, a.z), q.setFromAxisAngle(yAxis, a.heading), vScale.setScalar(a.scale));
       P.solve(root, textures[a.lod]!, a.slot);
@@ -708,6 +728,7 @@ export const sentinelsComponent: ComponentFactory<Params> = {
       stepBudget = Math.min(6, stepBudget + dt * 5);
       beams.begin();
       glints.begin();
+      shadows.begin();
       for (const a of agents) {
         a.px = a.x;
         a.pz = a.z;
@@ -727,13 +748,13 @@ export const sentinelsComponent: ComponentFactory<Params> = {
         const tr = dt > 0 ? wrapAngle(a.heading - a.ph) / dt : 0;
         a.turn += (tr - a.turn) * Math.min(1, dt * 5);
         if (a.v > 0.04 || Math.abs(a.turn) > 0.06) {
-          a.phase = (a.phase + dt / a.cycle) % 1;
+          a.phase = (a.phase + dt / cycleOf(a)) % 1;
         } else if (a.phase % 0.5 > 0.02) {
           // Coast to a double-support pose instead of freezing mid-step.
-          a.phase = (a.phase + dt / a.cycle) % 1;
+          a.phase = (a.phase + dt / cycleOf(a)) % 1;
         }
-        // Heel strikes: settle the hydraulics, emit a metallic footfall near the viewer.
-        const crossed = (a.lastPhase > a.phase) || (a.lastPhase < 0.5 && a.phase >= 0.5);
+        // Heel strikes: settle the frame, emit a metallic footfall near the viewer.
+        const crossed = a.lastPhase > a.phase || (a.lastPhase < 0.5 && a.phase >= 0.5);
         if (crossed && (a.v > 0.2 || Math.abs(a.turn) > 0.2)) {
           a.svy -= 0.16 * Math.min(1, a.v + 0.3);
           const dcx = a.x - camP.x;
@@ -747,25 +768,91 @@ export const sentinelsComponent: ComponentFactory<Params> = {
         a.lastPhase = a.phase;
         // Sensors: events pull heads round; powered-down units stay dark.
         a.sensor.power = a.power;
-        a.sensor.update(dt, w.events, clock, { x: a.x, y: a.y + 2.4, z: a.z, heading: a.heading });
+        a.sensor.update(dt, w.events, clock, { x: a.x, y: a.y + eyeHeight * a.scale, z: a.z, heading: a.heading });
         // Animation LOD: distant machines re-pose every third frame.
-        if (a.lod === 0 || (frame + a.slot) % 3 === 0) solveAgent(a, a.lod === 0 ? dt : dt * 3, clock);
-        // Optics: per-instance lens state, glint sprites, optional beam.
+        if (a.lod === 0 || (frame + a.slot) % 3 === 0) solveAgent(a, a.lod === 0 ? dt : dt * 3);
+        // Ground shadows: a pool under the body, contact shadows under planted feet (near machines),
+        // and the long soft streak cast by the sunset.
+        {
+          const s = a.scale;
+          // Near machines re-pose every frame (the pool follows the pelvis sway); far ones every
+          // third frame, so they use their root (their pelvis may not be posed yet).
+          const pm = a.solver.worldOf(id.pelvis).elements;
+          const gx = a.lod === 0 ? pm[12]! : a.x;
+          const gz = a.lod === 0 ? pm[14]! : a.z;
+          const gy = a.y + 0.012;
+          const contact = p.shadows.contact;
+          shadows.add(gx, gy, gz, -Math.sin(a.heading), -Math.cos(a.heading), 0.46 * s, 0.34 * s, contact * 0.55);
+          if (a.lod === 0) {
+            for (let side = 0; side < 2; side++) {
+              a.solver.pointOn(id.foot[side]!, heelRest[side]!, heel);
+              a.solver.pointOn(id.toe[side]!, ballRest[side]!, ball);
+              const lift = Math.max(0, Math.min(heel.y, ball.y) - a.y);
+              const fx = ball.x - heel.x;
+              const fz = ball.z - heel.z;
+              const fl = Math.hypot(fx, fz) || 1;
+              const k = Math.max(0, 1 - lift / (0.22 * s));
+              shadows.add((heel.x + ball.x) / 2, gy + 0.002, (heel.z + ball.z) / 2, fx / fl, fz / fl, 0.15 * s, 0.085 * s, contact * 0.85 * k * k);
+            }
+          }
+          // Cast shadow from the local light that lights this spot of ground the most (the ground's
+          // own light model: wrapped Lambert, softened inverse square, smooth range cut-off). It
+          // darkens by that light's share of the ground's light, and is as long as a figure this tall
+          // throws from a light that high and that far.
+          let best = 0;
+          let bx = 0;
+          let bz = 0;
+          let bh = 0;
+          for (let i = 0; i < w.lightValues.length; i++) {
+            const L = w.lightValues[i]!;
+            if (L.w <= 0 || L.y < -500) continue;
+            const C = w.lightColours[i]!;
+            const dx = gx - L.x;
+            const dz = gz - L.z;
+            const dy = L.y - a.y;
+            const d2 = dx * dx + dy * dy + dz * dz;
+            const fall = Math.max(0, 1 - d2 / (C.w * C.w)) ** 2;
+            if (fall <= 0) continue;
+            const lambert = Math.max(0, (dy / Math.sqrt(d2) + 0.25) / 1.25);
+            const e = (0.2126 * C.x + 0.7152 * C.y + 0.0722 * C.z) * L.w * lambert * fall / (d2 + 25);
+            if (e > best) {
+              best = e;
+              bx = dx;
+              bz = dz;
+              bh = dy;
+            }
+          }
+          const bd = Math.hypot(bx, bz);
+          if (best > 0.005 && bd > 0.3) {
+            const H = height * s;
+            // A fire lower than the head throws an unbounded shadow; its large flame blurs it out
+            // within a few metres, so cap the length and let the streak fade.
+            const reach = bh > H + 0.2 ? (H * bd) / (bh - H) : 4.6 * s;
+            const half = Math.max(0.7 * s, Math.min(4.6 * s, reach)) / 2;
+            const ux = bx / bd;
+            const uz = bz / bd;
+            shadows.add(gx + ux * half * 0.9, gy, gz + uz * half * 0.9, ux, uz, half, 0.34 * s, (p.shadows.cast * best) / (best + SKY_LIGHT), 1);
+          }
+        }
+        // Optics: per-instance eye state, a glint per eye, optional beam.
         const scanX = Math.max(-1, Math.min(1, a.sensor.yaw / 0.9));
-        optics[a.lod]!.setXYZW(a.slot, a.sensor.intensity, a.sensor.focus, scanX, a.variant);
+        optics[a.lod]!.setXYZW(a.slot, a.sensor.intensity, a.sensor.focus, scanX, a.seed * 100);
         if (a.sensor.intensity > 0.02) {
-          const sb = id.sensor[a.variant]!;
-          a.solver.pointOn(sb, LENS[a.variant]!, lensW);
-          const wm = a.solver.worldOf(sb);
+          const wm = a.solver.worldOf(id.head);
           fwd.set(-wm.elements[8]!, -wm.elements[9]!, -wm.elements[10]!).normalize();
+          a.solver.pointOn(id.head, eyeMid, lensW);
           const toCam = vPos.copy(camP).sub(lensW).normalize();
           const facing = Math.max(0, fwd.dot(toCam));
-          const gain = a.sensor.intensity * (0.18 + 0.82 * facing * facing) * 1.6;
-          glints.add(lensW.x + toCam.x * 0.06, lensW.y + toCam.y * 0.06, lensW.z + toCam.z * 0.06, LENS_R[a.variant]! * a.scale, lensCol.x * gain, lensCol.y * gain, lensCol.z * gain);
-          // A faint red sensor beam only while the optics look down at the ground nearby: short,
+          const gain = a.sensor.intensity * (0.18 + 0.82 * facing * facing) * 1.4;
+          for (const e of eyes) {
+            a.solver.pointOn(id.head, e.at, lensW);
+            glints.add(lensW.x + toCam.x * 0.03, lensW.y + toCam.y * 0.03, lensW.z + toCam.z * 0.03, e.radius * 1.5 * a.scale, lensCol.x * gain, lensCol.y * gain, lensCol.z * gain);
+          }
+          // A faint red sensor beam only while the eyes look down at the ground nearby: short,
           // soft, fading out as the gaze levels (never a flat line across the view).
           const down = Math.min(1, Math.max(0, (-fwd.y - 0.12) / 0.25));
           if (a.beam && !reduced && down > 0.01) {
+            a.solver.pointOn(id.head, eyeMid, lensW);
             const bi = a.sensor.intensity * (0.3 + a.sensor.focus * 0.7) * down * 0.35;
             beams.add(lensW.x, lensW.y, lensW.z, fwd.x, fwd.y, fwd.z, 9, 0.16, beamCol.x * bi, beamCol.y * bi, beamCol.z * bi, GROUND_Y, 0.12);
           }
@@ -775,6 +862,7 @@ export const sentinelsComponent: ComponentFactory<Params> = {
       for (const o of optics) if (o) o.needsUpdate = true;
       beams.end();
       glints.end();
+      shadows.end();
     };
     update(0);
 
@@ -795,11 +883,11 @@ export const sentinelsComponent: ComponentFactory<Params> = {
         for (const t of textures) t?.dispose();
         beams.dispose();
         glints.dispose();
-        ctx.assets.release('models/sentinel.glb');
-        ctx.assets.release('models/sentinel_lod.glb');
+        shadows.dispose();
+        ctx.assets.release('models/robot.glb');
+        ctx.assets.release('models/robot_lod.glb');
         release(w);
       },
     };
   },
 };
-

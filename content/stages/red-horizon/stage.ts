@@ -12,8 +12,9 @@ import { skyComponent } from './sky';
 /**
  * Red Horizon: a content-only world. A real photograph of an abandoned freight yard at sunset
  * (Poly Haven's Freight Station), graded to a smoke-filled red dusk, beyond which a machine
- * civilisation works a ruined city: original Blender-built humanoid machines patrolling with
- * planted-foot gaits and scanning optical sensors, hexapod walking refineries, recon drones with
+ * civilisation works a ruined city: rigged endoskeleton robots (a Sketchfab model folded onto the
+ * machine rig by scripts/build-red-horizon-robot.ts) patrolling with planted-foot gaits and scanning
+ * optical sensors, original Blender-built hexapod walking refineries, recon drones with
  * searchlights, a working assembly factory, burning ruins and distant explosions. Everything goes
  * through the public SDK; the components live in this folder.
  */

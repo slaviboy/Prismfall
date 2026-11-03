@@ -8,10 +8,12 @@
  * attribution is recorded; NonCommercial and NoDerivatives licences are refused).
  *
  *   SKETCHFAB_TOKEN=... node scripts/fetch-sketchfab.ts <uid> <name> [--max-texture 1024] [--max-triangles 60000]
- *   node scripts/fetch-sketchfab.ts <uid> <name> --zip <downloaded glTF zip>
+ *   node scripts/fetch-sketchfab.ts <uid> <name> --zip <downloaded glTF zip> [--source-only]
  *
  * With --zip, a glTF archive the owner downloaded from the model's page is used instead of the API
  * download (no token needed); the licence and author still come from Sketchfab's public metadata.
+ * With --source-only, it stops after step 1 (for models a stage's own build script prepares, such
+ * as scripts/build-red-horizon-robot.ts).
  *
  * 1. Saves the glTF archive into assets/external/sketchfab/<name>/ with source.json (author, page,
  *    licence, download date, file MD5s).
@@ -22,7 +24,7 @@
  */
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
 const ROOT = resolve(import.meta.dirname, '..');
@@ -80,6 +82,13 @@ mkdirSync(extracted, { recursive: true });
 // Windows' own tar (bsdtar) reads zip archives; a GNU tar earlier on PATH (Git Bash) cannot.
 const tar = process.platform === 'win32' ? join(process.env.SystemRoot ?? 'C:\\Windows', 'System32', 'tar.exe') : 'tar';
 execFileSync(tar, ['-xf', zipPath, '-C', extracted]);
+// Some archives wrap everything in one folder: lift its contents to the top.
+const top = readdirSync(extracted);
+if (!top.some((f) => f.endsWith('.gltf')) && top.length === 1 && statSync(join(extracted, top[0]!)).isDirectory()) {
+  const inner = join(extracted, top[0]!);
+  for (const f of readdirSync(inner)) renameSync(join(inner, f), join(extracted, f));
+  rmSync(inner, { recursive: true, force: true });
+}
 const gltfFile = readdirSync(extracted).find((f) => f.endsWith('.gltf'));
 if (!gltfFile) throw new Error('the archive has no .gltf file');
 
@@ -105,6 +114,12 @@ writeFileSync(
     2,
   )}\n`,
 );
+
+if (process.argv.includes('--source-only')) {
+  console.log(`${dir}\n  source.json written, glTF extracted to ${extracted}`);
+  console.log(`  attribution: "${info.name}" by ${info.user.displayName} (${info.viewerUrl}), ${info.license?.label}`);
+  process.exit(0);
+}
 
 interface GlbJson {
   animations?: { name?: string }[];

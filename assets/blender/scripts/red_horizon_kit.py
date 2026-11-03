@@ -1,6 +1,6 @@
 """Red Horizon kit: original machines, ruins and a working factory for the Red Horizon world.
 
-Run headless:  blender -b --factory-startup --python assets/blender/scripts/red_horizon_kit.py -- [--no-preview] [--only machines|ruins|factory]
+Run headless:  blender -b --factory-startup --python assets/blender/scripts/red_horizon_kit.py -- [--no-preview] [--only machines|ruins|factory] [--sentinel]
 
 Every design here is original (no franchise machines). Machines are rigid-segment rigs: each part is
 bound to one bone (float attribute `_BONE`), and a `<name>.rig.json` sidecar lists the bones
@@ -8,7 +8,9 @@ bound to one bone (float attribute `_BONE`), and a `<name>.rig.json` sidecar lis
 the CPU (gait, IK, optical sensors) and skins the instanced meshes on the GPU.
 
 Outputs (assets/blender/exports/red_horizon/):
-  sentinel.glb, sentinel_lod.glb, sentinel.rig.json   humanoid machine, three sensor heads
+  sentinel.glb, sentinel_lod.glb, sentinel.rig.json   humanoid machine, three sensor heads (only with
+                                                      --sentinel: the world now walks the rigged robot
+                                                      from scripts/build-red-horizon-robot.ts)
   colossus.glb, colossus.rig.json                     hexapod giant walker
   drone.glb, drone.rig.json                           recon drone with ducted fans and a sensor turret
   ruins.glb                                           ruined towers, broken highway, lattice mast, wrecks, debris
@@ -675,7 +677,9 @@ def main():
     reset_scene()
     ensure_dir(OUT)
     report = {}
-    if only in (None, "machines"):
+    with_sentinel = "--sentinel" in a
+    k = None
+    if only in (None, "machines") and with_sentinel:
         k = sentinel(0)
         k.join("sentinel")
         report["sentinel"] = export_rigged(k, os.path.join(OUT, "sentinel.glb"), os.path.join(OUT, "sentinel.rig.json"), {"height": 2.46, "stride": 0.62})
@@ -684,6 +688,7 @@ def main():
         report["sentinel_lod"] = export_rigged(kl, os.path.join(OUT, "sentinel_lod.glb"))
         kl.joined.hide_render = True
         kl.joined.location.x = 3
+    if only in (None, "machines"):
         from red_horizon_machines import colossus, drone
 
         kd = drone()
@@ -716,13 +721,15 @@ def main():
     print("RED_HORIZON_OK", json.dumps(report))
     save_blend(os.path.join(SRC, "red_horizon.blend"))
     if "--no-preview" not in a and only in (None, "machines"):
-        sid = {b["name"]: b["id"] for b in k.bones}
-        hide = lambda keep: {sid[f"head{c}"] for c in "ABC" if c != keep} | {sid[f"sensor{c}"] for c in "ABC" if c != keep}
-        copies = preview_copies(k.joined, [hide("A"), hide("B"), hide("C")], 1.1)
-        preview(os.path.join(PREV, "red_horizon_sentinel.png"), (1.2, 6.5, 1.9), (0, 0, 1.25), 40)
-        preview(os.path.join(PREV, "red_horizon_sentinel_heads.png"), (0.4, 2.2, 2.5), (0, 0, 2.3), 55)
-        for ob in copies:
-            bpy.data.objects.remove(ob, do_unlink=True)
+        if k is not None:
+            sid = {b["name"]: b["id"] for b in k.bones}
+            hide = lambda keep: {sid[f"head{c}"] for c in "ABC" if c != keep} | {sid[f"sensor{c}"] for c in "ABC" if c != keep}
+            copies = preview_copies(k.joined, [hide("A"), hide("B"), hide("C")], 1.1)
+            preview(os.path.join(PREV, "red_horizon_sentinel.png"), (1.2, 6.5, 1.9), (0, 0, 1.25), 40)
+            preview(os.path.join(PREV, "red_horizon_sentinel_heads.png"), (0.4, 2.2, 2.5), (0, 0, 2.3), 55)
+            for ob in copies:
+                bpy.data.objects.remove(ob, do_unlink=True)
+            k.joined.hide_render = True
         kc.joined.hide_render = False
         preview(os.path.join(PREV, "red_horizon_colossus.png"), (62, 70, 30), (0, 0, 22), 35)
         kc.joined.hide_render = True
