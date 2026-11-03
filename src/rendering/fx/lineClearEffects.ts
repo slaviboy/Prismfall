@@ -23,8 +23,6 @@ export interface ClearRecipe {
   swirl: number;
   /** Extra light streak along each cleared row. */
   streak: boolean;
-  /** Energy wave that sweeps across the whole board on multi-line clears. */
-  wave?: boolean;
   /** Secondary particles (embers, sparks, seeds). */
   secondary?: Partial<ClearRecipe> & { share: number };
 }
@@ -69,7 +67,6 @@ export const CLEAR_RECIPES: Record<string, Partial<ClearRecipe>> = {
     color: 'mix',
     brightness: 2,
     swirl: 0.8,
-    wave: true,
     secondary: { share: 0.6, shape: 'star', motion: 'rise', speed: [0.4, 1.6], gravity: 0.3, drag: 0.8, life: [1.4, 2.4], size: [0.05, 0.14], color: 'highlight', brightness: 1.6, swirl: 1.4 },
   },
   sandSpiral: {
@@ -84,7 +81,6 @@ export const CLEAR_RECIPES: Record<string, Partial<ClearRecipe>> = {
     size: [0.07, 0.17],
     color: 'mix',
     brightness: 1.7,
-    wave: true,
     secondary: { share: 0.3, shape: 'soft', motion: 'wind', speed: [3, 7], gravity: 0.4, drag: 0.5, swirl: 1.2, life: [2, 3.6], size: [0.5, 1.1], color: 'accent', brightness: 0.3 },
   },
 };
@@ -214,23 +210,9 @@ export function runRecipe(ctx: EffectContext, clear: ClearInfo, recipe: ClearRec
       }
     }
   }
-  if (recipe.wave && shareOfCells === 1 && clear.lines >= 2) {
-    // A column of light crosses the board, taller and brighter for bigger clears.
-    const c = pickColor('highlight', [1, 1, 1], ctx, 1);
-    const n = ctx.bursts.budget((40 + clear.lines * 18) * ctx.intensityScale);
-    for (let i = 0; i < n; i++) {
-      const y = (i / Math.max(1, n - 1)) * 20;
-      const p0 = ctx.cellToWorld(-1, y);
-      const k = 1 - Math.abs(y - 10) / 12;
-      ctx.bursts.emit(
-        { x: p0.x, y: p0.y, z: 0.8, vx: 14, vy: 0, vz: 0, r: c[0] * 0.9 * k, g: c[1] * 0.9 * k, b: c[2] * 0.9 * k, size: 1.3 + clear.lines * 0.15, life: 0.85, delay: 0.05 + Math.abs(y - 10) * 0.004, drag: 0.15, shape: 'soft' },
-        clear.time,
-      );
-    }
-  }
   if (recipe.secondary && shareOfCells === 1) {
     const { share, ...rest } = recipe.secondary;
-    runRecipe(ctx, clear, { ...recipe, ...rest, secondary: undefined, streak: false, wave: false }, share);
+    runRecipe(ctx, clear, { ...recipe, ...rest, secondary: undefined, streak: false }, share);
   }
 }
 

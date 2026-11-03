@@ -3,6 +3,7 @@ import { auroraComponent } from './components/aurora';
 import { beamsComponent } from './components/beams';
 import { cityComponent } from './components/city';
 import { cloudsComponent } from './components/clouds';
+import { conifersComponent } from './components/conifers';
 import { emitterComponent } from './components/emitter';
 import { galaxyComponent } from './components/galaxy';
 import { gltfSceneComponent } from './components/gltfScene';
@@ -10,6 +11,7 @@ import { creatureHerdComponent } from './components/creatureHerd';
 import { lavaComponent } from './components/lava';
 import { particlesComponent } from './components/particles';
 import { planetComponent } from './components/planet';
+import { ridgesComponent } from './components/ridges';
 import { ringsComponent } from './components/rings';
 import { scatterComponent } from './components/scatter';
 import { skyComponent } from './components/sky';
@@ -37,6 +39,8 @@ export const BUILTIN_COMPONENTS: readonly ComponentFactory[] = [
   auroraComponent,
   galaxyComponent,
   cityComponent,
+  ridgesComponent,
+  conifersComponent,
 ] as unknown as readonly ComponentFactory[];
 
 let registered = false;

@@ -118,6 +118,9 @@ export class RenderSystem implements GameView {
     this.cameraRig = new CameraRig(BoardView.FRAME_WIDTH, BoardView.FRAME_HEIGHT);
     this.board = new BoardView({ palette: paletteFor(false), preset: resolveBlockPreset('prism') });
     this.boardRoot.add(this.board.group);
+    // Named so environment reflections can leave the playfield out.
+    this.boardRoot.name = 'board';
+    this.fxRoot.name = 'fx';
     this.scene.add(this.backdrop.group, this.worldRoot, this.lights.group, this.boardRoot, this.fxRoot);
     this.post = new PostPipeline(renderer, this.scene, this.cameraRig.camera);
     this.feedback = new FeedbackDirector(this.boardBursts, this.cameraRig, createRoundedBlock());

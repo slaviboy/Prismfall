@@ -863,9 +863,7 @@
   "effects": {
     "lineClear": {
       "effect": "bloomSeeds",
-      "params": {
-        "wave": true
-      }
+      "params": {}
     },
     "landing": {
       "shape": "petal"

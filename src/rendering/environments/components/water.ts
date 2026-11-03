@@ -1,5 +1,27 @@
-import { Mesh, MeshBasicNodeMaterial, PlaneGeometry, Vector2, type Node } from 'three/webgpu';
-import { cameraPosition, clamp, cos, dot, exp, float, max, mix, mrt, normalize, positionLocal, positionWorld, sin, smoothstep, vec2, vec3, vec4 } from 'three/tsl';
+import { Group, Mesh, MeshBasicNodeMaterial, PlaneGeometry, Vector2, type MRTNode, type Node, type Object3D, type Renderer } from 'three/webgpu';
+import {
+  cameraPosition,
+  clamp,
+  cos,
+  dot,
+  exp,
+  float,
+  max,
+  mix,
+  mrt,
+  mx_noise_float,
+  normalize,
+  output,
+  positionLocal,
+  positionWorld,
+  reflector,
+  screenUV,
+  sin,
+  smoothstep,
+  vec2,
+  vec3,
+  vec4,
+} from 'three/tsl';
 import { z } from 'zod';
 import type { ComponentFactory } from '../../../sdk/types';
 import { colorUniform, floatUniform, zColor, zVec3 } from './common';
@@ -19,7 +41,45 @@ const schema = z.object({
   moonDirection: zVec3.default([0.3, 0.25, -1]),
   moonColor: zColor.default('#dce8ff'),
   rippleColor: zColor.default('#7ffff0'),
+  /** Planar mirror reflection of the world (not the playfield), for still lakes. */
+  reflection: z
+    .object({
+      strength: z.number().min(0).max(1).default(0.9),
+      /** Render scale of the reflection relative to the screen. */
+      resolution: z.number().min(0.25).max(1).default(0.5),
+      /** Screen-space wobble from fine ripples. */
+      distortion: z.number().min(0).default(0.004),
+      tint: zColor.default('#ffffff'),
+    })
+    .optional(),
 });
+
+/**
+ * The reflector renders the scene with no MRT, where a material's `mrtNode` (bloom masks) would
+ * replace its colour output; route plain renders to the colour output instead, and hide the
+ * playfield and its effects while the mirrored view is drawn.
+ */
+function reflectWorldOnly(node: ReturnType<typeof reflector>, scene: Object3D): void {
+  const outputOnly: MRTNode = mrt({ '': output });
+  outputOnly.setBlendMode('', outputOnly.getBlendMode('output'));
+  const base = node.reflector as unknown as { updateBefore(frame: { renderer: Renderer }): unknown };
+  const original = base.updateBefore.bind(base);
+  let hidden: Object3D[] | null = null;
+  base.updateBefore = (frame) => {
+    hidden ??= ['board', 'fx'].map((name) => scene.getObjectByName(name)).filter((o): o is Object3D => !!o);
+    const r = frame.renderer;
+    const setMRT = r.setMRT;
+    r.setMRT = (m: MRTNode | null) => setMRT.call(r, m ?? outputOnly);
+    const shown = hidden.map((o) => o.visible);
+    for (const o of hidden) o.visible = false;
+    try {
+      return original(frame);
+    } finally {
+      r.setMRT = setMRT;
+      hidden.forEach((o, i) => (o.visible = shown[i] as boolean));
+    }
+  };
+}
 
 /** Animated ocean surface with fresnel sky reflection, moon glint, glowing crests and clear ripples. */
 export const waterComponent: ComponentFactory<z.infer<typeof schema>> = {
@@ -80,7 +140,25 @@ export const waterComponent: ComponentFactory<z.infer<typeof schema>> = {
     const ripple = exp(dist.sub(ripplePos).abs().mul(-0.35)).mul(u.rippleStrength).mul(exp(t.sub(u.rippleTime).mul(-0.45)));
     const body = mix(colorUniform(p.deep), colorUniform(p.shallow), clamp(frag.h.mul(0.4).add(0.4), 0, 1));
     const glowC = colorUniform(p.glow);
-    const color = mix(body, skyRef, fresnel)
+    let surface: Node<'vec3'> = mix(body, skyRef, fresnel);
+    const group = new Group();
+    if (p.reflection) {
+      const r = p.reflection;
+      const mirror = reflector({ resolutionScale: r.resolution * (ctx.quality.detail === 'low' ? 0.6 : 1), bounces: false });
+      mirror.target.rotateX(-Math.PI / 2);
+      mirror.target.position.y = p.y;
+      group.add(mirror.target);
+      reflectWorldOnly(mirror, ctx.scene);
+      // Fine ripples wobble the mirrored image slightly; calmer with distance.
+      const rp = positionWorld.xz.mul(0.18);
+      const wobble = vec2(mx_noise_float(vec3(rp, t.mul(0.15))), mx_noise_float(vec3(rp.add(7.3), t.mul(0.15)))).mul(r.distortion).mul(exp(positionWorld.xz.length().mul(-0.004)));
+      mirror.uvNode = screenUV.flipX().add(wobble);
+      // Schlick fresnel for water (F0 0.02), lifted so the mirror stays readable at mid angles.
+      const cosV = clamp(dot(n, v), 0, 1);
+      const schlick = float(0.02).add(float(0.98).mul(float(1).sub(cosV).pow(5)));
+      surface = mix(body, mirror.rgb.mul(colorUniform(r.tint)), clamp(schlick.mul(1.3).add(0.3), 0, 1).mul(r.strength));
+    }
+    const color = surface
       .add(colorUniform(p.moonColor).mul(spec))
       .add(glowC.mul(crest.mul(0.35)))
       .add(colorUniform(p.rippleColor).mul(ripple));
@@ -92,8 +170,9 @@ export const waterComponent: ComponentFactory<z.infer<typeof schema>> = {
     ctx.ground.setWaterLevel(p.y);
     mesh.frustumCulled = false;
     mesh.renderOrder = -8;
+    group.add(mesh);
     return {
-      object: mesh,
+      object: group,
       reactive: { amplitude: u.amplitude, glow: u.glow, speed: u.speed },
       onGameEvent(e) {
         if (e.kind === 'clear' && e.intensity > 0.2) {

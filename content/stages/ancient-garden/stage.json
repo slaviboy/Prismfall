@@ -768,9 +768,7 @@
   "effects": {
     "lineClear": {
       "effect": "petalShatter",
-      "params": {
-        "wave": true
-      }
+      "params": {}
     },
     "landing": {
       "shape": "petal"

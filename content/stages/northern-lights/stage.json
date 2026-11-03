@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "northern-lights",
   "name": "Northern Lights",
-  "description": "A polar night on the tundra. The aurora fills the sky and mirrors in a frozen lake, reindeer pass in the starlight, and birds of light ride the wind.",
+  "description": "A polar night by a still lake. The aurora folds across the sky and mirrors in the water, spruce stands black against it, and reindeer pass along the shore.",
   "order": 55,
   "tags": [
     "aurora",
@@ -14,73 +14,73 @@
   "recommendedQuality": "high",
   "palette": {
     "accent": "#5dffb0",
-    "secondary": "#b47cff",
+    "secondary": "#a36bff",
     "highlight": "#e0fff4",
-    "fog": "#06141c",
-    "plate": "#020a0c"
+    "fog": "#03090d",
+    "plate": "#010406"
   },
   "fog": {
-    "color": "#071822",
-    "density": 0.0021
+    "color": "#04090d",
+    "density": 0.0014
   },
   "backdrop": {
-    "top": "#020812",
-    "bottom": "#041014",
-    "glow": "#5dffb0"
+    "top": "#010307",
+    "bottom": "#02060a",
+    "glow": "#1f6b55"
   },
   "lighting": {
     "key": {
-      "color": "#d6e8ff",
-      "intensity": 1.6,
+      "color": "#bfe8dc",
+      "intensity": 1.2,
       "azimuth": 15,
       "elevation": 40
     },
     "rim": {
-      "color": "#5dffb0",
-      "intensity": 1.8
+      "color": "#9fffd6",
+      "intensity": 0.6
     },
     "ambient": {
-      "sky": "#34506e",
-      "ground": "#0a1820",
-      "intensity": 0.85
+      "sky": "#16302c",
+      "ground": "#04080a",
+      "intensity": 0.5
     },
     "accents": [
       {
         "color": "#5dffb0",
-        "intensity": 24,
+        "intensity": 6,
         "x": -9,
         "y": -6,
         "z": 6
       },
       {
-        "color": "#b47cff",
-        "intensity": 20,
+        "color": "#a36bff",
+        "intensity": 5,
         "x": 9,
         "y": 8,
         "z": 6
       }
     ],
-    "beatResponse": 0.3
+    "beatResponse": 0.2
   },
   "grade": {
-    "saturation": 1.1,
-    "contrast": 1.06,
+    "saturation": 1.05,
+    "contrast": 1.12,
     "tint": [
-      0.96,
-      1.03,
-      1.02
+      0.98,
+      1.02,
+      1.0
     ],
-    "vignette": 0.46,
-    "bloomThreshold": 0.2,
-    "bloomRadius": 0.62,
+    "vignette": 0.38,
+    "bloomThreshold": 0.28,
+    "bloomRadius": 0.55,
     "toneMapping": "neutral",
-    "envIntensity": 0.3,
-    "exposure": 0.96
+    "envIntensity": 0.25,
+    "exposure": 1.0
   },
   "camera": {
-    "pitch": 8,
+    "pitch": 2,
     "yaw": 0,
-    "sway": 0.6,
+    "sway": 0.35,
     "targetY": 0
   },
   "blocks": {
@@ -102,110 +102,176 @@
         "id": "sky",
         "type": "sky",
         "params": {
-          "top": "#01040c",
-          "mid": "#04121c",
-          "midHeight": 0.2,
-          "horizon": "#0e3a3a",
-          "bottom": "#020608",
-          "horizonGlow": 0.3,
-          "horizonWidth": 0.14,
+          "top": "#010206",
+          "mid": "#02070c",
+          "midHeight": 0.18,
+          "horizon": "#0b2626",
+          "bottom": "#010304",
+          "horizonGlow": 0.45,
+          "horizonWidth": 0.09,
           "stars": 1.0,
-          "starSize": 0.9,
-          "nebula": 0.25,
-          "nebulaA": "#0a3a3a",
-          "nebulaB": "#2a1a5a",
-          "nebulaScale": 1.4
-        },
-        "bind": [
-          {
-            "target": "stars",
-            "feature": "treble",
-            "amount": 0.3,
-            "attackMs": 40,
-            "releaseMs": 600
+          "starSize": 1.0,
+          "nebula": 0,
+          "milkyWay": {
+            "strength": 0.55,
+            "pole": [
+              0.62,
+              0.42,
+              0.66
+            ],
+            "width": 0.15,
+            "color": "#7f8ea8"
           }
-        ]
+        },
+        "bind": []
       },
       {
         "id": "aurora-main",
         "type": "aurora",
         "params": {
-          "ribbons": 5,
+          "ribbons": 2,
           "distance": [
-            300,
-            560
+            640,
+            760
           ],
-          "base": 18,
+          "base": 16,
           "height": [
-            150,
-            230
+            200,
+            260
           ],
-          "width": 1300,
-          "low": "#4dffa0",
-          "high": "#a05cff",
+          "width": 1700,
+          "low": "#74ffb4",
+          "high": "#6a50ff",
           "alt": {
-            "low": "#4ae0ff",
-            "high": "#ff6ad0",
-            "share": 0.4
+            "low": "#7affd8",
+            "high": "#8a5cff",
+            "share": 0.3
           },
-          "intensity": 1.15,
-          "speed": 1.1,
-          "seed": 7
+          "intensity": 0.6,
+          "speed": 1.0,
+          "seed": 7,
+          "arc": 0.6,
+          "folds": 55,
+          "rays": 0.7,
+          "rayScale": 95,
+          "gaps": 0.65,
+          "edge": 0.03,
+          "span": [
+            70,
+            95
+          ],
+          "azimuth": [
+            -38,
+            38
+          ],
+          "rise": 150
         },
         "bind": [
           {
             "target": "intensity",
             "feature": "sectionIntensity",
-            "amount": 0.6,
+            "amount": 0.35,
             "category": "lighting",
-            "attackMs": 600,
-            "releaseMs": 2200
-          },
-          {
-            "target": "speed",
-            "feature": "overallEnergy",
-            "amount": 0.5,
-            "attackMs": 400,
-            "releaseMs": 1600
+            "attackMs": 1200,
+            "releaseMs": 4000
           }
         ]
       },
       {
-        "id": "aurora-high",
+        "id": "aurora-far",
         "type": "aurora",
         "params": {
           "ribbons": 2,
           "distance": [
-            200,
-            300
+            820,
+            870
           ],
-          "base": 80,
+          "base": 30,
           "height": [
-            120,
-            180
+            150,
+            200
           ],
-          "width": 900,
-          "low": "#5dffb0",
-          "high": "#5a8aff",
+          "span": [
+            50,
+            70
+          ],
+          "azimuth": [
+            -70,
+            60
+          ],
+          "rise": 80,
+          "low": "#5ae8a6",
+          "high": "#5a3cff",
           "alt": {
-            "low": "#5dffb0",
-            "high": "#c07bff",
+            "low": "#3ae0b8",
+            "high": "#6a3cff",
             "share": 0.5
           },
-          "intensity": 0.7,
-          "speed": 0.8,
-          "seed": 11
+          "intensity": 0.28,
+          "speed": 0.7,
+          "seed": 21,
+          "arc": 0.5,
+          "folds": 40,
+          "rays": 0.6,
+          "rayScale": 80,
+          "gaps": 0.75,
+          "edge": 0.12
         },
-        "bind": [
-          {
-            "target": "intensity",
-            "feature": "bass",
-            "amount": 0.5,
-            "category": "lighting",
-            "attackMs": 120,
-            "releaseMs": 1400
-          }
-        ]
+        "bind": []
+      },
+      {
+        "id": "ranges",
+        "type": "ridges",
+        "params": {
+          "span": [
+            -100,
+            100
+          ],
+          "hazeColor": "#0a1a1e",
+          "rimColor": "#6dffc4",
+          "layers": [
+            {
+              "distance": 560,
+              "height": 42,
+              "base": -15,
+              "scale": 0.8,
+              "roughness": 0.75,
+              "seed": 3,
+              "rock": "#04070a",
+              "snow": "#6a8292",
+              "snowAmount": 0.62,
+              "haze": 0.3,
+              "rim": 0.14
+            },
+            {
+              "distance": 380,
+              "height": 24,
+              "base": -15,
+              "scale": 1.1,
+              "roughness": 0.65,
+              "seed": 8,
+              "rock": "#020406",
+              "snow": "#3e5262",
+              "snowAmount": 0.5,
+              "haze": 0.12,
+              "rim": 0.06
+            },
+            {
+              "distance": 250,
+              "height": 11,
+              "base": -15,
+              "scale": 1.6,
+              "roughness": 0.4,
+              "seed": 13,
+              "rock": "#010203",
+              "snow": "#1e2a34",
+              "snowAmount": 0.35,
+              "haze": 0.0,
+              "rim": 0.0
+            }
+          ]
+        },
+        "bind": []
       },
       {
         "id": "tundra",
@@ -218,56 +284,44 @@
             "layers": [
               {
                 "type": "fbm",
-                "amplitude": 5,
-                "scale": 80,
+                "amplitude": 3,
+                "scale": 70,
                 "octaves": 4
               },
               {
                 "type": "dunes",
-                "amplitude": 1.6,
+                "amplitude": 0.8,
                 "wavelength": 22,
                 "direction": 50,
                 "crest": 0.65,
                 "warp": 0.4,
                 "variation": 0.6
-              },
-              {
-                "type": "ridged",
-                "amplitude": 120,
-                "scale": 260,
-                "octaves": 4,
-                "sharpness": 1.7,
-                "band": {
-                  "near": 460,
-                  "ramp": 180,
-                  "far": 5000
-                }
               }
             ],
             "clearing": {
               "center": [
                 0,
-                -120
+                -172
               ],
-              "radius": 60,
-              "falloff": 40,
-              "depth": -1.6
+              "radius": 130,
+              "falloff": 22,
+              "depth": -3
             }
           },
           "mesh": {
             "near": 12,
-            "far": 1200,
-            "rows": 220,
-            "cols": 230,
+            "far": 420,
+            "rows": 200,
+            "cols": 220,
             "spread": 1.45
           },
           "colors": {
-            "low": "#5a7896",
-            "high": "#d4e4f2",
-            "rock": "#3a4a56",
-            "snow": "#e8f4ff",
+            "low": "#070a0e",
+            "high": "#0d1318",
+            "rock": "#06090c",
+            "snow": "#121a22",
             "snowLine": 40,
-            "sparkle": "#e0fff4"
+            "sparkle": "#b8d8ff"
           },
           "ripples": {
             "strength": 0.15,
@@ -276,7 +330,7 @@
             "speed": 0.0,
             "fadeDistance": 80
           },
-          "sparkle": 0.8,
+          "sparkle": 0.35,
           "roughness": 0.78,
           "rockSlope": 0.45
         },
@@ -287,221 +341,125 @@
         "type": "water",
         "params": {
           "y": -15.95,
-          "deep": "#06202a",
-          "shallow": "#2a6a72",
-          "skyTop": "#1a5a50",
-          "skyHorizon": "#3affb0",
+          "size": 900,
+          "deep": "#010406",
+          "shallow": "#02080b",
+          "skyTop": "#03100f",
+          "skyHorizon": "#0a2a22",
           "glow": "#5dffb0",
-          "rippleColor": "#a8ffe0",
-          "glowStrength": 0.12,
-          "amplitude": 0.0,
+          "glowStrength": 0,
+          "amplitude": 0,
           "wavelength": 30,
-          "speed": 0.0,
-          "moonDirection": [
-            0.3,
-            0.5,
-            -1
-          ]
-        },
-        "bind": [
-          {
-            "target": "glow",
-            "feature": "sectionIntensity",
-            "amount": 0.5,
-            "attackMs": 600,
-            "releaseMs": 2000
+          "speed": 0,
+          "moonColor": "#000000",
+          "rippleColor": "#123a30",
+          "reflection": {
+            "strength": 0.92,
+            "resolution": 0.5,
+            "distortion": 0.0035,
+            "tint": "#d8f0ea"
           }
-        ]
-      },
-      {
-        "id": "frozen-arches",
-        "type": "gltfScene",
-        "params": {
-          "src": "/content/stages/frozen-kingdom/models/ice.glb",
-          "include": "^(crystal_arch|rune_a|rune_c)$",
-          "position": [
-            -40,
-            0,
-            -40
-          ],
-          "rotation": [
-            0,
-            -0.3,
-            0
-          ],
-          "snapToGround": true,
-          "sink": 1.0,
-          "vertexAO": true,
-          "materials": [
-            {
-              "match": "^iceWall",
-              "preset": "ice",
-              "color": "#6aa8b8",
-              "roughness": 0.1
-            },
-            {
-              "match": "^iceDeep",
-              "preset": "ice",
-              "color": "#2a5a6a",
-              "roughness": 0.08
-            },
-            {
-              "match": "^snowCap",
-              "preset": "stone",
-              "color": "#e0eef8"
-            },
-            {
-              "match": "^iceGlow",
-              "preset": "emissive",
-              "color": "#062018",
-              "emissive": "#5dffb0",
-              "emissiveIntensity": 1.1,
-              "musicGlow": 0.9
-            }
-          ]
-        },
-        "bind": [
-          {
-            "target": "emissive",
-            "feature": "bass",
-            "amount": 0.5,
-            "category": "lighting",
-            "attackMs": 80,
-            "releaseMs": 900
-          }
-        ]
-      },
-      {
-        "id": "taiga",
-        "type": "scatter",
-        "params": {
-          "src": "/content/shared/flora/flora.glb",
-          "count": 180,
-          "seed": 5,
-          "items": [
-            {
-              "mesh": "pine_snow",
-              "scale": [
-                0.8,
-                1.5
-              ],
-              "tintJitter": 0.1
-            }
-          ],
-          "area": {
-            "kind": "band",
-            "near": 90,
-            "far": 420,
-            "spread": 1.4
-          },
-          "exclude": [
-            {
-              "center": [
-                0,
-                -8
-              ],
-              "radius": 34
-            },
-            {
-              "center": [
-                0,
-                -120
-              ],
-              "radius": 66
-            }
-          ],
-          "clustering": 0.75,
-          "clusterScale": 90,
-          "sway": {
-            "amount": 0.12,
-            "speed": 0.6
-          },
-          "materials": [
-            {
-              "match": "^needles",
-              "preset": "foliage",
-              "color": "#142a2a"
-            },
-            {
-              "match": "^snow",
-              "preset": "stone",
-              "color": "#d8e8f4",
-              "roughness": 0.65
-            },
-            {
-              "match": "^bark",
-              "preset": "stone",
-              "color": "#241c18"
-            }
-          ]
         },
         "bind": []
       },
       {
-        "id": "glow-crystals",
-        "type": "scatter",
+        "id": "spruce",
+        "type": "conifers",
         "params": {
-          "src": "/content/shared/flora/flora.glb",
-          "count": 40,
-          "seed": 8,
-          "items": [
-            {
-              "mesh": "crystal_cluster",
-              "scale": [
-                0.6,
-                1.5
-              ],
-              "tintJitter": 0.3
-            }
+          "needles": "#020507",
+          "snow": "#25313c",
+          "snowAmount": 0.3,
+          "rimColor": "#5dffb0",
+          "rim": 0.2,
+          "rimDirection": [
+            0,
+            0.5,
+            -1
           ],
-          "area": {
-            "kind": "band",
-            "near": 26,
-            "far": 110,
-            "spread": 1.4
-          },
-          "exclude": [
+          "groups": [
             {
               "center": [
                 0,
-                -8
+                -345
               ],
-              "radius": 28
+              "spread": [
+                260,
+                18
+              ],
+              "count": 520,
+              "height": [
+                9,
+                20
+              ],
+              "seed": 1
             },
             {
               "center": [
-                0,
-                -120
+                -175,
+                -200
               ],
-              "radius": 60
-            }
-          ],
-          "clustering": 0.5,
-          "clusterScale": 30,
-          "sway": {
-            "amount": 0.0
-          },
-          "materials": [
+              "spread": [
+                40,
+                90
+              ],
+              "count": 160,
+              "height": [
+                10,
+                22
+              ],
+              "seed": 2
+            },
             {
-              "match": "^crystal",
-              "preset": "ice",
-              "color": "#4a9aa8",
-              "emissive": "#4ae0d0",
-              "emissiveIntensity": 0.18,
-              "musicGlow": 1
+              "center": [
+                175,
+                -200
+              ],
+              "spread": [
+                40,
+                90
+              ],
+              "count": 160,
+              "height": [
+                10,
+                22
+              ],
+              "seed": 3
+            },
+            {
+              "center": [
+                -92,
+                -40
+              ],
+              "spread": [
+                22,
+                16
+              ],
+              "count": 11,
+              "height": [
+                30,
+                46
+              ],
+              "seed": 4
+            },
+            {
+              "center": [
+                96,
+                -44
+              ],
+              "spread": [
+                22,
+                16
+              ],
+              "count": 11,
+              "height": [
+                30,
+                46
+              ],
+              "seed": 5
             }
           ]
         },
-        "bind": [
-          {
-            "target": "emissive",
-            "feature": "highMid",
-            "amount": 0.6,
-            "category": "lighting",
-            "attackMs": 40,
-            "releaseMs": 600
-          }
-        ]
+        "bind": []
       },
       {
         "id": "reindeer",
@@ -509,27 +467,27 @@
         "params": {
           "model": "/content/shared/creatures/deer.glb",
           "rig": "/content/shared/creatures/deer.rig.json",
-          "representation": "both",
+          "representation": "mesh",
           "groups": [
             {
               "path": {
                 "kind": "line",
                 "from": [
-                  -170,
+                  -150,
                   0,
-                  -70
+                  -17
                 ],
                 "to": [
-                  180,
+                  150,
                   0,
-                  -82
+                  -19
                 ]
               },
-              "members": 6,
+              "members": 5,
               "formation": "herd",
               "spacing": 4.5,
               "speed": 0.85,
-              "scale": 2.3,
+              "scale": 3.0,
               "start": 0.3,
               "rest": 18,
               "fade": 16,
@@ -542,9 +500,9 @@
             "size": 0.05,
             "color": "#c8fff0",
             "colorB": "#8ae0ff",
-            "brightness": 0.6,
+            "brightness": 0.35,
             "jitter": 0.02,
-            "bloom": 0.4,
+            "bloom": 0.2,
             "scatter": 5,
             "wind": [
               0.4,
@@ -554,13 +512,13 @@
             "lodDistance": 80
           },
           "mesh": {
-            "color": "#3a3430",
+            "color": "#070707",
             "roughness": 0.85,
-            "rim": "#5dffb0",
-            "rimStrength": 0.25
+            "rim": "#a8e0cc",
+            "rimStrength": 0.16
           },
           "dust": {
-            "enabled": true,
+            "enabled": false,
             "color": "#e0f0ff",
             "amount": 0.6,
             "size": 0.45
@@ -570,158 +528,35 @@
         "bind": []
       },
       {
-        "id": "light-birds",
-        "type": "swarm",
-        "params": {
-          "kind": "bird",
-          "count": 40,
-          "flocks": 3,
-          "motion": {
-            "kind": "orbit",
-            "center": [
-              0,
-              60,
-              -220
-            ],
-            "radius": [
-              190,
-              18,
-              80
-            ],
-            "speed": 10
-          },
-          "spread": [
-            14,
-            5,
-            9
-          ],
-          "size": [
-            3,
-            4
-          ],
-          "color": "#7affd0",
-          "colorB": "#b48cff",
-          "glow": 1.6,
-          "tempo": 0.6,
-          "seed": 4
-        },
-        "bind": [
-          {
-            "target": "glow",
-            "feature": "beatPulse",
-            "amount": 0.6,
-            "category": "lighting",
-            "attackMs": 30,
-            "releaseMs": 500
-          }
-        ]
-      },
-      {
-        "id": "light-streams",
-        "type": "particles",
-        "params": {
-          "count": 1800,
-          "center": [
-            0,
-            30,
-            -160
-          ],
-          "size": [
-            420,
-            30,
-            120
-          ],
-          "color": "#5dffb0",
-          "colorB": "#b47cff",
-          "minSize": 0.08,
-          "maxSize": 0.2,
-          "velocity": [
-            8,
-            0.4,
-            0
-          ],
-          "turbulence": 1.2,
-          "twinkle": 0.5,
-          "brightness": 1.0,
-          "shape": "streak",
-          "angle": 90,
-          "seed": 91,
-          "bloom": 0.6
-        },
-        "bind": [
-          {
-            "target": "speed",
-            "feature": "overallEnergy",
-            "amount": 0.6,
-            "category": "particles",
-            "attackMs": 200,
-            "releaseMs": 1400
-          }
-        ]
-      },
-      {
         "id": "snow",
         "type": "particles",
         "params": {
-          "count": 4500,
+          "count": 1400,
           "center": [
             0,
-            6,
-            -45
+            4,
+            -30
           ],
           "size": [
-            200,
-            50,
-            120
+            160,
+            40,
+            70
           ],
           "color": "#ffffff",
           "colorB": "#d8f8ff",
           "minSize": 0.04,
-          "maxSize": 0.12,
+          "maxSize": 0.1,
           "velocity": [
-            0.8,
-            -1.4,
-            0.3
+            0.5,
+            -1.0,
+            0.2
           ],
           "turbulence": 0.7,
           "twinkle": 0.4,
-          "brightness": 0.6,
+          "brightness": 0.4,
           "shape": "snow",
           "seed": 93,
           "bloom": 0.2
-        },
-        "bind": []
-      },
-      {
-        "id": "glow-motes",
-        "type": "particles",
-        "params": {
-          "count": 1800,
-          "center": [
-            0,
-            0,
-            -40
-          ],
-          "size": [
-            140,
-            30,
-            80
-          ],
-          "color": "#7affd0",
-          "colorB": "#c8a8ff",
-          "minSize": 0.03,
-          "maxSize": 0.09,
-          "velocity": [
-            0.2,
-            0.2,
-            0.1
-          ],
-          "turbulence": 0.6,
-          "twinkle": 1,
-          "brightness": 1.3,
-          "shape": "star",
-          "seed": 95,
-          "bloom": 0.6
         },
         "bind": []
       }
@@ -730,16 +565,9 @@
   "reactivity": {
     "profiles": [
       {
-        "name": "treble-sparkle",
-        "layers": [
-          "glow-motes"
-        ]
-      },
-      {
         "name": "flux-turbulence",
         "layers": [
-          "snow",
-          "glow-motes"
+          "snow"
         ]
       }
     ],

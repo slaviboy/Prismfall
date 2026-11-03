@@ -118,7 +118,6 @@ const foldIntoCranes = makeRecipeEffect(
     size: [0.22, 0.42],
     color: 'mix',
     brightness: 1.3,
-    wave: true,
     secondary: { share: 0.4, shape: 'shard', motion: 'radial', speed: [3, 7], gravity: -3, life: [0.6, 1.1], size: [0.12, 0.24], color: 'white', brightness: 1.6 },
   },
   'Rows fold into paper scraps that rise like cranes.',

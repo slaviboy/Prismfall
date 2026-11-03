@@ -200,15 +200,11 @@ export class FeedbackDirector {
           frameUniforms.clearPulse.value = Math.min(1.6, frameUniforms.clearPulse.value + intensity * 0.8 * frameUniforms.flashLimit.value);
           this.camera.addTrauma(0.12 + intensity * 0.3);
           if (e.lines >= 4 || e.perfectClear || e.spin !== 'none') this.camera.addPush(0.5 + intensity * 0.4);
-          if (e.perfectClear) {
-            this.shockwave(this.hex(this.palette.highlight), 40, nowSec, 1.2);
-            this.shockwave(this.hex(this.palette.accent), 26, nowSec + 0.12, 1);
-          } else if (e.lines >= 4) this.shockwave(this.hex(this.palette.accent), 24, nowSec, 0.8);
+          if (e.perfectClear) this.shockwave(this.hex(this.palette.highlight), 30, nowSec, 1);
           this.onStageEvent?.({ kind: 'clear', lines: e.lines, intensity, spin: e.spin !== 'none', perfectClear: e.perfectClear, combo: e.combo, backToBack: e.backToBack });
           break;
         }
         case 'levelUp':
-          this.shockwave(this.hex(this.palette.secondary), 30, nowSec, 1.1);
           this.onStageEvent?.({ kind: 'levelUp', level: e.level });
           break;
         case 'boardReset':

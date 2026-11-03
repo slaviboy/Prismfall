@@ -608,9 +608,7 @@
   "effects": {
     "lineClear": {
       "effect": "igniteQuench",
-      "params": {
-        "wave": true
-      }
+      "params": {}
     },
     "landing": {
       "shape": "spark"

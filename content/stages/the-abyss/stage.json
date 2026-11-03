@@ -786,9 +786,7 @@
   "effects": {
     "lineClear": {
       "effect": "bubbleAscent",
-      "params": {
-        "wave": true
-      }
+      "params": {}
     },
     "landing": {
       "shape": "bubble"

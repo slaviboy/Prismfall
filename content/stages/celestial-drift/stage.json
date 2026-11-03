@@ -635,9 +635,7 @@
   "effects": {
     "lineClear": {
       "effect": "supernova",
-      "params": {
-        "wave": true
-      }
+      "params": {}
     },
     "landing": {
       "shape": "star"

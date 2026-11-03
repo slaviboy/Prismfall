@@ -738,9 +738,7 @@
   "effects": {
     "lineClear": {
       "effect": "crumbleDust",
-      "params": {
-        "wave": true
-      }
+      "params": {}
     },
     "landing": {
       "shape": "shard"

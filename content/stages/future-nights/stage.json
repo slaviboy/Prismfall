@@ -594,9 +594,7 @@
   "effects": {
     "lineClear": {
       "effect": "glitchSlice",
-      "params": {
-        "wave": true
-      }
+      "params": {}
     },
     "landing": {
       "shape": "square"
