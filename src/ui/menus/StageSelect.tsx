@@ -11,6 +11,7 @@ import { MenuList } from '../components/controls';
 import { formatScore } from '../format';
 import { useConfirmBackLabels } from '../hints';
 import { ControlHints, MenuScreen } from './MenuScreen';
+import { hoverFocus } from '../navigation/hoverFocus';
 
 /** Stages in play order (manifest `order`, then name). */
 export function orderedStages(): StageInfo[] {
@@ -116,7 +117,7 @@ export function StageSelectScreen(): ReactNode {
                 setFocusId(info.id);
                 shell.stageManager?.preview(info.id);
               }}
-              onMouseEnter={(e) => e.currentTarget.focus({ preventScroll: true })}
+              onMouseEnter={hoverFocus}
               onClick={() => choose(info)}
             >
               <StageArt info={info} className="world-card-art" />

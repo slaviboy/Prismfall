@@ -5,6 +5,8 @@ test.describe('practice mode', () => {
     await openMenu(page);
     await page.getByTestId('menu-play').click();
     await page.getByTestId('mode-practice').click();
+    // Park the mouse: the setup screen opens under the pointer, and hovering a row selects it.
+    await page.mouse.move(2, 2);
     await expect(page.getByTestId('practice-options')).toBeVisible();
     // Gravity: By level -> Custom -> None (two steps right).
     const gravity = page.getByTestId('practice-gravity');
@@ -13,6 +15,8 @@ test.describe('practice mode', () => {
     // One step at a time: under a loaded machine two quick presses can land before the first applies.
     await page.keyboard.press('ArrowRight');
     await expect.poll(() => hooks<string>(page, 'h.getSettings().practice.gravityMode')).toBe('custom');
+    // Custom gravity inserts a row under the resting mouse pointer: focus must stay on gravity.
+    await expect(gravity).toBeFocused();
     await page.keyboard.press('ArrowRight');
     await expect.poll(() => hooks<string>(page, 'h.getSettings().practice.gravityMode')).toBe('none');
     // Drill only I pieces.

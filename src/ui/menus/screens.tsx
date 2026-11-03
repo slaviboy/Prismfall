@@ -16,6 +16,7 @@ import { getCampaign, getStage } from '../../stages/registry';
 import { isStageUnlocked, unlockHint } from '../../stages/progression';
 import { PracticeOptions } from './PracticeOptions';
 import { StageArt, orderedStages } from './StageSelect';
+import { hoverFocus } from '../navigation/hoverFocus';
 
 function useHints(extra: readonly { keys: string; label: string }[] = []): readonly { keys: string; label: string }[] {
   const { confirm, back } = useConfirmBackLabels();
@@ -104,7 +105,7 @@ function WorldRow(): ReactNode {
   const locked = m ? !isStageUnlocked(m, progress, unlockAll) : false;
   const name = (id: string): string => getStage(id)?.manifest?.name ?? id;
   return (
-    <button type="button" className="setup-world" data-focusable onClick={() => navigate('stages')} onMouseEnter={(e) => e.currentTarget.focus({ preventScroll: true })} data-testid="setup-world">
+    <button type="button" className="setup-world" data-focusable onClick={() => navigate('stages')} onMouseEnter={hoverFocus} data-testid="setup-world">
       <StageArt info={info} className="setup-world-art" />
       <span className="setup-world-text">
         <span className="setup-world-label">World</span>

@@ -5,6 +5,7 @@ import { updateSection, useSettings } from '../../settings/store';
 import { Button, ChoiceRow, MenuList, useTicker } from '../components/controls';
 import { useConfirmBackLabels } from '../hints';
 import { ControlHints, MenuScreen } from './MenuScreen';
+import { hoverFocus } from '../navigation/hoverFocus';
 
 /** What's playing: title, tempo and section, with a lamp on the beat. */
 function NowPlaying(props: { track: CatalogTrack | undefined }): ReactNode {
@@ -124,7 +125,7 @@ export function MusicRoom(): ReactNode {
               className="track-item"
               data-focusable
               data-testid={`track-${t.id}`}
-              onMouseEnter={(e) => e.currentTarget.focus({ preventScroll: true })}
+              onMouseEnter={hoverFocus}
               onClick={() => void play(t.id)}
             >
               <span className="track-title">{t.title}</span>

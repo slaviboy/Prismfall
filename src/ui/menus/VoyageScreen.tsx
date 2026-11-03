@@ -12,6 +12,7 @@ import { formatScore } from '../format';
 import { useConfirmBackLabels } from '../hints';
 import { ControlHints, MenuScreen } from './MenuScreen';
 import { StageArt } from './StageSelect';
+import { hoverFocus } from '../navigation/hoverFocus';
 
 type Area = Campaign['areas'][number];
 
@@ -123,7 +124,7 @@ export function VoyageScreen(): ReactNode {
                 const first = area.legs[0]?.stage;
                 if (first) shell.stageManager?.preview(first);
               }}
-              onMouseEnter={(e) => e.currentTarget.focus({ preventScroll: true })}
+              onMouseEnter={hoverFocus}
               onClick={() => start(i)}
             >
               <span className="area-card-art">

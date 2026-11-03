@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { useNavAdjust } from '../navigation/useNavScope';
 import { useLatest } from '../useLatest';
+import { hoverFocus } from '../navigation/hoverFocus';
 
 /** A primary menu entry: large display type, shows its description while focused. */
 export function MenuItem(props: {
@@ -21,7 +22,7 @@ export function MenuItem(props: {
       data-testid={props.testId}
       disabled={props.disabled}
       onClick={props.onSelect}
-      onMouseEnter={(e) => e.currentTarget.focus({ preventScroll: true })}
+      onMouseEnter={hoverFocus}
     >
       <span className="menu-item-label">{props.label}</span>
       {props.badge ? <span className="menu-item-badge">{props.badge}</span> : null}
@@ -83,7 +84,7 @@ export function Button(props: {
       disabled={props.disabled}
       onClick={props.onClick}
       title={props.title}
-      onMouseEnter={(e) => e.currentTarget.focus({ preventScroll: true })}
+      onMouseEnter={hoverFocus}
     >
       {props.children}
     </button>
@@ -110,7 +111,7 @@ export function ToggleRow(props: RowProps & { value: boolean; onChange: (v: bool
       data-nav-adjust
       data-testid={props.testId}
       onClick={() => props.onChange(!props.value)}
-      onMouseEnter={(e) => e.currentTarget.focus({ preventScroll: true })}
+      onMouseEnter={hoverFocus}
     >
       <span className="setting-text">
         <span className="setting-label">{props.label}</span>
@@ -157,7 +158,7 @@ export function SliderRow(
       data-focusable
       data-nav-adjust
       data-testid={props.testId}
-      onMouseEnter={(e) => e.currentTarget.focus({ preventScroll: true })}
+      onMouseEnter={hoverFocus}
     >
       <span className="setting-text">
         <span className="setting-label">{props.label}</span>
@@ -203,7 +204,7 @@ export function ChoiceRow<T extends string | number>(
       data-nav-adjust
       data-testid={props.testId}
       onClick={() => step(1)}
-      onMouseEnter={(e) => e.currentTarget.focus({ preventScroll: true })}
+      onMouseEnter={hoverFocus}
     >
       <span className="setting-text">
         <span className="setting-label">{props.label}</span>
