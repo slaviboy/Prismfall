@@ -9,6 +9,7 @@ import { galaxyComponent } from './components/galaxy';
 import { gltfSceneComponent } from './components/gltfScene';
 import { creatureHerdComponent } from './components/creatureHerd';
 import { lavaComponent } from './components/lava';
+import { modelComponent } from './components/model';
 import { particlesComponent } from './components/particles';
 import { planetComponent } from './components/planet';
 import { ridgesComponent } from './components/ridges';
@@ -41,6 +42,7 @@ export const BUILTIN_COMPONENTS: readonly ComponentFactory[] = [
   cityComponent,
   ridgesComponent,
   conifersComponent,
+  modelComponent,
 ] as unknown as readonly ComponentFactory[];
 
 let registered = false;
