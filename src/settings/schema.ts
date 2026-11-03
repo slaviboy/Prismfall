@@ -4,7 +4,7 @@ import { z } from 'zod';
  * Persistent settings. Every field has a default so partial or older data parses
  * into a complete object; `migrateSettings` handles structural changes between versions.
  */
-export const SETTINGS_VERSION = 4;
+export const SETTINGS_VERSION = 5;
 
 export const INPUT_ACTIONS = [
   'moveLeft',
@@ -325,6 +325,8 @@ export function migrateSettings(raw: unknown): { settings: Settings; migrated: b
   // v4: free play goes back to each world's own music (a track picked once in the Music Room
   // silently replaced every world's music).
   if (from < 4 && data.setup && typeof data.setup === 'object') data.setup = { ...(data.setup as Record<string, unknown>), music: 'stage' };
+  // v5: every world unlocked for the owner's testing (Settings > Data > Unlock every stage turns it off).
+  if (from < 5) data.setup = { ...(data.setup && typeof data.setup === 'object' ? (data.setup as Record<string, unknown>) : {}), unlockAll: true };
   data.version = SETTINGS_VERSION;
   const parsed = settingsSchema.safeParse(data);
   if (!parsed.success) return { settings: defaultSettings(), migrated: false, valid: false };

@@ -35,9 +35,15 @@ describe('settings schema', () => {
     expect(v2.settings.graphics.depthOfField).toBe(false);
     const v3 = migrateSettings({ version: 3, setup: { music: 'stage:frozen-kingdom:frozen-kingdom-glass-meridian' } });
     expect(v3.settings.setup.music).toBe('stage');
-    const chosen = migrateSettings({ version: 4, camera: { shake: true, movementIntensity: 0.4 } });
+    const chosen = migrateSettings({ version: 5, camera: { shake: true, movementIntensity: 0.4 } });
     expect(chosen.settings.camera.shake).toBe(true);
     expect(chosen.settings.camera.movementIntensity).toBe(0.4);
+  });
+
+  it('v5 unlocks every world in older saves, and keeps a later choice to lock them', () => {
+    expect(migrateSettings({ version: 4, setup: { stageId: 'the-abyss' } }).settings.setup).toMatchObject({ unlockAll: true, stageId: 'the-abyss' });
+    expect(migrateSettings({ version: 2 }).settings.setup.unlockAll).toBe(true);
+    expect(migrateSettings({ version: 5, setup: { unlockAll: false } }).settings.setup.unlockAll).toBe(false);
   });
 
   it('replaces invalid values with defaults instead of failing', () => {
