@@ -174,7 +174,7 @@ The top of Folded Sky's manifest:
 | `lighting` | The fixed light rig's settings: `key` (colour, intensity, azimuth, elevation), `rim`, `ambient` (sky, ground, intensity), up to two point `accents`, `beatResponse` (default 0.4). |
 | `grade` | `exposure`, `saturation`, `contrast`, `tint` [r, g, b], `vignette`, `bloomThreshold`, `bloomRadius`, `toneMapping` (`aces`, `agx`, `neutral`), `envIntensity`. |
 | `camera` | `pitch`, `yaw`, `sway`, `targetY`. |
-| `blocks` | `geometry` (`soft`, `chamfer`, `faceted`, `pillow`, `framed`, `procedural`), `material` (a name from `BLOCK_PRESETS`, `src/rendering/materials/blockPresets.ts`; unknown names fall back to `prism`), `overrides` (any preset field), `palette` (colours for I, O, T, S, Z, J, L). |
+| `blocks` | `geometry` (`soft`, `chamfer`, `faceted`, `pillow`, `framed`, `procedural`, and the procedural `orb` and `tile`), `material` (a name from `BLOCK_PRESETS`, `src/rendering/materials/blockPresets.ts`; unknown names fall back to `prism`), `overrides` (any preset field), `palette` (colours for I, O, T, S, Z, J, L). The named designs players can choose (`BLOCK_DESIGNS`, `src/rendering/materials/blockDesigns.ts`) pair a preset with a shape: the library designs `lumen`, `dichroic`, `ingot`, `ribbon`, `gel`, `rosette`, `marble` and `lantern`, plus every world's own design. |
 | `environment.layers` | The world, built in order (section 5). |
 | `reactivity` | Shared `profiles` and extra `bindings` (section 6). |
 | `effects` | `lineClear` `{ effect, params }` (default `prismBurst`), `transition` `{ effect, params }` (default `warp`), `landing` `{ shape, color }`. |

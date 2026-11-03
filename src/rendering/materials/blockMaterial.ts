@@ -2,6 +2,7 @@ import { MeshPhysicalNodeMaterial, Vector3, type InstancedInterleavedBuffer } fr
 import {
   abs,
   clamp,
+  cos,
   dot,
   exp,
   float,
@@ -71,6 +72,7 @@ export function createBlockMaterial(buffer: InstancedInterleavedBuffer, preset: 
     albedo: uniform(preset.albedo),
     musicGlow: uniform(preset.musicGlow),
     saturation: uniform(preset.saturation),
+    wobble: uniform(preset.wobble ?? 0),
   };
   const intensity = uniform(1);
   const spawnTime = uniform(-1000);
@@ -102,7 +104,10 @@ export function createBlockMaterial(buffer: InstancedInterleavedBuffer, preset: 
   // Row-collapse animation: blocks start `dropRows` higher and ease down (GPU-timed).
   const dropT = clamp(t.sub(a1.z).div(dropDuration), 0, 1);
   const dropRemain = dropT.oneMinus().pow(3);
-  const lifted = positionLocal.add(vec3(0, a1.y.mul(dropRemain), 0));
+  // Jelly designs squash and rebound for a moment when a block locks.
+  const sinceLock = t.sub(a1.w);
+  const squash = exp(max(sinceLock, 0).mul(-7)).mul(step(0, sinceLock)).mul(cos(sinceLock.mul(28))).mul(u.wobble.mul(0.09));
+  const lifted = positionLocal.add(vec3(0, a1.y.mul(dropRemain), 0)).add(positionGeometry.mul(vec3(squash, squash.negate(), squash)));
 
   // Lock flash and spawn materialize pulse.
   const flash = exp(max(t.sub(a1.w), 0).mul(-10)).mul(step(0, t.sub(a1.w))).mul(frameUniforms.flashLimit);
@@ -187,6 +192,7 @@ export function createBlockMaterial(buffer: InstancedInterleavedBuffer, preset: 
       u.albedo.value = next.albedo;
       u.musicGlow.value = next.musicGlow;
       u.saturation.value = next.saturation;
+      u.wobble.value = next.wobble ?? 0;
     },
   };
   handle.apply(preset);

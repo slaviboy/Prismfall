@@ -1,4 +1,4 @@
-import type { BufferGeometry } from 'three/webgpu';
+import { SphereGeometry, type BufferGeometry } from 'three/webgpu';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 
 /** Block edge length; 1 - BLOCK_SIZE is the visible gap between neighbours. */
@@ -12,6 +12,28 @@ export function createRoundedBlock(segments = 4, radius = 0.12): BufferGeometry 
   const g = new RoundedBoxGeometry(BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE, segments, radius);
   g.computeBoundingSphere();
   return g;
+}
+
+/** A round bead or marble in place of a cube (orb designs). */
+export function createOrbBlock(): BufferGeometry {
+  const g = new SphereGeometry(BLOCK_SIZE * 0.48, 40, 28);
+  g.computeBoundingSphere();
+  return g;
+}
+
+/** A slim rounded tile: full face, half the depth (tile designs). */
+export function createTileBlock(): BufferGeometry {
+  const g = new RoundedBoxGeometry(BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE * 0.55, 4, 0.07);
+  g.computeBoundingSphere();
+  return g;
+}
+
+/** Procedural block shapes that need no Blender file, by design id. */
+export function proceduralBlock(id: string): BufferGeometry | null {
+  if (id === 'procedural') return createRoundedBlock();
+  if (id === 'orb') return createOrbBlock();
+  if (id === 'tile') return createTileBlock();
+  return null;
 }
 
 /** Normalises an imported block mesh to the board's cell size (centred, BLOCK_SIZE wide). */

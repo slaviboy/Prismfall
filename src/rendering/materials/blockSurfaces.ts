@@ -1,12 +1,15 @@
 import {
   abs,
+  atan,
   clamp,
+  cos,
   dot,
   float,
   floor,
   fract,
   length,
   max,
+  min,
   mix,
   mx_cell_noise_float,
   mx_fractal_noise_float,
@@ -24,7 +27,7 @@ import type { Node } from 'three/webgpu';
  * Procedural block surfaces for stage block themes. Every surface keeps the piece colour as its
  * identity (tint, glow or crack colour), so the seven pieces stay distinguishable in any theme.
  */
-export const BLOCK_SURFACES = ['plain', 'wood', 'ice', 'sandstone', 'obsidian', 'emerald', 'cosmic', 'aquatic', 'neon', 'mineral', 'aurora', 'paper'] as const;
+export const BLOCK_SURFACES = ['plain', 'wood', 'ice', 'sandstone', 'obsidian', 'emerald', 'cosmic', 'aquatic', 'neon', 'mineral', 'aurora', 'paper', 'lumen', 'dichroic', 'ingot', 'ribbon', 'gel', 'rosette', 'marble', 'lantern'] as const;
 export type BlockSurface = (typeof BLOCK_SURFACES)[number];
 
 type F = Node<'float'>;
@@ -53,6 +56,24 @@ export interface SurfaceOutputs {
 }
 
 const cast = <T>(n: unknown): T => n as T;
+const HALF = 0.47;
+const LUMA = vec3(0.2126, 0.7152, 0.0722);
+
+/** Coordinates on the block face this point belongs to (the axis of its largest component). */
+function faceUV(p: V3): Node<'vec2'> {
+  const a = abs(p);
+  const onZ = step(max(a.x, a.y), a.z);
+  const onY = step(max(a.x, a.z), a.y).mul(onZ.oneMinus());
+  return cast<Node<'vec2'>>(mix(mix(p.yz, p.xz, onY), p.xy, onZ));
+}
+
+/** Distance from the face border (0 on the block's edges, HALF at a face centre). */
+function borderDistance(p: V3): F {
+  const a = abs(p);
+  const m1 = max(a.x, max(a.y, a.z));
+  const mn = min(a.x, min(a.y, a.z));
+  return cast<F>(float(HALF).sub(a.x.add(a.y).add(a.z).sub(m1).sub(mn)));
+}
 
 /** Builds the TSL nodes for one surface kind. */
 export function buildSurface(kind: BlockSurface, i: SurfaceInputs): SurfaceOutputs {
@@ -161,6 +182,90 @@ export function buildSurface(kind: BlockSurface, i: SurfaceInputs): SurfaceOutpu
       const fibres = mx_noise_float(q.mul(vec3(40, 6, 40))).mul(0.5).add(0.5);
       const albedo = base.mul(float(0.86).add(fibres.mul(0.12))).mul(mix(float(1), float(0.88), edge));
       return { albedo: cast<V3>(albedo), emissive: zero, roughness: cast<F>(float(0.95)) };
+    }
+    case 'lumen': {
+      // Dark smoked tile with one crisp lit line inset around every face, like a lit glass edge.
+      const d = borderDistance(p);
+      const line = smoothstep(0.026, 0.01, abs(d.sub(0.06)));
+      const fill = smoothstep(0.08, 0.22, d).mul(ndv.pow(2)).mul(0.06);
+      const albedo = base.mul(0.05).add(0.004);
+      const emissive = base.mul(line.mul(float(1.7).add(music.mul(0.4)))).add(base.mul(fill));
+      return { albedo: cast<V3>(albedo), emissive: cast<V3>(emissive), roughness: cast<F>(float(0.16)) };
+    }
+    case 'dichroic': {
+      // Dichroic glass: a thin-film sheen that shifts hue with the viewing angle over the piece colour.
+      // The coating's thickness varies across the glass (soft swirls), and the hue also shifts with angle.
+      const thickness = mx_fractal_noise_float(q.mul(1.25), 3, 2, 0.5).mul(0.75);
+      const film = ndv.mul(1.3).add(thickness).add(seed.x.mul(0.13));
+      const tau = Math.PI * 2;
+      const rainbow = vec3(cos(film.mul(tau)), cos(film.mul(tau).sub(2.094)), cos(film.mul(tau).sub(4.189))).mul(0.5).add(0.5);
+      const sheen = ndv.oneMinus().pow(1.4).mul(0.6).add(0.28);
+      const albedo = mix(base.mul(0.34), rainbow.mul(dot(base, LUMA).mul(0.45).add(0.2)), sheen.mul(0.6));
+      const emissive = base.mul(ndv.pow(2.2).mul(0.1)).add(rainbow.mul(sheen.mul(0.07)));
+      return { albedo: cast<V3>(albedo), emissive: cast<V3>(emissive), roughness: cast<F>(float(0.05)) };
+    }
+    case 'ingot': {
+      // Polished, anodised metal in the piece colour: a brushed grain and an engraved inset panel.
+      const d = borderDistance(p);
+      const groove = smoothstep(0.012, 0.0, abs(d.sub(0.085)));
+      const brushed = mx_noise_float(q.mul(vec3(2.5, 90, 90))).mul(0.5).add(0.5);
+      const metal = mix(base, vec3(dot(base, LUMA)), 0.15).mul(0.92).add(0.05);
+      const albedo = metal.mul(float(1).sub(groove.mul(0.55))).mul(float(0.92).add(brushed.mul(0.08)));
+      return { albedo: cast<V3>(albedo), emissive: zero, roughness: cast<F>(float(0.16).add(brushed.mul(0.12)).add(groove.mul(0.3))) };
+    }
+    case 'ribbon': {
+      // Candy glass with diagonal ribbons: deep bands of colour between clear, brighter glass.
+      const s = fract(p.x.add(p.y).add(p.z.mul(0.5)).mul(3.4));
+      const band = smoothstep(0.02, 0.06, s).mul(smoothstep(0.52, 0.48, s));
+      const albedo = mix(base.mul(1.05).add(0.06), base.mul(0.4), band);
+      const emissive = base.mul(ndv.pow(2).mul(mix(float(0.12), float(0.05), band)));
+      return { albedo: cast<V3>(albedo), emissive: cast<V3>(emissive), roughness: cast<F>(mix(float(0.06), float(0.12), band)) };
+    }
+    case 'gel': {
+      // Jelly: deep colour, light scattering out of the edges, a darker core and a few suspended bubbles.
+      // Light travels further through the jelly at grazing angles: bright edges, a deep centre.
+      const scatter = ndv.oneMinus().pow(2);
+      const depth = ndv.pow(3);
+      const f1 = mx_worley_noise_float(q.mul(6.5));
+      const bubble = smoothstep(0.075, 0.055, f1).sub(smoothstep(0.045, 0.02, f1));
+      const albedo = base.mul(mix(float(0.3), float(0.14), depth));
+      const emissive = base.mul(scatter.mul(0.55).add(0.03)).add(base.mul(0.5).add(0.25).mul(clamp(bubble, 0, 1).mul(0.22)));
+      return { albedo: cast<V3>(albedo), emissive: cast<V3>(emissive), roughness: cast<F>(float(0.04)) };
+    }
+    case 'rosette': {
+      // Lacquered tile with a gilded eight-petal rosette pressed into each face.
+      const uv = faceUV(p);
+      const r = length(uv);
+      const ang = atan(uv.y, uv.x);
+      const edgeR = float(0.24).add(cos(ang.mul(8)).mul(0.045));
+      const petal = smoothstep(edgeR.add(0.008), edgeR.sub(0.008), r);
+      const outline = smoothstep(0.012, 0.0, abs(r.sub(edgeR)));
+      const centre = smoothstep(0.075, 0.06, r);
+      const veins = smoothstep(0.08, 0.0, abs(sin(ang.mul(8)))).mul(petal).mul(smoothstep(0.07, 0.12, r)).mul(0.3);
+      const gold = mix(base, vec3(1, 0.82, 0.45), 0.55).mul(1.05);
+      const lacquer = base.mul(0.78).mul(mix(float(1), float(0.82), edge));
+      const gild = petal.sub(centre.mul(0.9)).clamp(0, 1);
+      const albedo = mix(lacquer, gold.mul(float(1).sub(veins)), gild).mul(float(1).sub(outline.mul(0.5))).add(base.mul(centre.mul(0.12)));
+      return { albedo: cast<V3>(albedo), emissive: zero, roughness: cast<F>(mix(float(0.42), float(0.2), petal)) };
+    }
+    case 'marble': {
+      // A glass marble: clear tinted glass around a twisted ribbon of colour.
+      const twist = sin(atan(p.z, p.x).mul(2).add(p.y.mul(7)).add(seed.x.mul(3.1)).add(mx_noise_float(q.mul(2)).mul(1.2)));
+      const ribbon = smoothstep(0.55, 0.9, twist).mul(smoothstep(0.42, 0.15, length(p.xz)));
+      const albedo = mix(base.mul(0.22), base.mul(0.95).add(0.08), ribbon);
+      const emissive = base.mul(ndv.pow(2.5).mul(0.14)).add(base.mul(ribbon.mul(0.06)));
+      return { albedo: cast<V3>(albedo), emissive: cast<V3>(emissive), roughness: cast<F>(float(0.03)) };
+    }
+    case 'lantern': {
+      // A paper lantern: thin paper on bamboo ribs, lit warmly from inside; the light breathes with the music.
+      const rib = smoothstep(0.05, 0.02, abs(fract(p.y.mul(3.2).add(0.5)).sub(0.5)));
+      const fibres = mx_noise_float(q.mul(vec3(30, 8, 30))).mul(0.5).add(0.5);
+      const warm = mix(base, vec3(1, 0.8, 0.55), 0.35);
+      const albedo = mix(base.mul(0.62).add(0.05), vec3(0.08, 0.05, 0.03), rib).mul(mix(float(1), float(0.6), edge));
+      // Lit from a flame inside: brightest in the middle of each face, dim towards the frame.
+      const centre = smoothstep(0.03, 0.32, borderDistance(p));
+      const light = ndv.pow(2).mul(centre).mul(float(0.36).add(music.mul(0.08))).mul(float(0.82).add(fibres.mul(0.18))).mul(rib.oneMinus());
+      return { albedo: cast<V3>(albedo), emissive: cast<V3>(warm.mul(light)), roughness: cast<F>(float(0.88)) };
     }
     default:
       return { albedo: base, emissive: zero, roughness: null };

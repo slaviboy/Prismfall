@@ -5,7 +5,7 @@ import { normaliseBlockGeometry } from './blockGeometry';
 /** Blender-authored block designs (assets/blender/scripts/blocks.py), resolved to hashed URLs by Vite. */
 const BLOCK_URLS = import.meta.glob('/content/shared/blocks/*.glb', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
 
-export const BLOCK_GEOMETRIES = ['soft', 'chamfer', 'faceted', 'pillow', 'framed', 'procedural'] as const;
+export const BLOCK_GEOMETRIES = ['soft', 'chamfer', 'faceted', 'pillow', 'framed', 'procedural', 'orb', 'tile'] as const;
 export type BlockGeometryId = (typeof BLOCK_GEOMETRIES)[number];
 
 export function blockUrl(id: string): string | null {

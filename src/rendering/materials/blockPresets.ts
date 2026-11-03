@@ -29,6 +29,8 @@ export interface BlockMaterialPreset {
   readonly envIntensity: number;
   /** Saturation applied to the piece colour (1 = palette as is). */
   readonly saturation: number;
+  /** Jelly squash and rebound when a block locks (0 or absent = rigid). */
+  readonly wobble?: number;
 }
 
 export const BLOCK_PRESETS = {
@@ -57,6 +59,15 @@ export const BLOCK_PRESETS = {
   alpineStone: { surface: 'mineral', roughness: 0.3, metalness: 0, clearcoat: 0.5, clearcoatRoughness: 0.2, emissive: 0.0, core: 0.0, edgeGlow: 0.1, edgeColor: [0.9, 0.95, 1], rim: 0.08, surfaceNoise: 0, ao: 0.6, albedo: 1, musicGlow: 0.05, envIntensity: 0.5, saturation: 1 },
   auroraCrystal: { surface: 'aurora', roughness: 0.1, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.04, emissive: 0.02, core: 0.06, edgeGlow: 0.22, edgeColor: [0.8, 1, 0.95], rim: 0.25, surfaceNoise: 0, ao: 0.4, albedo: 1, musicGlow: 0.25, envIntensity: 0.6, saturation: 1.05 },
   washiSheet: { surface: 'paper', roughness: 0.92, metalness: 0, clearcoat: 0, clearcoatRoughness: 1, emissive: 0.0, core: 0.0, edgeGlow: 0.05, edgeColor: [1, 0.96, 0.9], rim: 0.05, surfaceNoise: 0, ao: 0.6, albedo: 1, musicGlow: 0.05, envIntensity: 0.35, saturation: 1 },
+  // Library designs (any world, the level creator and the Block design setting).
+  lumenFrame: { surface: 'lumen', roughness: 0.16, metalness: 0.3, clearcoat: 1, clearcoatRoughness: 0.05, emissive: 0, core: 0, edgeGlow: 0.06, edgeColor: null, rim: 0.12, surfaceNoise: 0, ao: 0.4, albedo: 1, musicGlow: 0.3, envIntensity: 0.6, saturation: 1.1 },
+  dichroicGlass: { surface: 'dichroic', roughness: 0.05, metalness: 0.15, clearcoat: 1, clearcoatRoughness: 0.03, emissive: 0, core: 0.06, edgeGlow: 0.16, edgeColor: null, rim: 0.12, surfaceNoise: 0, ao: 0.4, albedo: 1, musicGlow: 0.2, envIntensity: 0.65, saturation: 1.05 },
+  polishedIngot: { surface: 'ingot', roughness: 0.2, metalness: 1, clearcoat: 0.5, clearcoatRoughness: 0.08, emissive: 0.03, core: 0, edgeGlow: 0, edgeColor: null, rim: 0.04, surfaceNoise: 0, ao: 0.6, albedo: 1, musicGlow: 0.05, envIntensity: 1.15, saturation: 1 },
+  ribbonGlass: { surface: 'ribbon', roughness: 0.08, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.04, emissive: 0, core: 0.05, edgeGlow: 0.14, edgeColor: null, rim: 0.18, surfaceNoise: 0, ao: 0.45, albedo: 1, musicGlow: 0.15, envIntensity: 0.6, saturation: 1.06 },
+  jellyGel: { surface: 'gel', roughness: 0.04, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.02, emissive: 0.02, core: 0.05, edgeGlow: 0.08, edgeColor: null, rim: 0.2, surfaceNoise: 0, ao: 0.4, albedo: 1, musicGlow: 0.2, envIntensity: 0.7, saturation: 1.08, wobble: 1 },
+  rosetteLacquer: { surface: 'rosette', roughness: 0.4, metalness: 0.15, clearcoat: 0.6, clearcoatRoughness: 0.15, emissive: 0, core: 0, edgeGlow: 0.05, edgeColor: [1, 0.9, 0.7], rim: 0.06, surfaceNoise: 0, ao: 0.6, albedo: 1, musicGlow: 0.05, envIntensity: 0.6, saturation: 1.02 },
+  glassMarble: { surface: 'marble', roughness: 0.03, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.02, emissive: 0.02, core: 0.08, edgeGlow: 0, edgeColor: null, rim: 0.22, surfaceNoise: 0, ao: 0.3, albedo: 1, musicGlow: 0.2, envIntensity: 0.75, saturation: 1.06 },
+  paperLantern: { surface: 'lantern', roughness: 0.88, metalness: 0, clearcoat: 0, clearcoatRoughness: 1, emissive: 0, core: 0, edgeGlow: 0.03, edgeColor: [1, 0.9, 0.75], rim: 0.04, surfaceNoise: 0, ao: 0.55, albedo: 1, musicGlow: 0.15, envIntensity: 0.35, saturation: 1.02 },
 } satisfies Record<string, BlockMaterialPreset>;
 
 export type BlockPresetId = keyof typeof BLOCK_PRESETS;

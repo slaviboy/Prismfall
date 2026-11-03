@@ -18,7 +18,7 @@ import { EnvironmentHost } from '../environments/EnvironmentHost';
 import { createAudioFeatures, type AudioFeatures } from '../../audio/analysis/features';
 import type { GameSignals, QualityInfo } from '../../sdk/types';
 import { loadBlockGeometry } from '../board/blockLibrary';
-import { createRoundedBlock } from '../board/blockGeometry';
+import { createRoundedBlock, proceduralBlock } from '../board/blockGeometry';
 import { perfStore } from './perfStore';
 
 const perfStoreSnapshot = () => perfStore.getState();
@@ -218,7 +218,7 @@ export class RenderSystem implements GameView {
   async setBlockDesign(id: string): Promise<void> {
     if (id === this.blockDesign) return;
     this.blockDesign = id;
-    const geometry = id === 'procedural' ? createRoundedBlock() : await loadBlockGeometry(id);
+    const geometry = proceduralBlock(id) ?? (await loadBlockGeometry(id));
     if (this.blockDesign !== id) {
       geometry?.dispose();
       return;
