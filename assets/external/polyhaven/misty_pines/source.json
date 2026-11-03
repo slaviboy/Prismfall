@@ -25,6 +25,10 @@
     {
       "path": "content/stages/enchanted-wilderness/textures/misty_pines_band.webp",
       "how": "ffmpeg crop=8192:1638:0:1138 (elevations -32..40 deg), unsharp 5:5:0.6, libwebp quality 86"
+    },
+    {
+      "path": "content/stages/enchanted-wilderness/textures/misty_pines_detail.webp",
+      "how": "16k HDR https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/16k%2B/misty_pines_16k.hdr (md5 43d4b0213e6a169189b7cd16556f5b17): crop 6372x3276 (uRange 0.3055..0.6945), tone curve matched to the tonemapped JPG (scripts/panorama_match.py), libwebp quality 90"
     }
   ]
 }

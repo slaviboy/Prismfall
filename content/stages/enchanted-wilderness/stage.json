@@ -118,7 +118,14 @@
             ],
             "offset": 0.5,
             "exposure": 1.0,
-            "fade": 8
+            "fade": 8,
+            "detail": {
+              "src": "textures/misty_pines_detail.webp",
+              "uRange": [
+                0.3055,
+                0.6945
+              ]
+            }
           }
         },
         "bind": []

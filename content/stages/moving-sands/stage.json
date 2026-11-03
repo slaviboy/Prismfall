@@ -120,7 +120,14 @@
             ],
             "offset": 0.5,
             "exposure": 0.85,
-            "fade": 8
+            "fade": 8,
+            "detail": {
+              "src": "textures/rogland_clear_night_detail.webp",
+              "uRange": [
+                0.3055,
+                0.6945
+              ]
+            }
           }
         },
         "bind": []

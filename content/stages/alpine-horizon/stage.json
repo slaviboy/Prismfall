@@ -118,7 +118,14 @@
             ],
             "offset": 0.765,
             "exposure": 1.0,
-            "fade": 8
+            "fade": 8,
+            "detail": {
+              "src": "textures/alps_field_detail.webp",
+              "uRange": [
+                0.5706,
+                0.9594
+              ]
+            }
           }
         },
         "bind": []
