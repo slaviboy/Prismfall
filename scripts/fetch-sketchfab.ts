@@ -7,7 +7,7 @@
  * Only models whose licence allows use in the game are accepted: CC0, CC BY or CC BY-SA (the
  * attribution is recorded; NonCommercial and NoDerivatives licences are refused).
  *
- *   SKETCHFAB_TOKEN=... node scripts/fetch-sketchfab.ts <uid> <name> [--max-texture 1024]
+ *   SKETCHFAB_TOKEN=... node scripts/fetch-sketchfab.ts <uid> <name> [--max-texture 1024] [--max-triangles 60000]
  *   node scripts/fetch-sketchfab.ts <uid> <name> --zip <downloaded glTF zip>
  *
  * With --zip, a glTF archive the owner downloaded from the model's page is used instead of the API
@@ -15,7 +15,8 @@
  *
  * 1. Saves the glTF archive into assets/external/sketchfab/<name>/ with source.json (author, page,
  *    licence, download date, file MD5s).
- * 2. Packs it into one GLB, keeping its skeleton and animations, and optimises it with glTF-Transform
+ * 2. Packs it into one GLB, keeping its skeleton and animations, converts spec/gloss materials to
+ *    metal/rough (three.js no longer reads spec/gloss), and optimises it with glTF-Transform
  *    (meshopt, WebP textures capped at --max-texture) into content/shared/creatures/<name>.glb.
  * 3. Prints the animation clips and the rows to add to ASSET_LICENSES.md.
  */
@@ -76,7 +77,9 @@ writeFileSync(zipPath, zip);
 const extracted = join(dir, 'gltf');
 rmSync(extracted, { recursive: true, force: true });
 mkdirSync(extracted, { recursive: true });
-execFileSync('tar', ['-xf', zipPath, '-C', extracted]);
+// Windows' own tar (bsdtar) reads zip archives; a GNU tar earlier on PATH (Git Bash) cannot.
+const tar = process.platform === 'win32' ? join(process.env.SystemRoot ?? 'C:\\Windows', 'System32', 'tar.exe') : 'tar';
+execFileSync(tar, ['-xf', zipPath, '-C', extracted]);
 const gltfFile = readdirSync(extracted).find((f) => f.endsWith('.gltf'));
 if (!gltfFile) throw new Error('the archive has no .gltf file');
 
@@ -103,19 +106,48 @@ writeFileSync(
   )}\n`,
 );
 
-// One GLB, skeleton and clips intact, then meshopt and WebP textures.
+interface GlbJson {
+  animations?: { name?: string }[];
+  skins?: unknown[];
+  meshes?: { primitives: { indices?: number; mode?: number; attributes: Record<string, number> }[] }[];
+  accessors?: { count: number }[];
+}
+/** The JSON chunk of a GLB. */
+const glbJson = (path: string): GlbJson => {
+  const glb = readFileSync(path);
+  return JSON.parse(glb.subarray(20, 20 + glb.readUInt32LE(12)).toString('utf8')) as GlbJson;
+};
+const triangles = (doc: GlbJson): number =>
+  (doc.meshes ?? []).reduce(
+    (sum, m) =>
+      sum +
+      m.primitives.reduce((s, p) => {
+        if ((p.mode ?? 4) !== 4) return s;
+        const acc = doc.accessors?.[p.indices ?? (p.attributes.POSITION as number)];
+        return s + Math.floor((acc?.count ?? 0) / 3);
+      }, 0),
+    0,
+  );
+
+// One GLB, skeleton and clips intact, then meshopt and WebP textures. Heavy scans are simplified to
+// --max-triangles (meshoptimizer keeps UVs and skin weights: it only collapses edges onto existing
+// vertices), so no model costs more than its budget to load or, when drawn solid, to render.
 const out = join(ROOT, 'content/shared/creatures', `${name}.glb`);
 const raw = join(dir, `${name}.raw.glb`);
 const tx = (...args: string[]) => execFileSync(process.execPath, [GLTF_TRANSFORM, ...args], { stdio: 'inherit' });
 tx('copy', join(extracted, gltfFile), raw);
-tx('optimize', raw, out, '--compress', 'meshopt', '--texture-compress', 'webp', '--texture-size', opt('--max-texture', '1024'), '--simplify', 'false');
+// three.js no longer reads spec/gloss materials (their diffuse texture would be lost): convert them.
+if (readFileSync(join(extracted, gltfFile), 'utf8').includes('KHR_materials_pbrSpecularGlossiness')) tx('metalrough', raw, raw);
+const maxTriangles = Number(opt('--max-triangles', '60000'));
+const sourceTriangles = triangles(glbJson(raw));
+const simplify = sourceTriangles > maxTriangles ? ['--simplify', 'true', '--simplify-ratio', (maxTriangles / sourceTriangles).toFixed(4), '--simplify-error', '0.01'] : ['--simplify', 'false'];
+tx('optimize', raw, out, '--compress', 'meshopt', '--texture-compress', 'webp', '--texture-size', opt('--max-texture', '1024'), ...simplify);
 rmSync(raw, { force: true });
 
 // Clip names, from the GLB's JSON chunk.
-const glb = readFileSync(out);
-const jsonLength = glb.readUInt32LE(12);
-const doc = JSON.parse(glb.subarray(20, 20 + jsonLength).toString('utf8')) as { animations?: { name?: string }[]; skins?: unknown[] };
+const doc = glbJson(out);
 console.log(`\n${out}`);
+console.log(`  triangles: ${sourceTriangles} -> ${triangles(doc)} (budget ${maxTriangles}), ${Math.round(readFileSync(out).length / 1024)} KB`);
 console.log(`  skins: ${doc.skins?.length ?? 0}, clips: ${(doc.animations ?? []).map((a) => a.name).join(', ') || 'none'}`);
 console.log(`\nASSET_LICENSES.md row:\n| \`content/shared/creatures/${name}.glb\` | Sketchfab "${info.name}" by ${info.user.displayName} (${info.viewerUrl}); glTF packed to GLB and optimised with glTF-Transform (meshopt, WebP textures) | ${info.license?.label} (attribution: ${info.user.displayName}) |`);
 if (!existsSync(join(ROOT, '.gitignore')) || !readFileSync(join(ROOT, '.gitignore'), 'utf8').includes('assets/external/sketchfab/')) {
