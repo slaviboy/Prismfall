@@ -115,6 +115,8 @@ export class XRManager {
   private head: Vector3 | null = null;
   private framesSinceAnchor = 0;
   private vrEnvironment: Texture | null = null;
+  /** The world the layout was computed for; a new world has its own ground height. */
+  private layoutWorld: unknown = null;
 
   constructor(private readonly host: XRHost) {
     this.input = new XRControllerInput((e) => host.input.handleXR(e));
@@ -313,6 +315,7 @@ export class XRManager {
     const rs = this.host.renderSystem();
     if (!rs) return;
     const vr = getSettings().vr;
+    this.layoutWorld = rs.environments.current;
     const ground = rs.environments.current?.ctx.ground.surface(0, 30) ?? -14;
     const standing = vr.layout === 'standing';
     // Runtimes disagree on where the "local" origin sits (head or floor), so the layout follows
@@ -446,6 +449,7 @@ export class XRManager {
     const rs = this.host.renderSystem();
     const r = this.renderer;
     if (!rs || !r) return;
+    if (rs.environments.current !== this.layoutWorld) this.applyLayout();
     this.updateUi();
     r.render(rs.scene, this.camera);
     // After a render the eye cameras hold their poses in reference space; the head is their midpoint.
