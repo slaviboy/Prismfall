@@ -37,6 +37,8 @@ export const heightLayerSchema = z.discriminatedUnion('type', [
   }),
   z.object({ type: z.literal('ridged'), ...common, scale: z.number().positive().default(120), octaves: z.number().int().min(1).max(8).default(5), sharpness: z.number().min(1).default(2) }),
   z.object({ type: z.literal('fbm'), ...common, scale: z.number().positive().default(80), octaves: z.number().int().min(1).max(8).default(4) }),
+  /** A volcano: concave cone with a crater (amplitude = height above base). */
+  z.object({ type: z.literal('cone'), ...common, center: z.tuple([z.number(), z.number()]), radius: z.number().positive().default(160), crater: z.number().min(0).default(0.18), roughness: z.number().min(0).default(0.12) }),
   /** Flat-topped buttes with steep sides (desert mesas, terraces). */
   z.object({ type: z.literal('terraces'), ...common, scale: z.number().positive().default(140), steps: z.number().int().min(1).max(12).default(3), threshold: z.number().min(0).max(1).default(0.55) }),
 ]);
@@ -185,6 +187,17 @@ export function createHeightfield(params: HeightfieldParams): (x: number, z: num
         };
       case 'fbm':
         return (x: number, z: number): number => n.fbm((x + ox) / layer.scale, (z + oz) / layer.scale, layer.octaves) * layer.amplitude * weight(z);
+      case 'cone':
+        return (x: number, z: number): number => {
+          const d = Math.hypot(x - layer.center[0], z - layer.center[1]) / layer.radius;
+          if (d >= 1) return 0;
+          // Concave flanks rising to a rim, then a crater bowl inside.
+          const flank = Math.pow(1 - d, 2.2);
+          const rimAt = layer.crater;
+          const bowl = d < rimAt ? 1 - Math.pow(1 - d / rimAt, 2) * 0.35 : 1;
+          const rough = 1 + n.fbm(x / 40, z / 40, 3) * layer.roughness * (1 - d);
+          return flank * bowl * rough * layer.amplitude * weight(z);
+        };
       case 'terraces':
         return (x: number, z: number): number => {
           const v = n.fbm((x + ox) / layer.scale, (z + oz) / layer.scale, 3) * 0.5 + 0.5;

@@ -73,6 +73,8 @@ const schema = z.object({
   glow: z.object({ color: zColor.default('#ff9a4a'), strength: z.number().min(0).default(0) }).prefault({}),
   /** Heat shimmer on distant terrain (0 = off). */
   heatHaze: z.number().min(0).max(1).default(0),
+  /** Molten lava pooling in the low ground below world height `y`. */
+  lava: z.object({ strength: z.number().min(0).default(0), y: z.number().default(-18), color: zColor.default('#ff6a1a'), hot: zColor.default('#ffd27a'), speed: z.number().default(0.05) }).prefault({}),
   /** Underwater caustics: drifting cells of focused sunlight on the ground (strength 0 = off). */
   caustics: z.object({ strength: z.number().min(0).default(0), scale: z.number().positive().default(0.12), speed: z.number().default(0.35), color: zColor.default('#9ff6ff') }).prefault({}),
 });
@@ -191,6 +193,19 @@ export const terrainComponent: ComponentFactory<Params> = {
     const glint = step(0.985, seed).mul(twinkle.pow(4)).mul(smoothstep(60, 8, camDist)).mul(flat).mul(u.sparkle);
     const crest = smoothstep(0.55, 1, h01).mul(u.glow).mul(float(0.6).add(u.music.mul(0.8)));
     let emissive = colorUniform(p.colors.sparkle).mul(glint.mul(1.6)).add(colorUniform(p.glow.color).mul(crest));
+    if (p.lava.strength > 0) {
+      // Lava: crusted, slowly flowing glow in the valleys; brighter seams pulse with the music.
+      const flow = mx_noise_float(vec3(wp.x.mul(0.04).add(time.mul(p.lava.speed)), wp.z.mul(0.04), time.mul(p.lava.speed * 0.5)));
+      // Dark crust plates drifting on the melt; warped so the cracks wander organically.
+      const lw = vec3(mx_noise_float(vec3(wp.x.mul(0.05), wp.z.mul(0.05), 1.3)), mx_noise_float(vec3(wp.z.mul(0.05), wp.x.mul(0.05), 4.1)), 0).mul(1.4);
+      const crust = mx_worley_noise_vec2(vec3(wp.x.mul(0.16).add(time.mul(p.lava.speed)), wp.z.mul(0.16), time.mul(p.lava.speed * 1.5)).add(lw));
+      const seams = smoothstep(0.14, 0, crust.y.sub(crust.x));
+      const molten = smoothstep(p.lava.y + 0.8, p.lava.y - 0.6, wp.y.add(flow.mul(0.9)));
+      const heat = molten.mul(seams.mul(0.7).add(0.35)).mul(float(0.85).add(u.music.mul(0.4)));
+      const lavaColor = mix(colorUniform(p.lava.color), colorUniform(p.lava.hot), seams.mul(molten));
+      emissive = emissive.add(lavaColor.mul(heat).mul(p.lava.strength));
+      albedo = mix(albedo, albedo.mul(0.2), molten);
+    }
     if (p.caustics.strength > 0) {
       // Domain-warped Worley borders at two scales, multiplied: wavy, broken threads of focused light
       // rather than a regular cell network.

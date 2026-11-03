@@ -1,0 +1,648 @@
+{
+  "schemaVersion": 1,
+  "id": "ember-core",
+  "name": "Ember Core",
+  "description": "A land of black glass and running fire beneath a smoking volcano. The mountain erupts on the beat and ember-birds wheel through the ash.",
+  "order": 50,
+  "tags": [
+    "volcanic",
+    "fire",
+    "night",
+    "intense"
+  ],
+  "intensity": 0.7,
+  "recommendedQuality": "high",
+  "palette": {
+    "accent": "#ff6a1a",
+    "secondary": "#ff3a3a",
+    "highlight": "#ffd8a0",
+    "fog": "#2a1410",
+    "plate": "#0c0504"
+  },
+  "fog": {
+    "color": "#2e1610",
+    "density": 0.0034
+  },
+  "backdrop": {
+    "top": "#120808",
+    "bottom": "#2a0e06",
+    "glow": "#ff6a1a"
+  },
+  "lighting": {
+    "key": {
+      "color": "#ffb080",
+      "intensity": 2.0,
+      "azimuth": 30,
+      "elevation": 34
+    },
+    "rim": {
+      "color": "#ff6a1a",
+      "intensity": 2.6
+    },
+    "ambient": {
+      "sky": "#5a2a1a",
+      "ground": "#3a1006",
+      "intensity": 1.0
+    },
+    "accents": [
+      {
+        "color": "#ff6a1a",
+        "intensity": 26,
+        "x": -9,
+        "y": -6,
+        "z": 6
+      },
+      {
+        "color": "#ff3a6a",
+        "intensity": 16,
+        "x": 9,
+        "y": 8,
+        "z": 6
+      }
+    ],
+    "beatResponse": 0.45
+  },
+  "grade": {
+    "saturation": 1.06,
+    "contrast": 1.08,
+    "tint": [
+      1.05,
+      0.98,
+      0.95
+    ],
+    "vignette": 0.5,
+    "bloomThreshold": 0.24,
+    "bloomRadius": 0.55,
+    "toneMapping": "neutral",
+    "envIntensity": 0.3,
+    "exposure": 0.95
+  },
+  "camera": {
+    "pitch": 6,
+    "yaw": 0,
+    "sway": 0.8,
+    "targetY": 0
+  },
+  "blocks": {
+    "geometry": "faceted",
+    "material": "volcanicObsidian",
+    "palette": {
+      "I": "#33d6ff",
+      "O": "#ffcf33",
+      "T": "#c266ff",
+      "S": "#5cff7a",
+      "Z": "#ff3d3d",
+      "J": "#4d6bff",
+      "L": "#ff8a1f"
+    }
+  },
+  "environment": {
+    "layers": [
+      {
+        "id": "sky",
+        "type": "sky",
+        "params": {
+          "top": "#0c0606",
+          "mid": "#3a1410",
+          "midHeight": 0.16,
+          "horizon": "#8a2a10",
+          "bottom": "#1a0806",
+          "horizonGlow": 0.5,
+          "horizonWidth": 0.12,
+          "stars": 0.12,
+          "starSize": 0.7
+        },
+        "bind": [
+          {
+            "target": "glow",
+            "feature": "bass",
+            "amount": 0.25,
+            "attackMs": 80,
+            "releaseMs": 900
+          }
+        ]
+      },
+      {
+        "id": "lava-fields",
+        "type": "terrain",
+        "params": {
+          "height": {
+            "base": -15,
+            "seed": 61,
+            "layers": [
+              {
+                "type": "ridged",
+                "amplitude": 9,
+                "scale": 60,
+                "octaves": 4,
+                "sharpness": 2.2
+              },
+              {
+                "type": "fbm",
+                "amplitude": 5,
+                "scale": 90,
+                "octaves": 3
+              },
+              {
+                "type": "cone",
+                "amplitude": 170,
+                "center": [
+                  60,
+                  -420
+                ],
+                "radius": 260,
+                "crater": 0.16,
+                "roughness": 0.25
+              },
+              {
+                "type": "ridged",
+                "amplitude": 70,
+                "scale": 160,
+                "octaves": 4,
+                "sharpness": 2.0,
+                "band": {
+                  "near": 300,
+                  "ramp": 120,
+                  "far": 5000
+                },
+                "offset": [
+                  400,
+                  0
+                ]
+              }
+            ],
+            "clearing": {
+              "center": [
+                0,
+                -8
+              ],
+              "radius": 26,
+              "falloff": 24,
+              "depth": 2.5
+            }
+          },
+          "mesh": {
+            "near": 12,
+            "far": 1000,
+            "rows": 230,
+            "cols": 230,
+            "spread": 1.45
+          },
+          "colors": {
+            "low": "#1a1210",
+            "high": "#3a2a26",
+            "rock": "#141010",
+            "sparkle": "#ffb06a"
+          },
+          "ripples": {
+            "strength": 0.0
+          },
+          "sparkle": 0.2,
+          "roughness": 0.6,
+          "rockSlope": 0.4,
+          "glow": {
+            "color": "#ff4a1a",
+            "strength": 0.0
+          },
+          "lava": {
+            "strength": 1.3,
+            "y": -12.6,
+            "color": "#ff4a12",
+            "hot": "#ffcf6a",
+            "speed": 0.06
+          },
+          "heatHaze": 0.6
+        },
+        "bind": [
+          {
+            "target": "glow",
+            "feature": "bass",
+            "amount": 0.15,
+            "attackMs": 60,
+            "releaseMs": 700
+          }
+        ]
+      },
+      {
+        "id": "obsidian-spires",
+        "type": "scatter",
+        "params": {
+          "src": "/content/shared/flora/flora.glb",
+          "count": 80,
+          "seed": 3,
+          "items": [
+            {
+              "mesh": "ice_spire",
+              "weight": 2,
+              "scale": [
+                0.5,
+                1.4
+              ],
+              "tintJitter": 0.1
+            },
+            {
+              "mesh": "crystal_cluster",
+              "weight": 2,
+              "scale": [
+                0.8,
+                2.2
+              ],
+              "tintJitter": 0.1
+            },
+            {
+              "mesh": "rock_b",
+              "weight": 1,
+              "scale": [
+                0.6,
+                1.6
+              ]
+            }
+          ],
+          "area": {
+            "kind": "band",
+            "near": 30,
+            "far": 260,
+            "spread": 1.35
+          },
+          "exclude": [
+            {
+              "center": [
+                0,
+                -8
+              ],
+              "radius": 30
+            }
+          ],
+          "clustering": 0.55,
+          "clusterScale": 50,
+          "alignToSlope": false,
+          "sway": {
+            "amount": 0.0
+          },
+          "materials": [
+            {
+              "match": "^ice",
+              "preset": "glass",
+              "color": "#141018",
+              "roughness": 0.08,
+              "emissive": "#ff3a12",
+              "emissiveIntensity": 0.08,
+              "musicGlow": 1
+            },
+            {
+              "match": "^crystal",
+              "preset": "glass",
+              "color": "#18121a",
+              "roughness": 0.06,
+              "emissive": "#ff5a1a",
+              "emissiveIntensity": 0.12,
+              "musicGlow": 1
+            },
+            {
+              "match": "^rock",
+              "preset": "stone",
+              "color": "#241a18",
+              "roughness": 0.7
+            }
+          ]
+        },
+        "bind": [
+          {
+            "target": "emissive",
+            "feature": "bass",
+            "amount": 0.7,
+            "category": "lighting",
+            "attackMs": 40,
+            "releaseMs": 600
+          }
+        ]
+      },
+      {
+        "id": "eruption",
+        "type": "emitter",
+        "params": {
+          "positions": [
+            [
+              60,
+              140,
+              -420
+            ]
+          ],
+          "trigger": "bar",
+          "count": 160,
+          "shape": "spark",
+          "color": "#ffb04a",
+          "colorB": "#ff4a12",
+          "intensity": 2.4,
+          "size": 2.6,
+          "speed": 46,
+          "spread": 0.55,
+          "gravity": -30,
+          "drag": 0.25,
+          "life": 3.2,
+          "swirl": 0.4,
+          "direction": [
+            0,
+            1,
+            0
+          ]
+        },
+        "bind": [
+          {
+            "target": "amount",
+            "feature": "sectionIntensity",
+            "amount": 0.7,
+            "attackMs": 300,
+            "releaseMs": 1500
+          }
+        ]
+      },
+      {
+        "id": "ash-plume",
+        "type": "clouds",
+        "params": {
+          "count": 22,
+          "center": [
+            60,
+            230,
+            -440
+          ],
+          "spread": [
+            200,
+            160,
+            80
+          ],
+          "size": [
+            90,
+            200
+          ],
+          "color": "#2a1a18",
+          "colorB": "#4a2a22",
+          "opacity": 0.5,
+          "drift": [
+            3,
+            1.2,
+            0
+          ],
+          "additive": false,
+          "seed": 9
+        },
+        "bind": []
+      },
+      {
+        "id": "crater-glow",
+        "type": "clouds",
+        "params": {
+          "count": 10,
+          "center": [
+            60,
+            150,
+            -420
+          ],
+          "spread": [
+            60,
+            30,
+            40
+          ],
+          "size": [
+            50,
+            90
+          ],
+          "color": "#ff5a1a",
+          "colorB": "#ffb04a",
+          "opacity": 0.25,
+          "drift": [
+            0.4,
+            0.6,
+            0
+          ],
+          "additive": true,
+          "seed": 11
+        },
+        "bind": [
+          {
+            "target": "opacity",
+            "feature": "bass",
+            "amount": 0.6,
+            "attackMs": 60,
+            "releaseMs": 800
+          }
+        ]
+      },
+      {
+        "id": "fire-birds",
+        "type": "swarm",
+        "params": {
+          "kind": "bird",
+          "count": 12,
+          "flocks": 2,
+          "motion": {
+            "kind": "orbit",
+            "center": [
+              20,
+              60,
+              -260
+            ],
+            "radius": [
+              140,
+              12,
+              70
+            ],
+            "speed": 9
+          },
+          "spread": [
+            10,
+            4,
+            8
+          ],
+          "size": [
+            4,
+            6
+          ],
+          "color": "#ff8a2a",
+          "colorB": "#ffcf6a",
+          "glow": 1.4,
+          "tempo": 0.7,
+          "seed": 5
+        },
+        "bind": [
+          {
+            "target": "glow",
+            "feature": "beatPulse",
+            "amount": 0.6,
+            "category": "lighting",
+            "attackMs": 30,
+            "releaseMs": 500
+          }
+        ]
+      },
+      {
+        "id": "embers",
+        "type": "particles",
+        "params": {
+          "count": 4000,
+          "center": [
+            0,
+            0,
+            -50
+          ],
+          "size": [
+            180,
+            40,
+            110
+          ],
+          "color": "#ffb04a",
+          "colorB": "#ff4a12",
+          "minSize": 0.05,
+          "maxSize": 0.14,
+          "velocity": [
+            0.6,
+            1.8,
+            0.2
+          ],
+          "turbulence": 1.2,
+          "twinkle": 0.8,
+          "brightness": 1.6,
+          "shape": "spark",
+          "seed": 81,
+          "bloom": 0.7
+        },
+        "bind": [
+          {
+            "target": "speed",
+            "feature": "overallEnergy",
+            "amount": 0.6,
+            "category": "particles",
+            "attackMs": 200,
+            "releaseMs": 1200
+          }
+        ]
+      },
+      {
+        "id": "ash",
+        "type": "particles",
+        "params": {
+          "count": 3000,
+          "center": [
+            0,
+            6,
+            -60
+          ],
+          "size": [
+            200,
+            50,
+            120
+          ],
+          "color": "#5a4a46",
+          "colorB": "#3a302e",
+          "minSize": 0.05,
+          "maxSize": 0.14,
+          "velocity": [
+            1.2,
+            -0.6,
+            0.2
+          ],
+          "turbulence": 0.9,
+          "twinkle": 0.0,
+          "brightness": 0.6,
+          "shape": "soft",
+          "additive": false,
+          "seed": 83,
+          "bloom": 0.0
+        },
+        "bind": []
+      },
+      {
+        "id": "heat-smoke",
+        "type": "clouds",
+        "params": {
+          "count": 24,
+          "center": [
+            0,
+            -6,
+            -220
+          ],
+          "spread": [
+            600,
+            20,
+            220
+          ],
+          "size": [
+            60,
+            140
+          ],
+          "color": "#3a1e18",
+          "colorB": "#5a2a1a",
+          "opacity": 0.28,
+          "drift": [
+            1.5,
+            0.3,
+            0.2
+          ],
+          "additive": false,
+          "seed": 13
+        },
+        "bind": [
+          {
+            "target": "opacity",
+            "feature": "sectionIntensity",
+            "amount": 0.3,
+            "attackMs": 1200,
+            "releaseMs": 3000
+          }
+        ]
+      }
+    ]
+  },
+  "reactivity": {
+    "profiles": [
+      {
+        "name": "flux-turbulence",
+        "layers": [
+          "embers"
+        ]
+      }
+    ],
+    "bindings": []
+  },
+  "effects": {
+    "lineClear": {
+      "effect": "igniteQuench",
+      "params": {
+        "wave": true
+      }
+    },
+    "landing": {
+      "shape": "spark"
+    },
+    "transition": {
+      "effect": "embers",
+      "params": {}
+    }
+  },
+  "music": {
+    "bpm": 112,
+    "beatsPerBar": 4,
+    "tracks": [
+      {
+        "id": "ember-core-heart-of-the-mountain",
+        "title": "Heart of the Mountain",
+        "kind": "composition",
+        "src": "music/main.ts"
+      }
+    ],
+    "defaultTrack": "ember-core-heart-of-the-mountain"
+  },
+  "ambience": {
+    "preset": "volcanic",
+    "level": 1
+  },
+  "sfx": {
+    "preset": "metal",
+    "material": "obsidian"
+  },
+  "unlock": {
+    "type": "always"
+  },
+  "thumbnail": "previews/thumb.jpg"
+}
