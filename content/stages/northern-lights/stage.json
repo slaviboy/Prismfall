@@ -126,6 +126,16 @@
         "bind": []
       },
       {
+        "id": "meteors",
+        "type": "meteors",
+        "params": {
+          "interval": 9,
+          "elevation": [3, 32],
+          "seed": 5
+        },
+        "bind": []
+      },
+      {
         "id": "aurora-main",
         "type": "aurora",
         "params": {

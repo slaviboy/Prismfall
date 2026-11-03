@@ -11,6 +11,7 @@ import { gltfSceneComponent } from './components/gltfScene';
 import { jellyfishComponent } from './components/jellyfish';
 import { creatureHerdComponent } from './components/creatureHerd';
 import { lavaComponent } from './components/lava';
+import { meteorsComponent } from './components/meteors';
 import { modelComponent } from './components/model';
 import { particlesComponent } from './components/particles';
 import { particleShapesComponent } from './components/particleShapes';
@@ -49,6 +50,7 @@ export const BUILTIN_COMPONENTS: readonly ComponentFactory[] = [
   particleShapesComponent,
   jellyfishComponent,
   fishSchoolComponent,
+  meteorsComponent,
 ] as unknown as readonly ComponentFactory[];
 
 let registered = false;

@@ -127,6 +127,17 @@
         "bind": []
       },
       {
+        "id": "meteors",
+        "type": "meteors",
+        "params": {
+          "interval": 10,
+          "elevation": [3, 32],
+          "avoid": [{ "direction": [0.55, 0.17, -1], "radius": 6 }],
+          "seed": 11
+        },
+        "bind": []
+      },
+      {
         "id": "headlands",
         "type": "ridges",
         "params": {
@@ -231,7 +242,13 @@
           "rippleColor": "#1f6f68",
           "chop": 0.16,
           "chopScale": 1.0,
-          "size": 2600
+          "size": 2600,
+          "surf": {
+            "color": "#4cc6ff",
+            "strength": 1,
+            "density": 0.4,
+            "seed": 3
+          }
         },
         "bind": []
       },
