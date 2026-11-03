@@ -29,6 +29,10 @@ const schema = z.object({
     .min(1),
   /** Optional material rules; unmatched materials keep the model's own PBR textures. */
   materials: z.array(materialRuleSchema).default([]),
+  /** Scales the materials' own colour (night scenes dim real assets without dimming the board). */
+  exposure: z.number().min(0).default(1),
+  /** Multiplies the materials' colour (sRGB hex), e.g. a cool moonlight cast. */
+  tint: zColor.optional(),
   castShadow: z.boolean().default(false),
   /** Skeletal animation: a clip by name (default the first), with per-instance speed and phase variation. */
   animation: z.object({ clip: z.string().optional(), speed: z.number().default(1), vary: z.number().min(0).max(0.5).default(0.12) }).optional(),
@@ -134,6 +138,11 @@ export const modelComponent: ComponentFactory<Params> = {
           // A per-instance copy that can fade (dithered alpha keeps depth sorting intact).
           const out = remapper.remap(m, false).clone();
           out.alphaHash = true;
+          const c = (out as Material & { color?: Color }).color;
+          if (c instanceof Color) {
+            c.multiplyScalar(p.exposure);
+            if (p.tint) c.multiply(new Color(p.tint));
+          }
           fading.push(out);
           return out;
         };
