@@ -102,7 +102,7 @@ Built-in materials and the stages that use them, with each stage's ambience and 
 | Ember Core | `obsidian` | `metal` | `volcanic` |
 | Northern Lights | `aurora` | `crystal` | `aurora` |
 | Future Nights | `neon` | `neon` | `neon` |
-| Folded Sky | `paper` | `paper` | `garden` (level 0.8) |
+| Folded Sky | `paper` | `paper` | `alpine` (level 0.9) |
 
 The `glass` profile is the fallback, and it is used whenever the "classic" block style is selected.
 

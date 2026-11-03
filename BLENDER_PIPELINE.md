@@ -191,7 +191,6 @@ Example mappings from shipped stages:
 | Frozen Kingdom `citadel` | `^iceWall` → `ice`, `^iceDeep` → `ice`, `^snowCap` → `stone`, `^iceGlow` → `emissive` |
 | Ancient Garden `temple` | `^lacquer`, `^woodDark`, `^roofTile`, `^plaster` → `stone`; `^gold` → `metal`; `^lanternPaper` → `emissive` |
 | Moving Sands `ruins` | `^sandstoneRed`, `^sandstone`, `^paleStone`, `^darkStone` → `stone`; `^glyphGlow` → `emissive` |
-| Folded Sky `lantern-grove` | `^stone` → `stone`, `^lanternGlow` → `emissive`, `^blossom` → `foliage`, `^bark` → `stone` |
 
 ## 8. Optimisation
 

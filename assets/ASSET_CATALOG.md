@@ -297,6 +297,22 @@ In game, use the material preset `keep` for `pyramidStone` to show the textures.
 | Used by | Moving Sands sky (night desert under the Milky Way) |
 
 
+### Montorfano (Poly Haven HDRI)
+
+| Field | Value |
+|---|---|
+| Asset name | Montorfano |
+| Source URL | https://polyhaven.com/a/montorfano |
+| Author | Andreas Mischok |
+| Original download URL | see `assets/external/polyhaven/montorfano/source.json` |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | Tonemapped equirectangular JPG, 8192 x 4096; 16k HDR for the detail band |
+| Modifications | Band cropped to elevations -32 to +40 degrees (8192 x 1638), unsharp mask, WebP quality 86; detail crop of u 0.6422 to 0.9977 from the 16k HDR, tone-matched (5825 x 3276, WebP quality 90) (`scripts/fetch-panorama.ts`) |
+| Final format | `content/stages/folded-sky/textures/montorfano_band.webp`, `montorfano_detail.webp` |
+| Animation | None |
+| Used by | Folded Sky sky (`panorama`, offset 0.82: the forested ridge behind the board, the lake to the right, cirrus overhead) |
+
 ## Space imagery
 
 ### The Milky Way panorama (ESO)

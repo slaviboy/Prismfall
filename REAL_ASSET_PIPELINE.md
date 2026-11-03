@@ -47,6 +47,7 @@ In use:
 | Alpine Horizon | Alps Field (Andreas Mischok) | -32..40, the whole surroundings | 20k |
 | Ancient Garden | Ninomaru Teien (Greg Zaal) | -32..40, the whole surroundings | 16k |
 | Enchanted Wilderness | Misty Pines (Greg Zaal) | -32..40, the whole surroundings | 16k |
+| Folded Sky | Montorfano (Andreas Mischok) | -32..40, the whole surroundings | 16k |
 
 ## Space imagery
 

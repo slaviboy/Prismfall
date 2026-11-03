@@ -56,6 +56,8 @@ content/stages/folded-sky/
   stage.ts
   assets.json
   music/main.ts
+  textures/montorfano_band.webp
+  textures/montorfano_detail.webp
   previews/thumb.jpg
 ```
 
@@ -142,13 +144,13 @@ The top of Folded Sky's manifest:
   "schemaVersion": 1,
   "id": "folded-sky",
   "name": "Folded Sky",
-  "description": "An origami world of paper mountains and drifting cranes. Built entirely from content through the Prismfall SDK.",
+  "description": "A granite summit above two lakes, under a sky folded into sweeping cirrus. Seeds drift on the wind, and cleared lines fold into paper cranes.",
   "order": 70,
-  "tags": ["paper", "origami", "bright", "content-pack"],
+  "tags": ["sky", "lakes", "mountains", "content-pack"],
   "module": "stage.ts",
-  "palette": { "accent": "#e85a4a", "secondary": "#4a7ad8", "highlight": "#fff8ee", "fog": "#e8dcc8", "plate": "#14100c" },
-  "fog": { "color": "#e4d6c0", "density": 0.0022 },
-  "backdrop": { "top": "#9ac0e0", "bottom": "#e8dcc8", "glow": "#f2c14e" },
+  "palette": { "accent": "#f0e2c8", "secondary": "#7aa6d8", "highlight": "#fffaf0", "fog": "#c8d4e2", "plate": "#0c0f14" },
+  "fog": { "color": "#c8d4e2", "density": 0.0008 },
+  "backdrop": { "top": "#5f86b8", "bottom": "#4a5040", "glow": "#fff0d8" },
   "blocks": {
     "geometry": "chamfer",
     "material": "washiSheet",
@@ -210,9 +212,9 @@ Each layer names a registered component type and passes it parameters:
 
 Layers are built in order. Put `terrain` before anything that stands on the ground (`gltfScene` with `snapToGround`, `scatter`, `creatureHerd`), because the terrain installs the ground-height function they query. When a layer fails to build (an unregistered type, invalid params, a missing file or an exception), it is skipped with a console warning `[stage <id>] …`, and the rest of the world still builds.
 
-The Folded Sky environment is seven layers: `sky`, `terrain` (paper hills built from `terraces` and `ridged` height layers), `scatter` (stone lanterns and cherry trees from the shared flora kit), two `paperCranes` flocks (its own component), `particles` (paper scraps) and `clouds`.
+The Folded Sky environment is two layers: a `sky` with a photographic `panorama` (Poly Haven's Montorfano, plus a high-resolution `detail` crop of the directions the camera sees; see REAL_ASSET_PIPELINE.md) and `particles` (seeds drifting on the wind). Its module still registers its own `paperCranes` flock component, a working example of a stage-registered component, although the world no longer places it.
 
-Scatter and gltfScene layers recolour Blender materials by name (`BLENDER_PIPELINE.md`, section 7). From Folded Sky's lantern grove:
+Scatter and gltfScene layers recolour Blender materials by name (`BLENDER_PIPELINE.md`, section 7). For example, a grove of stone lanterns and cherry trees from the shared flora kit:
 
 ```json
 "materials": [
@@ -285,10 +287,10 @@ Bindings come from three places (`StageEnvironment.wireBindings`):
 
 Several bindings on one uniform combine: `mul` factors multiply, `add` terms sum, and then `min`/`max` apply. Audio features are scaled by the player's reactivity settings (strength, preset, bass, treble and beat sensitivity, category response). `game.*` signals are not scaled.
 
-Folded Sky uses all of these: a `bind` on each crane flock (`speed` from `overallEnergy`), a `bind` on the paper scraps, and one scoped profile:
+Folded Sky uses a layer `bind` (its seeds' `speed` from `overallEnergy`) and one scoped profile:
 
 ```json
-"reactivity": { "profiles": [{ "name": "flux-turbulence", "layers": ["paper-scraps"] }], "bindings": [] }
+"reactivity": { "profiles": [{ "name": "flux-turbulence", "layers": ["seeds"] }], "bindings": [] }
 ```
 
 Shared profiles:

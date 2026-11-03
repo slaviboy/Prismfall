@@ -18,7 +18,7 @@ Per-world status of what is on screen, judged from in-game screenshots and recor
 | Future Nights | Procedural night city | Instanced towers, reflective wet street, rain | None | Everything | Candidate for a real night-city panorama |
 | Ember Core | Procedural volcanic night | Lava plain, volcano cone, embers | None | Everything | No volcanic panorama found |
 | Ember Foundry | Procedural industrial hall | Blender hall kit, molten channel, sparks | None | Everything | No suitable CC0 interior |
-| Folded Sky | Procedural paper world | Paper hills, paper cranes | None | Everything (stylised by design) | Intentionally not photographic |
+| Folded Sky | Photo (Montorfano, 16k), whole surroundings | Drifting seeds | Granite summit, forested ridges, lake, cirrus sky | Seeds | The paper theme lives on in its washi blocks and fold-into-cranes line clear |
 
 ## Removed after review
 
@@ -33,6 +33,7 @@ These looked primitive or gimmicky in game and were taken out:
 - **Future Nights:** the drones and data motes.
 - **Ember Core:** the obsidian spires and fire birds.
 - **Moving Sands:** the mesas, arch, particle camels and the script-built pyramids.
+- **Folded Sky:** the paper hills, the paper-crane flocks, the lantern and cherry grove, paper scraps and paper clouds (the world became a real summit under cirrus).
 - **Alpine, Garden and Forest:** the procedural ranges, low-poly tree scatter, particle birds and creatures, and haze sprites.
 
 ## Needed from outside the project
