@@ -1,0 +1,2739 @@
+{
+  "schemaVersion": 1,
+  "id": "last-frontier",
+  "name": "The Last Frontier",
+  "description": "A frontier town at the edge of red rock country, in the last golden hours of the day. Riders come in off the desert, a steam train crosses the plain, and dust glows in the low sun until the lanterns are lit and the stars come out.",
+  "order": 22,
+  "tags": [
+    "western",
+    "desert",
+    "town",
+    "golden hour",
+    "photographic"
+  ],
+  "intensity": 0.5,
+  "recommendedQuality": "high",
+  "module": "stage.ts",
+  "requires": {
+    "sdk": "^1.2.0"
+  },
+  "palette": {
+    "accent": "#e8a451",
+    "secondary": "#b5562e",
+    "highlight": "#fff1d6",
+    "fog": "#d9b48c",
+    "plate": "#0d0806"
+  },
+  "fog": {
+    "color": "#d9b48c",
+    "density": 0.0001
+  },
+  "backdrop": {
+    "top": "#4f7fb8",
+    "bottom": "#8a6a48",
+    "glow": "#ffd39a"
+  },
+  "lighting": {
+    "key": {
+      "color": "#fff0dc",
+      "intensity": 2.3,
+      "azimuth": 40,
+      "elevation": 38
+    },
+    "rim": {
+      "color": "#ffc27a",
+      "intensity": 1.1
+    },
+    "ambient": {
+      "sky": "#a8b8d0",
+      "ground": "#8a6a4a",
+      "intensity": 0.85
+    },
+    "accents": [
+      {
+        "color": "#ffb46a",
+        "intensity": 6,
+        "x": 9,
+        "y": 7,
+        "z": 6
+      },
+      {
+        "color": "#9fb6d8",
+        "intensity": 4,
+        "x": -9,
+        "y": -6,
+        "z": 6
+      }
+    ],
+    "beatResponse": 0
+  },
+  "grade": {
+    "exposure": 1,
+    "saturation": 1.02,
+    "contrast": 1.06,
+    "tint": [
+      1,
+      0.99,
+      0.97
+    ],
+    "vignette": 0.3,
+    "bloomThreshold": 0.85,
+    "bloomRadius": 0.45,
+    "toneMapping": "neutral",
+    "envIntensity": 0.4
+  },
+  "camera": {
+    "pitch": 2,
+    "yaw": 0,
+    "sway": 0.2,
+    "targetY": 0
+  },
+  "blocks": {
+    "geometry": "chamfer",
+    "material": "frontierTimber",
+    "palette": {
+      "I": "#2f9fb0",
+      "O": "#d9a32c",
+      "T": "#8c4aa8",
+      "S": "#5c9a38",
+      "Z": "#c43c2c",
+      "J": "#3561b8",
+      "L": "#d6702a"
+    }
+  },
+  "environment": {
+    "layers": [
+      {
+        "id": "sky",
+        "type": "frontierSky",
+        "params": {
+          "panorama": {
+            "src": "textures/goegap_road_band.webp",
+            "elevation": [
+              -6,
+              40
+            ],
+            "offset": 0.3,
+            "fade": 8,
+            "detail": {
+              "src": "textures/goegap_road_detail.webp",
+              "uRange": [
+                0.1089,
+                0.5311
+              ]
+            }
+          },
+          "top": "#3d6ca8",
+          "mid": "#85a9ce"
+        }
+      },
+      {
+        "id": "ground",
+        "type": "frontierGround",
+        "params": {
+          "town": {
+            "origin": [
+              -47,
+              -46.7
+            ],
+            "axis": [
+              0.819,
+              -0.574
+            ],
+            "s": [
+              -46,
+              21
+            ],
+            "q": [
+              -48,
+              80
+            ],
+            "y": -7,
+            "margin": 26
+          },
+          "grades": [
+            {
+              "points": [
+                [
+                  20,
+                  -650
+                ],
+                [
+                  30,
+                  -320
+                ],
+                [
+                  50,
+                  -175
+                ],
+                [
+                  75,
+                  -145
+                ],
+                [
+                  190,
+                  -82
+                ],
+                [
+                  320,
+                  -12
+                ]
+              ],
+              "y": -8.8,
+              "width": 7,
+              "margin": 10
+            }
+          ],
+          "hills": [
+            {
+              "center": [
+                42,
+                -106
+              ],
+              "radius": 30,
+              "height": 4
+            },
+            {
+              "center": [
+                18,
+                -215
+              ],
+              "radius": 55,
+              "height": 10
+            },
+            {
+              "center": [
+                -30,
+                -300
+              ],
+              "radius": 70,
+              "height": 8
+            }
+          ],
+          "roads": [
+            {
+              "points": [
+                [
+                  -260,
+                  -20
+                ],
+                [
+                  -90.9,
+                  -4.9
+                ],
+                [
+                  -20.5,
+                  -54.2
+                ],
+                [
+                  -89.4,
+                  -152.5
+                ]
+              ],
+              "width": 10
+            },
+            {
+              "points": [
+                [
+                  230,
+                  -100
+                ],
+                [
+                  150,
+                  -115
+                ],
+                [
+                  95,
+                  -150
+                ],
+                [
+                  60,
+                  -200
+                ],
+                [
+                  40,
+                  -260
+                ]
+              ],
+              "width": 4.5
+            },
+            {
+              "points": [
+                [
+                  -28,
+                  -36
+                ],
+                [
+                  -8,
+                  -24
+                ],
+                [
+                  18,
+                  -26
+                ],
+                [
+                  42,
+                  -48
+                ],
+                [
+                  60,
+                  -72
+                ],
+                [
+                  90,
+                  -96
+                ],
+                [
+                  112,
+                  -118
+                ]
+              ],
+              "width": 5
+            },
+            {
+              "points": [
+                [
+                  -30,
+                  -9
+                ],
+                [
+                  -44,
+                  8
+                ],
+                [
+                  -66,
+                  30
+                ]
+              ],
+              "width": 4.5
+            }
+          ],
+          "creek": {
+            "points": [
+              [
+                28,
+                -74
+              ],
+              [
+                44,
+                -28
+              ],
+              [
+                62,
+                12
+              ],
+              [
+                85,
+                42
+              ]
+            ],
+            "width": 7,
+            "depth": 1.1
+          },
+          "plain": -10.2,
+          "basin": {
+            "center": [
+              0,
+              -6
+            ],
+            "y": -10.6,
+            "inner": 60,
+            "outer": 220
+          },
+          "horizon": {
+            "from": 700,
+            "to": 2100,
+            "rise": 58
+          },
+          "photo": {
+            "src": "textures/goegap_road_band.webp",
+            "elevation": [
+              -6,
+              40
+            ],
+            "offset": 0.3,
+            "from": 800,
+            "to": 1900
+          }
+        }
+      },
+      {
+        "id": "town",
+        "type": "frontierTown",
+        "params": {}
+      },
+      {
+        "id": "outcrop",
+        "type": "frontierRocks",
+        "params": {
+          "src": "/content/shared/scans/namaqualand_cliff_02.glb",
+          "tint": "#e8b89a",
+          "instances": [
+            {
+              "position": [
+                40,
+                -3.2,
+                -104
+              ],
+              "yaw": 200,
+              "scale": 2.3
+            },
+            {
+              "position": [
+                26,
+                -2.2,
+                -130
+              ],
+              "yaw": 150,
+              "scale": 1.8
+            },
+            {
+              "position": [
+                72,
+                -3,
+                -165
+              ],
+              "yaw": 190,
+              "scale": 2.6
+            }
+          ]
+        }
+      },
+      {
+        "id": "outcrop-small",
+        "type": "frontierRocks",
+        "params": {
+          "src": "/content/shared/scans/namaqualand_cliff_01.glb",
+          "tint": "#e8b89a",
+          "instances": [
+            {
+              "position": [
+                22,
+                -1.6,
+                -94
+              ],
+              "yaw": 120,
+              "scale": 1.6
+            },
+            {
+              "position": [
+                57,
+                -1.4,
+                -114
+              ],
+              "yaw": 40,
+              "scale": 1.4
+            },
+            {
+              "position": [
+                -72,
+                -1.4,
+                -112
+              ],
+              "yaw": 70,
+              "scale": 2.2
+            }
+          ]
+        }
+      },
+      {
+        "id": "rail",
+        "type": "frontierRail",
+        "params": {
+          "track": [
+            [
+              20,
+              -650
+            ],
+            [
+              30,
+              -320
+            ],
+            [
+              50,
+              -175
+            ],
+            [
+              75,
+              -145
+            ],
+            [
+              190,
+              -82
+            ],
+            [
+              320,
+              -12
+            ]
+          ],
+          "run": [
+            430,
+            794
+          ],
+          "tower": {
+            "at": 560,
+            "offset": -7
+          },
+          "poles": {
+            "offset": 6,
+            "spacing": 46,
+            "from": 470,
+            "to": 794
+          },
+          "first": 2,
+          "shadowBox": [
+            55,
+            -12,
+            -180,
+            210,
+            14,
+            -50
+          ]
+        }
+      },
+      {
+        "id": "shrubs",
+        "type": "frontierScatter",
+        "params": {
+          "src": "models/wild_rooibos_bush.glb",
+          "count": 7000,
+          "inner": 26,
+          "outer": 380,
+          "azimuth": [
+            -85,
+            85
+          ],
+          "scale": [
+            2,
+            3.8
+          ],
+          "cluster": 0.78,
+          "sway": 0.06,
+          "tint": "#f2dcc4",
+          "exclude": {
+            "rects": [
+              {
+                "origin": [
+                  -47,
+                  -46.7
+                ],
+                "axis": [
+                  0.819,
+                  -0.574
+                ],
+                "s": [
+                  -44,
+                  21
+                ],
+                "q": [
+                  -46,
+                  78
+                ]
+              }
+            ],
+            "lines": [
+              {
+                "points": [
+                  [
+                    20,
+                    -650
+                  ],
+                  [
+                    30,
+                    -320
+                  ],
+                  [
+                    50,
+                    -175
+                  ],
+                  [
+                    75,
+                    -145
+                  ],
+                  [
+                    190,
+                    -82
+                  ],
+                  [
+                    320,
+                    -12
+                  ]
+                ],
+                "width": 10
+              },
+              {
+                "points": [
+                  [
+                    -260,
+                    -20
+                  ],
+                  [
+                    -90.9,
+                    -4.9
+                  ],
+                  [
+                    -20.5,
+                    -54.2
+                  ],
+                  [
+                    -89.4,
+                    -152.5
+                  ]
+                ],
+                "width": 12
+              },
+              {
+                "points": [
+                  [
+                    230,
+                    -100
+                  ],
+                  [
+                    150,
+                    -115
+                  ],
+                  [
+                    95,
+                    -150
+                  ],
+                  [
+                    60,
+                    -200
+                  ],
+                  [
+                    40,
+                    -260
+                  ]
+                ],
+                "width": 6
+              },
+              {
+                "points": [
+                  [
+                    -28,
+                    -36
+                  ],
+                  [
+                    -8,
+                    -24
+                  ],
+                  [
+                    18,
+                    -26
+                  ],
+                  [
+                    42,
+                    -48
+                  ],
+                  [
+                    60,
+                    -72
+                  ],
+                  [
+                    90,
+                    -96
+                  ],
+                  [
+                    112,
+                    -118
+                  ]
+                ],
+                "width": 6.5
+              },
+              {
+                "points": [
+                  [
+                    -30,
+                    -9
+                  ],
+                  [
+                    -44,
+                    8
+                  ],
+                  [
+                    -66,
+                    30
+                  ]
+                ],
+                "width": 6
+              }
+            ],
+            "clear": 21,
+            "clearRange": 42
+          }
+        }
+      },
+      {
+        "id": "boulders",
+        "type": "frontierScatter",
+        "params": {
+          "src": "/content/shared/scans/namaqualand_boulder_02.glb",
+          "count": 110,
+          "inner": 30,
+          "outer": 300,
+          "azimuth": [
+            -85,
+            85
+          ],
+          "scale": [
+            0.8,
+            2.4
+          ],
+          "cluster": 0.7,
+          "tint": "#eac0a0",
+          "shadows": false,
+          "exclude": {
+            "rects": [
+              {
+                "origin": [
+                  -47,
+                  -46.7
+                ],
+                "axis": [
+                  0.819,
+                  -0.574
+                ],
+                "s": [
+                  -44,
+                  21
+                ],
+                "q": [
+                  -46,
+                  78
+                ]
+              }
+            ],
+            "lines": [
+              {
+                "points": [
+                  [
+                    20,
+                    -650
+                  ],
+                  [
+                    30,
+                    -320
+                  ],
+                  [
+                    50,
+                    -175
+                  ],
+                  [
+                    75,
+                    -145
+                  ],
+                  [
+                    190,
+                    -82
+                  ],
+                  [
+                    320,
+                    -12
+                  ]
+                ],
+                "width": 10
+              },
+              {
+                "points": [
+                  [
+                    -260,
+                    -20
+                  ],
+                  [
+                    -90.9,
+                    -4.9
+                  ],
+                  [
+                    -20.5,
+                    -54.2
+                  ],
+                  [
+                    -89.4,
+                    -152.5
+                  ]
+                ],
+                "width": 12
+              },
+              {
+                "points": [
+                  [
+                    230,
+                    -100
+                  ],
+                  [
+                    150,
+                    -115
+                  ],
+                  [
+                    95,
+                    -150
+                  ],
+                  [
+                    60,
+                    -200
+                  ],
+                  [
+                    40,
+                    -260
+                  ]
+                ],
+                "width": 6
+              },
+              {
+                "points": [
+                  [
+                    -28,
+                    -36
+                  ],
+                  [
+                    -8,
+                    -24
+                  ],
+                  [
+                    18,
+                    -26
+                  ],
+                  [
+                    42,
+                    -48
+                  ],
+                  [
+                    60,
+                    -72
+                  ],
+                  [
+                    90,
+                    -96
+                  ],
+                  [
+                    112,
+                    -118
+                  ]
+                ],
+                "width": 6.5
+              },
+              {
+                "points": [
+                  [
+                    -30,
+                    -9
+                  ],
+                  [
+                    -44,
+                    8
+                  ],
+                  [
+                    -66,
+                    30
+                  ]
+                ],
+                "width": 6
+              }
+            ],
+            "clear": 21,
+            "clearRange": 42
+          }
+        }
+      },
+      {
+        "id": "shrubs-near",
+        "type": "frontierScatter",
+        "params": {
+          "src": "models/wild_rooibos_bush.glb",
+          "count": 1400,
+          "inner": 26,
+          "outer": 85,
+          "azimuth": [
+            -85,
+            85
+          ],
+          "scale": [
+            1.3,
+            2.4
+          ],
+          "cluster": 0.7,
+          "sway": 0.06,
+          "tint": "#f2dcc4",
+          "exclude": {
+            "rects": [
+              {
+                "origin": [
+                  -47,
+                  -46.7
+                ],
+                "axis": [
+                  0.819,
+                  -0.574
+                ],
+                "s": [
+                  -44,
+                  21
+                ],
+                "q": [
+                  -46,
+                  78
+                ]
+              }
+            ],
+            "lines": [
+              {
+                "points": [
+                  [
+                    20,
+                    -650
+                  ],
+                  [
+                    30,
+                    -320
+                  ],
+                  [
+                    50,
+                    -175
+                  ],
+                  [
+                    75,
+                    -145
+                  ],
+                  [
+                    190,
+                    -82
+                  ],
+                  [
+                    320,
+                    -12
+                  ]
+                ],
+                "width": 10
+              },
+              {
+                "points": [
+                  [
+                    -260,
+                    -20
+                  ],
+                  [
+                    -90.9,
+                    -4.9
+                  ],
+                  [
+                    -20.5,
+                    -54.2
+                  ],
+                  [
+                    -89.4,
+                    -152.5
+                  ]
+                ],
+                "width": 12
+              },
+              {
+                "points": [
+                  [
+                    230,
+                    -100
+                  ],
+                  [
+                    150,
+                    -115
+                  ],
+                  [
+                    95,
+                    -150
+                  ],
+                  [
+                    60,
+                    -200
+                  ],
+                  [
+                    40,
+                    -260
+                  ]
+                ],
+                "width": 6
+              },
+              {
+                "points": [
+                  [
+                    -28,
+                    -36
+                  ],
+                  [
+                    -8,
+                    -24
+                  ],
+                  [
+                    18,
+                    -26
+                  ],
+                  [
+                    42,
+                    -48
+                  ],
+                  [
+                    60,
+                    -72
+                  ],
+                  [
+                    90,
+                    -96
+                  ],
+                  [
+                    112,
+                    -118
+                  ]
+                ],
+                "width": 6.5
+              },
+              {
+                "points": [
+                  [
+                    -30,
+                    -9
+                  ],
+                  [
+                    -44,
+                    8
+                  ],
+                  [
+                    -66,
+                    30
+                  ]
+                ],
+                "width": 6
+              }
+            ],
+            "clear": 21,
+            "clearRange": 42
+          },
+          "seed": 23
+        }
+      },
+      {
+        "id": "quivers",
+        "type": "frontierScatter",
+        "params": {
+          "src": "/content/shared/scans/quiver_tree_01.glb",
+          "count": 14,
+          "inner": 50,
+          "outer": 300,
+          "azimuth": [
+            -80,
+            80
+          ],
+          "scale": [
+            0.8,
+            1.2
+          ],
+          "cluster": 0.3,
+          "tint": "#e8d8c0",
+          "sway": 0,
+          "shadows": false,
+          "exclude": {
+            "rects": [
+              {
+                "origin": [
+                  -47,
+                  -46.7
+                ],
+                "axis": [
+                  0.819,
+                  -0.574
+                ],
+                "s": [
+                  -44,
+                  21
+                ],
+                "q": [
+                  -46,
+                  78
+                ]
+              }
+            ],
+            "lines": [
+              {
+                "points": [
+                  [
+                    20,
+                    -650
+                  ],
+                  [
+                    30,
+                    -320
+                  ],
+                  [
+                    50,
+                    -175
+                  ],
+                  [
+                    75,
+                    -145
+                  ],
+                  [
+                    190,
+                    -82
+                  ],
+                  [
+                    320,
+                    -12
+                  ]
+                ],
+                "width": 10
+              },
+              {
+                "points": [
+                  [
+                    -260,
+                    -20
+                  ],
+                  [
+                    -90.9,
+                    -4.9
+                  ],
+                  [
+                    -20.5,
+                    -54.2
+                  ],
+                  [
+                    -89.4,
+                    -152.5
+                  ]
+                ],
+                "width": 12
+              },
+              {
+                "points": [
+                  [
+                    230,
+                    -100
+                  ],
+                  [
+                    150,
+                    -115
+                  ],
+                  [
+                    95,
+                    -150
+                  ],
+                  [
+                    60,
+                    -200
+                  ],
+                  [
+                    40,
+                    -260
+                  ]
+                ],
+                "width": 6
+              },
+              {
+                "points": [
+                  [
+                    -28,
+                    -36
+                  ],
+                  [
+                    -8,
+                    -24
+                  ],
+                  [
+                    18,
+                    -26
+                  ],
+                  [
+                    42,
+                    -48
+                  ],
+                  [
+                    60,
+                    -72
+                  ],
+                  [
+                    90,
+                    -96
+                  ],
+                  [
+                    112,
+                    -118
+                  ]
+                ],
+                "width": 6.5
+              },
+              {
+                "points": [
+                  [
+                    -30,
+                    -9
+                  ],
+                  [
+                    -44,
+                    8
+                  ],
+                  [
+                    -66,
+                    30
+                  ]
+                ],
+                "width": 6
+              }
+            ],
+            "clear": 26,
+            "clearRange": 400
+          },
+          "seed": 31
+        }
+      },
+      {
+        "id": "quivers-b",
+        "type": "frontierScatter",
+        "params": {
+          "src": "/content/shared/scans/quiver_tree_02.glb",
+          "count": 10,
+          "inner": 50,
+          "outer": 300,
+          "azimuth": [
+            -80,
+            80
+          ],
+          "scale": [
+            0.8,
+            1.2
+          ],
+          "cluster": 0.3,
+          "tint": "#e8d8c0",
+          "sway": 0,
+          "shadows": false,
+          "exclude": {
+            "rects": [
+              {
+                "origin": [
+                  -47,
+                  -46.7
+                ],
+                "axis": [
+                  0.819,
+                  -0.574
+                ],
+                "s": [
+                  -44,
+                  21
+                ],
+                "q": [
+                  -46,
+                  78
+                ]
+              }
+            ],
+            "lines": [
+              {
+                "points": [
+                  [
+                    20,
+                    -650
+                  ],
+                  [
+                    30,
+                    -320
+                  ],
+                  [
+                    50,
+                    -175
+                  ],
+                  [
+                    75,
+                    -145
+                  ],
+                  [
+                    190,
+                    -82
+                  ],
+                  [
+                    320,
+                    -12
+                  ]
+                ],
+                "width": 10
+              },
+              {
+                "points": [
+                  [
+                    -260,
+                    -20
+                  ],
+                  [
+                    -90.9,
+                    -4.9
+                  ],
+                  [
+                    -20.5,
+                    -54.2
+                  ],
+                  [
+                    -89.4,
+                    -152.5
+                  ]
+                ],
+                "width": 12
+              },
+              {
+                "points": [
+                  [
+                    230,
+                    -100
+                  ],
+                  [
+                    150,
+                    -115
+                  ],
+                  [
+                    95,
+                    -150
+                  ],
+                  [
+                    60,
+                    -200
+                  ],
+                  [
+                    40,
+                    -260
+                  ]
+                ],
+                "width": 6
+              },
+              {
+                "points": [
+                  [
+                    -28,
+                    -36
+                  ],
+                  [
+                    -8,
+                    -24
+                  ],
+                  [
+                    18,
+                    -26
+                  ],
+                  [
+                    42,
+                    -48
+                  ],
+                  [
+                    60,
+                    -72
+                  ],
+                  [
+                    90,
+                    -96
+                  ],
+                  [
+                    112,
+                    -118
+                  ]
+                ],
+                "width": 6.5
+              },
+              {
+                "points": [
+                  [
+                    -30,
+                    -9
+                  ],
+                  [
+                    -44,
+                    8
+                  ],
+                  [
+                    -66,
+                    30
+                  ]
+                ],
+                "width": 6
+              }
+            ],
+            "clear": 26,
+            "clearRange": 400
+          },
+          "seed": 37
+        }
+      },
+      {
+        "id": "outcrop-near",
+        "type": "frontierRocks",
+        "params": {
+          "src": "/content/shared/scans/namaqualand_cliff_01.glb",
+          "tint": "#e8b89a",
+          "shadows": false,
+          "instances": [
+            {
+              "position": [
+                34,
+                -0.8,
+                -22
+              ],
+              "yaw": 60,
+              "scale": 1.1
+            },
+            {
+              "position": [
+                56,
+                -0.9,
+                -40
+              ],
+              "yaw": 140,
+              "scale": 1.3
+            },
+            {
+              "position": [
+                -60,
+                -0.9,
+                -140
+              ],
+              "yaw": 20,
+              "scale": 1.6
+            },
+            {
+              "position": [
+                -8,
+                -0.7,
+                -150
+              ],
+              "yaw": -30,
+              "scale": 0.9
+            }
+          ]
+        }
+      },
+      {
+        "id": "outcrop-face",
+        "type": "frontierRocks",
+        "params": {
+          "src": "/content/shared/scans/rock_face_01.glb",
+          "tint": "#e8b89a",
+          "shadows": false,
+          "instances": [
+            {
+              "position": [
+                26,
+                -0.6,
+                -34
+              ],
+              "yaw": 200,
+              "scale": 1.3
+            },
+            {
+              "position": [
+                70,
+                -0.6,
+                -30
+              ],
+              "yaw": 120,
+              "scale": 1.4
+            },
+            {
+              "position": [
+                -14,
+                -0.5,
+                -120
+              ],
+              "yaw": 15,
+              "scale": 1.2
+            }
+          ]
+        }
+      },
+      {
+        "id": "clutter",
+        "type": "frontierClutter",
+        "params": {
+          "grass": {
+            "count": 22000,
+            "inner": 26,
+            "outer": 200,
+            "height": [
+              0.3,
+              0.75
+            ]
+          },
+          "stones": {
+            "count": 6000,
+            "inner": 26,
+            "outer": 160
+          },
+          "fences": [
+            {
+              "points": [
+                [
+                  21,
+                  -12
+                ],
+                [
+                  31,
+                  -7
+                ],
+                [
+                  42,
+                  -1
+                ],
+                [
+                  55,
+                  6
+                ]
+              ],
+              "height": 1.3,
+              "spacing": 2.6,
+              "broken": 0.35
+            },
+            {
+              "points": [
+                [
+                  -16,
+                  -4
+                ],
+                [
+                  -26,
+                  4
+                ],
+                [
+                  -38,
+                  10
+                ]
+              ],
+              "height": 1.25,
+              "spacing": 2.6,
+              "broken": 0.5
+            }
+          ],
+          "wheels": [
+            {
+              "at": [
+                27,
+                -16
+              ],
+              "yaw": 30,
+              "tilt": 80,
+              "radius": 0.68,
+              "missing": 3
+            },
+            {
+              "at": [
+                -19,
+                -8
+              ],
+              "yaw": -40,
+              "tilt": 72,
+              "radius": 0.62,
+              "missing": 4
+            }
+          ],
+          "exclude": {
+            "rects": [
+              {
+                "origin": [
+                  -47,
+                  -46.7
+                ],
+                "axis": [
+                  0.819,
+                  -0.574
+                ],
+                "s": [
+                  -44,
+                  21
+                ],
+                "q": [
+                  -46,
+                  78
+                ]
+              }
+            ],
+            "lines": [
+              {
+                "points": [
+                  [
+                    20,
+                    -650
+                  ],
+                  [
+                    30,
+                    -320
+                  ],
+                  [
+                    50,
+                    -175
+                  ],
+                  [
+                    75,
+                    -145
+                  ],
+                  [
+                    190,
+                    -82
+                  ],
+                  [
+                    320,
+                    -12
+                  ]
+                ],
+                "width": 10
+              },
+              {
+                "points": [
+                  [
+                    -260,
+                    -20
+                  ],
+                  [
+                    -90.9,
+                    -4.9
+                  ],
+                  [
+                    -20.5,
+                    -54.2
+                  ],
+                  [
+                    -89.4,
+                    -152.5
+                  ]
+                ],
+                "width": 12
+              },
+              {
+                "points": [
+                  [
+                    230,
+                    -100
+                  ],
+                  [
+                    150,
+                    -115
+                  ],
+                  [
+                    95,
+                    -150
+                  ],
+                  [
+                    60,
+                    -200
+                  ],
+                  [
+                    40,
+                    -260
+                  ]
+                ],
+                "width": 6
+              },
+              {
+                "points": [
+                  [
+                    -28,
+                    -36
+                  ],
+                  [
+                    -8,
+                    -24
+                  ],
+                  [
+                    18,
+                    -26
+                  ],
+                  [
+                    42,
+                    -48
+                  ],
+                  [
+                    60,
+                    -72
+                  ],
+                  [
+                    90,
+                    -96
+                  ],
+                  [
+                    112,
+                    -118
+                  ]
+                ],
+                "width": 6.5
+              },
+              {
+                "points": [
+                  [
+                    -30,
+                    -9
+                  ],
+                  [
+                    -44,
+                    8
+                  ],
+                  [
+                    -66,
+                    30
+                  ]
+                ],
+                "width": 6
+              }
+            ],
+            "clear": 21,
+            "clearRange": 42
+          }
+        }
+      },
+      {
+        "id": "riders",
+        "type": "model",
+        "params": {
+          "src": "models/horse-rider-a.glb",
+          "render": "particles",
+          "particles": {
+            "count": 12000,
+            "size": 0.09,
+            "blend": "normal",
+            "bloom": 0,
+            "brightness": 0.92,
+            "shading": 0.5,
+            "light": [
+              0.945,
+              0.113,
+              0.307
+            ],
+            "jitter": 0.003,
+            "exclude": "Cornea",
+            "seed": 3,
+            "colorMix": 0.3,
+            "tint": "#7a5236"
+          },
+          "animation": {
+            "clip": "Skeleton|Walk",
+            "inPlace": true,
+            "stride": 1.7,
+            "vary": 0
+          },
+          "instances": [
+            {
+              "position": [
+                -175,
+                0,
+                -15
+              ],
+              "yaw": 0,
+              "walk": {
+                "to": [
+                  -175,
+                  0,
+                  -5
+                ],
+                "via": [
+                  [
+                    -120,
+                    0,
+                    -18
+                  ],
+                  [
+                    -80,
+                    0,
+                    -26
+                  ],
+                  [
+                    -52,
+                    0,
+                    -35
+                  ],
+                  [
+                    -41,
+                    0,
+                    -42
+                  ],
+                  [
+                    -55,
+                    0,
+                    -30
+                  ],
+                  [
+                    -100,
+                    0,
+                    -12
+                  ]
+                ],
+                "smooth": true,
+                "fade": 0,
+                "tilt": true,
+                "speed": 1.7,
+                "stops": [
+                  {
+                    "at": 0.493,
+                    "for": 28,
+                    "clip": "Skeleton|1 Ilde"
+                  }
+                ],
+                "phase": 0.36
+              }
+            }
+          ]
+        },
+        "bind": [
+          {
+            "target": "brightness",
+            "feature": "game.progress",
+            "mode": "mul",
+            "amount": -0.97,
+            "attackMs": 12000,
+            "releaseMs": 6000
+          }
+        ]
+      },
+      {
+        "id": "riders-b",
+        "type": "model",
+        "params": {
+          "src": "models/horse-rider-b.glb",
+          "render": "particles",
+          "particles": {
+            "count": 12000,
+            "size": 0.09,
+            "blend": "normal",
+            "bloom": 0,
+            "brightness": 0.92,
+            "shading": 0.5,
+            "light": [
+              0.945,
+              0.113,
+              0.307
+            ],
+            "jitter": 0.003,
+            "exclude": "Cornea",
+            "seed": 3,
+            "colorMix": 0.3,
+            "tint": "#7a5236"
+          },
+          "animation": {
+            "clip": "Skeleton|Walk",
+            "inPlace": true,
+            "stride": 1.7,
+            "vary": 0
+          },
+          "instances": [
+            {
+              "position": [
+                -174.86,
+                0,
+                -12.4
+              ],
+              "yaw": 0,
+              "walk": {
+                "to": [
+                  -175.24,
+                  0,
+                  -7.59
+                ],
+                "via": [
+                  [
+                    -119.7,
+                    0,
+                    -15.42
+                  ],
+                  [
+                    -79.37,
+                    0,
+                    -23.48
+                  ],
+                  [
+                    -51.01,
+                    0,
+                    -32.59
+                  ],
+                  [
+                    -43.23,
+                    0,
+                    -43.34
+                  ],
+                  [
+                    -56.18,
+                    0,
+                    -32.32
+                  ],
+                  [
+                    -100.53,
+                    0,
+                    -14.55
+                  ]
+                ],
+                "smooth": true,
+                "fade": 0,
+                "tilt": true,
+                "speed": 1.7,
+                "stops": [
+                  {
+                    "at": 0.493,
+                    "for": 28,
+                    "clip": "Skeleton|2 Ilde"
+                  }
+                ],
+                "phase": 0.36
+              }
+            }
+          ]
+        },
+        "bind": [
+          {
+            "target": "brightness",
+            "feature": "game.progress",
+            "mode": "mul",
+            "amount": -0.97,
+            "attackMs": 12000,
+            "releaseMs": 6000
+          }
+        ]
+      },
+      {
+        "id": "galloper",
+        "type": "model",
+        "params": {
+          "src": "models/horse-rider-b.glb",
+          "render": "particles",
+          "particles": {
+            "count": 3500,
+            "size": 0.22,
+            "blend": "normal",
+            "bloom": 0,
+            "brightness": 0.92,
+            "shading": 0.5,
+            "light": [
+              0.945,
+              0.113,
+              0.307
+            ],
+            "jitter": 0.003,
+            "exclude": "Cornea",
+            "seed": 3,
+            "colorMix": 0.3,
+            "tint": "#7a5236"
+          },
+          "animation": {
+            "clip": "Skeleton|Gallop",
+            "inPlace": true,
+            "stride": 6.3,
+            "vary": 0
+          },
+          "instances": [
+            {
+              "position": [
+                440,
+                0,
+                -330
+              ],
+              "walk": {
+                "to": [
+                  175,
+                  0,
+                  -430
+                ],
+                "speed": 10,
+                "fade": 0.1,
+                "phase": 0.3
+              }
+            }
+          ]
+        },
+        "bind": [
+          {
+            "target": "brightness",
+            "feature": "game.progress",
+            "mode": "mul",
+            "amount": -0.97,
+            "attackMs": 12000,
+            "releaseMs": 6000
+          }
+        ]
+      },
+      {
+        "id": "corral-horses",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/horse-saddled.glb",
+          "render": "particles",
+          "particles": {
+            "count": 14000,
+            "size": 0.075,
+            "blend": "normal",
+            "bloom": 0,
+            "brightness": 0.92,
+            "shading": 0.5,
+            "light": [
+              0.945,
+              0.113,
+              0.307
+            ],
+            "jitter": 0.003,
+            "exclude": "Cornea",
+            "seed": 3,
+            "colorMix": 0.3,
+            "tint": "#7a5236"
+          },
+          "animation": {
+            "clip": "Skeleton|6 Eat",
+            "vary": 0.2
+          },
+          "instances": [
+            {
+              "position": [
+                -23.3,
+                0,
+                -18.2
+              ],
+              "yaw": 30,
+              "scale": 0.1086
+            },
+            {
+              "position": [
+                -31.1,
+                0,
+                -17
+              ],
+              "yaw": -120,
+              "scale": 0.1086
+            }
+          ]
+        },
+        "bind": [
+          {
+            "target": "brightness",
+            "feature": "game.progress",
+            "mode": "mul",
+            "amount": -0.97,
+            "attackMs": 12000,
+            "releaseMs": 6000
+          }
+        ]
+      },
+      {
+        "id": "corral-idle",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/horse-saddled.glb",
+          "render": "particles",
+          "particles": {
+            "count": 14000,
+            "size": 0.075,
+            "blend": "normal",
+            "bloom": 0,
+            "brightness": 0.92,
+            "shading": 0.5,
+            "light": [
+              0.945,
+              0.113,
+              0.307
+            ],
+            "jitter": 0.003,
+            "exclude": "Cornea",
+            "seed": 3,
+            "colorMix": 0.3,
+            "tint": "#7a5236"
+          },
+          "animation": {
+            "clip": "Skeleton|1 Ilde",
+            "vary": 0.2
+          },
+          "instances": [
+            {
+              "position": [
+                -28.3,
+                0,
+                -20.6
+              ],
+              "yaw": 160,
+              "scale": 0.1086
+            },
+            {
+              "position": [
+                -31.4,
+                0,
+                -13.6
+              ],
+              "yaw": 70,
+              "scale": 0.1086
+            },
+            {
+              "position": [
+                -40.6,
+                0,
+                -46.6
+              ],
+              "yaw": -145,
+              "scale": 0.1086
+            },
+            {
+              "position": [
+                -38.9,
+                0,
+                -47.8
+              ],
+              "yaw": -140,
+              "scale": 0.1086
+            }
+          ]
+        },
+        "bind": [
+          {
+            "target": "brightness",
+            "feature": "game.progress",
+            "mode": "mul",
+            "amount": -0.97,
+            "attackMs": 12000,
+            "releaseMs": 6000
+          }
+        ]
+      },
+      {
+        "id": "wagon",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/conestoga-wagon.glb",
+          "render": "particles",
+          "particles": {
+            "count": 16000,
+            "size": 0.11,
+            "blend": "normal",
+            "bloom": 0,
+            "brightness": 0.92,
+            "shading": 0.5,
+            "light": [
+              0.945,
+              0.113,
+              0.307
+            ],
+            "jitter": 0.003,
+            "exclude": "Cornea",
+            "seed": 3,
+            "colorMix": 0.15,
+            "tint": "#7a5236"
+          },
+          "instances": [
+            {
+              "position": [
+                -180,
+                0,
+                -32
+              ],
+              "yaw": 0,
+              "walk": {
+                "to": [
+                  -140,
+                  0,
+                  10
+                ],
+                "via": [
+                  [
+                    -110,
+                    0,
+                    -30
+                  ],
+                  [
+                    -66,
+                    0,
+                    -40
+                  ],
+                  [
+                    -42,
+                    0,
+                    -45
+                  ],
+                  [
+                    -30,
+                    0,
+                    -31
+                  ],
+                  [
+                    -36,
+                    0,
+                    -12
+                  ],
+                  [
+                    -80,
+                    0,
+                    5
+                  ]
+                ],
+                "smooth": true,
+                "fade": 0,
+                "tilt": true,
+                "speed": 1.6,
+                "phase": 0.3
+              },
+              "scale": 0.0085
+            }
+          ]
+        },
+        "bind": [
+          {
+            "target": "brightness",
+            "feature": "game.progress",
+            "mode": "mul",
+            "amount": -0.97,
+            "attackMs": 12000,
+            "releaseMs": 6000
+          }
+        ]
+      },
+      {
+        "id": "wagon-team",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/horse-saddled.glb",
+          "render": "particles",
+          "particles": {
+            "count": 9000,
+            "size": 0.1,
+            "blend": "normal",
+            "bloom": 0,
+            "brightness": 0.92,
+            "shading": 0.5,
+            "light": [
+              0.945,
+              0.113,
+              0.307
+            ],
+            "jitter": 0.003,
+            "exclude": "Cornea",
+            "seed": 3,
+            "colorMix": 0.3,
+            "tint": "#7a5236"
+          },
+          "animation": {
+            "clip": "Skeleton|Walk",
+            "inPlace": true,
+            "stride": 1.7,
+            "vary": 0
+          },
+          "instances": [
+            {
+              "position": [
+                -180.02,
+                0,
+                -31.28
+              ],
+              "yaw": 0,
+              "walk": {
+                "to": [
+                  -140.06,
+                  0,
+                  9.28
+                ],
+                "via": [
+                  [
+                    -109.95,
+                    0,
+                    -29.28
+                  ],
+                  [
+                    -65.84,
+                    0,
+                    -39.3
+                  ],
+                  [
+                    -42.17,
+                    0,
+                    -44.3
+                  ],
+                  [
+                    -30.71,
+                    0,
+                    -30.87
+                  ],
+                  [
+                    -36.42,
+                    0,
+                    -12.58
+                  ],
+                  [
+                    -80.15,
+                    0,
+                    4.3
+                  ]
+                ],
+                "smooth": true,
+                "fade": 0,
+                "tilt": true,
+                "speed": 1.6,
+                "phase": 0.3161
+              },
+              "scale": 0.1086
+            },
+            {
+              "position": [
+                -179.98,
+                0,
+                -32.72
+              ],
+              "yaw": 0,
+              "walk": {
+                "to": [
+                  -139.94,
+                  0,
+                  10.72
+                ],
+                "via": [
+                  [
+                    -110.05,
+                    0,
+                    -30.72
+                  ],
+                  [
+                    -66.16,
+                    0,
+                    -40.7
+                  ],
+                  [
+                    -41.83,
+                    0,
+                    -45.7
+                  ],
+                  [
+                    -29.29,
+                    0,
+                    -31.13
+                  ],
+                  [
+                    -35.58,
+                    0,
+                    -11.42
+                  ],
+                  [
+                    -79.85,
+                    0,
+                    5.7
+                  ]
+                ],
+                "smooth": true,
+                "fade": 0,
+                "tilt": true,
+                "speed": 1.6,
+                "phase": 0.3161
+              },
+              "scale": 0.1086
+            }
+          ]
+        },
+        "bind": [
+          {
+            "target": "brightness",
+            "feature": "game.progress",
+            "mode": "mul",
+            "amount": -0.97,
+            "attackMs": 12000,
+            "releaseMs": 6000
+          }
+        ]
+      },
+      {
+        "id": "stagecoach",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/stagecoach.glb",
+          "render": "particles",
+          "particles": {
+            "count": 14000,
+            "size": 0.16,
+            "blend": "normal",
+            "bloom": 0,
+            "brightness": 0.92,
+            "shading": 0.5,
+            "light": [
+              0.945,
+              0.113,
+              0.307
+            ],
+            "jitter": 0.003,
+            "exclude": "Cornea",
+            "seed": 3,
+            "colorMix": 0.15,
+            "tint": "#7a5236"
+          },
+          "instances": [
+            {
+              "position": [
+                230,
+                0,
+                -100
+              ],
+              "yaw": 0,
+              "walk": {
+                "to": [
+                  40,
+                  0,
+                  -260
+                ],
+                "via": [
+                  [
+                    150,
+                    0,
+                    -115
+                  ],
+                  [
+                    95,
+                    0,
+                    -150
+                  ],
+                  [
+                    60,
+                    0,
+                    -200
+                  ]
+                ],
+                "smooth": true,
+                "fade": 0,
+                "tilt": true,
+                "speed": 2.2,
+                "phase": 0.2
+              },
+              "scale": 0.009
+            }
+          ]
+        },
+        "bind": [
+          {
+            "target": "brightness",
+            "feature": "game.progress",
+            "mode": "mul",
+            "amount": -0.97,
+            "attackMs": 12000,
+            "releaseMs": 6000
+          }
+        ]
+      },
+      {
+        "id": "stagecoach-team",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/horse-saddled.glb",
+          "render": "particles",
+          "particles": {
+            "count": 9000,
+            "size": 0.15,
+            "blend": "normal",
+            "bloom": 0,
+            "brightness": 0.92,
+            "shading": 0.5,
+            "light": [
+              0.945,
+              0.113,
+              0.307
+            ],
+            "jitter": 0.003,
+            "exclude": "Cornea",
+            "seed": 3,
+            "colorMix": 0.3,
+            "tint": "#7a5236"
+          },
+          "animation": {
+            "clip": "Skeleton|Walk",
+            "inPlace": true,
+            "stride": 1.7,
+            "vary": 0
+          },
+          "instances": [
+            {
+              "position": [
+                230.13,
+                0,
+                -100.71
+              ],
+              "yaw": 0,
+              "walk": {
+                "to": [
+                  40.68,
+                  0,
+                  -260.23
+                ],
+                "via": [
+                  [
+                    150.25,
+                    0,
+                    -115.68
+                  ],
+                  [
+                    95.49,
+                    0,
+                    -150.52
+                  ],
+                  [
+                    60.64,
+                    0,
+                    -200.32
+                  ]
+                ],
+                "smooth": true,
+                "fade": 0,
+                "tilt": true,
+                "speed": 2.2,
+                "phase": 0.2148
+              },
+              "scale": 0.1086
+            },
+            {
+              "position": [
+                229.87,
+                0,
+                -99.29
+              ],
+              "yaw": 0,
+              "walk": {
+                "to": [
+                  39.32,
+                  0,
+                  -259.77
+                ],
+                "via": [
+                  [
+                    149.75,
+                    0,
+                    -114.32
+                  ],
+                  [
+                    94.51,
+                    0,
+                    -149.48
+                  ],
+                  [
+                    59.36,
+                    0,
+                    -199.68
+                  ]
+                ],
+                "smooth": true,
+                "fade": 0,
+                "tilt": true,
+                "speed": 2.2,
+                "phase": 0.2148
+              },
+              "scale": 0.1086
+            }
+          ]
+        },
+        "bind": [
+          {
+            "target": "brightness",
+            "feature": "game.progress",
+            "mode": "mul",
+            "amount": -0.97,
+            "attackMs": 12000,
+            "releaseMs": 6000
+          }
+        ]
+      },
+      {
+        "id": "motes-town",
+        "type": "particles",
+        "params": {
+          "count": 1400,
+          "center": [
+            -36,
+            -3,
+            -36
+          ],
+          "size": [
+            60,
+            12,
+            40
+          ],
+          "color": "#ffdca8",
+          "colorB": "#e8a451",
+          "minSize": 0.03,
+          "maxSize": 0.085,
+          "velocity": [
+            -0.7,
+            0.04,
+            -0.25
+          ],
+          "turbulence": 0.45,
+          "twinkle": 0.35,
+          "brightness": 0.45,
+          "shape": "soft",
+          "additive": true,
+          "density": 1,
+          "seed": 21,
+          "bloom": 0
+        },
+        "bind": [
+          {
+            "target": "brightness",
+            "feature": "treble",
+            "mode": "mul",
+            "amount": 0.35,
+            "category": "particles",
+            "attackMs": 120,
+            "releaseMs": 900
+          },
+          {
+            "target": "brightness",
+            "feature": "game.progress",
+            "mode": "mul",
+            "amount": -0.85,
+            "attackMs": 12000,
+            "releaseMs": 6000
+          }
+        ],
+        "minDetail": "medium"
+      },
+      {
+        "id": "motes-right",
+        "type": "particles",
+        "params": {
+          "count": 1400,
+          "center": [
+            62,
+            -4,
+            -62
+          ],
+          "size": [
+            70,
+            14,
+            60
+          ],
+          "color": "#ffdca8",
+          "colorB": "#e8a451",
+          "minSize": 0.03,
+          "maxSize": 0.085,
+          "velocity": [
+            -0.7,
+            0.04,
+            -0.25
+          ],
+          "turbulence": 0.45,
+          "twinkle": 0.35,
+          "brightness": 0.45,
+          "shape": "soft",
+          "additive": true,
+          "density": 1,
+          "seed": 22,
+          "bloom": 0
+        },
+        "bind": [
+          {
+            "target": "brightness",
+            "feature": "treble",
+            "mode": "mul",
+            "amount": 0.35,
+            "category": "particles",
+            "attackMs": 120,
+            "releaseMs": 900
+          },
+          {
+            "target": "brightness",
+            "feature": "game.progress",
+            "mode": "mul",
+            "amount": -0.85,
+            "attackMs": 12000,
+            "releaseMs": 6000
+          }
+        ],
+        "minDetail": "medium"
+      },
+      {
+        "id": "dust",
+        "type": "frontierDust",
+        "params": {
+          "drifts": [
+            {
+              "center": [
+                -40,
+                -35
+              ],
+              "size": [
+                40,
+                25
+              ],
+              "rate": 2.5
+            },
+            {
+              "center": [
+                70,
+                -60
+              ],
+              "size": [
+                45,
+                40
+              ],
+              "rate": 2.5
+            },
+            {
+              "center": [
+                0,
+                -200
+              ],
+              "size": [
+                150,
+                80
+              ],
+              "rate": 3
+            }
+          ],
+          "gustArea": {
+            "center": [
+              -38,
+              -38
+            ],
+            "size": [
+              40,
+              28
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "reactivity": {
+    "profiles": [],
+    "bindings": []
+  },
+  "effects": {
+    "lineClear": {
+      "effect": "dustAndTimber",
+      "params": {}
+    },
+    "landing": {
+      "shape": "soft"
+    },
+    "transition": {
+      "effect": "sand",
+      "params": {
+        "colors": [
+          "#e8b070",
+          "#c4864c",
+          "#fff0d4"
+        ]
+      }
+    }
+  },
+  "music": {
+    "bpm": 84,
+    "beatsPerBar": 4,
+    "tracks": [
+      {
+        "id": "last-frontier-long-shadows",
+        "title": "Long Shadows",
+        "kind": "composition",
+        "src": "music/long-shadows.ts"
+      },
+      {
+        "id": "last-frontier-iron-horse",
+        "title": "Iron Horse",
+        "kind": "composition",
+        "src": "music/iron-horse.ts",
+        "bpm": 116
+      }
+    ],
+    "defaultTrack": "last-frontier-long-shadows"
+  },
+  "ambience": {
+    "preset": "desert",
+    "level": 0.7
+  },
+  "sfx": {
+    "preset": "organic",
+    "material": "wood"
+  },
+  "unlock": {
+    "type": "always"
+  },
+  "thumbnail": "previews/thumb.jpg"
+}

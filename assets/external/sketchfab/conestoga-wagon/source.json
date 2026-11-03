@@ -1,0 +1,25 @@
+{
+  "uid": "2bfd8f4232054fd982b29e4df0f367d1",
+  "name": "Conestoga Wagon",
+  "page": "https://sketchfab.com/3d-models/conestoga-wagon-2bfd8f4232054fd982b29e4df0f367d1",
+  "author": {
+    "name": "Ursei",
+    "username": "robertursache",
+    "profile": "https://sketchfab.com/robertursache"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Conestoga Wagon\" by Ursei (https://sketchfab.com/3d-models/conestoga-wagon-2bfd8f4232054fd982b29e4df0f367d1), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 278952,
+  "vertices": 142975,
+  "animations": 0,
+  "files": [
+    {
+      "path": "conestoga-wagon.gltf.zip",
+      "md5": "8e99a6185b985a8e0627b2bb423c4a2b",
+      "size": 72124618,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

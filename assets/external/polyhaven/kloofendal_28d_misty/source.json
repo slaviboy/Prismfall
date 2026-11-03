@@ -1,0 +1,35 @@
+{
+  "id": "kloofendal_28d_misty",
+  "kind": "hdri",
+  "name": "Kloofendal 28d Misty",
+  "page": "https://polyhaven.com/a/kloofendal_28d_misty",
+  "api": {
+    "info": "https://api.polyhaven.com/info/kloofendal_28d_misty",
+    "files": "https://api.polyhaven.com/files/kloofendal_28d_misty"
+  },
+  "authors": {
+    "Greg Zaal": "Processing",
+    "Jenelle van Heerden": "Photography"
+  },
+  "licence": "CC0 1.0",
+  "licenceUrl": "https://polyhaven.com/license",
+  "files": [
+    {
+      "path": "kloofendal_28d_misty_tonemapped.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/HDRIs/extra/Tonemapped%20JPG/kloofendal_28d_misty.jpg",
+      "md5": "73197068cb736046dd9abb8261237397",
+      "size": 38531150
+    }
+  ],
+  "downloaded": "2026-11-03",
+  "derived": [
+    {
+      "path": "content/stages/the-veil/textures/kloofendal_28d_misty_band.webp",
+      "how": "ffmpeg crop=8192:1138:0:1138 (elevations -10..40 deg), unsharp 5:5:0.6, libwebp quality 86, then a cold moonlight grade (Pillow/numpy: saturation 0.28 around Rec.709 luma, gamma 1.85 on sRGB values, channel gains 0.90/0.97/1.07)"
+    },
+    {
+      "path": "content/stages/the-veil/textures/kloofendal_28d_misty_detail.webp",
+      "how": "16k HDR https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/16k%2B/kloofendal_28d_misty_16k.hdr (md5 37a3a7a010ff582455e160e764444b68): crop 6372x2275 (uRange 0.4946..0.8835), tone curve matched to the tonemapped JPG (scripts/panorama_match.py), libwebp quality 90, then a cold moonlight grade (Pillow/numpy: saturation 0.28 around Rec.709 luma, gamma 1.85 on sRGB values, channel gains 0.90/0.97/1.07)"
+    }
+  ]
+}

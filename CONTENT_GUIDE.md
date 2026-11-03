@@ -92,6 +92,7 @@ The SDK exports:
 | `z` | zod, for component parameter schemas |
 | `zColor`, `zVec3`, `colorUniform`, `floatUniform`, `linear`, `seeded`, `scaledCount` | parameter types, TSL uniforms, sRGB-to-linear colour, deterministic random, quality-scaled counts |
 | `frameUniforms` | per-frame TSL uniforms (time, music features, clear pulse, danger, fog density, flash limit, screen effects) |
+| `frameUniforms.worldEvents` | the accessibility World events setting: 1 full, 0.5 calm, 0 off. Worlds with creatures or sudden events read it (The Veil: calm makes events rarer, further away and gentler and drops the sudden shadow events; off leaves only the fog weather) |
 | `noBloom`, `additiveFog` | exclude a material from bloom; distance-fade an additive colour |
 | `makeRecipeEffect`, `runRecipe`, `BASE_RECIPE`, `ClearRecipe` | line-clear particle recipes |
 | `resolveBlockPreset`, `BLOCK_PRESETS` | block surface presets |
@@ -433,7 +434,7 @@ For recorded or produced music, use `kind: "file"` with an audio file and a `tra
 
 | Field | Values |
 |---|---|
-| `ambience.preset` | `ocean`, `foundry`, `space`, `forest`, `wind`, `rain`, `underwater`, `city`, `cathedral`, `arctic`, `horizon`, `desert`, `ice`, `garden`, `cosmos`, `alpine`, `abyss`, `wilderness`, `volcanic`, `aurora`, `neon` (`src/audio/sound-effects/Ambience.ts`). Each preset is filtered noise layers with slow LFOs, plus occasional synthesised events. An unknown name plays silence. |
+| `ambience.preset` | `ocean`, `foundry`, `space`, `forest`, `wind`, `rain`, `underwater`, `city`, `cathedral`, `arctic`, `horizon`, `desert`, `ice`, `garden`, `cosmos`, `alpine`, `abyss`, `wilderness`, `volcanic`, `aurora`, `neon`, `veil` (`src/audio/sound-effects/Ambience.ts`). Each preset is filtered noise layers with slow LFOs, plus occasional synthesised events. An unknown name plays silence. |
 | `sfx.preset` | The tonal family for gameplay sounds: `glass`, `metal`, `crystal`, `organic`, `neon`, `paper`, `stone`, `ice`, `oasis`, `koto`, `void` (`SFX_PRESETS` in `SfxBank.ts`). Unknown names fail `npm run content:validate`. |
 | `sfx.material` | The block impact sound: a built-in `MaterialAudioProfile` name (`glass`, `pearl`, `metal`, `sandstone`, `ice`, `wood`, `cosmic`, `mineral`, `water`, `organic`, `obsidian`, `aurora`, `neon`, `paper`) or an inline profile. Unknown names fail `npm run content:validate`; an invalid inline profile falls back to `glass` at runtime. |
 | `sfx.overrides` | A map from sound id (`SFX_IDS` in `SfxBank.ts`, e.g. `lock`, `hardDrop`, `clear4`) to a stage audio file. The file replaces the generated sound for that id (no variations). Validation checks that the files exist; unknown ids are skipped with a console warning. |

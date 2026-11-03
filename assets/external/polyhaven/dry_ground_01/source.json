@@ -1,0 +1,53 @@
+{
+  "id": "dry_ground_01",
+  "name": "Dry Ground 01",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/dry_ground_01",
+  "api": {
+    "info": "https://api.polyhaven.com/info/dry_ground_01",
+    "files": "https://api.polyhaven.com/files/dry_ground_01"
+  },
+  "authors": {
+    "Rob Tuytel": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    4000,
+    4000
+  ],
+  "resolution": "1k",
+  "filesHash": "1ab2b8b9d6e1f7a8c82d90e327f0e2e3ff47e4f9",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "dry_ground_01_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/dry_ground_01/dry_ground_01_diff_1k.jpg",
+      "size": 604799,
+      "md5": "f928726e24cf06765877ae77b9a04b4a"
+    },
+    {
+      "map": "nor_gl",
+      "path": "dry_ground_01_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/dry_ground_01/dry_ground_01_nor_gl_1k.jpg",
+      "size": 243523,
+      "md5": "6088d590e646993784228156696e9948"
+    },
+    {
+      "map": "Rough",
+      "path": "dry_ground_01_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/dry_ground_01/dry_ground_01_rough_1k.jpg",
+      "size": 336234,
+      "md5": "63b583296c606971ce605e5b160a21bc"
+    },
+    {
+      "map": "arm",
+      "path": "dry_ground_01_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/dry_ground_01/dry_ground_01_arm_1k.jpg",
+      "size": 184324,
+      "md5": "60e63a0fc45f87ecca09b39fd86ad0ec"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

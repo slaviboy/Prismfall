@@ -1,0 +1,53 @@
+{
+  "id": "rusty_corrugated_iron",
+  "name": "Rusty Corrugated Iron",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/rusty_corrugated_iron",
+  "api": {
+    "info": "https://api.polyhaven.com/info/rusty_corrugated_iron",
+    "files": "https://api.polyhaven.com/files/rusty_corrugated_iron"
+  },
+  "authors": {
+    "Charlotte Baglioni": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    2000,
+    2000
+  ],
+  "resolution": "1k",
+  "filesHash": "97bc0d11ea7e5d919b47f2c287639afd5332ce69",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "rusty_corrugated_iron_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rusty_corrugated_iron/rusty_corrugated_iron_diff_1k.jpg",
+      "size": 619706,
+      "md5": "6e30158f4ff9f8492cfc800803b484dd"
+    },
+    {
+      "map": "nor_gl",
+      "path": "rusty_corrugated_iron_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rusty_corrugated_iron/rusty_corrugated_iron_nor_gl_1k.jpg",
+      "size": 631058,
+      "md5": "b4effdfcd2ec71faa91bb6c92f531f48"
+    },
+    {
+      "map": "Rough",
+      "path": "rusty_corrugated_iron_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rusty_corrugated_iron/rusty_corrugated_iron_rough_1k.jpg",
+      "size": 322973,
+      "md5": "dda9d483f1326a56a1b70671b1a1f53b"
+    },
+    {
+      "map": "arm",
+      "path": "rusty_corrugated_iron_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rusty_corrugated_iron/rusty_corrugated_iron_arm_1k.jpg",
+      "size": 427876,
+      "md5": "9d24b3fa4c2abf82d262f18ee58e57e1"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

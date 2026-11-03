@@ -1,0 +1,81 @@
+{
+  "name": "tree_stump_02",
+  "input": "assets/external/polyhaven/tree_stump_02/tree_stump_02_1k.gltf",
+  "output": "assets/blender/exports/scans/tree_stump_02.glb",
+  "droppedLods": [],
+  "sourceTriangles": 62345,
+  "targetTriangles": 4000,
+  "triangles": 4000,
+  "vertices": 2040,
+  "dimensions": {
+    "width": 1.5221,
+    "depth": 1.3928,
+    "height": 0.5224
+  },
+  "objects": [
+    {
+      "name": "tree_stump_02",
+      "sourceTriangles": 62345,
+      "triangles": 4000,
+      "dimensions": {
+        "width": 1.5221,
+        "depth": 1.3928,
+        "height": 0.5224
+      }
+    }
+  ],
+  "origin": "bottom centre of the bounding box",
+  "maxTexture": 1024,
+  "alphaModes": {
+    "tree_stump_02": "OPAQUE"
+  },
+  "alphaChanges": {},
+  "occlusionAddedFromArm": [
+    "tree_stump_02"
+  ],
+  "materials": [
+    {
+      "name": "tree_stump_02",
+      "textures": {
+        "Base Color": [
+          "tree_stump_02_diff"
+        ],
+        "Roughness": [
+          "tree_stump_02_rough"
+        ],
+        "Metallic": [
+          "tree_stump_02_rough"
+        ],
+        "Normal": [
+          "tree_stump_02_nor_gl"
+        ],
+        "Occlusion": [
+          "tree_stump_02_rough"
+        ]
+      }
+    }
+  ],
+  "textures": [
+    {
+      "name": "tree_stump_02_diff",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "tree_stump_02_nor_gl",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "tree_stump_02_rough",
+      "size": [
+        1024,
+        1024
+      ]
+    }
+  ]
+}

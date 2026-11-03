@@ -1,0 +1,60 @@
+{
+  "id": "dry_branches_medium_01",
+  "name": "Dry Branches Medium 01",
+  "source": "Poly Haven",
+  "page": "https://polyhaven.com/a/dry_branches_medium_01",
+  "api": {
+    "info": "https://api.polyhaven.com/info/dry_branches_medium_01",
+    "files": "https://api.polyhaven.com/files/dry_branches_medium_01"
+  },
+  "authors": {
+    "Rico Cilliers": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "polycount": 16803,
+  "dimensionsMm": [
+    1059.486210346222,
+    1299.152910709381,
+    340.9853130578995
+  ],
+  "resolution": "1k",
+  "format": "glTF 2.0 (.gltf + .bin + JPEG textures)",
+  "gltf": "dry_branches_medium_01_1k.gltf",
+  "gltfUrl": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/dry_branches_medium_01/dry_branches_medium_01_1k.gltf",
+  "filesHash": "9707cc29f837b6946d6787c231b522dc2ed69573",
+  "files": [
+    {
+      "path": "dry_branches_medium_01_1k.gltf",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/dry_branches_medium_01/dry_branches_medium_01_1k.gltf",
+      "size": 5844,
+      "md5": "bd6d60dff97c59a80d770f94f23b566b"
+    },
+    {
+      "path": "textures/dry_branches_medium_01_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/dry_branches_medium_01/dry_branches_medium_01_arm_1k.jpg",
+      "size": 831180,
+      "md5": "a0c5fface8ffdf81a806fcd5cf05788f"
+    },
+    {
+      "path": "textures/dry_branches_medium_01_diff_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/dry_branches_medium_01/dry_branches_medium_01_diff_1k.jpg",
+      "size": 778799,
+      "md5": "2b01d9d1613c88496250f64828566f7c"
+    },
+    {
+      "path": "textures/dry_branches_medium_01_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/dry_branches_medium_01/dry_branches_medium_01_nor_gl_1k.jpg",
+      "size": 1170647,
+      "md5": "d374fbbd8c4829310104cce0de7cd826"
+    },
+    {
+      "path": "dry_branches_medium_01.bin",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/dry_branches_medium_01/dry_branches_medium_01.bin",
+      "size": 465172,
+      "md5": "10de852c8bf38e3f3ca5fb1d6c8de9d0"
+    }
+  ],
+  "alphaMaps": {},
+  "downloaded": "2026-11-03"
+}

@@ -993,3 +993,110 @@ CC BY 4.0 models from Sketchfab, imported by `scripts/fetch-sketchfab.ts --zip` 
 | Modifications | packed to GLB, meshopt compression, WebP textures (at most 1024 px); simplified from 188,492 to 43,615 triangles; its animated splash cubes are not drawn; converted to particles |
 | Final format | `content/shared/creatures/dolphin.glb` (source record: `assets/external/sketchfab/dolphin/source.json`) |
 | Used by | Tradewind Cove |
+
+### Goegap Road (Poly Haven HDRI)
+
+| Field | Value |
+|---|---|
+| Source URL | https://polyhaven.com/a/goegap_road |
+| Authors | Greg Zaal, James Ray Cock |
+| Licence | CC0 1.0 |
+| Modifications | `scripts/fetch-panorama.ts goegap_road last-frontier --elevation -6,40 --detail --center 0.32 --azimuth 76`: band from the tonemapped JPG (8192 x 1047), detail crop from the 16k HDR (6918 x 2093, uRange 0.1089..0.5311, tone curve matched); then `scripts/panorama_dry_grade.py` turns the flowering field below +3.2 degrees to dry ochre (hue, saturation and elevation feathered) |
+| Final files | `content/stages/last-frontier/textures/goegap_road_band.webp`, `goegap_road_detail.webp` (source record: `assets/external/polyhaven/goegap_road/source.json`) |
+| Used by | The Last Frontier (`frontierSky`; the far ground of `frontierGround` melts into it) |
+
+### The Last Frontier ground textures (Poly Haven textures)
+
+| Field | Value |
+|---|---|
+| Assets | Sandy Gravel 02 and Gravelly Sand (Dario Barresi), Dry Ground Rocks and Dry Ground 01 (Rob Tuytel), Rocky Trail 02 (Amal Kumar), Mud Cracked Dry Riverbed 002 and Rock Boulder Cracked (Dario Barresi, Dimitrios Savva) |
+| Source URLs | https://polyhaven.com/a/sandy_gravel_02, /gravelly_sand, /dry_ground_rocks, /dry_ground_01, /rocky_trail_02, /mud_cracked_dry_riverbed_002, /rock_boulder_cracked |
+| Licence | CC0 1.0 |
+| Modifications | 1k diffuse (WebP quality 88) and OpenGL normal maps (WebP quality 92), downloaded by `scripts/fetch-polyhaven-textures.ts` (records in `assets/external/polyhaven/<id>/source.json`) |
+| Final files | `content/stages/last-frontier/textures/*_diff.webp`, `*_nor.webp` |
+| Used by | The Last Frontier (`frontierGround`) |
+
+### Wild Rooibos Bush (`wild_rooibos_bush`, Poly Haven model)
+
+| Field | Value |
+|---|---|
+| Source URL | https://polyhaven.com/a/wild_rooibos_bush |
+| Licence | CC0 1.0 |
+| Modifications | `import_external.py --split --target-tris 4000 --max-texture 512` (five bushes, alpha-tested leaves), glTF-Transform optimize |
+| Final file | `content/stages/last-frontier/models/wild_rooibos_bush.glb` |
+| Used by | The Last Frontier (`frontierScatter`, about 9,000 instanced shrubs) |
+
+### The Last Frontier town and train (`town.glb`, `train.glb`, original)
+
+| Field | Value |
+|---|---|
+| Generators | `assets/blender/scripts/frontier_town.py` (Copper Wells: 18 buildings, corral, props; 211,889 triangles, 9.2 MB) and `assets/blender/scripts/frontier_train.py` (4-4-0 locomotive, tender, four cars, water tower, telegraph pole; 179,212 triangles, 6.0 MB) |
+| Sources | `assets/blender/source/environments/last_frontier_town.blend`, `last_frontier_train.blend`; previews `assets/blender/previews/last_frontier_town_*.png`, `last_frontier_train_*.png` |
+| Textures | Poly Haven CC0 photographs (wood siding and planks, painted planks, corrugated and rusty metal, sandstone, thatch, leather, bark), scaled to their real size |
+| Lettering | Rye, Alfa Slab One, Old Standard TT (SIL OFL 1.1), Ultra (Apache 2.0) converted to geometry (`assets/external/fonts/source.json`) |
+| Licence | Original work for Prismfall (textures CC0) |
+
+### Horse (`horse-saddled`)
+
+| Field | Value |
+|---|---|
+| Asset name | Horse |
+| Source URL | https://sketchfab.com/3d-models/horse-a6f860e43e364619bccb174a1ac7d0c9 |
+| Author | Henry S |
+| Licence | CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) |
+| Attribution requirements | Credit "Horse" by Henry S, with the link and licence (ASSET_LICENSES.md and the credits) |
+| Modifications | packed to GLB, meshopt compression, WebP textures (at most 1024 px); 28 clips (walk, gallop, idles, grazing used); converted to particles |
+| Final format | `content/shared/creatures/horse-saddled.glb` (source record: `assets/external/sketchfab/horse-saddled/source.json`) |
+| Used by | The Last Frontier (corral, hitching rail, wagon and stagecoach teams; carries the riders) |
+
+### Western Cowboy (Rigged) (`cowboy`)
+
+| Field | Value |
+|---|---|
+| Asset name | Western Cowboy (Rigged) |
+| Source URL | https://sketchfab.com/3d-models/western-cowboy-rigged-160bf043b71c458984c81c717b7483c9 |
+| Author | human being |
+| Licence | CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) |
+| Attribution requirements | Credit "Western Cowboy (Rigged)" by human being, with the link and licence (ASSET_LICENSES.md and the credits) |
+| Modifications | posed seated by `assets/blender/scripts/frontier_riders.py` (bones aimed into a riding posture, pose applied, scaled to 1.78 m) and parented to the saddle bone of the horse above; converted to particles |
+| Final format | `content/stages/last-frontier/models/horse-rider-a.glb` (source record: `assets/external/sketchfab/cowboy/source.json`) |
+| Used by | The Last Frontier (riders) |
+
+### Gunslinger (`gunslinger`)
+
+| Field | Value |
+|---|---|
+| Asset name | Gunslinger |
+| Source URL | https://sketchfab.com/3d-models/gunslinger-95336de7a15145238c151388ee84d22b |
+| Author | archiebattley |
+| Licence | CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) |
+| Attribution requirements | Credit "Gunslinger" by archiebattley, with the link and licence (ASSET_LICENSES.md and the credits) |
+| Modifications | posed seated on the horse by `frontier_riders.py`, as above; converted to particles |
+| Final format | `content/stages/last-frontier/models/horse-rider-b.glb` (source record: `assets/external/sketchfab/gunslinger/source.json`) |
+| Used by | The Last Frontier (riders, the far galloper) |
+
+### Conestoga Wagon (`conestoga-wagon`)
+
+| Field | Value |
+|---|---|
+| Asset name | Conestoga Wagon |
+| Source URL | https://sketchfab.com/3d-models/conestoga-wagon-2bfd8f4232054fd982b29e4df0f367d1 |
+| Author | Ursei |
+| Licence | CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) |
+| Attribution requirements | Credit "Conestoga Wagon" by Ursei, with the link and licence (ASSET_LICENSES.md and the credits) |
+| Modifications | packed to GLB, simplified from 278,952 to 59,995 triangles, meshopt compression, WebP textures; converted to particles |
+| Final format | `content/shared/creatures/conestoga-wagon.glb` (source record: `assets/external/sketchfab/conestoga-wagon/source.json`) |
+| Used by | The Last Frontier (freight wagon on Front Street) |
+
+### US Mail Stagecoach (`stagecoach`)
+
+| Field | Value |
+|---|---|
+| Asset name | US Mail Stagecoach |
+| Source URL | https://sketchfab.com/3d-models/us-mail-stagecoach-17d0e94cc0ef4691a0a088ccc33f9b19 |
+| Author | tony chopper |
+| Licence | CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) |
+| Attribution requirements | Credit "US Mail Stagecoach" by tony chopper, with the link and licence (ASSET_LICENSES.md and the credits) |
+| Modifications | packed to GLB, meshopt compression, WebP textures; converted to particles |
+| Final format | `content/shared/creatures/stagecoach.glb` (source record: `assets/external/sketchfab/stagecoach/source.json`) |
+| Used by | The Last Frontier (stagecoach on the railway road) |

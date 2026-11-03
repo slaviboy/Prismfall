@@ -1,0 +1,53 @@
+{
+  "id": "brown_leather",
+  "name": "Brown Leather",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/brown_leather",
+  "api": {
+    "info": "https://api.polyhaven.com/info/brown_leather",
+    "files": "https://api.polyhaven.com/files/brown_leather"
+  },
+  "authors": {
+    "Rob Tuytel": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    400.0000059604645,
+    400.00003576278687
+  ],
+  "resolution": "1k",
+  "filesHash": "b9a9a4129b9cec6e01f3ba38eee9bd342e1bac19",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "brown_leather_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/brown_leather/brown_leather_albedo_1k.jpg",
+      "size": 503348,
+      "md5": "080b3bf1372766ff2c7ff121ed07b5e8"
+    },
+    {
+      "map": "nor_gl",
+      "path": "brown_leather_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/brown_leather/brown_leather_nor_gl_1k.jpg",
+      "size": 863280,
+      "md5": "b63ae0121a415c23d74eed0b07fc6065"
+    },
+    {
+      "map": "Rough",
+      "path": "brown_leather_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/brown_leather/brown_leather_rough_1k.jpg",
+      "size": 686142,
+      "md5": "0f3a0148c8d2d25fbeca67e64e79bca0"
+    },
+    {
+      "map": "arm",
+      "path": "brown_leather_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/brown_leather/brown_leather_arm_1k.jpg",
+      "size": 436931,
+      "md5": "40778465932d0a0816a9fbdab00e2a5d"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

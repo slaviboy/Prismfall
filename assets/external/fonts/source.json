@@ -1,0 +1,11 @@
+{
+  "kind": "fonts",
+  "purpose": "Typefaces whose glyph outlines the Blender generators convert to raised sign lettering (The Last Frontier). No font file ships with the game.",
+  "fonts": [
+    { "path": "rye/Rye-Regular.ttf", "name": "Rye", "authors": "Sorkin Type Co", "licence": "SIL Open Font License 1.1", "licenceFile": "rye/OFL.txt", "source": "https://github.com/google/fonts/tree/main/ofl/rye" },
+    { "path": "alfaslabone/AlfaSlabOne-Regular.ttf", "name": "Alfa Slab One", "authors": "JM Solé", "licence": "SIL Open Font License 1.1", "licenceFile": "alfaslabone/OFL.txt", "source": "https://github.com/google/fonts/tree/main/ofl/alfaslabone" },
+    { "path": "oldstandardtt/OldStandard-Bold.ttf", "name": "Old Standard TT Bold", "authors": "Alexey Kryukov", "licence": "SIL Open Font License 1.1", "licenceFile": "oldstandardtt/OFL.txt", "source": "https://github.com/google/fonts/tree/main/ofl/oldstandardtt" },
+    { "path": "ultra/Ultra-Regular.ttf", "name": "Ultra", "authors": "Astigmatic", "licence": "Apache License 2.0", "licenceFile": "ultra/LICENSE.txt", "source": "https://github.com/google/fonts/tree/main/apache/ultra" }
+  ],
+  "downloaded": "2026-11-03"
+}

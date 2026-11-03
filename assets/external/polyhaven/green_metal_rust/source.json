@@ -1,0 +1,53 @@
+{
+  "id": "green_metal_rust",
+  "name": "Green Metal Rust",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/green_metal_rust",
+  "api": {
+    "info": "https://api.polyhaven.com/info/green_metal_rust",
+    "files": "https://api.polyhaven.com/files/green_metal_rust"
+  },
+  "authors": {
+    "Rob Tuytel": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    1000,
+    1000
+  ],
+  "resolution": "1k",
+  "filesHash": "fd6cc162a0eb0eb8e0e2fb4d7f1b977dda4626b3",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "green_metal_rust_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/green_metal_rust/green_metal_rust_diff_1k.jpg",
+      "size": 212088,
+      "md5": "f69d8c507961f0629019652162090917"
+    },
+    {
+      "map": "nor_gl",
+      "path": "green_metal_rust_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/green_metal_rust/green_metal_rust_nor_gl_1k.jpg",
+      "size": 121379,
+      "md5": "a6cefc436aa41f73f15347dcf7a791d0"
+    },
+    {
+      "map": "Rough",
+      "path": "green_metal_rust_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/green_metal_rust/green_metal_rust_rough_1k.jpg",
+      "size": 124360,
+      "md5": "22cb8ebbd84cd90667a2734114fc4732"
+    },
+    {
+      "map": "arm",
+      "path": "green_metal_rust_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/green_metal_rust/green_metal_rust_arm_1k.jpg",
+      "size": 108674,
+      "md5": "f7474f11a76b3747265873c325ecbb88"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

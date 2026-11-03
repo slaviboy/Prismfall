@@ -1,0 +1,81 @@
+{
+  "name": "boulder_01",
+  "input": "assets/external/polyhaven/boulder_01/boulder_01_1k.gltf",
+  "output": "assets/blender/exports/scans/boulder_01.glb",
+  "droppedLods": [],
+  "sourceTriangles": 66122,
+  "targetTriangles": 6000,
+  "triangles": 28124,
+  "vertices": 30685,
+  "dimensions": {
+    "width": 1.2752,
+    "depth": 1.8328,
+    "height": 1.0226
+  },
+  "objects": [
+    {
+      "name": "boulder_01",
+      "sourceTriangles": 66122,
+      "triangles": 28124,
+      "dimensions": {
+        "width": 1.2752,
+        "depth": 1.8328,
+        "height": 1.0226
+      }
+    }
+  ],
+  "origin": "bottom centre of the bounding box",
+  "maxTexture": 1024,
+  "alphaModes": {
+    "boulder_01": "OPAQUE"
+  },
+  "alphaChanges": {},
+  "occlusionAddedFromArm": [
+    "boulder_01"
+  ],
+  "materials": [
+    {
+      "name": "boulder_01",
+      "textures": {
+        "Base Color": [
+          "boulder_01_diff"
+        ],
+        "Roughness": [
+          "boulder_01_rough"
+        ],
+        "Metallic": [
+          "boulder_01_rough"
+        ],
+        "Normal": [
+          "boulder_01_nor_gl"
+        ],
+        "Occlusion": [
+          "boulder_01_rough"
+        ]
+      }
+    }
+  ],
+  "textures": [
+    {
+      "name": "boulder_01_diff",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "boulder_01_nor_gl",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "boulder_01_rough",
+      "size": [
+        1024,
+        1024
+      ]
+    }
+  ]
+}

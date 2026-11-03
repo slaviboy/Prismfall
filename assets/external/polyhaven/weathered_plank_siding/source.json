@@ -1,0 +1,53 @@
+{
+  "id": "weathered_plank_siding",
+  "name": "Weathered Plank Siding",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/weathered_plank_siding",
+  "api": {
+    "info": "https://api.polyhaven.com/info/weathered_plank_siding",
+    "files": "https://api.polyhaven.com/files/weathered_plank_siding"
+  },
+  "authors": {
+    "Dimitrios Savva": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    1570.0000524520874,
+    1570.0000524520874
+  ],
+  "resolution": "2k",
+  "filesHash": "2abcb76d5b6adf54f2e033d181740d82c0585376",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "weathered_plank_siding_diffuse_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/weathered_plank_siding/weathered_plank_siding_diff_2k.jpg",
+      "size": 2362951,
+      "md5": "970f80b7b3c84f5dfc17b578f725023a"
+    },
+    {
+      "map": "nor_gl",
+      "path": "weathered_plank_siding_nor_gl_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/weathered_plank_siding/weathered_plank_siding_nor_gl_2k.jpg",
+      "size": 2507695,
+      "md5": "d565db31c7aa0f1990db59cfcc9c7bd7"
+    },
+    {
+      "map": "Rough",
+      "path": "weathered_plank_siding_rough_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/weathered_plank_siding/weathered_plank_siding_rough_2k.jpg",
+      "size": 1604928,
+      "md5": "fed5ccba16098c33691531a5b8ac4ba2"
+    },
+    {
+      "map": "arm",
+      "path": "weathered_plank_siding_arm_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/weathered_plank_siding/weathered_plank_siding_arm_2k.jpg",
+      "size": 1863130,
+      "md5": "4b1facaef73d4694849bb5bf69bf9325"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

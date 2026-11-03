@@ -1,0 +1,46 @@
+{
+  "id": "mud_forest",
+  "name": "Mud Forest",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/mud_forest",
+  "api": {
+    "info": "https://api.polyhaven.com/info/mud_forest",
+    "files": "https://api.polyhaven.com/files/mud_forest"
+  },
+  "authors": {
+    "eye-candy.xyz": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    2349.9999046325684,
+    2349.9999046325684
+  ],
+  "resolution": "2k",
+  "filesHash": "c09133c4536ecd3111be89c1d7122d8b96e36e60",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "mud_forest_diffuse_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/mud_forest/mud_forest_diff_2k.jpg",
+      "size": 3683329,
+      "md5": "e78c6eae192daae3d00a677a588d1739"
+    },
+    {
+      "map": "nor_gl",
+      "path": "mud_forest_nor_gl_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/mud_forest/mud_forest_nor_gl_2k.jpg",
+      "size": 5909919,
+      "md5": "17635ab324ff50542465d7a4284502e3"
+    },
+    {
+      "map": "arm",
+      "path": "mud_forest_arm_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/mud_forest/mud_forest_arm_2k.jpg",
+      "size": 3326167,
+      "md5": "5e46adb654cda4ca023f1e983a363a71"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

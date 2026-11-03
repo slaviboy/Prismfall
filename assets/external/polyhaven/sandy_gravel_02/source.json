@@ -1,0 +1,53 @@
+{
+  "id": "sandy_gravel_02",
+  "name": "Sandy Gravel 02",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/sandy_gravel_02",
+  "api": {
+    "info": "https://api.polyhaven.com/info/sandy_gravel_02",
+    "files": "https://api.polyhaven.com/files/sandy_gravel_02"
+  },
+  "authors": {
+    "Dario Barresi": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    2529.9999713897705,
+    2529.9999713897705
+  ],
+  "resolution": "1k",
+  "filesHash": "d8350a4c74bb92100ac3a039655b7f9ff935f988",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "sandy_gravel_02_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/sandy_gravel_02/sandy_gravel_02_diff_1k.jpg",
+      "size": 947222,
+      "md5": "e8f0496f1e0e923514470171de033bf9"
+    },
+    {
+      "map": "nor_gl",
+      "path": "sandy_gravel_02_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/sandy_gravel_02/sandy_gravel_02_nor_gl_1k.jpg",
+      "size": 1185078,
+      "md5": "a0174cc069d02b825b546d8547b4a49a"
+    },
+    {
+      "map": "Rough",
+      "path": "sandy_gravel_02_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/sandy_gravel_02/sandy_gravel_02_rough_1k.jpg",
+      "size": 382424,
+      "md5": "bbd5bd1358d0a3f7dbdee52707c126c1"
+    },
+    {
+      "map": "arm",
+      "path": "sandy_gravel_02_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/sandy_gravel_02/sandy_gravel_02_arm_1k.jpg",
+      "size": 820610,
+      "md5": "1fef9778c9be98b81bb30a69437ec1da"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

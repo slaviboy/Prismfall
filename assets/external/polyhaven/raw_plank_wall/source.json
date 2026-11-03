@@ -1,0 +1,53 @@
+{
+  "id": "raw_plank_wall",
+  "name": "Raw Plank Wall",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/raw_plank_wall",
+  "api": {
+    "info": "https://api.polyhaven.com/info/raw_plank_wall",
+    "files": "https://api.polyhaven.com/files/raw_plank_wall"
+  },
+  "authors": {
+    "Dimitrios Savva": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    1870.0001239776611,
+    1870.0001239776611
+  ],
+  "resolution": "1k",
+  "filesHash": "55d322b77f98f3222d72b263757e3b1e5b78340f",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "raw_plank_wall_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/raw_plank_wall/raw_plank_wall_diff_1k.jpg",
+      "size": 640551,
+      "md5": "2eef61339d80b5f7ba8ce389861d2b10"
+    },
+    {
+      "map": "nor_gl",
+      "path": "raw_plank_wall_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/raw_plank_wall/raw_plank_wall_nor_gl_1k.jpg",
+      "size": 741259,
+      "md5": "bf50f16e4682cb30d565e895026f1404"
+    },
+    {
+      "map": "Rough",
+      "path": "raw_plank_wall_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/raw_plank_wall/raw_plank_wall_rough_1k.jpg",
+      "size": 380216,
+      "md5": "7624a287ee50147337777bd8a0d5a5b7"
+    },
+    {
+      "map": "arm",
+      "path": "raw_plank_wall_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/raw_plank_wall/raw_plank_wall_arm_1k.jpg",
+      "size": 579601,
+      "md5": "c66543befd889495b3d4acf0062669ab"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

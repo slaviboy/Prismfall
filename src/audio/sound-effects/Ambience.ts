@@ -191,6 +191,39 @@ const PRESETS: Record<string, Preset> = {
     ],
     event: { every: [6, 14], play: (c, o, t) => void playNote(c, o, { kind: 'riser' }, 60, t, 1.4, 0.08) },
   },
+  // The Veil: wind in dead branches over a low rumble, a fine hiss of twigs; now and then (quietly,
+  // never close) a drip into still water, a creak of old timber, a branch giving way, a far call,
+  // or slow heavy footfalls a long way off.
+  veil: {
+    layers: [
+      { noise: 'pink', filter: 'bandpass', freq: 520, q: 0.6, gain: 0.3, lfo: [0.07, 0.75], sweep: 280 },
+      { noise: 'pink', filter: 'lowpass', freq: 95, q: 0.8, gain: 0.34, lfo: [0.025, 0.4] },
+      { noise: 'white', filter: 'bandpass', freq: 4200, q: 0.9, gain: 0.016, lfo: [0.11, 0.85] },
+    ],
+    event: {
+      every: [3.5, 9],
+      play: (c, o, t) => {
+        const r = Math.random();
+        if (r < 0.3) {
+          playNote(c, o, { kind: 'mallet', ratio: 1, index: 0.25, decay: 0.12 }, 86 + Math.floor(Math.random() * 10), t, 0.05, 0.05);
+        } else if (r < 0.5) {
+          const n = 50 + Math.floor(Math.random() * 6);
+          for (let i = 0; i < 2; i++) playNote(c, o, { kind: 'pluck', wave: 'sawtooth', cutoff: 650, envAmount: 0.6, decay: 0.35 }, n + i, t + i * 0.42, 0.3, 0.06);
+        } else if (r < 0.64) {
+          for (let i = 0; i < 3; i++) playNote(c, o, { kind: 'tom', tone: 38, decay: 1.3 }, 30, t + i * 1.55 + Math.random() * 0.2, 1, 0.1 - i * 0.02);
+        } else if (r < 0.8) {
+          const n = 55 + Math.floor(Math.random() * 5);
+          playNote(c, o, { kind: 'pad', wave: 'sine', voices: 1, attack: 0.9, release: 2.2, cutoff: 1200 }, n, t, 1.8, 0.14);
+          playNote(c, o, { kind: 'pad', wave: 'sine', voices: 1, attack: 0.8, release: 2.6, cutoff: 1100 }, n - 3, t + 1.5, 2.1, 0.11);
+        } else if (r < 0.9) {
+          playNote(c, o, { kind: 'perc', tone: 2600, decay: 0.05 }, 70, t, 0.05, 0.05);
+          playNote(c, o, { kind: 'perc', tone: 1800, decay: 0.08 }, 66, t + 0.07, 0.05, 0.03);
+        } else {
+          playNote(c, o, { kind: 'impact' }, 30, t, 2, 0.05);
+        }
+      },
+    },
+  },
 };
 
 export const AMBIENCE_PRESETS = Object.keys(PRESETS);

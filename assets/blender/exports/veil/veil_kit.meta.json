@@ -1,0 +1,60 @@
+{
+  "generator": "assets/blender/scripts/veil_kit.py",
+  "textures": "Poly Haven (CC0): bark_willow_02, dark_planks, rough_wood, old_stone_wall",
+  "license": "Original work for Prismfall",
+  "assets": {
+    "trees": {
+      "objects": [
+        "tree_snag_a",
+        "tree_snag_b",
+        "tree_twisted_a",
+        "tree_twisted_b",
+        "tree_lean",
+        "tree_broken",
+        "tree_far_snag",
+        "tree_far_twisted"
+      ],
+      "triangles": 30746,
+      "perObject": {
+        "tree_snag_a": 10382,
+        "tree_snag_b": 4640,
+        "tree_twisted_a": 5466,
+        "tree_twisted_b": 5076,
+        "tree_lean": 3505,
+        "tree_broken": 472,
+        "tree_far_snag": 675,
+        "tree_far_twisted": 530
+      }
+    },
+    "ruins": {
+      "objects": [
+        "cabin",
+        "tower",
+        "boardwalk",
+        "fence"
+      ],
+      "triangles": 15041,
+      "perObject": {
+        "cabin": 5588,
+        "tower": 6032,
+        "boardwalk": 2780,
+        "fence": 641
+      }
+    },
+    "monuments": {
+      "objects": [
+        "gate",
+        "needle_a",
+        "needle_b",
+        "needle_c"
+      ],
+      "triangles": 2640,
+      "perObject": {
+        "gate": 1920,
+        "needle_a": 252,
+        "needle_b": 228,
+        "needle_c": 240
+      }
+    }
+  }
+}

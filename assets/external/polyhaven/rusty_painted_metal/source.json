@@ -1,0 +1,53 @@
+{
+  "id": "rusty_painted_metal",
+  "name": "Rusty Painted Metal",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/rusty_painted_metal",
+  "api": {
+    "info": "https://api.polyhaven.com/info/rusty_painted_metal",
+    "files": "https://api.polyhaven.com/files/rusty_painted_metal"
+  },
+  "authors": {
+    "Amal Kumar": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    2200.000047683716,
+    2200.000047683716
+  ],
+  "resolution": "1k",
+  "filesHash": "565279d4180007b072dcdd769755ba77918b5d55",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "rusty_painted_metal_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rusty_painted_metal/rusty_painted_metal_diff_1k.jpg",
+      "size": 471866,
+      "md5": "3846f5567b6e7985b275a6b3867a648f"
+    },
+    {
+      "map": "nor_gl",
+      "path": "rusty_painted_metal_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rusty_painted_metal/rusty_painted_metal_nor_gl_1k.jpg",
+      "size": 484158,
+      "md5": "b5a2c2b08219304dcd4e0b00837f3e2d"
+    },
+    {
+      "map": "Rough",
+      "path": "rusty_painted_metal_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rusty_painted_metal/rusty_painted_metal_rough_1k.jpg",
+      "size": 318766,
+      "md5": "4d1a17deece24665d877f818b59b7d38"
+    },
+    {
+      "map": "arm",
+      "path": "rusty_painted_metal_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rusty_painted_metal/rusty_painted_metal_arm_1k.jpg",
+      "size": 372615,
+      "md5": "fdbc2e55370ea387899e25d84c49b203"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

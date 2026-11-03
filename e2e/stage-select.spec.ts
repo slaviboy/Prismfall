@@ -37,6 +37,10 @@ test.describe('world select', () => {
     await page.getByTestId('setup-world').click();
     const locked = page.locator('.world-card.is-locked').first();
     await expect(locked).toBeVisible();
+    // A pointer that just moved (the click above) would take focus from any card the list
+    // scrolls under it; let it rest first, as a keyboard player's would.
+    await page.mouse.move(4, 4);
+    await page.waitForTimeout(200);
     await locked.focus();
     await expect(page.getByTestId('world-details')).toContainText('Voyage');
     await page.keyboard.press('Enter');

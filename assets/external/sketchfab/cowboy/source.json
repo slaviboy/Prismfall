@@ -1,0 +1,25 @@
+{
+  "uid": "160bf043b71c458984c81c717b7483c9",
+  "name": "Western Cowboy (Rigged)",
+  "page": "https://sketchfab.com/3d-models/western-cowboy-rigged-160bf043b71c458984c81c717b7483c9",
+  "author": {
+    "name": "human being",
+    "username": "stevedaman",
+    "profile": "https://sketchfab.com/stevedaman"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Western Cowboy (Rigged)\" by human being (https://sketchfab.com/3d-models/western-cowboy-rigged-160bf043b71c458984c81c717b7483c9), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 35370,
+  "vertices": 18524,
+  "animations": 1,
+  "files": [
+    {
+      "path": "cowboy.gltf.zip",
+      "md5": "8c5a5a0bf66ee896085faf5b6311fae0",
+      "size": 4199317,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

@@ -1,0 +1,181 @@
+{
+  "name": "wild_rooibos_bush",
+  "input": "assets/external/polyhaven/wild_rooibos_bush/wild_rooibos_bush_1k.gltf",
+  "output": "assets/blender/exports/frontier_scans/wild_rooibos_bush.glb",
+  "droppedLods": [],
+  "sourceTriangles": 27519,
+  "targetTriangles": 4000,
+  "triangles": 4000,
+  "vertices": 12229,
+  "dimensions": {
+    "width": 0.6956,
+    "depth": 0.8433,
+    "height": 0.5425
+  },
+  "objects": [
+    {
+      "name": "wild_rooibos_bush_a",
+      "sourceTriangles": 13151,
+      "triangles": 1912,
+      "dimensions": {
+        "width": 0.6956,
+        "depth": 0.8433,
+        "height": 0.5425
+      }
+    },
+    {
+      "name": "wild_rooibos_bush_b",
+      "sourceTriangles": 6287,
+      "triangles": 914,
+      "dimensions": {
+        "width": 0.5219,
+        "depth": 0.4695,
+        "height": 0.5424
+      }
+    },
+    {
+      "name": "wild_rooibos_bush_c",
+      "sourceTriangles": 4204,
+      "triangles": 611,
+      "dimensions": {
+        "width": 0.4254,
+        "depth": 0.4721,
+        "height": 0.4479
+      }
+    },
+    {
+      "name": "wild_rooibos_bush_d",
+      "sourceTriangles": 2684,
+      "triangles": 390,
+      "dimensions": {
+        "width": 0.3224,
+        "depth": 0.3836,
+        "height": 0.4217
+      }
+    },
+    {
+      "name": "wild_rooibos_bush_e",
+      "sourceTriangles": 1193,
+      "triangles": 173,
+      "dimensions": {
+        "width": 0.2776,
+        "depth": 0.1816,
+        "height": 0.3065
+      }
+    }
+  ],
+  "origin": "bottom centre of the bounding box of each object, every object at the origin",
+  "maxTexture": 512,
+  "alphaModes": {
+    "wild_rooibos_bush_twigs": "MASK",
+    "wild_rooibos_bush_leaves": "MASK",
+    "wild_rooibos_bush": "OPAQUE"
+  },
+  "alphaChanges": {
+    "wild_rooibos_bush_twigs": "BLEND (JPEG without alpha) -> MASK from wild_rooibos_bush_alpha_1k.png",
+    "wild_rooibos_bush_leaves": "BLEND (JPEG without alpha) -> MASK from wild_rooibos_bush_alpha_1k.png"
+  },
+  "occlusionAddedFromArm": [
+    "wild_rooibos_bush_twigs",
+    "wild_rooibos_bush_leaves",
+    "wild_rooibos_bush"
+  ],
+  "materials": [
+    {
+      "name": "wild_rooibos_bush_twigs",
+      "textures": {
+        "Base Color": [
+          "wild_rooibos_bush_diff-wild_rooibos_bush_alpha"
+        ],
+        "Roughness": [
+          "wild_rooibos_bush_rough"
+        ],
+        "Metallic": [
+          "wild_rooibos_bush_rough"
+        ],
+        "Normal": [
+          "wild_rooibos_bush_nor_gl"
+        ],
+        "Alpha": [
+          "wild_rooibos_bush_alpha_1k.png"
+        ],
+        "Occlusion": [
+          "wild_rooibos_bush_rough"
+        ]
+      }
+    },
+    {
+      "name": "wild_rooibos_bush_leaves",
+      "textures": {
+        "Base Color": [
+          "wild_rooibos_bush_diff-wild_rooibos_bush_alpha"
+        ],
+        "Roughness": [
+          "wild_rooibos_bush_rough"
+        ],
+        "Metallic": [
+          "wild_rooibos_bush_rough"
+        ],
+        "Normal": [
+          "wild_rooibos_bush_nor_gl"
+        ],
+        "Alpha": [
+          "wild_rooibos_bush_alpha_1k.png"
+        ],
+        "Occlusion": [
+          "wild_rooibos_bush_rough"
+        ]
+      }
+    },
+    {
+      "name": "wild_rooibos_bush",
+      "textures": {
+        "Base Color": [
+          "wild_rooibos_bush_diff-wild_rooibos_bush_alpha"
+        ],
+        "Roughness": [
+          "wild_rooibos_bush_rough"
+        ],
+        "Metallic": [
+          "wild_rooibos_bush_rough"
+        ],
+        "Normal": [
+          "wild_rooibos_bush_nor_gl"
+        ],
+        "Occlusion": [
+          "wild_rooibos_bush_rough"
+        ]
+      }
+    }
+  ],
+  "textures": [
+    {
+      "name": "wild_rooibos_bush_alpha_1k.png",
+      "size": [
+        512,
+        512
+      ]
+    },
+    {
+      "name": "wild_rooibos_bush_diff-wild_rooibos_bush_alpha",
+      "size": [
+        512,
+        512
+      ]
+    },
+    {
+      "name": "wild_rooibos_bush_nor_gl",
+      "size": [
+        512,
+        512
+      ]
+    },
+    {
+      "name": "wild_rooibos_bush_rough",
+      "size": [
+        512,
+        512
+      ]
+    }
+  ]
+}

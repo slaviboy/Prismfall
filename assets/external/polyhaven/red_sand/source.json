@@ -1,0 +1,53 @@
+{
+  "id": "red_sand",
+  "name": "Red Sand",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/red_sand",
+  "api": {
+    "info": "https://api.polyhaven.com/info/red_sand",
+    "files": "https://api.polyhaven.com/files/red_sand"
+  },
+  "authors": {
+    "Rohit Seervi": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    2999.999523162842,
+    2999.999523162842
+  ],
+  "resolution": "1k",
+  "filesHash": "c78965feee79ff1b01357624ea61d9058a43892e",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "red_sand_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/red_sand/red_sand_diff_1k.jpg",
+      "size": 506972,
+      "md5": "7c126de6c6c145bade7586a45e166b0c"
+    },
+    {
+      "map": "nor_gl",
+      "path": "red_sand_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/red_sand/red_sand_nor_gl_1k.jpg",
+      "size": 1142017,
+      "md5": "296562ee18efc0708dfb593cf0dfd2a8"
+    },
+    {
+      "map": "Rough",
+      "path": "red_sand_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/red_sand/red_sand_rough_1k.jpg",
+      "size": 510252,
+      "md5": "ce17988faceead5ac6e0e8802bfeabe5"
+    },
+    {
+      "map": "arm",
+      "path": "red_sand_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/red_sand/red_sand_arm_1k.jpg",
+      "size": 684472,
+      "md5": "ab9d7ccce2c53c5e26cbd7a42790f51a"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

@@ -1,0 +1,53 @@
+{
+  "id": "rocky_trail_02",
+  "name": "Rocky Trail 02",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/rocky_trail_02",
+  "api": {
+    "info": "https://api.polyhaven.com/info/rocky_trail_02",
+    "files": "https://api.polyhaven.com/files/rocky_trail_02"
+  },
+  "authors": {
+    "Amal Kumar": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    2000,
+    2000
+  ],
+  "resolution": "1k",
+  "filesHash": "7b9394e3bb60d9c0cfed2631b813c3f37678c62a",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "rocky_trail_02_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rocky_trail_02/rocky_trail_02_diff_1k.jpg",
+      "size": 869368,
+      "md5": "45b85f90c5ae0eb9ee0c4789d48974c5"
+    },
+    {
+      "map": "nor_gl",
+      "path": "rocky_trail_02_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rocky_trail_02/rocky_trail_02_nor_gl_1k.jpg",
+      "size": 1400149,
+      "md5": "0c46a1471c8d09051a52e4c1628378c3"
+    },
+    {
+      "map": "Rough",
+      "path": "rocky_trail_02_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rocky_trail_02/rocky_trail_02_rough_1k.jpg",
+      "size": 564545,
+      "md5": "d5b837bd0c3d2ba798b45b61e55dfa18"
+    },
+    {
+      "map": "arm",
+      "path": "rocky_trail_02_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rocky_trail_02/rocky_trail_02_arm_1k.jpg",
+      "size": 1027407,
+      "md5": "51eb269537b2a4a2b42e09e7ad385773"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

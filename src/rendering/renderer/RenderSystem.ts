@@ -289,6 +289,7 @@ export class RenderSystem implements GameView {
     this.cameraRig.settings = { ...s.camera, reducedMotion: reducedMotion(s) };
     frameUniforms.effectsIntensity.value = s.gameplay.effectsIntensity;
     frameUniforms.flashLimit.value = s.accessibility.flashReduction ? 0.45 : 1;
+    frameUniforms.worldEvents.value = s.accessibility.worldEvents === 'off' ? 0 : s.accessibility.worldEvents === 'calm' ? 0.5 : 1;
     frameUniforms.reactivity.value = s.reactivity.enabled ? s.reactivity.strength : 0;
   }
 

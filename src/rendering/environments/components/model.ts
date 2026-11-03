@@ -415,10 +415,13 @@ export const modelComponent: ComponentFactory<Params> = {
 
     let burst = 0;
     let presenceValue = 1;
+    // Bindable particle brightness (dims particle creatures at night, for instance).
+    const particleBrightness = floatUniform(p.particles.brightness);
     const apply = (dissolve: number): void => {
       for (const s of particleSets) {
         s.uniforms.dissolve.value = dissolve;
         s.uniforms.presence.value = presenceValue;
+        s.uniforms.brightness.value = particleBrightness.value;
       }
       const solid = p.render === 'dissolve' ? 1 - smooth(Math.min(1, dissolve * 1.4)) : 1;
       for (const m of fading) m.opacity = solid * presenceValue;
@@ -484,6 +487,7 @@ export const modelComponent: ComponentFactory<Params> = {
     apply(0);
     return {
       object: group,
+      reactive: { brightness: particleBrightness },
       update(frame) {
         // Flexed bones start from rest each frame; any clip then poses them, and the swing goes on top.
         for (const f of flexed) f.bone.quaternion.copy(f.rest);

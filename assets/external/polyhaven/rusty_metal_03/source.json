@@ -1,0 +1,53 @@
+{
+  "id": "rusty_metal_03",
+  "name": "Rusty Metal 03",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/rusty_metal_03",
+  "api": {
+    "info": "https://api.polyhaven.com/info/rusty_metal_03",
+    "files": "https://api.polyhaven.com/files/rusty_metal_03"
+  },
+  "authors": {
+    "Amal Kumar": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    1350.0001430511475,
+    1350.0001430511475
+  ],
+  "resolution": "1k",
+  "filesHash": "2ef230b9065b0868c06d7ea7963e58da94f34261",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "rusty_metal_03_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rusty_metal_03/rusty_metal_03_diff_1k.jpg",
+      "size": 781056,
+      "md5": "32165054d3f6a81d81e3d7aec59181da"
+    },
+    {
+      "map": "nor_gl",
+      "path": "rusty_metal_03_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rusty_metal_03/rusty_metal_03_nor_gl_1k.jpg",
+      "size": 582177,
+      "md5": "a9de126b02dc45d674664cf85764519f"
+    },
+    {
+      "map": "Rough",
+      "path": "rusty_metal_03_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rusty_metal_03/rusty_metal_03_rough_1k.jpg",
+      "size": 406559,
+      "md5": "d14ac18d2658f5e5cd68f68cbfa183f1"
+    },
+    {
+      "map": "arm",
+      "path": "rusty_metal_03_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rusty_metal_03/rusty_metal_03_arm_1k.jpg",
+      "size": 554579,
+      "md5": "85131770f95545fa745601ecf6fe637a"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

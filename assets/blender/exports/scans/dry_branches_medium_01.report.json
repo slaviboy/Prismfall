@@ -1,0 +1,81 @@
+{
+  "name": "dry_branches_medium_01",
+  "input": "assets/external/polyhaven/dry_branches_medium_01/dry_branches_medium_01_1k.gltf",
+  "output": "assets/blender/exports/scans/dry_branches_medium_01.glb",
+  "droppedLods": [],
+  "sourceTriangles": 16803,
+  "targetTriangles": 3000,
+  "triangles": 2999,
+  "vertices": 1506,
+  "dimensions": {
+    "width": 1.0586,
+    "depth": 1.2982,
+    "height": 0.3411
+  },
+  "objects": [
+    {
+      "name": "dry_branches_medium_01",
+      "sourceTriangles": 16803,
+      "triangles": 2999,
+      "dimensions": {
+        "width": 1.0586,
+        "depth": 1.2982,
+        "height": 0.3411
+      }
+    }
+  ],
+  "origin": "bottom centre of the bounding box",
+  "maxTexture": 1024,
+  "alphaModes": {
+    "dry_branches_medium_01": "OPAQUE"
+  },
+  "alphaChanges": {},
+  "occlusionAddedFromArm": [
+    "dry_branches_medium_01"
+  ],
+  "materials": [
+    {
+      "name": "dry_branches_medium_01",
+      "textures": {
+        "Base Color": [
+          "dry_branches_medium_01_diff"
+        ],
+        "Roughness": [
+          "dry_branches_medium_01_rough"
+        ],
+        "Metallic": [
+          "dry_branches_medium_01_rough"
+        ],
+        "Normal": [
+          "dry_branches_medium_01_nor_gl"
+        ],
+        "Occlusion": [
+          "dry_branches_medium_01_rough"
+        ]
+      }
+    }
+  ],
+  "textures": [
+    {
+      "name": "dry_branches_medium_01_diff",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "dry_branches_medium_01_nor_gl",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "dry_branches_medium_01_rough",
+      "size": [
+        1024,
+        1024
+      ]
+    }
+  ]
+}

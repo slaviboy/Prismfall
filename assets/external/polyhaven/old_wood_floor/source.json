@@ -1,0 +1,53 @@
+{
+  "id": "old_wood_floor",
+  "name": "Old Wood Floor",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/old_wood_floor",
+  "api": {
+    "info": "https://api.polyhaven.com/info/old_wood_floor",
+    "files": "https://api.polyhaven.com/files/old_wood_floor"
+  },
+  "authors": {
+    "Guillaume Monsergent": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    3000,
+    3000
+  ],
+  "resolution": "2k",
+  "filesHash": "fd59ad577af8185aa6702142c57265b3bfff8aa4",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "old_wood_floor_diffuse_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/old_wood_floor/old_wood_floor_diff_2k.jpg",
+      "size": 3116403,
+      "md5": "b26ae70ec77367f421a5e0b3388b3e05"
+    },
+    {
+      "map": "nor_gl",
+      "path": "old_wood_floor_nor_gl_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/old_wood_floor/old_wood_floor_nor_gl_2k.jpg",
+      "size": 2927156,
+      "md5": "9e055d8c7b568269d18ab9433b0d25d7"
+    },
+    {
+      "map": "Rough",
+      "path": "old_wood_floor_rough_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/old_wood_floor/old_wood_floor_rough_2k.jpg",
+      "size": 2370202,
+      "md5": "afd7ec48a5bb248d87f39b2993d88cac"
+    },
+    {
+      "map": "arm",
+      "path": "old_wood_floor_arm_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/old_wood_floor/old_wood_floor_arm_2k.jpg",
+      "size": 2766097,
+      "md5": "ab39b5d881b4034f96baba7aaf8ad461"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

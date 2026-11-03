@@ -120,6 +120,18 @@ export const ACCESSIBILITY_TAB: TabDef = {
     { kind: 'toggle', section: 'accessibility', key: 'pieceGlyphs', label: 'Piece symbols', description: 'Adds a distinct symbol to each piece type.' },
     { kind: 'slider', section: 'accessibility', key: 'backgroundDim', label: 'Background dimming', description: 'Darkens the world behind the playfield.', min: 0, max: 0.9, step: 0.05, format: percent },
     { kind: 'toggle', section: 'accessibility', key: 'visualAudioCues', label: 'Visual cues for sounds', description: 'Shows beat, danger and level-up sounds on screen.' },
+    {
+      kind: 'choice',
+      section: 'accessibility',
+      key: 'worldEvents',
+      label: 'World events',
+      description: 'Creatures and sudden events out in the world: calm keeps them rarer, further away and gentler; off leaves only the weather.',
+      options: [
+        { value: 'full', label: 'Full' },
+        { value: 'calm', label: 'Calm' },
+        { value: 'off', label: 'Off' },
+      ],
+    },
   ],
 };
 

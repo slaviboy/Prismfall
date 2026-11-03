@@ -72,6 +72,7 @@ export const BLOCK_PRESETS = {
   smokedVeil: { surface: 'veil', roughness: 0.42, metalness: 0.04, clearcoat: 0.35, clearcoatRoughness: 0.38, emissive: 0, core: 0.04, edgeGlow: 0.06, edgeColor: [0.78, 0.86, 1], rim: 0.12, surfaceNoise: 0, ao: 0.45, albedo: 1, musicGlow: 0.1, envIntensity: 0.28, saturation: 1.04 },
   carvedJade: { surface: 'jade', roughness: 0.22, metalness: 0, clearcoat: 0.8, clearcoatRoughness: 0.12, emissive: 0, core: 0.03, edgeGlow: 0.04, edgeColor: [1, 0.85, 0.5], rim: 0.1, surfaceNoise: 0, ao: 0.55, albedo: 1, musicGlow: 0.08, envIntensity: 0.55, saturation: 1.06 },
   machinedGunmetal: { surface: 'machined', roughness: 0.28, metalness: 0.92, clearcoat: 0.3, clearcoatRoughness: 0.18, emissive: 0, core: 0, edgeGlow: 0, edgeColor: null, rim: 0.05, surfaceNoise: 0, ao: 0.6, albedo: 1, musicGlow: 0.08, envIntensity: 1.0, saturation: 1.08 },
+  frontierTimber: { surface: 'frontier', roughness: 0.66, metalness: 0, clearcoat: 0.12, clearcoatRoughness: 0.45, emissive: 0, core: 0, edgeGlow: 0, edgeColor: null, rim: 0.05, surfaceNoise: 0, ao: 0.62, albedo: 1, musicGlow: 0, envIntensity: 0.38, saturation: 1.06 },
 } satisfies Record<string, BlockMaterialPreset>;
 
 export type BlockPresetId = keyof typeof BLOCK_PRESETS;

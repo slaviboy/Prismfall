@@ -1,0 +1,53 @@
+{
+  "id": "fabric_leather_01",
+  "name": "Fabric Leather 01",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/fabric_leather_01",
+  "api": {
+    "info": "https://api.polyhaven.com/info/fabric_leather_01",
+    "files": "https://api.polyhaven.com/files/fabric_leather_01"
+  },
+  "authors": {
+    "Rob Tuytel": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    400.0000059604645,
+    400.00003576278687
+  ],
+  "resolution": "1k",
+  "filesHash": "1ffb69f738b865a70bcff2bb110ea9b3814883c5",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "fabric_leather_01_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/fabric_leather_01/fabric_leather_01_diff_1k.jpg",
+      "size": 510537,
+      "md5": "54ef2a19a00d35a9cd374e419fb75912"
+    },
+    {
+      "map": "nor_gl",
+      "path": "fabric_leather_01_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/fabric_leather_01/fabric_leather_01_nor_gl_1k.jpg",
+      "size": 679548,
+      "md5": "1846424108d23c79a3e46a3e5fd3c6bc"
+    },
+    {
+      "map": "Rough",
+      "path": "fabric_leather_01_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/fabric_leather_01/fabric_leather_01_rough_1k.jpg",
+      "size": 577850,
+      "md5": "8984afb0139f961a4a05d58f3c9403df"
+    },
+    {
+      "map": "arm",
+      "path": "fabric_leather_01_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/fabric_leather_01/fabric_leather_01_arm_1k.jpg",
+      "size": 309975,
+      "md5": "825db6e0f22ea689172ae918a00b8a51"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

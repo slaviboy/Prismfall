@@ -1,0 +1,53 @@
+{
+  "id": "gravelly_sand",
+  "name": "Gravelly Sand",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/gravelly_sand",
+  "api": {
+    "info": "https://api.polyhaven.com/info/gravelly_sand",
+    "files": "https://api.polyhaven.com/files/gravelly_sand"
+  },
+  "authors": {
+    "Dario Barresi": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    2480.0000190734863,
+    2480.0000190734863
+  ],
+  "resolution": "1k",
+  "filesHash": "e8fe004684171971d9a3119f0bbcdfc1d8f7d53d",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "gravelly_sand_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/gravelly_sand/gravelly_sand_diff_1k.jpg",
+      "size": 1062525,
+      "md5": "16b7593a26ce1bd43f1d95e61dc25f05"
+    },
+    {
+      "map": "nor_gl",
+      "path": "gravelly_sand_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/gravelly_sand/gravelly_sand_nor_gl_1k.jpg",
+      "size": 1387739,
+      "md5": "92053a3e135c938def2dc974c76e3763"
+    },
+    {
+      "map": "Rough",
+      "path": "gravelly_sand_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/gravelly_sand/gravelly_sand_rough_1k.jpg",
+      "size": 419895,
+      "md5": "1152ab34b85ec42a5d4d6c8ed2c1100b"
+    },
+    {
+      "map": "arm",
+      "path": "gravelly_sand_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/gravelly_sand/gravelly_sand_arm_1k.jpg",
+      "size": 826170,
+      "md5": "03d07b3466ad0219fb06dc6b8abf0e54"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

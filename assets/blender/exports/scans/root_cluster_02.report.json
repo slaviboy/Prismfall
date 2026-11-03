@@ -1,0 +1,81 @@
+{
+  "name": "root_cluster_02",
+  "input": "assets/external/polyhaven/root_cluster_02/root_cluster_02_1k.gltf",
+  "output": "assets/blender/exports/scans/root_cluster_02.glb",
+  "droppedLods": [],
+  "sourceTriangles": 339641,
+  "targetTriangles": 6000,
+  "triangles": 6000,
+  "vertices": 3411,
+  "dimensions": {
+    "width": 2.3829,
+    "depth": 2.7059,
+    "height": 0.1968
+  },
+  "objects": [
+    {
+      "name": "root_cluster_02",
+      "sourceTriangles": 339641,
+      "triangles": 6000,
+      "dimensions": {
+        "width": 2.3829,
+        "depth": 2.7059,
+        "height": 0.1968
+      }
+    }
+  ],
+  "origin": "bottom centre of the bounding box",
+  "maxTexture": 1024,
+  "alphaModes": {
+    "root_cluster_02": "OPAQUE"
+  },
+  "alphaChanges": {},
+  "occlusionAddedFromArm": [
+    "root_cluster_02"
+  ],
+  "materials": [
+    {
+      "name": "root_cluster_02",
+      "textures": {
+        "Base Color": [
+          "root_cluster_02_diff"
+        ],
+        "Roughness": [
+          "root_cluster_02_rough"
+        ],
+        "Metallic": [
+          "root_cluster_02_rough"
+        ],
+        "Normal": [
+          "root_cluster_02_nor_gl"
+        ],
+        "Occlusion": [
+          "root_cluster_02_rough"
+        ]
+      }
+    }
+  ],
+  "textures": [
+    {
+      "name": "root_cluster_02_diff",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "root_cluster_02_nor_gl",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "root_cluster_02_rough",
+      "size": [
+        1024,
+        1024
+      ]
+    }
+  ]
+}

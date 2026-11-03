@@ -1,0 +1,53 @@
+{
+  "id": "old_sandstone_02",
+  "name": "Old Sandstone 02",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/old_sandstone_02",
+  "api": {
+    "info": "https://api.polyhaven.com/info/old_sandstone_02",
+    "files": "https://api.polyhaven.com/files/old_sandstone_02"
+  },
+  "authors": {
+    "Dimitrios Savva": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    1529.9999713897705,
+    1529.9999713897705
+  ],
+  "resolution": "2k",
+  "filesHash": "a336dea63c883feba28f6b0ca94a8795b6b8ed80",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "old_sandstone_02_diffuse_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/old_sandstone_02/old_sandstone_02_diff_2k.jpg",
+      "size": 3149934,
+      "md5": "a9ffa9168384297e720cbe0bb7de9c0a"
+    },
+    {
+      "map": "nor_gl",
+      "path": "old_sandstone_02_nor_gl_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/old_sandstone_02/old_sandstone_02_nor_gl_2k.jpg",
+      "size": 4060255,
+      "md5": "9ca8b9c1e883878828c7e7f615330ea8"
+    },
+    {
+      "map": "Rough",
+      "path": "old_sandstone_02_rough_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/old_sandstone_02/old_sandstone_02_rough_2k.jpg",
+      "size": 2506137,
+      "md5": "4a03d9466cd3da76c22737cd5e36f4db"
+    },
+    {
+      "map": "arm",
+      "path": "old_sandstone_02_arm_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/old_sandstone_02/old_sandstone_02_arm_2k.jpg",
+      "size": 2754193,
+      "md5": "71c58e41fd5023c7d1a7a920d152cf8a"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

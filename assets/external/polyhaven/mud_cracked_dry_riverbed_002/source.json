@@ -1,0 +1,54 @@
+{
+  "id": "mud_cracked_dry_riverbed_002",
+  "name": "Mud Cracked Dry Riverbed 002",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/mud_cracked_dry_riverbed_002",
+  "api": {
+    "info": "https://api.polyhaven.com/info/mud_cracked_dry_riverbed_002",
+    "files": "https://api.polyhaven.com/files/mud_cracked_dry_riverbed_002"
+  },
+  "authors": {
+    "Dario Barresi": "Processing",
+    "Dimitrios Savva": "Photography"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    2000,
+    2000
+  ],
+  "resolution": "1k",
+  "filesHash": "f2e98edc195840c54be1b2447a8fe5fea7e23395",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "mud_cracked_dry_riverbed_002_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/mud_cracked_dry_riverbed_002/mud_cracked_dry_riverbed_002_diff_1k.jpg",
+      "size": 740567,
+      "md5": "a7b38524333f22970dd2481115ddd50b"
+    },
+    {
+      "map": "nor_gl",
+      "path": "mud_cracked_dry_riverbed_002_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/mud_cracked_dry_riverbed_002/mud_cracked_dry_riverbed_002_nor_gl_1k.jpg",
+      "size": 1358195,
+      "md5": "29674c48445126aebae2f2d5e4ea0e7f"
+    },
+    {
+      "map": "Rough",
+      "path": "mud_cracked_dry_riverbed_002_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/mud_cracked_dry_riverbed_002/mud_cracked_dry_riverbed_002_rough_1k.jpg",
+      "size": 370592,
+      "md5": "acad1e7332f99a964f77c0cd7fc88ec3"
+    },
+    {
+      "map": "arm",
+      "path": "mud_cracked_dry_riverbed_002_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/mud_cracked_dry_riverbed_002/mud_cracked_dry_riverbed_002_arm_1k.jpg",
+      "size": 952347,
+      "md5": "29f86b37ed3db22616867a944611e250"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

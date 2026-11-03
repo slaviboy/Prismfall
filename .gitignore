@@ -71,3 +71,9 @@ assets/blender/source/environments/lost-kingdom.blend
 assets/blender/exports/lost_kingdom/*.glb
 assets/blender/exports/lost_kingdom/textures/
 assets/blender/exports/lost_kingdom/scans/*.glb
+# The Last Frontier: the rider .blends (frontier_riders.py rebuilds them from the Sketchfab GLBs),
+# the raw Blender exports and the large preview renders are rebuilt by the frontier_*.py scripts;
+# the optimised GLBs ship in content/.
+assets/blender/source/environments/last_frontier_horse-rider-*.blend
+assets/blender/exports/frontier*/*.glb
+assets/blender/previews/last_frontier_*.png

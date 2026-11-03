@@ -1,0 +1,54 @@
+{
+  "id": "rust_coarse_01",
+  "name": "Rust Coarse 01",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/rust_coarse_01",
+  "api": {
+    "info": "https://api.polyhaven.com/info/rust_coarse_01",
+    "files": "https://api.polyhaven.com/files/rust_coarse_01"
+  },
+  "authors": {
+    "Dimitrios Savva": "Photography",
+    "Rico Cilliers": "Processing"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    2199.9998092651367,
+    2200.000286102295
+  ],
+  "resolution": "1k",
+  "filesHash": "c20faac0db66a29d5b52f5c45a4ca333e5d6471d",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "rust_coarse_01_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rust_coarse_01/rust_coarse_01_diff_1k.jpg",
+      "size": 845196,
+      "md5": "c2d2facc7184f216d15a8f9957d3aa4c"
+    },
+    {
+      "map": "nor_gl",
+      "path": "rust_coarse_01_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rust_coarse_01/rust_coarse_01_nor_gl_1k.jpg",
+      "size": 763053,
+      "md5": "77f701cbbf5042f6531e7a5af3a4d171"
+    },
+    {
+      "map": "Rough",
+      "path": "rust_coarse_01_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rust_coarse_01/rust_coarse_01_rough_1k.jpg",
+      "size": 712003,
+      "md5": "5c06aa68ed5f0d597ef92198050c0c6a"
+    },
+    {
+      "map": "arm",
+      "path": "rust_coarse_01_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rust_coarse_01/rust_coarse_01_arm_1k.jpg",
+      "size": 833378,
+      "md5": "28b26e393942bc25ef62f76b55fe4649"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

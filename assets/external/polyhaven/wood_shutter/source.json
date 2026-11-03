@@ -1,0 +1,53 @@
+{
+  "id": "wood_shutter",
+  "name": "Wood Shutter",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/wood_shutter",
+  "api": {
+    "info": "https://api.polyhaven.com/info/wood_shutter",
+    "files": "https://api.polyhaven.com/files/wood_shutter"
+  },
+  "authors": {
+    "Dimitrios Savva": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    1000,
+    1000
+  ],
+  "resolution": "1k",
+  "filesHash": "49e5d59532e49d26235dd956eb7e9402d276d3e2",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "wood_shutter_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/wood_shutter/wood_shutter_diff_1k.jpg",
+      "size": 718295,
+      "md5": "aa04efa11722523b239bdfb98ada58b7"
+    },
+    {
+      "map": "nor_gl",
+      "path": "wood_shutter_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/wood_shutter/wood_shutter_nor_gl_1k.jpg",
+      "size": 701234,
+      "md5": "27017b4e111943d4798e60a22ebfb50c"
+    },
+    {
+      "map": "Rough",
+      "path": "wood_shutter_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/wood_shutter/wood_shutter_rough_1k.jpg",
+      "size": 255193,
+      "md5": "8dc958fa2246109b1da5942f9fdd7954"
+    },
+    {
+      "map": "arm",
+      "path": "wood_shutter_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/wood_shutter/wood_shutter_arm_1k.jpg",
+      "size": 370923,
+      "md5": "5b5814f815c6c39120b2b4e65ed6bd60"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

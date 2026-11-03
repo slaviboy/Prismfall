@@ -1,0 +1,270 @@
+{
+  "files": [
+    {
+      "path": "stage.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "SDK module: registers the atmosphere, land, scenery and creatures, and the mist line clear"
+    },
+    {
+      "path": "atmosphere.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "fog shells, fog lights, wind, the event director's fog set pieces, the moon shadow maps"
+    },
+    {
+      "path": "fogModel.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "fog density, lighting and segmented ray-march integration (shells and surfaces)"
+    },
+    {
+      "path": "shadow.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "creature and tree moon-shadow capture (coverage-depth cascades with mipmaps) and sampling"
+    },
+    {
+      "path": "director.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "event director: seeded, cooldown-controlled schedule of creature and fog events, comfort levels"
+    },
+    {
+      "path": "director.test.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "unit tests for the director and the terrain"
+    },
+    {
+      "path": "terrain.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "the landscape's height function (board clearance, marsh, ridges)"
+    },
+    {
+      "path": "surface.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "shared surface lighting: moonlight and shadows, fog light, lamps, wet sheen, back-lit rims, fog"
+    },
+    {
+      "path": "land.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "terrain mesh in photographed mud and leaf litter, the reflective marsh"
+    },
+    {
+      "path": "marsh.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "procedural dead reed, sedge and grass clumps on the shores, wind sway"
+    },
+    {
+      "path": "models.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "GLB mesh baking (dequantisation, world transform)"
+    },
+    {
+      "path": "scenery.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "placement and materials for scans, dead trees, ruins and monuments"
+    },
+    {
+      "path": "gait.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "procedural locomotion: foot planting, step timing, two-bone IK, path following"
+    },
+    {
+      "path": "creatures.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "the strider, hollow and colossus walkers and the GPU-animated ray swarm, driven by the director"
+    },
+    {
+      "path": "effects.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "mist line clears (dissolve, mist wave, QUAD wave)"
+    },
+    {
+      "path": "music/beyond-the-mist.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "Beyond the Mist composition"
+    },
+    {
+      "path": "music/lanterns-in-the-fog.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "Lanterns in the Fog composition"
+    },
+    {
+      "path": "models/strider.glb",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "assets/blender/scripts/veil_creatures.py",
+      "purpose": "the giant walker (skinned)"
+    },
+    {
+      "path": "models/hollow.glb",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "assets/blender/scripts/veil_creatures.py",
+      "purpose": "the long-limbed shadow (skinned)"
+    },
+    {
+      "path": "models/colossus.glb",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "assets/blender/scripts/veil_creatures.py",
+      "purpose": "the unseen giant (skinned)"
+    },
+    {
+      "path": "models/ray.glb",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "assets/blender/scripts/veil_creatures.py",
+      "purpose": "the fog ray (swarm)"
+    },
+    {
+      "path": "models/trees.glb",
+      "license": "Original work for Prismfall; bark texture CC0 1.0",
+      "author": "Prismfall; texture Charlotte Baglioni (Poly Haven)",
+      "source": "assets/blender/scripts/veil_kit.py; https://polyhaven.com/a/bark_willow_02",
+      "purpose": "dead trees, near and far variants"
+    },
+    {
+      "path": "models/ruins.glb",
+      "license": "Original work for Prismfall; textures CC0 1.0",
+      "author": "Prismfall; textures Rob Tuytel (Poly Haven)",
+      "source": "assets/blender/scripts/veil_kit.py; https://polyhaven.com/a/dark_planks, https://polyhaven.com/a/rough_wood",
+      "purpose": "cabin, lookout tower, boardwalk, fence"
+    },
+    {
+      "path": "models/monuments.glb",
+      "license": "Original work for Prismfall; texture CC0 1.0",
+      "author": "Prismfall; texture Charlotte Baglioni (Poly Haven)",
+      "source": "assets/blender/scripts/veil_kit.py; https://polyhaven.com/a/old_stone_wall",
+      "purpose": "the far gate and stone needles"
+    },
+    {
+      "path": "models/boulder_01.glb",
+      "license": "CC0 1.0",
+      "author": "Rico Cilliers (Poly Haven)",
+      "source": "https://polyhaven.com/a/boulder_01",
+      "purpose": "photoscan (assets/external/polyhaven/boulder_01/source.json)"
+    },
+    {
+      "path": "models/dead_tree_trunk_02.glb",
+      "license": "CC0 1.0",
+      "author": "Jenelle van Heerden, Rico Cilliers (Poly Haven)",
+      "source": "https://polyhaven.com/a/dead_tree_trunk_02",
+      "purpose": "photoscan, fallen trunks"
+    },
+    {
+      "path": "models/rock_moss_set_01.glb",
+      "license": "CC0 1.0",
+      "author": "Kless Gyzen (Poly Haven)",
+      "source": "https://polyhaven.com/a/rock_moss_set_01",
+      "purpose": "photoscan, six mossy rocks"
+    },
+    {
+      "path": "models/root_cluster_02.glb",
+      "license": "CC0 1.0",
+      "author": "Jenelle van Heerden (Poly Haven)",
+      "source": "https://polyhaven.com/a/root_cluster_02",
+      "purpose": "photoscan, dead roots"
+    },
+    {
+      "path": "models/tree_stump_02.glb",
+      "license": "CC0 1.0",
+      "author": "Rob Tuytel (Poly Haven)",
+      "source": "https://polyhaven.com/a/tree_stump_02",
+      "purpose": "photoscan, stumps"
+    },
+    {
+      "path": "models/dry_branches_medium_01.glb",
+      "license": "CC0 1.0",
+      "author": "Rico Cilliers (Poly Haven)",
+      "source": "https://polyhaven.com/a/dry_branches_medium_01",
+      "purpose": "photoscan, dead branch debris"
+    },
+    {
+      "path": "textures/kloofendal_28d_misty_band.webp",
+      "license": "CC0 1.0",
+      "author": "Greg Zaal, Jenelle van Heerden (Poly Haven)",
+      "source": "https://polyhaven.com/a/kloofendal_28d_misty",
+      "purpose": "panorama band, moonlight-graded (assets/external/polyhaven/kloofendal_28d_misty/source.json)"
+    },
+    {
+      "path": "textures/kloofendal_28d_misty_detail.webp",
+      "license": "CC0 1.0",
+      "author": "Greg Zaal, Jenelle van Heerden (Poly Haven)",
+      "source": "https://polyhaven.com/a/kloofendal_28d_misty",
+      "purpose": "panorama detail crop from the 16k HDR, moonlight-graded"
+    },
+    {
+      "path": "textures/mud_forest_diff.webp",
+      "license": "CC0 1.0",
+      "author": "eye-candy.xyz (Poly Haven)",
+      "source": "https://polyhaven.com/a/mud_forest",
+      "purpose": "ground albedo"
+    },
+    {
+      "path": "textures/mud_forest_nor.webp",
+      "license": "CC0 1.0",
+      "author": "eye-candy.xyz (Poly Haven)",
+      "source": "https://polyhaven.com/a/mud_forest",
+      "purpose": "ground normal map"
+    },
+    {
+      "path": "textures/mud_forest_arm.webp",
+      "license": "CC0 1.0",
+      "author": "eye-candy.xyz (Poly Haven)",
+      "source": "https://polyhaven.com/a/mud_forest",
+      "purpose": "ground AO and roughness"
+    },
+    {
+      "path": "textures/forest_leaves_02_diff.webp",
+      "license": "CC0 1.0",
+      "author": "Rob Tuytel (Poly Haven)",
+      "source": "https://polyhaven.com/a/forest_leaves_02",
+      "purpose": "leaf litter albedo"
+    },
+    {
+      "path": "textures/forest_leaves_02_nor.webp",
+      "license": "CC0 1.0",
+      "author": "Rob Tuytel (Poly Haven)",
+      "source": "https://polyhaven.com/a/forest_leaves_02",
+      "purpose": "leaf litter normal map"
+    },
+    {
+      "path": "previews/thumb.jpg",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "generated by scripts/thumbnails.ts",
+      "purpose": "world artwork"
+    }
+  ]
+}

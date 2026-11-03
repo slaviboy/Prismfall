@@ -1,0 +1,54 @@
+{
+  "id": "corrugated_iron",
+  "name": "Corrugated Iron",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/corrugated_iron",
+  "api": {
+    "info": "https://api.polyhaven.com/info/corrugated_iron",
+    "files": "https://api.polyhaven.com/files/corrugated_iron"
+  },
+  "authors": {
+    "Jenelle van Heerden": "Processing",
+    "Dimitrios Savva": "Photography"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    1120.0000047683716,
+    1120.0000047683716
+  ],
+  "resolution": "1k",
+  "filesHash": "32412884f4522418b4598d9631610b2331e8ca58",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "corrugated_iron_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/corrugated_iron/corrugated_iron_diff_1k.jpg",
+      "size": 719557,
+      "md5": "fabb629c5ad6f427e6862bb4043564bd"
+    },
+    {
+      "map": "nor_gl",
+      "path": "corrugated_iron_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/corrugated_iron/corrugated_iron_nor_gl_1k.jpg",
+      "size": 755185,
+      "md5": "02249d61a2b1839552938f35a20d075a"
+    },
+    {
+      "map": "Rough",
+      "path": "corrugated_iron_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/corrugated_iron/corrugated_iron_rough_1k.jpg",
+      "size": 455677,
+      "md5": "7c14b728587586e74be45a67cfe44160"
+    },
+    {
+      "map": "arm",
+      "path": "corrugated_iron_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/corrugated_iron/corrugated_iron_arm_1k.jpg",
+      "size": 513485,
+      "md5": "1aa3a922ef522a8b98e6d38a810d8a3e"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

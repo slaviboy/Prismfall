@@ -1,0 +1,256 @@
+{
+  "files": [
+    {
+      "path": "stage.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "SDK module: registers the sky, ground, town, railway, scatter, rocks and dust components and the line clear"
+    },
+    {
+      "path": "shared.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "time of day, the world's own sun (with shadows) and sky lights, haze, lamp light, glTF material conversion"
+    },
+    {
+      "path": "sky.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "photographic sky graded from golden afternoon to sunset, blue hour and a moonlit night"
+    },
+    {
+      "path": "ground.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "textured desert terrain: town bench, railway grade, roads, creek; melts into the photograph far away"
+    },
+    {
+      "path": "town.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "the Blender town: lit windows with passing silhouettes, lanterns, wind pump, swaying signs, saloon doors"
+    },
+    {
+      "path": "rail.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "railway line, poles and water tower; the steam train with wheels, rods, smoke, steam, dust and headlight"
+    },
+    {
+      "path": "puffs.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "sun-lit GPU puffs (smoke, steam, dust)"
+    },
+    {
+      "path": "dust.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "ground drifts, gusts, dust devils, dust under hooves and wheels"
+    },
+    {
+      "path": "scatter.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "instanced scanned shrubs and boulders; placed scanned outcrops"
+    },
+    {
+      "path": "effects.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "dustAndTimber line clear"
+    },
+    {
+      "path": "clutter.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "instanced grass tufts, stones, fence lines and broken wagon wheels"
+    },
+    {
+      "path": "music/long-shadows.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "Long Shadows composition"
+    },
+    {
+      "path": "music/iron-horse.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "Iron Horse composition"
+    },
+    {
+      "path": "models/town.glb",
+      "license": "Original work for Prismfall (textures CC0 Poly Haven)",
+      "author": "Prismfall",
+      "source": "assets/blender/scripts/frontier_town.py",
+      "purpose": "Copper Wells"
+    },
+    {
+      "path": "models/town.meta.json",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "assets/blender/scripts/frontier_town.py",
+      "purpose": "town metadata"
+    },
+    {
+      "path": "models/train.glb",
+      "license": "Original work for Prismfall (textures CC0 Poly Haven)",
+      "author": "Prismfall",
+      "source": "assets/blender/scripts/frontier_train.py",
+      "purpose": "4-4-0 locomotive, tender, cars, water tower, telegraph pole"
+    },
+    {
+      "path": "models/train.meta.json",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "assets/blender/scripts/frontier_train.py",
+      "purpose": "train kinematics metadata"
+    },
+    {
+      "path": "models/horse-rider-a.glb",
+      "license": "CC BY 4.0",
+      "author": "human being (cowboy), Henry S (horse)",
+      "source": "https://sketchfab.com/3d-models/western-cowboy-rigged-160bf043b71c458984c81c717b7483c9 + https://sketchfab.com/3d-models/horse-a6f860e43e364619bccb174a1ac7d0c9",
+      "purpose": "rider seated on the horse (assets/blender/scripts/frontier_riders.py), drawn as particles"
+    },
+    {
+      "path": "models/horse-rider-b.glb",
+      "license": "CC BY 4.0",
+      "author": "archiebattley (gunslinger), Henry S (horse)",
+      "source": "https://sketchfab.com/3d-models/gunslinger-95336de7a15145238c151388ee84d22b + https://sketchfab.com/3d-models/horse-a6f860e43e364619bccb174a1ac7d0c9",
+      "purpose": "second rider, drawn as particles"
+    },
+    {
+      "path": "models/wild_rooibos_bush.glb",
+      "license": "CC0 1.0",
+      "author": "Poly Haven",
+      "source": "https://polyhaven.com/a/wild_rooibos_bush",
+      "purpose": "desert shrubs"
+    },
+    {
+      "path": "textures/goegap_road_band.webp",
+      "license": "CC0 1.0",
+      "author": "Greg Zaal, James Ray Cock (Poly Haven)",
+      "source": "https://polyhaven.com/a/goegap_road",
+      "purpose": "panorama band, dry-season grade (assets/external/polyhaven/goegap_road/source.json)"
+    },
+    {
+      "path": "textures/goegap_road_detail.webp",
+      "license": "CC0 1.0",
+      "author": "Greg Zaal, James Ray Cock (Poly Haven)",
+      "source": "https://polyhaven.com/a/goegap_road",
+      "purpose": "panorama detail crop from the 16k HDR, dry-season grade"
+    },
+    {
+      "path": "textures/sandy_gravel_02_diff.webp",
+      "license": "CC0 1.0",
+      "author": "Dario Barresi (Poly Haven)",
+      "source": "https://polyhaven.com/a/sandy_gravel_02",
+      "purpose": "ground"
+    },
+    {
+      "path": "textures/sandy_gravel_02_nor.webp",
+      "license": "CC0 1.0",
+      "author": "Dario Barresi (Poly Haven)",
+      "source": "https://polyhaven.com/a/sandy_gravel_02",
+      "purpose": "ground normal"
+    },
+    {
+      "path": "textures/gravelly_sand_diff.webp",
+      "license": "CC0 1.0",
+      "author": "Dario Barresi (Poly Haven)",
+      "source": "https://polyhaven.com/a/gravelly_sand",
+      "purpose": "ground"
+    },
+    {
+      "path": "textures/gravelly_sand_nor.webp",
+      "license": "CC0 1.0",
+      "author": "Dario Barresi (Poly Haven)",
+      "source": "https://polyhaven.com/a/gravelly_sand",
+      "purpose": "ground normal"
+    },
+    {
+      "path": "textures/dry_ground_rocks_diff.webp",
+      "license": "CC0 1.0",
+      "author": "Rob Tuytel (Poly Haven)",
+      "source": "https://polyhaven.com/a/dry_ground_rocks",
+      "purpose": "pebbly ground"
+    },
+    {
+      "path": "textures/dry_ground_rocks_nor.webp",
+      "license": "CC0 1.0",
+      "author": "Rob Tuytel (Poly Haven)",
+      "source": "https://polyhaven.com/a/dry_ground_rocks",
+      "purpose": "pebbly ground normal"
+    },
+    {
+      "path": "textures/rocky_trail_02_diff.webp",
+      "license": "CC0 1.0",
+      "author": "Amal Kumar (Poly Haven)",
+      "source": "https://polyhaven.com/a/rocky_trail_02",
+      "purpose": "roads and the street"
+    },
+    {
+      "path": "textures/rocky_trail_02_nor.webp",
+      "license": "CC0 1.0",
+      "author": "Amal Kumar (Poly Haven)",
+      "source": "https://polyhaven.com/a/rocky_trail_02",
+      "purpose": "roads normal"
+    },
+    {
+      "path": "textures/mud_cracked_dry_riverbed_002_diff.webp",
+      "license": "CC0 1.0",
+      "author": "Dario Barresi, Dimitrios Savva (Poly Haven)",
+      "source": "https://polyhaven.com/a/mud_cracked_dry_riverbed_002",
+      "purpose": "dry creek bed"
+    },
+    {
+      "path": "textures/rock_boulder_cracked_diff.webp",
+      "license": "CC0 1.0",
+      "author": "Dario Barresi, Dimitrios Savva (Poly Haven)",
+      "source": "https://polyhaven.com/a/rock_boulder_cracked",
+      "purpose": "rocky slopes"
+    },
+    {
+      "path": "textures/rock_boulder_cracked_nor.webp",
+      "license": "CC0 1.0",
+      "author": "Dario Barresi, Dimitrios Savva (Poly Haven)",
+      "source": "https://polyhaven.com/a/rock_boulder_cracked",
+      "purpose": "rocky slopes normal"
+    },
+    {
+      "path": "textures/dry_ground_01_diff.webp",
+      "license": "CC0 1.0",
+      "author": "Rob Tuytel (Poly Haven)",
+      "source": "https://polyhaven.com/a/dry_ground_01",
+      "purpose": "crusted ground flats"
+    },
+    {
+      "path": "textures/dry_ground_01_nor.webp",
+      "license": "CC0 1.0",
+      "author": "Rob Tuytel (Poly Haven)",
+      "source": "https://polyhaven.com/a/dry_ground_01",
+      "purpose": "crusted ground normal"
+    },
+    {
+      "path": "previews/thumb.jpg",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "generated by scripts/thumbnails.ts",
+      "purpose": "world artwork"
+    }
+  ]
+}

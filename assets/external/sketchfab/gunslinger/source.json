@@ -1,0 +1,25 @@
+{
+  "uid": "95336de7a15145238c151388ee84d22b",
+  "name": "Gunslinger",
+  "page": "https://sketchfab.com/3d-models/gunslinger-95336de7a15145238c151388ee84d22b",
+  "author": {
+    "name": "archiebattley",
+    "username": "archiebattley",
+    "profile": "https://sketchfab.com/archiebattley"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Gunslinger\" by archiebattley (https://sketchfab.com/3d-models/gunslinger-95336de7a15145238c151388ee84d22b), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 59459,
+  "vertices": 30792,
+  "animations": 1,
+  "files": [
+    {
+      "path": "gunslinger.gltf.zip",
+      "md5": "34c122512583372e11401a59163d5a22",
+      "size": 6361652,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

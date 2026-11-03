@@ -1,0 +1,46 @@
+{
+  "id": "dark_planks",
+  "name": "Dark Planks",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/dark_planks",
+  "api": {
+    "info": "https://api.polyhaven.com/info/dark_planks",
+    "files": "https://api.polyhaven.com/files/dark_planks"
+  },
+  "authors": {
+    "Rob Tuytel": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    2000,
+    2000
+  ],
+  "resolution": "2k",
+  "filesHash": "ca20bf0a2ad911df1033d471491e1a3f1bf37e1d",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "dark_planks_diffuse_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/dark_planks/dark_planks_diff_2k.jpg",
+      "size": 1681749,
+      "md5": "009fe546ba9c27102552a6ce225fc83e"
+    },
+    {
+      "map": "nor_gl",
+      "path": "dark_planks_nor_gl_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/dark_planks/dark_planks_nor_gl_2k.jpg",
+      "size": 2119724,
+      "md5": "14a6b692bc231baeb817f0ce9114335d"
+    },
+    {
+      "map": "arm",
+      "path": "dark_planks_arm_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/dark_planks/dark_planks_arm_2k.jpg",
+      "size": 482059,
+      "md5": "c846a03d13022e90bbd9871bb4aab083"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

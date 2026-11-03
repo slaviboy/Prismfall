@@ -1,0 +1,53 @@
+{
+  "id": "dry_riverbed_rock",
+  "name": "Dry Riverbed Rock",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/dry_riverbed_rock",
+  "api": {
+    "info": "https://api.polyhaven.com/info/dry_riverbed_rock",
+    "files": "https://api.polyhaven.com/files/dry_riverbed_rock"
+  },
+  "authors": {
+    "Amal Kumar": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    2000,
+    2000
+  ],
+  "resolution": "1k",
+  "filesHash": "aa87f826fc4326cd3e4ecd9d73e3644e18e86ed1",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "dry_riverbed_rock_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/dry_riverbed_rock/dry_riverbed_rock_diff_1k.jpg",
+      "size": 1099450,
+      "md5": "7a2c188fc40fee70a7add47af4c8e4ae"
+    },
+    {
+      "map": "nor_gl",
+      "path": "dry_riverbed_rock_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/dry_riverbed_rock/dry_riverbed_rock_nor_gl_1k.jpg",
+      "size": 1021996,
+      "md5": "5ad5ebe7959185fdff60e78a536dfd38"
+    },
+    {
+      "map": "Rough",
+      "path": "dry_riverbed_rock_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/dry_riverbed_rock/dry_riverbed_rock_rough_1k.jpg",
+      "size": 676952,
+      "md5": "195b6506ecd618a7134c7177d445b4f1"
+    },
+    {
+      "map": "arm",
+      "path": "dry_riverbed_rock_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/dry_riverbed_rock/dry_riverbed_rock_arm_1k.jpg",
+      "size": 837134,
+      "md5": "e39579a0341249356dbc469d52410a9c"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

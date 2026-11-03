@@ -1,0 +1,53 @@
+{
+  "id": "red_laterite_soil_stones",
+  "name": "Red Laterite Soil Stones",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/red_laterite_soil_stones",
+  "api": {
+    "info": "https://api.polyhaven.com/info/red_laterite_soil_stones",
+    "files": "https://api.polyhaven.com/files/red_laterite_soil_stones"
+  },
+  "authors": {
+    "Amal Kumar": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    2000,
+    2000
+  ],
+  "resolution": "1k",
+  "filesHash": "7162c7ae70b9626991753b8e0ba6c2b4abd633ca",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "red_laterite_soil_stones_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/red_laterite_soil_stones/red_laterite_soil_stones_diff_1k.jpg",
+      "size": 906764,
+      "md5": "f5d483e42da0c704f320b8c159ebca5e"
+    },
+    {
+      "map": "nor_gl",
+      "path": "red_laterite_soil_stones_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/red_laterite_soil_stones/red_laterite_soil_stones_nor_gl_1k.jpg",
+      "size": 1494933,
+      "md5": "08737e3b461efa2583c648fbb3472e84"
+    },
+    {
+      "map": "Rough",
+      "path": "red_laterite_soil_stones_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/red_laterite_soil_stones/red_laterite_soil_stones_rough_1k.jpg",
+      "size": 722823,
+      "md5": "564a0faa8182a6cdb0fcff8e357dc064"
+    },
+    {
+      "map": "arm",
+      "path": "red_laterite_soil_stones_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/red_laterite_soil_stones/red_laterite_soil_stones_arm_1k.jpg",
+      "size": 1056919,
+      "md5": "8f1a8b5d546c87d57ec2718ea072d8b0"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

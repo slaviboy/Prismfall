@@ -1,0 +1,54 @@
+{
+  "id": "worn_rock_natural_01",
+  "name": "Worn Rock Natural 01",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/worn_rock_natural_01",
+  "api": {
+    "info": "https://api.polyhaven.com/info/worn_rock_natural_01",
+    "files": "https://api.polyhaven.com/files/worn_rock_natural_01"
+  },
+  "authors": {
+    "Rob Tuytel": "Processing",
+    "Dimitrios Savva": "Photography"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    2000,
+    2000
+  ],
+  "resolution": "1k",
+  "filesHash": "a5e10beb7649207d76c559cc7f3792e334a1c6d2",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "worn_rock_natural_01_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/worn_rock_natural_01/worn_rock_natural_01_diff_1k.jpg",
+      "size": 854615,
+      "md5": "f410522eec19eb12e2b96ad4386b8493"
+    },
+    {
+      "map": "nor_gl",
+      "path": "worn_rock_natural_01_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/worn_rock_natural_01/worn_rock_natural_01_nor_gl_1k.jpg",
+      "size": 910654,
+      "md5": "8645b86f5cb360b626086a4dc286340a"
+    },
+    {
+      "map": "Rough",
+      "path": "worn_rock_natural_01_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/worn_rock_natural_01/worn_rock_natural_01_rough_1k.jpg",
+      "size": 541768,
+      "md5": "d8f4508262dcf919d3fe6ce97ae30f98"
+    },
+    {
+      "map": "arm",
+      "path": "worn_rock_natural_01_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/worn_rock_natural_01/worn_rock_natural_01_arm_1k.jpg",
+      "size": 643837,
+      "md5": "9ebd8c9c3b3db65349dca9c7c27f106e"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

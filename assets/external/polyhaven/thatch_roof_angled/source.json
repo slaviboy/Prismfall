@@ -1,0 +1,54 @@
+{
+  "id": "thatch_roof_angled",
+  "name": "Thatch Roof Angled",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/thatch_roof_angled",
+  "api": {
+    "info": "https://api.polyhaven.com/info/thatch_roof_angled",
+    "files": "https://api.polyhaven.com/files/thatch_roof_angled"
+  },
+  "authors": {
+    "Rob Tuytel": "Processing",
+    "Dimitrios Savva": "Photography"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    539.9999618530273,
+    539.9999618530273
+  ],
+  "resolution": "1k",
+  "filesHash": "ae272743c3e50cfb1bbb4a74783700a67aef44da",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "thatch_roof_angled_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/thatch_roof_angled/thatch_roof_angled_diff_1k.jpg",
+      "size": 860319,
+      "md5": "645a32cd470a4b14aa033793d0e7aa83"
+    },
+    {
+      "map": "nor_gl",
+      "path": "thatch_roof_angled_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/thatch_roof_angled/thatch_roof_angled_nor_gl_1k.jpg",
+      "size": 1278796,
+      "md5": "eaa0da45ad5ce3fdb664be4202943fdf"
+    },
+    {
+      "map": "Rough",
+      "path": "thatch_roof_angled_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/thatch_roof_angled/thatch_roof_angled_rough_1k.jpg",
+      "size": 588100,
+      "md5": "6368f0014bf7411f38950d5dc23bd2e2"
+    },
+    {
+      "map": "arm",
+      "path": "thatch_roof_angled_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/thatch_roof_angled/thatch_roof_angled_arm_1k.jpg",
+      "size": 848888,
+      "md5": "c25bbba75032af5b8a567cf4e79f3bea"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

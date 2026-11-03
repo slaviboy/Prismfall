@@ -1,0 +1,46 @@
+{
+  "id": "bark_willow_02",
+  "name": "Bark Willow 02",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/bark_willow_02",
+  "api": {
+    "info": "https://api.polyhaven.com/info/bark_willow_02",
+    "files": "https://api.polyhaven.com/files/bark_willow_02"
+  },
+  "authors": {
+    "Charlotte Baglioni": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    2150.0000953674316,
+    2150.0000953674316
+  ],
+  "resolution": "2k",
+  "filesHash": "cf8e6e6f070a79e58fb6e9607b6a230f5e93db4d",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "bark_willow_02_diffuse_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/bark_willow_02/bark_willow_02_diff_2k.jpg",
+      "size": 4010319,
+      "md5": "c6bc363160c1e91d7af4b579dd0345f4"
+    },
+    {
+      "map": "nor_gl",
+      "path": "bark_willow_02_nor_gl_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/bark_willow_02/bark_willow_02_nor_gl_2k.jpg",
+      "size": 5216489,
+      "md5": "1a1a98d8cf2654326a3f8f45e7508f53"
+    },
+    {
+      "map": "arm",
+      "path": "bark_willow_02_arm_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/bark_willow_02/bark_willow_02_arm_2k.jpg",
+      "size": 3670146,
+      "md5": "2c23c6b3b10690690346da6b5b50176d"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

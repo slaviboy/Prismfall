@@ -1,0 +1,53 @@
+{
+  "id": "cracked_red_ground",
+  "name": "Cracked Red Ground",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/cracked_red_ground",
+  "api": {
+    "info": "https://api.polyhaven.com/info/cracked_red_ground",
+    "files": "https://api.polyhaven.com/files/cracked_red_ground"
+  },
+  "authors": {
+    "Amal Kumar": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    2000,
+    2000
+  ],
+  "resolution": "1k",
+  "filesHash": "e26ccacd19dd06f9f75ce04602ded00370a96b61",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "cracked_red_ground_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/cracked_red_ground/cracked_red_ground_diff_1k.jpg",
+      "size": 720673,
+      "md5": "991a0e3d10abd7c4f19a1113d60a2c3e"
+    },
+    {
+      "map": "nor_gl",
+      "path": "cracked_red_ground_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/cracked_red_ground/cracked_red_ground_nor_gl_1k.jpg",
+      "size": 1105496,
+      "md5": "d1bce528e7f47be613ed3c8dcb4601d6"
+    },
+    {
+      "map": "Rough",
+      "path": "cracked_red_ground_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/cracked_red_ground/cracked_red_ground_rough_1k.jpg",
+      "size": 569920,
+      "md5": "c1a810313f5ac9602f687e43d4fa0395"
+    },
+    {
+      "map": "arm",
+      "path": "cracked_red_ground_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/cracked_red_ground/cracked_red_ground_arm_1k.jpg",
+      "size": 729394,
+      "md5": "563f83150bbdac57e4e1388522df7230"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

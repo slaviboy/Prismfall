@@ -27,7 +27,7 @@ import type { Node } from 'three/webgpu';
  * Procedural block surfaces for stage block themes. Every surface keeps the piece colour as its
  * identity (tint, glow or crack colour), so the seven pieces stay distinguishable in any theme.
  */
-export const BLOCK_SURFACES = ['plain', 'wood', 'ice', 'sandstone', 'obsidian', 'emerald', 'cosmic', 'aquatic', 'neon', 'mineral', 'aurora', 'paper', 'lumen', 'dichroic', 'ingot', 'ribbon', 'gel', 'rosette', 'marble', 'lantern', 'basalt', 'veil', 'jade', 'machined'] as const;
+export const BLOCK_SURFACES = ['plain', 'wood', 'ice', 'sandstone', 'obsidian', 'emerald', 'cosmic', 'aquatic', 'neon', 'mineral', 'aurora', 'paper', 'lumen', 'dichroic', 'ingot', 'ribbon', 'gel', 'rosette', 'marble', 'lantern', 'basalt', 'veil', 'jade', 'machined', 'frontier'] as const;
 export type BlockSurface = (typeof BLOCK_SURFACES)[number];
 
 type F = Node<'float'>;
@@ -342,6 +342,32 @@ export function buildSurface(kind: BlockSurface, i: SurfaceInputs): SurfaceOutpu
       const red = mix(base, vec3(1, 0.1, 0.04), 0.6);
       const emissive = red.mul(line.mul(float(0.42).add(music.mul(0.12)))).add(mix(base, vec3(1, 0.95, 0.9), 0.35).mul(lamp.mul(0.9)));
       return { albedo: cast<V3>(albedo), emissive: cast<V3>(emissive), roughness: cast<F>(mix(float(0.24).add(brushed.mul(0.1)).add(scratch.mul(0.1)), float(0.14), edge).add(groove.mul(0.3))) };
+    }
+    case 'frontier': {
+      // Frontier timber (The Last Frontier): weathered oak planks painted in the piece colour, two
+      // boards per face with a seam, open grain and the odd knot, paint worn back to bare wood on
+      // the arrises, forged-iron corner straps with brass rivet heads. No glow: lit like the town.
+      const uv = faceUV(p);
+      const d = borderDistance(p);
+      const board = fract(uv.y.mul(2.13).add(0.5));
+      const seam = smoothstep(0.04, 0.0, min(board, float(1).sub(board)));
+      const grain = mx_noise_float(q.mul(vec3(3, 3, 3)).add(vec3(uv.x.mul(1.5), uv.y.mul(38), 0))).mul(0.5).add(0.5);
+      const fibre = mx_noise_float(vec3(uv.x.mul(4), uv.y.mul(90), seed.x.mul(9))).mul(0.5).add(0.5);
+      const knot = smoothstep(0.9, 1.0, mx_worley_noise_float(q.mul(2.2))).mul(0.4);
+      const wear = smoothstep(0.7, 0.86, mx_fractal_noise_float(q.mul(4.5), 3, 2, 0.5).mul(0.5).add(0.5).mul(0.6).add(smoothstep(0.07, 0.0, d).mul(0.55)));
+      const wood = vec3(0.3, 0.19, 0.11).mul(float(0.75).add(grain.mul(0.4)));
+      const paint = base.mul(float(0.74).add(fibre.mul(0.18)).add(grain.mul(0.12)));
+      let albedo = cast<V3>(mix(paint, wood, wear.mul(0.8)).mul(float(1).sub(seam.mul(0.55))).mul(float(1).sub(knot)));
+      // Iron straps across each corner (an L of flat bar) with a brass rivet at the knee.
+      const ax = abs(uv.x);
+      const ay = abs(uv.y);
+      const strap = step(0.335, max(ax, ay)).mul(step(0.24, min(ax, ay)));
+      const rivet = smoothstep(0.03, 0.018, length(vec3(ax.sub(0.4), ay.sub(0.4), 0)));
+      const iron = vec3(0.055, 0.05, 0.047).add(vec3(0.12, 0.06, 0.03).mul(smoothstep(0.7, 1.0, fibre).mul(0.6)));
+      albedo = cast<V3>(mix(albedo, iron, strap.mul(0.92)));
+      albedo = cast<V3>(mix(albedo, vec3(0.78, 0.55, 0.24), rivet).mul(mix(float(1), float(0.8), edge)));
+      const rough = mix(mix(float(0.7).sub(grain.mul(0.08)), float(0.85), wear), float(0.42), strap).sub(rivet.mul(0.25));
+      return { albedo: cast<V3>(albedo), emissive: zero, roughness: cast<F>(rough) };
     }
     default:
       return { albedo: base, emissive: zero, roughness: null };

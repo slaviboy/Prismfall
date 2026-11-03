@@ -1,0 +1,54 @@
+{
+  "id": "wood_peeling_paint_weathered",
+  "name": "Wood Peeling Paint Weathered",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/wood_peeling_paint_weathered",
+  "api": {
+    "info": "https://api.polyhaven.com/info/wood_peeling_paint_weathered",
+    "files": "https://api.polyhaven.com/files/wood_peeling_paint_weathered"
+  },
+  "authors": {
+    "Rob Tuytel": "Processing",
+    "Dimitrios Savva": "Photography"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    761.9999647140503,
+    762.0000243186951
+  ],
+  "resolution": "1k",
+  "filesHash": "477efc13ced9f70916939064f880c9a610979f80",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "wood_peeling_paint_weathered_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/wood_peeling_paint_weathered/wood_peeling_paint_weathered_diff_1k.jpg",
+      "size": 890162,
+      "md5": "aefb69e623845126ade66707a6893fc2"
+    },
+    {
+      "map": "nor_gl",
+      "path": "wood_peeling_paint_weathered_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/wood_peeling_paint_weathered/wood_peeling_paint_weathered_nor_gl_1k.jpg",
+      "size": 892366,
+      "md5": "8f00472450256df53d39481a7a91fdd8"
+    },
+    {
+      "map": "Rough",
+      "path": "wood_peeling_paint_weathered_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/wood_peeling_paint_weathered/wood_peeling_paint_weathered_rough_1k.jpg",
+      "size": 357967,
+      "md5": "44c6abc671ece51e4f4c59399c58af43"
+    },
+    {
+      "map": "arm",
+      "path": "wood_peeling_paint_weathered_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/wood_peeling_paint_weathered/wood_peeling_paint_weathered_arm_1k.jpg",
+      "size": 484940,
+      "md5": "b40456c20ef902b128734223c7cce345"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

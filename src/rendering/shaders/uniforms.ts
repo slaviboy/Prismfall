@@ -34,6 +34,8 @@ export const frameUniforms = {
   flashLimit: uniform(1),
   /** Accessibility screen-effects intensity (0..1); 0 while VR is presenting. */
   screenEffects: uniform(1),
+  /** Accessibility world events: 1 full, 0.5 calm, 0 off (creatures and sudden world events). */
+  worldEvents: uniform(1),
   reactivity: uniform(1),
   /** Current scene fog density (FogExp2), for materials that fog themselves. */
   fogDensity: uniform(0),

@@ -1,0 +1,35 @@
+{
+  "id": "goegap_road",
+  "kind": "hdri",
+  "name": "Goegap Road",
+  "page": "https://polyhaven.com/a/goegap_road",
+  "api": {
+    "info": "https://api.polyhaven.com/info/goegap_road",
+    "files": "https://api.polyhaven.com/files/goegap_road"
+  },
+  "authors": {
+    "Greg Zaal": "All",
+    "James Ray Cock": "Backplates"
+  },
+  "licence": "CC0 1.0",
+  "licenceUrl": "https://polyhaven.com/license",
+  "files": [
+    {
+      "path": "goegap_road_tonemapped.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/HDRIs/extra/Tonemapped%20JPG/goegap_road.jpg",
+      "md5": "d04c80098f2d2b67c11c60b028e22f33",
+      "size": 54944945
+    }
+  ],
+  "downloaded": "2026-11-03",
+  "derived": [
+    {
+      "path": "content/stages/last-frontier/textures/goegap_road_band.webp",
+      "how": "ffmpeg crop=8192:1047:0:1138 (elevations -6..40 deg), unsharp 5:5:0.6, libwebp quality 86"
+    },
+    {
+      "path": "content/stages/last-frontier/textures/goegap_road_detail.webp",
+      "how": "16k HDR https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/16k%2B/goegap_road_16k.hdr (md5 09910d05e7a4405b8618f073f1e587c2): crop 6918x2093 (uRange 0.1089..0.5311), tone curve matched to the tonemapped JPG (scripts/panorama_match.py), libwebp quality 90"
+    }
+  ]
+}

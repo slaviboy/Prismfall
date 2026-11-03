@@ -1,0 +1,531 @@
+{
+  "generator": "assets/blender/scripts/frontier_train.py",
+  "license": "Original work for Prismfall; textures Poly Haven CC0 (see materials)",
+  "units": "metres",
+  "frame": "per vehicle: origin on the track centre line at rail top, midway between the coupler faces; Blender +X right (side R), +Y forward, +Z up. glTF/three.js: x = X, y = Z, z = -Y (forward is -z).",
+  "hierarchy": "each vehicle and kit item is a top-level empty at the world origin; static parts are one mesh <name>_body; animated parts are empties (pivot) with the mesh child <name>_mesh",
+  "train_order": [
+    "loco",
+    "tender",
+    "car_box",
+    "car_stock",
+    "car_coach",
+    "car_caboose"
+  ],
+  "vehicles": {
+    "loco": {
+      "length_over_couplers": 8.97,
+      "front_coupler_y": 4.485,
+      "rear_coupler_y": -4.485,
+      "coupler_height": 0.86,
+      "wheelsets": [
+        {
+          "name": "loco_truck_1",
+          "y": 3.505,
+          "z": 0.38,
+          "radius": 0.38
+        },
+        {
+          "name": "loco_truck_2",
+          "y": 1.705,
+          "z": 0.38,
+          "radius": 0.38
+        },
+        {
+          "name": "loco_drive_1",
+          "y": 0.235,
+          "z": 0.8,
+          "radius": 0.8
+        },
+        {
+          "name": "loco_drive_2",
+          "y": -2.365,
+          "z": 0.8,
+          "radius": 0.8
+        }
+      ],
+      "front_extent_y": 5.335,
+      "overall_length": 9.82
+    },
+    "tender": {
+      "length_over_couplers": 7.5,
+      "front_coupler_y": 3.75,
+      "rear_coupler_y": -3.75,
+      "coupler_height": 0.86,
+      "wheelsets": [
+        {
+          "name": "tender_wheel_1",
+          "y": 2.95,
+          "z": 0.42,
+          "radius": 0.42
+        },
+        {
+          "name": "tender_wheel_2",
+          "y": 1.45,
+          "z": 0.42,
+          "radius": 0.42
+        },
+        {
+          "name": "tender_wheel_3",
+          "y": -1.45,
+          "z": 0.42,
+          "radius": 0.42
+        },
+        {
+          "name": "tender_wheel_4",
+          "y": -2.95,
+          "z": 0.42,
+          "radius": 0.42
+        }
+      ],
+      "water_hatch": [
+        0.0,
+        -2.3,
+        2.66
+      ]
+    },
+    "car_box": {
+      "length_over_couplers": 9.4,
+      "front_coupler_y": 4.7,
+      "rear_coupler_y": -4.7,
+      "coupler_height": 0.86,
+      "wheelsets": [
+        {
+          "name": "car_box_wheel_1",
+          "y": 3.85,
+          "z": 0.42,
+          "radius": 0.42
+        },
+        {
+          "name": "car_box_wheel_2",
+          "y": 2.35,
+          "z": 0.42,
+          "radius": 0.42
+        },
+        {
+          "name": "car_box_wheel_3",
+          "y": -2.35,
+          "z": 0.42,
+          "radius": 0.42
+        },
+        {
+          "name": "car_box_wheel_4",
+          "y": -3.85,
+          "z": 0.42,
+          "radius": 0.42
+        }
+      ]
+    },
+    "car_stock": {
+      "length_over_couplers": 9.4,
+      "front_coupler_y": 4.7,
+      "rear_coupler_y": -4.7,
+      "coupler_height": 0.86,
+      "wheelsets": [
+        {
+          "name": "car_stock_wheel_1",
+          "y": 3.85,
+          "z": 0.42,
+          "radius": 0.42
+        },
+        {
+          "name": "car_stock_wheel_2",
+          "y": 2.35,
+          "z": 0.42,
+          "radius": 0.42
+        },
+        {
+          "name": "car_stock_wheel_3",
+          "y": -2.35,
+          "z": 0.42,
+          "radius": 0.42
+        },
+        {
+          "name": "car_stock_wheel_4",
+          "y": -3.85,
+          "z": 0.42,
+          "radius": 0.42
+        }
+      ]
+    },
+    "car_coach": {
+      "length_over_couplers": 15.6,
+      "front_coupler_y": 7.8,
+      "rear_coupler_y": -7.8,
+      "coupler_height": 0.86,
+      "wheelsets": [
+        {
+          "name": "car_coach_wheel_1",
+          "y": 6.4,
+          "z": 0.42,
+          "radius": 0.42
+        },
+        {
+          "name": "car_coach_wheel_2",
+          "y": 4.7,
+          "z": 0.42,
+          "radius": 0.42
+        },
+        {
+          "name": "car_coach_wheel_3",
+          "y": -4.7,
+          "z": 0.42,
+          "radius": 0.42
+        },
+        {
+          "name": "car_coach_wheel_4",
+          "y": -6.4,
+          "z": 0.42,
+          "radius": 0.42
+        }
+      ]
+    },
+    "car_caboose": {
+      "length_over_couplers": 8.4,
+      "front_coupler_y": 4.2,
+      "rear_coupler_y": -4.2,
+      "coupler_height": 0.86,
+      "wheelsets": [
+        {
+          "name": "car_caboose_wheel_1",
+          "y": 3.15,
+          "z": 0.42,
+          "radius": 0.42
+        },
+        {
+          "name": "car_caboose_wheel_2",
+          "y": 1.65,
+          "z": 0.42,
+          "radius": 0.42
+        },
+        {
+          "name": "car_caboose_wheel_3",
+          "y": -1.65,
+          "z": 0.42,
+          "radius": 0.42
+        },
+        {
+          "name": "car_caboose_wheel_4",
+          "y": -3.15,
+          "z": 0.42,
+          "radius": 0.42
+        }
+      ],
+      "marker_lamps": [
+        [
+          -1.28,
+          -3.2,
+          3.0
+        ],
+        [
+          1.28,
+          -3.2,
+          3.0
+        ]
+      ]
+    }
+  },
+  "locomotive": {
+    "sides": {
+      "L": "-X (left-hand side facing forward, fireman's side)",
+      "R": "+X (right-hand side, engineer's side)"
+    },
+    "crank_radius": 0.305,
+    "cylinders": {
+      "axis_height": 0.8,
+      "axis_x_abs": 0.98,
+      "inclination_deg": 0.0,
+      "centre_y": 2.605,
+      "bore": 0.406,
+      "stroke": 0.61,
+      "note": "horizontal, on the driving-axle line: the main rod lies on the axis at front dead centre"
+    },
+    "main_rod": {
+      "length": 3.955,
+      "drives": "loco_drive_2",
+      "plane_x_abs": 0.98,
+      "rest_big_end_y": -2.06,
+      "rest_small_end_y": 1.895
+    },
+    "side_rod": {
+      "length": 2.6,
+      "plane_x_abs": 0.905,
+      "rest_front_pin_y": 0.54
+    },
+    "crosshead": {
+      "rest_y": 1.895,
+      "travel": 0.61,
+      "moves": "between rest_y (front dead centre) and rest_y - travel"
+    },
+    "rest_pose": "every crank pin at front dead centre: (0, +crank_radius, 0) from its axle, on both sides",
+    "pivots": {
+      "loco_siderod_L": [
+        -0.905,
+        0.54,
+        0.8
+      ],
+      "loco_siderod_R": [
+        0.905,
+        0.54,
+        0.8
+      ],
+      "loco_mainrod_L": [
+        -0.98,
+        -2.06,
+        0.8
+      ],
+      "loco_mainrod_R": [
+        0.98,
+        -2.06,
+        0.8
+      ],
+      "loco_crosshead_L": [
+        -0.98,
+        1.895,
+        0.8
+      ],
+      "loco_crosshead_R": [
+        0.98,
+        1.895,
+        0.8
+      ],
+      "loco_drive_1": [
+        0.0,
+        0.235,
+        0.8
+      ],
+      "loco_drive_2": [
+        0.0,
+        -2.365,
+        0.8
+      ],
+      "loco_truck_1": [
+        0.0,
+        3.505,
+        0.38
+      ],
+      "loco_truck_2": [
+        0.0,
+        1.705,
+        0.38
+      ]
+    },
+    "kinematics": "theta = rotation of a wheel set about its local +X (right-hand rule: +Y turns towards +Z); moving forward a distance d gives theta = -d / radius. For a side with phase phi (the game applies the 90 deg quartering), pin = axle + r*(0, cos(theta+phi), sin(theta+phi)). Side rod: translate by pin_front - rest_pin_front, no rotation. Main rod: big end at the rear pin p; small end y_x = p.y + sqrt(L^2 - (p.z - axis_height)^2); rotate about X by atan2(axis_height - p.z, y_x - p.y). Crosshead: y = y_x (translation along Y only).",
+    "stack_top": [
+      0.0,
+      2.635,
+      4.605
+    ],
+    "cylinder_cocks": [
+      [
+        1.03,
+        2.94,
+        0.41
+      ],
+      [
+        1.03,
+        2.27,
+        0.41
+      ],
+      [
+        -1.03,
+        2.94,
+        0.41
+      ],
+      [
+        -1.03,
+        2.27,
+        0.41
+      ]
+    ],
+    "safety_valve": [
+      0.0,
+      -0.545,
+      4.02
+    ],
+    "whistle": [
+      0.0,
+      -0.325,
+      4.215
+    ],
+    "bell": [
+      0.0,
+      1.735,
+      3.2
+    ],
+    "headlight_lens": {
+      "centre": [
+        0.0,
+        3.93,
+        3.45
+      ],
+      "facing": [
+        0,
+        1,
+        0
+      ],
+      "radius": 0.25
+    },
+    "cab_glass": "material glass: 8 side panes and 4 front panes, one quad each"
+  },
+  "water_tower": {
+    "origin": "base centre at ground level; spout on the +X side; place the track centre line along Y at x ~ +4.6",
+    "spout_lowering": "rotate the spout about the pivot (axis Y) down from the rest pitch; tip = pivot + length*(cos p, 0, sin p); a tender hatch h above the tower base needs p = asin((h - pivot_z) / length), about -66 deg for h = 2.9",
+    "height": 12.382,
+    "tank_radius": 2.95,
+    "tank_bottom": 5.65,
+    "tank_top": 9.85,
+    "footprint_radius": 2.85,
+    "spout_pivot": [
+      3.13,
+      0.0,
+      6.2
+    ],
+    "spout_length": 3.6,
+    "spout_rest_pitch_deg": 62,
+    "spout_tip_rest": [
+      4.82,
+      0.0,
+      9.379
+    ]
+  },
+  "telegraph_pole": {
+    "origin": "base at ground level; crossarm along X, wires run along Y",
+    "height": 7.66,
+    "crossarm_top": 7.26,
+    "insulator_wire_points": [
+      [
+        -1.02,
+        0.13,
+        7.345
+      ],
+      [
+        -0.32,
+        0.13,
+        7.345
+      ],
+      [
+        0.38,
+        0.13,
+        7.345
+      ],
+      [
+        1.08,
+        0.13,
+        7.345
+      ]
+    ]
+  },
+  "materials": {
+    "boilerGreen": {
+      "texture": "polyhaven/green_metal_rust",
+      "texture_size_m": 1.0
+    },
+    "blackIron": {
+      "texture": "polyhaven/rust_coarse_01",
+      "texture_size_m": 2.2
+    },
+    "brass": {
+      "flat": true
+    },
+    "steel": {
+      "flat": true
+    },
+    "redPaint": {
+      "texture": "polyhaven/rusty_painted_metal",
+      "texture_size_m": 2.2
+    },
+    "woodVarnish": {
+      "texture": "polyhaven/wood_shutter",
+      "texture_size_m": 1.0
+    },
+    "roofCanvas": {
+      "texture": "polyhaven/brown_leather",
+      "texture_size_m": 0.4
+    },
+    "glass": {
+      "flat": true
+    },
+    "lampGlow": {
+      "flat": true
+    },
+    "boxcarRed": {
+      "texture": "polyhaven/weathered_brown_planks",
+      "texture_size_m": 1.8
+    },
+    "coachPaint": {
+      "texture": "polyhaven/distressed_painted_planks",
+      "texture_size_m": 1.6
+    },
+    "weatheredWood": {
+      "texture": "polyhaven/weathered_planks",
+      "texture_size_m": 2.0
+    },
+    "greyWood": {
+      "texture": "polyhaven/brown_planks_09",
+      "texture_size_m": 1.0
+    },
+    "bark": {
+      "texture": "polyhaven/bark_brown_02",
+      "texture_size_m": 1.0
+    },
+    "whitePaint": {
+      "flat": true
+    },
+    "insulator": {
+      "flat": true
+    }
+  },
+  "triangles": {
+    "total": 179212,
+    "loco": 63150,
+    "tender": 22796,
+    "car_box": 18490,
+    "car_stock": 20098,
+    "car_coach": 24638,
+    "car_caboose": 18452,
+    "water_tower": 10508,
+    "telegraph_pole": 1080,
+    "objects": {
+      "loco_body": 39454,
+      "loco_headlight_lens": 360,
+      "loco_drive_1_mesh": 6688,
+      "loco_drive_2_mesh": 6688,
+      "loco_truck_1_mesh": 3360,
+      "loco_truck_2_mesh": 3360,
+      "loco_siderod_L_mesh": 580,
+      "loco_mainrod_L_mesh": 632,
+      "loco_crosshead_L_mesh": 408,
+      "loco_siderod_R_mesh": 580,
+      "loco_mainrod_R_mesh": 632,
+      "loco_crosshead_R_mesh": 408,
+      "tender_body": 17148,
+      "tender_wheel_1_mesh": 1412,
+      "tender_wheel_2_mesh": 1412,
+      "tender_wheel_3_mesh": 1412,
+      "tender_wheel_4_mesh": 1412,
+      "car_box_body": 12842,
+      "car_box_wheel_1_mesh": 1412,
+      "car_box_wheel_2_mesh": 1412,
+      "car_box_wheel_3_mesh": 1412,
+      "car_box_wheel_4_mesh": 1412,
+      "car_stock_body": 14450,
+      "car_stock_wheel_1_mesh": 1412,
+      "car_stock_wheel_2_mesh": 1412,
+      "car_stock_wheel_3_mesh": 1412,
+      "car_stock_wheel_4_mesh": 1412,
+      "car_coach_body": 18990,
+      "car_coach_wheel_1_mesh": 1412,
+      "car_coach_wheel_2_mesh": 1412,
+      "car_coach_wheel_3_mesh": 1412,
+      "car_coach_wheel_4_mesh": 1412,
+      "car_caboose_body": 12804,
+      "car_caboose_wheel_1_mesh": 1412,
+      "car_caboose_wheel_2_mesh": 1412,
+      "car_caboose_wheel_3_mesh": 1412,
+      "car_caboose_wheel_4_mesh": 1412,
+      "water_tower_body": 10508,
+      "telegraph_pole_body": 1080
+    }
+  }
+}

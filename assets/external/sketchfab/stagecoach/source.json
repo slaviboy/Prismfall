@@ -1,0 +1,25 @@
+{
+  "uid": "17d0e94cc0ef4691a0a088ccc33f9b19",
+  "name": "US Mail Stagecoach",
+  "page": "https://sketchfab.com/3d-models/us-mail-stagecoach-17d0e94cc0ef4691a0a088ccc33f9b19",
+  "author": {
+    "name": "tony chopper",
+    "username": "choppar",
+    "profile": "https://sketchfab.com/choppar"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"US Mail Stagecoach\" by tony chopper (https://sketchfab.com/3d-models/us-mail-stagecoach-17d0e94cc0ef4691a0a088ccc33f9b19), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 34380,
+  "vertices": 19744,
+  "animations": 0,
+  "files": [
+    {
+      "path": "stagecoach.gltf.zip",
+      "md5": "2c2b8720296125e78584e274de4fc7bd",
+      "size": 81698831,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

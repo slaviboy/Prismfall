@@ -1,0 +1,55 @@
+{
+  "id": "cliff_side",
+  "name": "Cliff Side",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/cliff_side",
+  "api": {
+    "info": "https://api.polyhaven.com/info/cliff_side",
+    "files": "https://api.polyhaven.com/files/cliff_side"
+  },
+  "authors": {
+    "James Ray Cock": "Photography",
+    "Jenelle van Heerden": "Processing",
+    "Dario Barresi": "Photography"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    1830.0000429153442,
+    1830.0000429153442
+  ],
+  "resolution": "2k",
+  "filesHash": "bc0f782eb36d2d47515d6b6f321ff7bb9fc13f00",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "cliff_side_diffuse_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/cliff_side/cliff_side_diff_2k.jpg",
+      "size": 3387348,
+      "md5": "6d129836144e271b30071281241e237d"
+    },
+    {
+      "map": "nor_gl",
+      "path": "cliff_side_nor_gl_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/cliff_side/cliff_side_nor_gl_2k.jpg",
+      "size": 3585856,
+      "md5": "8209033c3ad15185977d91c92cf5866f"
+    },
+    {
+      "map": "Rough",
+      "path": "cliff_side_rough_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/cliff_side/cliff_side_rough_2k.jpg",
+      "size": 1765122,
+      "md5": "44abb195b6c4c7b6da902e97e5bbbef2"
+    },
+    {
+      "map": "arm",
+      "path": "cliff_side_arm_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/cliff_side/cliff_side_arm_2k.jpg",
+      "size": 2130381,
+      "md5": "124bf28fe0bb3733901c7d4bfcf7a13d"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

@@ -1,0 +1,25 @@
+{
+  "uid": "6d0f9c1ce82f41048a282b6c47a50684",
+  "name": "Horse",
+  "page": "https://sketchfab.com/3d-models/horse-6d0f9c1ce82f41048a282b6c47a50684",
+  "author": {
+    "name": "MAXDESIGN-3D",
+    "username": "MAXDESIGN",
+    "profile": "https://sketchfab.com/MAXDESIGN"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Horse\" by MAXDESIGN-3D (https://sketchfab.com/3d-models/horse-6d0f9c1ce82f41048a282b6c47a50684), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 14646,
+  "vertices": 7996,
+  "animations": 1,
+  "files": [
+    {
+      "path": "horse-chestnut.gltf.zip",
+      "md5": "0b4ede59ea69b0fe3dbb1d5c3a850f6e",
+      "size": 16139707,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

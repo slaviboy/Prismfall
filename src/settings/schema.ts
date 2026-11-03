@@ -287,6 +287,8 @@ export const settingsSchema = z.object({
       pieceGlyphs: b(false),
       backgroundDim: n(0, 0.9, 0.25),
       visualAudioCues: b(false),
+      /** Creature appearances and sudden world events (shadows, fog surges) in worlds that have them. */
+      worldEvents: e(['full', 'calm', 'off'] as const, 'full'),
     })
     .prefault({}),
   practice: z

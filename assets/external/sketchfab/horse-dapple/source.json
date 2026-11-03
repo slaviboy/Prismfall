@@ -1,0 +1,25 @@
+{
+  "uid": "d9af6902210645d995e37ba4319957b6",
+  "name": "Horse",
+  "page": "https://sketchfab.com/3d-models/horse-d9af6902210645d995e37ba4319957b6",
+  "author": {
+    "name": "MAXDESIGN-3D",
+    "username": "MAXDESIGN",
+    "profile": "https://sketchfab.com/MAXDESIGN"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Horse\" by MAXDESIGN-3D (https://sketchfab.com/3d-models/horse-d9af6902210645d995e37ba4319957b6), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 14796,
+  "vertices": 8483,
+  "animations": 1,
+  "files": [
+    {
+      "path": "horse-dapple.gltf.zip",
+      "md5": "6f74dd0a14b7f99b31429fa3706be59b",
+      "size": 7008808,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

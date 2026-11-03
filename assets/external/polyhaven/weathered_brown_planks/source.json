@@ -1,0 +1,54 @@
+{
+  "id": "weathered_brown_planks",
+  "name": "Weathered Brown Planks",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/weathered_brown_planks",
+  "api": {
+    "info": "https://api.polyhaven.com/info/weathered_brown_planks",
+    "files": "https://api.polyhaven.com/files/weathered_brown_planks"
+  },
+  "authors": {
+    "Dimitrios Savva": "Photography",
+    "Rico Cilliers": "Processing"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    1799.9999523162842,
+    1799.9999523162842
+  ],
+  "resolution": "1k",
+  "filesHash": "bb75a87a3b6f3a9980acfd40bce5bdb4e89a5cf4",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "weathered_brown_planks_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/weathered_brown_planks/weathered_brown_planks_diff_1k.jpg",
+      "size": 226049,
+      "md5": "e2fbdf7ed402e272e33e3f7ba707cf69"
+    },
+    {
+      "map": "nor_gl",
+      "path": "weathered_brown_planks_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/weathered_brown_planks/weathered_brown_planks_nor_gl_1k.jpg",
+      "size": 223250,
+      "md5": "1180a2ce3566529b25128252e02bd049"
+    },
+    {
+      "map": "Rough",
+      "path": "weathered_brown_planks_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/weathered_brown_planks/weathered_brown_planks_rough_1k.jpg",
+      "size": 234672,
+      "md5": "4893f3ee360a4e1e30b96a157e65e50a"
+    },
+    {
+      "map": "arm",
+      "path": "weathered_brown_planks_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/weathered_brown_planks/weathered_brown_planks_arm_1k.jpg",
+      "size": 204214,
+      "md5": "be352d1156f18f438a44b290b494192e"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

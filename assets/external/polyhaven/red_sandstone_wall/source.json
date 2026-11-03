@@ -1,0 +1,53 @@
+{
+  "id": "red_sandstone_wall",
+  "name": "Red Sandstone Wall",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/red_sandstone_wall",
+  "api": {
+    "info": "https://api.polyhaven.com/info/red_sandstone_wall",
+    "files": "https://api.polyhaven.com/files/red_sandstone_wall"
+  },
+  "authors": {
+    "Amal Kumar": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    2000,
+    2000
+  ],
+  "resolution": "1k",
+  "filesHash": "1ec500ec43df1fb88ec3f183c88b49a9bb4577ed",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "red_sandstone_wall_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/red_sandstone_wall/red_sandstone_wall_diff_1k.jpg",
+      "size": 656819,
+      "md5": "8639968c2ce8b0b2e54cc6ca0c19cd76"
+    },
+    {
+      "map": "nor_gl",
+      "path": "red_sandstone_wall_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/red_sandstone_wall/red_sandstone_wall_nor_gl_1k.jpg",
+      "size": 987917,
+      "md5": "0d2511d4d8ac1d48f417f7fc6345ffb6"
+    },
+    {
+      "map": "Rough",
+      "path": "red_sandstone_wall_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/red_sandstone_wall/red_sandstone_wall_rough_1k.jpg",
+      "size": 430875,
+      "md5": "790833c643017903ba371e9d758b0f0d"
+    },
+    {
+      "map": "arm",
+      "path": "red_sandstone_wall_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/red_sandstone_wall/red_sandstone_wall_arm_1k.jpg",
+      "size": 594317,
+      "md5": "a36dc0e449683150f07f66c1ef0774b4"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

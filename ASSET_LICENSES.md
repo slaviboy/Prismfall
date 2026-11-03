@@ -68,6 +68,18 @@ Imported from the owner's downloads with `scripts/fetch-sketchfab.ts --zip` (pac
 | `content/shared/creatures/red-deer.glb` | Sketchfab "Animated Deer" by igor-lir (https://sketchfab.com/3d-models/animated-deer-4cff1e63f4e941198b3d56300b3393b9); its 148 morph targets (vertex animation) drive the particles; converted to particles in Enchanted Wilderness | CC BY 4.0 (attribution: igor-lir) |
 | `content/shared/creatures/dolphin.glb` | Sketchfab "Dolphin" by Alex_Pfe (https://sketchfab.com/3d-models/dolphin-c24dc835a6aa4d3c827450513525cdb8); simplified from 188,492 to 43,615 triangles; its animated splash cubes are not drawn; converted to particles in Tradewind Cove | CC BY 4.0 (attribution: Alex_Pfe) |
 
+### Sketchfab models used by The Last Frontier
+
+Imported with `scripts/fetch-sketchfab.ts --zip` from the owner's downloads (the `source.json` records are in `assets/external/sketchfab/<name>/`). All are drawn as particles sampled from their surfaces (the `model` component's `render: "particles"`), never as solid meshes.
+
+| File | Origin | Licence |
+|---|---|---|
+| `content/shared/creatures/horse-saddled.glb` | Sketchfab "Horse" by Henry S (https://sketchfab.com/3d-models/horse-a6f860e43e364619bccb174a1ac7d0c9); glTF packed to GLB and optimised with glTF-Transform (meshopt, WebP textures); its walk, idle and grazing clips drive the corral horses and the wagon and stagecoach teams; converted to particles | CC BY 4.0 (attribution: Henry S) |
+| `content/shared/creatures/conestoga-wagon.glb` | Sketchfab "Conestoga Wagon" by Ursei (https://sketchfab.com/3d-models/conestoga-wagon-2bfd8f4232054fd982b29e4df0f367d1); simplified from 278,952 to 59,995 triangles, optimised; converted to particles | CC BY 4.0 (attribution: Ursei) |
+| `content/shared/creatures/stagecoach.glb` | Sketchfab "US Mail Stagecoach" by tony chopper (https://sketchfab.com/3d-models/us-mail-stagecoach-17d0e94cc0ef4691a0a088ccc33f9b19); optimised; converted to particles | CC BY 4.0 (attribution: tony chopper) |
+| `content/stages/last-frontier/models/horse-rider-a.glb` | `assets/blender/scripts/frontier_riders.py`: Sketchfab "Western Cowboy (Rigged)" by human being (https://sketchfab.com/3d-models/western-cowboy-rigged-160bf043b71c458984c81c717b7483c9) posed seated (bones aimed into a riding posture, the pose applied) and attached to the saddle bone of "Horse" by Henry S (https://sketchfab.com/3d-models/horse-a6f860e43e364619bccb174a1ac7d0c9), with the horse's walk, gallop, idle and grazing clips; optimised; converted to particles | CC BY 4.0 (attribution: human being; Henry S) |
+| `content/stages/last-frontier/models/horse-rider-b.glb` | `frontier_riders.py`: Sketchfab "Gunslinger" by archiebattley (https://sketchfab.com/3d-models/gunslinger-95336de7a15145238c151388ee84d22b) posed seated on "Horse" by Henry S, as above; converted to particles | CC BY 4.0 (attribution: archiebattley; Henry S) |
+
 ## 3. Shared flora and prop kit
 
 | File | Origin | Licence |
@@ -115,6 +127,11 @@ Imported from the owner's downloads with `scripts/fetch-sketchfab.ts --zip` (pac
 | `content/stages/the-veil/models/trees.glb` | `assets/blender/scripts/veil_kit.py`: procedural dead trees textured with Poly Haven "Bark Willow 02" (CC0, Charlotte Baglioni) | Original work for Prismfall; texture CC0 1.0 |
 | `content/stages/the-veil/models/ruins.glb` | `veil_kit.py`: cabin, lookout tower, boardwalk and fence built board by board, textured with Poly Haven "Dark Planks" and "Rough Wood" (CC0, Rob Tuytel) | Original work for Prismfall; textures CC0 1.0 |
 | `content/stages/the-veil/models/monuments.glb` | `veil_kit.py`: the far stone gate and needles, textured with Poly Haven "Old Stone Wall" (CC0, Charlotte Baglioni) | Original work for Prismfall; texture CC0 1.0 |
+| `content/stages/last-frontier/models/town.glb` | `assets/blender/scripts/frontier_town.py`: Copper Wells, an original frontier town (livery, blacksmith, store, saloon, sheriff, hotel, bank, church, barber, assay office, trading post, boarding house, shacks, water tank, wind pump, corral and street props) built board by board, Cycles AO in `COLOR_0`; textures from the CC0 Poly Haven photographs "Weathered Plank Siding", "Old Wood Floor", "Weathered Planks", "Brown Planks 09", "Weathered Brown Planks", "Distressed Painted Planks", "Wood Peeling Paint Weathered", "Wood Shutter", "Rusty Corrugated Iron", "Corrugated Iron", "Rusty Metal 03", "Old Sandstone 02" and "Thatch Roof Angled"; sign lettering from the Rye, Alfa Slab One, Old Standard TT (SIL OFL 1.1) and Ultra (Apache 2.0) typefaces converted to geometry (`assets/external/fonts/`) | Original work for Prismfall (textures CC0) |
+| `content/stages/last-frontier/models/town.meta.json` | `frontier_town.py` metadata (objects, pivots, materials, textures, fonts) | Original work for Prismfall |
+| `content/stages/last-frontier/models/train.glb` | `assets/blender/scripts/frontier_train.py`: an original 1870s 4-4-0 locomotive, tender, boxcar, stock car, coach, caboose, water tower and telegraph pole, Cycles AO in `COLOR_0`; textures from the CC0 Poly Haven photographs "Rusty Painted Metal", "Green Metal Rust", "Rust Coarse 01", "Rusty Metal 03", "Corrugated Iron", "Weathered Planks", "Brown Planks 09", "Wood Peeling Paint Weathered", "Weathered Brown Planks", "Distressed Painted Planks", "Raw Plank Wall", "Wood Shutter", "Brown Leather" and "Bark Brown 02" | Original work for Prismfall (textures CC0) |
+| `content/stages/last-frontier/models/train.meta.json` | `frontier_train.py` metadata (vehicle lengths, wheel sets, rod kinematics, emitter positions) | Original work for Prismfall |
+| `content/stages/last-frontier/models/wild_rooibos_bush.glb` | Poly Haven "Wild Rooibos Bush" (https://polyhaven.com/a/wild_rooibos_bush); split into five bushes and decimated to 4,000 triangles by `import_external.py`, 512 px textures, optimised | CC0 1.0 |
 
 Apart from `pyramids.glb`, none of the GLBs in sections 1 to 4 contains image textures: their surface detail comes from geometry, vertex-colour AO and the in-game TSL materials. `pyramids.glb` embeds the script-generated limestone atlas described above (WebP). The photoscans in section 5 also carry textures.
 
@@ -212,6 +229,21 @@ Real landscape photographs used as the distant horizon of a world (the `panorama
 | `content/stages/the-veil/textures/mud_forest_arm.webp` | Poly Haven "Mud Forest"; 2k ARM (AO, roughness, metal) downsampled to 1024 px, WebP quality 86 | CC0 1.0 |
 | `content/stages/the-veil/textures/forest_leaves_02_diff.webp` | Poly Haven texture "Forest Leaves 02" (https://polyhaven.com/a/forest_leaves_02) by Rob Tuytel; 2k diffuse downsampled to 1024 px, WebP quality 86. Source in `assets/external/polyhaven/forest_leaves_02/` | CC0 1.0 |
 | `content/stages/the-veil/textures/forest_leaves_02_nor.webp` | Poly Haven "Forest Leaves 02"; 2k OpenGL normal map downsampled to 1024 px, WebP quality 86 | CC0 1.0 |
+| `content/stages/last-frontier/textures/goegap_road_band.webp` | Poly Haven HDRI "Goegap Road" (https://polyhaven.com/a/goegap_road) by Greg Zaal and James Ray Cock; tonemapped JPG (8192 x 4096) cropped to elevations -6 to +40 degrees (8192 x 1047), unsharp mask, then a dry-season grade of the flowering field near the horizon (`scripts/panorama_dry_grade.py`), WebP quality 86 | CC0 1.0 |
+| `content/stages/last-frontier/textures/goegap_road_detail.webp` | Poly Haven HDRI "Goegap Road"; 16k HDR cropped to the visible directions (6918 x 2093, elevations -6 to +40 degrees), tone curve matched to Poly Haven's tonemapped JPG, light unsharp mask, the same dry-season grade, WebP quality 90 | CC0 1.0 |
+| `content/stages/last-frontier/textures/sandy_gravel_02_diff.webp` | Poly Haven texture "Sandy Gravel 02" (https://polyhaven.com/a/sandy_gravel_02) by Dario Barresi; 1k diffuse, WebP quality 88. Source in `assets/external/polyhaven/sandy_gravel_02/` (`scripts/fetch-polyhaven-textures.ts`) | CC0 1.0 |
+| `content/stages/last-frontier/textures/sandy_gravel_02_nor.webp` | Poly Haven "Sandy Gravel 02"; 1k OpenGL normal map, WebP quality 92 | CC0 1.0 |
+| `content/stages/last-frontier/textures/gravelly_sand_diff.webp` | Poly Haven texture "Gravelly Sand" (https://polyhaven.com/a/gravelly_sand) by Dario Barresi; 1k diffuse, WebP quality 88 | CC0 1.0 |
+| `content/stages/last-frontier/textures/gravelly_sand_nor.webp` | Poly Haven "Gravelly Sand"; 1k OpenGL normal map, WebP quality 92 | CC0 1.0 |
+| `content/stages/last-frontier/textures/dry_ground_rocks_diff.webp` | Poly Haven texture "Dry Ground Rocks" (https://polyhaven.com/a/dry_ground_rocks) by Rob Tuytel; 1k diffuse, WebP quality 88 | CC0 1.0 |
+| `content/stages/last-frontier/textures/dry_ground_rocks_nor.webp` | Poly Haven "Dry Ground Rocks"; 1k OpenGL normal map, WebP quality 92 | CC0 1.0 |
+| `content/stages/last-frontier/textures/rocky_trail_02_diff.webp` | Poly Haven texture "Rocky Trail 02" (https://polyhaven.com/a/rocky_trail_02) by Amal Kumar; 1k diffuse, WebP quality 88 | CC0 1.0 |
+| `content/stages/last-frontier/textures/rocky_trail_02_nor.webp` | Poly Haven "Rocky Trail 02"; 1k OpenGL normal map, WebP quality 92 | CC0 1.0 |
+| `content/stages/last-frontier/textures/mud_cracked_dry_riverbed_002_diff.webp` | Poly Haven texture "Mud Cracked Dry Riverbed 002" (https://polyhaven.com/a/mud_cracked_dry_riverbed_002) by Dario Barresi and Dimitrios Savva; 1k diffuse, WebP quality 88 | CC0 1.0 |
+| `content/stages/last-frontier/textures/rock_boulder_cracked_diff.webp` | Poly Haven texture "Rock Boulder Cracked" (https://polyhaven.com/a/rock_boulder_cracked) by Dario Barresi and Dimitrios Savva; 1k diffuse, WebP quality 88 | CC0 1.0 |
+| `content/stages/last-frontier/textures/rock_boulder_cracked_nor.webp` | Poly Haven "Rock Boulder Cracked"; 1k OpenGL normal map, WebP quality 92 | CC0 1.0 |
+| `content/stages/last-frontier/textures/dry_ground_01_diff.webp` | Poly Haven texture "Dry Ground 01" (https://polyhaven.com/a/dry_ground_01) by Rob Tuytel; 1k diffuse, WebP quality 88 | CC0 1.0 |
+| `content/stages/last-frontier/textures/dry_ground_01_nor.webp` | Poly Haven "Dry Ground 01"; 1k OpenGL normal map, WebP quality 92 | CC0 1.0 |
 
 ### Space imagery (Deep Cosmos)
 
@@ -250,6 +282,7 @@ Screenshots of the game's own rendering. `scripts/thumbnails.ts` (`npm run conte
 | `content/stages/lost-kingdom/previews/thumb.jpg` | render of the game, `scripts/thumbnails.ts` | Original work for Prismfall |
 | `content/stages/red-horizon/previews/thumb.jpg` | render of the game, `scripts/thumbnails.ts` (also recorded in `content/stages/red-horizon/assets.json`) | Original work for Prismfall |
 | `content/stages/the-veil/previews/thumb.jpg` | render of the game, `scripts/thumbnails.ts` (also recorded in `content/stages/the-veil/assets.json`) | Original work for Prismfall |
+| `content/stages/last-frontier/previews/thumb.jpg` | render of the game, `scripts/thumbnails.ts` (also recorded in `content/stages/last-frontier/assets.json`) | Original work for Prismfall |
 | `content/stages/alpine-horizon/previews/backdrop.jpg` | wide render of the game (2560×1080, the picture behind world select), `scripts/thumbnails.ts` | Original work for Prismfall |
 | `content/stages/ancient-garden/previews/backdrop.jpg` | wide render of the game (2560×1080, the picture behind world select), `scripts/thumbnails.ts` | Original work for Prismfall |
 | `content/stages/ashen-vigil/previews/backdrop.jpg` | wide render of the game (2560×1080, the picture behind world select), `scripts/thumbnails.ts` | Original work for Prismfall |

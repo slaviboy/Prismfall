@@ -1,0 +1,53 @@
+{
+  "id": "weathered_peeling_timber",
+  "name": "Weathered Peeling Timber",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/weathered_peeling_timber",
+  "api": {
+    "info": "https://api.polyhaven.com/info/weathered_peeling_timber",
+    "files": "https://api.polyhaven.com/files/weathered_peeling_timber"
+  },
+  "authors": {
+    "Dimitrios Savva": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    1100.000023841858,
+    1100.000023841858
+  ],
+  "resolution": "1k",
+  "filesHash": "5cdf4531c71c0973bdc4966ec222f019c3920456",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "weathered_peeling_timber_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/weathered_peeling_timber/weathered_peeling_timber_diff_1k.jpg",
+      "size": 912734,
+      "md5": "f121813ceb13db1627db54793221dabc"
+    },
+    {
+      "map": "nor_gl",
+      "path": "weathered_peeling_timber_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/weathered_peeling_timber/weathered_peeling_timber_nor_gl_1k.jpg",
+      "size": 708398,
+      "md5": "18b15e1ef41f4b3c49440d68d42f68af"
+    },
+    {
+      "map": "Rough",
+      "path": "weathered_peeling_timber_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/weathered_peeling_timber/weathered_peeling_timber_rough_1k.jpg",
+      "size": 545759,
+      "md5": "51f546812b53bf85ad1a03fda20a47ad"
+    },
+    {
+      "map": "arm",
+      "path": "weathered_peeling_timber_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/weathered_peeling_timber/weathered_peeling_timber_arm_1k.jpg",
+      "size": 709855,
+      "md5": "b8085917a9af4b682a4f21471bc90b9e"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

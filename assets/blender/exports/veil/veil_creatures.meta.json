@@ -1,0 +1,25 @@
+{
+  "generator": "assets/blender/scripts/veil_creatures.py",
+  "license": "Original work for Prismfall",
+  "creatures": {
+    "strider": {
+      "triangles": 25422,
+      "bones": 29,
+      "height": 10.9
+    },
+    "hollow": {
+      "triangles": 17608,
+      "bones": 35,
+      "height": 9.8
+    },
+    "colossus": {
+      "triangles": 22170,
+      "bones": 24,
+      "height": 32
+    },
+    "ray": {
+      "triangles": 1844,
+      "wingspan": 5.0
+    }
+  }
+}

@@ -56,6 +56,7 @@ In use:
 | Ashen Vigil | Aarfontein Pan (Dario Barresi) | -32..40, the whole surroundings, through the stage's own `ashenSky` (the built-in `occlude` classifier reads the warm horizon glow as land, so the stage measures the skyline column by column instead) | 16k |
 | Red Horizon | Freight Station (Sergej Majboroda), smoke-and-fire graded by `scripts/red_horizon_assets.py` | -32..40, the whole surroundings, through the stage's own `redHorizonSky`: the grade stores a land mask in the alpha channel (silhouettes much darker than the sky above them, eroded a pixel), which writes depth at 240 m | 16k |
 | The Veil | Kloofendal 28d Misty (Greg Zaal, Jenelle van Heerden), moonlight-graded | -18..32 declared, under a 3D lowland, marsh and ridges with ray-marched fog | 16k |
+| The Last Frontier | Goegap Road (Greg Zaal, James Ray Cock), dry-season grade (`scripts/panorama_dry_grade.py`) | -6..40, a 3D desert floor in front that melts into the photo at 0.8-1.9 km | 16k |
 
 ## Space imagery
 

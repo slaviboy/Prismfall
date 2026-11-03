@@ -1,0 +1,54 @@
+{
+  "id": "rock_boulder_cracked",
+  "name": "Rock Boulder Cracked",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/rock_boulder_cracked",
+  "api": {
+    "info": "https://api.polyhaven.com/info/rock_boulder_cracked",
+    "files": "https://api.polyhaven.com/files/rock_boulder_cracked"
+  },
+  "authors": {
+    "Dario Barresi": "Processing",
+    "Dimitrios Savva": "Photography"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    1389.9999856948853,
+    1390.0001049041748
+  ],
+  "resolution": "1k",
+  "filesHash": "afaff23585ab95f9855387acb02172479b293417",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "rock_boulder_cracked_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rock_boulder_cracked/rock_boulder_cracked_diff_1k.jpg",
+      "size": 998110,
+      "md5": "2eee29ef1257ce79569e4be0b76cd1ad"
+    },
+    {
+      "map": "nor_gl",
+      "path": "rock_boulder_cracked_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rock_boulder_cracked/rock_boulder_cracked_nor_gl_1k.jpg",
+      "size": 1079683,
+      "md5": "1185717651f6fa2db0face12425d0a74"
+    },
+    {
+      "map": "Rough",
+      "path": "rock_boulder_cracked_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rock_boulder_cracked/rock_boulder_cracked_rough_1k.jpg",
+      "size": 379850,
+      "md5": "8610432e3011c02abb70433f050cf651"
+    },
+    {
+      "map": "arm",
+      "path": "rock_boulder_cracked_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rock_boulder_cracked/rock_boulder_cracked_arm_1k.jpg",
+      "size": 497135,
+      "md5": "1df2fc6b4e792f7101831e7f87f920c8"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

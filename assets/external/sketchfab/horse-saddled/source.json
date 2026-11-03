@@ -1,0 +1,25 @@
+{
+  "uid": "a6f860e43e364619bccb174a1ac7d0c9",
+  "name": "Horse",
+  "page": "https://sketchfab.com/3d-models/horse-a6f860e43e364619bccb174a1ac7d0c9",
+  "author": {
+    "name": "Henry S",
+    "username": "henry_7",
+    "profile": "https://sketchfab.com/henry_7"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Horse\" by Henry S (https://sketchfab.com/3d-models/horse-a6f860e43e364619bccb174a1ac7d0c9), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 30750,
+  "vertices": 17634,
+  "animations": 28,
+  "files": [
+    {
+      "path": "horse-saddled.gltf.zip",
+      "md5": "fc75a5977eec2c314f5be79131a77bc7",
+      "size": 48108944,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

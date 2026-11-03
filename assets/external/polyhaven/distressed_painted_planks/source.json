@@ -1,0 +1,53 @@
+{
+  "id": "distressed_painted_planks",
+  "name": "Distressed Painted Planks",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/distressed_painted_planks",
+  "api": {
+    "info": "https://api.polyhaven.com/info/distressed_painted_planks",
+    "files": "https://api.polyhaven.com/files/distressed_painted_planks"
+  },
+  "authors": {
+    "Rob Tuytel": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    1599.9999046325684,
+    1599.9999046325684
+  ],
+  "resolution": "1k",
+  "filesHash": "51f3f472504af5725bcca0b140ecfe9b574786e0",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "distressed_painted_planks_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/distressed_painted_planks/distressed_painted_planks_diff_1k.jpg",
+      "size": 366553,
+      "md5": "5c877bc4140e757955f37de588494115"
+    },
+    {
+      "map": "nor_gl",
+      "path": "distressed_painted_planks_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/distressed_painted_planks/distressed_painted_planks_nor_gl_1k.jpg",
+      "size": 424390,
+      "md5": "b17446b5de44cb2148c13639c3356fbe"
+    },
+    {
+      "map": "Rough",
+      "path": "distressed_painted_planks_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/distressed_painted_planks/distressed_painted_planks_rough_1k.jpg",
+      "size": 337009,
+      "md5": "e82c876630887770a95126aeac5c2274"
+    },
+    {
+      "map": "arm",
+      "path": "distressed_painted_planks_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/distressed_painted_planks/distressed_painted_planks_arm_1k.jpg",
+      "size": 368878,
+      "md5": "a808a2b9d41dfe12470e408a9f4ed281"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

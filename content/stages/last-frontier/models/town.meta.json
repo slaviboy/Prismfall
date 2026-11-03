@@ -1,0 +1,721 @@
+{
+  "generator": "assets/blender/scripts/frontier_town.py",
+  "stage": "last-frontier",
+  "town": "Copper Wells",
+  "units": "metres; authored Z-up in Blender, exported Y-up; every node at its final world position",
+  "groundZ": -7.0,
+  "triangles": 211889,
+  "objects": [
+    {
+      "name": "bld_livery",
+      "triangles": 10348,
+      "parent": null
+    },
+    {
+      "name": "bld_blacksmith",
+      "triangles": 9537,
+      "parent": null
+    },
+    {
+      "name": "bld_store",
+      "triangles": 15096,
+      "parent": null
+    },
+    {
+      "name": "lantern_3_mesh",
+      "triangles": 212,
+      "parent": "lantern_3"
+    },
+    {
+      "name": "sign_swing_2_mesh",
+      "triangles": 3318,
+      "parent": "sign_swing_2"
+    },
+    {
+      "name": "bld_saloon",
+      "triangles": 22671,
+      "parent": null
+    },
+    {
+      "name": "saloon_door_L_mesh",
+      "triangles": 172,
+      "parent": "saloon_door_L"
+    },
+    {
+      "name": "saloon_door_R_mesh",
+      "triangles": 172,
+      "parent": "saloon_door_R"
+    },
+    {
+      "name": "lantern_1_mesh",
+      "triangles": 212,
+      "parent": "lantern_1"
+    },
+    {
+      "name": "lantern_2_mesh",
+      "triangles": 212,
+      "parent": "lantern_2"
+    },
+    {
+      "name": "sign_swing_1_mesh",
+      "triangles": 1590,
+      "parent": "sign_swing_1"
+    },
+    {
+      "name": "bld_sheriff",
+      "triangles": 7895,
+      "parent": null
+    },
+    {
+      "name": "lantern_4_mesh",
+      "triangles": 212,
+      "parent": "lantern_4"
+    },
+    {
+      "name": "bld_church",
+      "triangles": 18047,
+      "parent": null
+    },
+    {
+      "name": "bld_barber",
+      "triangles": 8689,
+      "parent": null
+    },
+    {
+      "name": "sign_swing_3_mesh",
+      "triangles": 2712,
+      "parent": "sign_swing_3"
+    },
+    {
+      "name": "bld_hotel",
+      "triangles": 38931,
+      "parent": null
+    },
+    {
+      "name": "lantern_5_mesh",
+      "triangles": 212,
+      "parent": "lantern_5"
+    },
+    {
+      "name": "lantern_6_mesh",
+      "triangles": 212,
+      "parent": "lantern_6"
+    },
+    {
+      "name": "bld_assay",
+      "triangles": 5767,
+      "parent": null
+    },
+    {
+      "name": "sign_swing_4_mesh",
+      "triangles": 1922,
+      "parent": "sign_swing_4"
+    },
+    {
+      "name": "bld_bank",
+      "triangles": 13087,
+      "parent": null
+    },
+    {
+      "name": "bld_watertank",
+      "triangles": 1964,
+      "parent": null
+    },
+    {
+      "name": "bld_windpump",
+      "triangles": 1826,
+      "parent": null
+    },
+    {
+      "name": "windmill_rotor_mesh",
+      "triangles": 864,
+      "parent": "windmill_rotor"
+    },
+    {
+      "name": "windmill_vane_mesh",
+      "triangles": 160,
+      "parent": "windmill_vane"
+    },
+    {
+      "name": "bld_trading_post",
+      "triangles": 11114,
+      "parent": null
+    },
+    {
+      "name": "bld_boarding_house",
+      "triangles": 14867,
+      "parent": null
+    },
+    {
+      "name": "bld_shack_1",
+      "triangles": 2522,
+      "parent": null
+    },
+    {
+      "name": "bld_shack_2",
+      "triangles": 2658,
+      "parent": null
+    },
+    {
+      "name": "bld_shed_1",
+      "triangles": 2392,
+      "parent": null
+    },
+    {
+      "name": "bld_outhouse",
+      "triangles": 590,
+      "parent": null
+    },
+    {
+      "name": "corral",
+      "triangles": 3234,
+      "parent": null
+    },
+    {
+      "name": "props_front",
+      "triangles": 6262,
+      "parent": null
+    },
+    {
+      "name": "props_back",
+      "triangles": 2210,
+      "parent": null
+    }
+  ],
+  "pivots": [
+    {
+      "name": "lantern_3",
+      "parent": "bld_store",
+      "location": [
+        -0.95,
+        -1.95,
+        3.9563
+      ]
+    },
+    {
+      "name": "sign_swing_2",
+      "parent": "bld_store",
+      "location": [
+        2.6,
+        -2.62,
+        3.56
+      ]
+    },
+    {
+      "name": "saloon_door_L",
+      "parent": "bld_saloon",
+      "location": [
+        -0.85,
+        0.06,
+        0.92
+      ]
+    },
+    {
+      "name": "saloon_door_R",
+      "parent": "bld_saloon",
+      "location": [
+        0.85,
+        0.06,
+        0.92
+      ]
+    },
+    {
+      "name": "lantern_1",
+      "parent": "bld_saloon",
+      "location": [
+        -1.42,
+        -1.9,
+        4.168
+      ]
+    },
+    {
+      "name": "lantern_2",
+      "parent": "bld_saloon",
+      "location": [
+        1.42,
+        -1.9,
+        4.168
+      ]
+    },
+    {
+      "name": "sign_swing_1",
+      "parent": "bld_saloon",
+      "location": [
+        3.88,
+        -2.62,
+        3.988
+      ]
+    },
+    {
+      "name": "lantern_4",
+      "parent": "bld_sheriff",
+      "location": [
+        -0.95,
+        -1.9,
+        3.4699
+      ]
+    },
+    {
+      "name": "sign_swing_3",
+      "parent": "bld_barber",
+      "location": [
+        -1.25,
+        -2.62,
+        3.03
+      ]
+    },
+    {
+      "name": "lantern_5",
+      "parent": "bld_hotel",
+      "location": [
+        -1.0,
+        -2.1,
+        3.908
+      ]
+    },
+    {
+      "name": "lantern_6",
+      "parent": "bld_hotel",
+      "location": [
+        1.0,
+        -2.1,
+        3.908
+      ]
+    },
+    {
+      "name": "sign_swing_4",
+      "parent": "bld_assay",
+      "location": [
+        0.9,
+        -1.22,
+        3.335
+      ]
+    },
+    {
+      "name": "windmill_rotor",
+      "parent": "bld_windpump",
+      "location": [
+        0.0,
+        -0.75,
+        12.5
+      ]
+    },
+    {
+      "name": "windmill_vane",
+      "parent": "bld_windpump",
+      "location": [
+        0.0,
+        0.0,
+        12.0
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "sidingWeathered",
+      "texture": "weathered_plank_siding",
+      "baseColorFactor": null
+    },
+    {
+      "name": "boardwalk",
+      "texture": "old_wood_floor",
+      "baseColorFactor": null
+    },
+    {
+      "name": "woodRaw",
+      "texture": "weathered_planks",
+      "baseColorFactor": null
+    },
+    {
+      "name": "woodPale",
+      "texture": "brown_planks_09",
+      "baseColorFactor": [
+        0.86,
+        0.8,
+        0.72
+      ]
+    },
+    {
+      "name": "paintOxblood",
+      "texture": "weathered_brown_planks",
+      "baseColorFactor": [
+        1.0,
+        0.84,
+        0.72
+      ]
+    },
+    {
+      "name": "paintWhite",
+      "texture": "distressed_painted_planks",
+      "baseColorFactor": [
+        1.0,
+        0.98,
+        0.93
+      ]
+    },
+    {
+      "name": "paintMustard",
+      "texture": "distressed_painted_planks",
+      "baseColorFactor": [
+        1.0,
+        0.7,
+        0.3
+      ]
+    },
+    {
+      "name": "paintSage",
+      "texture": "distressed_painted_planks",
+      "baseColorFactor": [
+        0.7,
+        0.82,
+        0.62
+      ]
+    },
+    {
+      "name": "paintSlate",
+      "texture": "distressed_painted_planks",
+      "baseColorFactor": [
+        0.56,
+        0.68,
+        0.86
+      ]
+    },
+    {
+      "name": "paintDark",
+      "texture": "wood_peeling_paint_weathered",
+      "baseColorFactor": null
+    },
+    {
+      "name": "woodVarnish",
+      "texture": "wood_shutter",
+      "baseColorFactor": [
+        0.78,
+        0.66,
+        0.56
+      ]
+    },
+    {
+      "name": "tinRusty",
+      "texture": "rusty_corrugated_iron",
+      "baseColorFactor": null
+    },
+    {
+      "name": "tinGalv",
+      "texture": "corrugated_iron",
+      "baseColorFactor": [
+        0.86,
+        0.86,
+        0.84
+      ]
+    },
+    {
+      "name": "ironRust",
+      "texture": "rusty_metal_03",
+      "baseColorFactor": [
+        0.62,
+        0.52,
+        0.46
+      ]
+    },
+    {
+      "name": "stone",
+      "texture": "old_sandstone_02",
+      "baseColorFactor": null
+    },
+    {
+      "name": "hay",
+      "texture": "thatch_roof_angled",
+      "baseColorFactor": [
+        1.0,
+        0.92,
+        0.7
+      ]
+    },
+    {
+      "name": "glass",
+      "texture": null,
+      "baseColorFactor": null
+    },
+    {
+      "name": "lampGlow",
+      "texture": null,
+      "baseColorFactor": null
+    },
+    {
+      "name": "ironBlack",
+      "texture": null,
+      "baseColorFactor": null
+    },
+    {
+      "name": "water",
+      "texture": null,
+      "baseColorFactor": null
+    }
+  ],
+  "api": {
+    "glass": "every window pane; one quad per sash opening, UV 0..1 (u left to right, v bottom to top)",
+    "lampGlow": "lantern glass and lamp chimneys (hanging lanterns and street lamps)",
+    "animatedParts": "each animated part is a node (empty) named below, child of its bld_<kind>, placed on its pivot with identity rotation and scale; its geometry is the child <name>_mesh. Animate the named node, not the _mesh child (glTF-Transform folds the quantisation offset and scale into the _mesh node).",
+    "saloon_door_L/R": "batwing leaves, hinge axis = local Z (Blender; three.js local Y), origin on the hinge",
+    "windmill_rotor": "sail wheel, axle = local Y (Blender; three.js local -Z), origin on the hub",
+    "windmill_vane": "tail vane, pivot = local Z (Blender; three.js local Y) on the tower axis",
+    "sign_swing_<n>": "hanging signs (1-4), pivot = local X at the top hinge",
+    "lantern_<n>": "hanging lanterns (1-6), origin at the hook",
+    "bld_<kind>": "one multi-material mesh per building, origin on the facade line at ground level, rotated +35 deg about Z (Blender)",
+    "COLOR_0": "baked Cycles ambient occlusion (corner domain, ground plane at z = -7 present during the bake)"
+  },
+  "textures": [
+    {
+      "polyhaven": "brown_planks_09",
+      "page": "https://polyhaven.com/a/brown_planks_09",
+      "authors": [
+        "Rob Tuytel"
+      ],
+      "license": "CC0 1.0",
+      "realSizeMetres": 1.0,
+      "maps": [
+        "diffuse",
+        "nor_gl",
+        "arm"
+      ],
+      "materials": [
+        "woodPale"
+      ]
+    },
+    {
+      "polyhaven": "corrugated_iron",
+      "page": "https://polyhaven.com/a/corrugated_iron",
+      "authors": [
+        "Jenelle van Heerden",
+        "Dimitrios Savva"
+      ],
+      "license": "CC0 1.0",
+      "realSizeMetres": 1.12,
+      "maps": [
+        "diffuse",
+        "nor_gl",
+        "arm"
+      ],
+      "materials": [
+        "tinGalv"
+      ]
+    },
+    {
+      "polyhaven": "distressed_painted_planks",
+      "page": "https://polyhaven.com/a/distressed_painted_planks",
+      "authors": [
+        "Rob Tuytel"
+      ],
+      "license": "CC0 1.0",
+      "realSizeMetres": 1.6,
+      "maps": [
+        "diffuse",
+        "nor_gl",
+        "arm"
+      ],
+      "materials": [
+        "paintWhite",
+        "paintMustard",
+        "paintSage",
+        "paintSlate"
+      ]
+    },
+    {
+      "polyhaven": "old_sandstone_02",
+      "page": "https://polyhaven.com/a/old_sandstone_02",
+      "authors": [
+        "Dimitrios Savva"
+      ],
+      "license": "CC0 1.0",
+      "realSizeMetres": 1.53,
+      "maps": [
+        "diffuse",
+        "nor_gl",
+        "arm"
+      ],
+      "materials": [
+        "stone"
+      ]
+    },
+    {
+      "polyhaven": "old_wood_floor",
+      "page": "https://polyhaven.com/a/old_wood_floor",
+      "authors": [
+        "Guillaume Monsergent"
+      ],
+      "license": "CC0 1.0",
+      "realSizeMetres": 3.0,
+      "maps": [
+        "diffuse",
+        "nor_gl",
+        "arm"
+      ],
+      "materials": [
+        "boardwalk"
+      ]
+    },
+    {
+      "polyhaven": "rusty_corrugated_iron",
+      "page": "https://polyhaven.com/a/rusty_corrugated_iron",
+      "authors": [
+        "Charlotte Baglioni"
+      ],
+      "license": "CC0 1.0",
+      "realSizeMetres": 2.0,
+      "maps": [
+        "diffuse",
+        "nor_gl",
+        "arm"
+      ],
+      "materials": [
+        "tinRusty"
+      ]
+    },
+    {
+      "polyhaven": "rusty_metal_03",
+      "page": "https://polyhaven.com/a/rusty_metal_03",
+      "authors": [
+        "Amal Kumar"
+      ],
+      "license": "CC0 1.0",
+      "realSizeMetres": 1.35,
+      "maps": [
+        "diffuse",
+        "nor_gl",
+        "arm"
+      ],
+      "materials": [
+        "ironRust"
+      ]
+    },
+    {
+      "polyhaven": "thatch_roof_angled",
+      "page": "https://polyhaven.com/a/thatch_roof_angled",
+      "authors": [
+        "Rob Tuytel",
+        "Dimitrios Savva"
+      ],
+      "license": "CC0 1.0",
+      "realSizeMetres": 0.54,
+      "maps": [
+        "diffuse",
+        "nor_gl",
+        "arm"
+      ],
+      "materials": [
+        "hay"
+      ]
+    },
+    {
+      "polyhaven": "weathered_brown_planks",
+      "page": "https://polyhaven.com/a/weathered_brown_planks",
+      "authors": [
+        "Dimitrios Savva",
+        "Rico Cilliers"
+      ],
+      "license": "CC0 1.0",
+      "realSizeMetres": 1.8,
+      "maps": [
+        "diffuse",
+        "nor_gl",
+        "arm"
+      ],
+      "materials": [
+        "paintOxblood"
+      ]
+    },
+    {
+      "polyhaven": "weathered_plank_siding",
+      "page": "https://polyhaven.com/a/weathered_plank_siding",
+      "authors": [
+        "Dimitrios Savva"
+      ],
+      "license": "CC0 1.0",
+      "realSizeMetres": 1.57,
+      "maps": [
+        "diffuse",
+        "nor_gl",
+        "arm"
+      ],
+      "materials": [
+        "sidingWeathered"
+      ]
+    },
+    {
+      "polyhaven": "weathered_planks",
+      "page": "https://polyhaven.com/a/weathered_planks",
+      "authors": [
+        "Dario Barresi",
+        "Dimitrios Savva"
+      ],
+      "license": "CC0 1.0",
+      "realSizeMetres": 2.0,
+      "maps": [
+        "diffuse",
+        "nor_gl",
+        "arm"
+      ],
+      "materials": [
+        "woodRaw"
+      ]
+    },
+    {
+      "polyhaven": "wood_peeling_paint_weathered",
+      "page": "https://polyhaven.com/a/wood_peeling_paint_weathered",
+      "authors": [
+        "Rob Tuytel",
+        "Dimitrios Savva"
+      ],
+      "license": "CC0 1.0",
+      "realSizeMetres": 0.762,
+      "maps": [
+        "diffuse",
+        "nor_gl",
+        "arm"
+      ],
+      "materials": [
+        "paintDark"
+      ]
+    },
+    {
+      "polyhaven": "wood_shutter",
+      "page": "https://polyhaven.com/a/wood_shutter",
+      "authors": [
+        "Dimitrios Savva"
+      ],
+      "license": "CC0 1.0",
+      "realSizeMetres": 1.0,
+      "maps": [
+        "diffuse",
+        "nor_gl",
+        "arm"
+      ],
+      "materials": [
+        "woodVarnish"
+      ]
+    }
+  ],
+  "fonts": [
+    {
+      "name": "Alfa Slab One",
+      "file": "assets/external/fonts/alfaslabone/AlfaSlabOne-Regular.ttf",
+      "licence": "SIL Open Font License 1.1"
+    },
+    {
+      "name": "Old Standard TT Bold",
+      "file": "assets/external/fonts/oldstandardtt/OldStandard-Bold.ttf",
+      "licence": "SIL Open Font License 1.1"
+    },
+    {
+      "name": "Rye",
+      "file": "assets/external/fonts/rye/Rye-Regular.ttf",
+      "licence": "SIL Open Font License 1.1"
+    },
+    {
+      "name": "Ultra",
+      "file": "assets/external/fonts/ultra/Ultra-Regular.ttf",
+      "licence": "Apache License 2.0"
+    }
+  ],
+  "license": "Original work for Prismfall; textures and scans CC0 Poly Haven"
+}

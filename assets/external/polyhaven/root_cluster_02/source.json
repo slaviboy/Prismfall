@@ -1,0 +1,60 @@
+{
+  "id": "root_cluster_02",
+  "name": "Root Cluster 02",
+  "source": "Poly Haven",
+  "page": "https://polyhaven.com/a/root_cluster_02",
+  "api": {
+    "info": "https://api.polyhaven.com/info/root_cluster_02",
+    "files": "https://api.polyhaven.com/files/root_cluster_02"
+  },
+  "authors": {
+    "Jenelle van Heerden": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "polycount": 339641,
+  "dimensionsMm": [
+    2382.428765296936,
+    2705.4203748703003,
+    198.60657304525375
+  ],
+  "resolution": "1k",
+  "format": "glTF 2.0 (.gltf + .bin + JPEG textures)",
+  "gltf": "root_cluster_02_1k.gltf",
+  "gltfUrl": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/root_cluster_02/root_cluster_02_1k.gltf",
+  "filesHash": "1e84dbee66939fe16d72046d655761b2b6d63288",
+  "files": [
+    {
+      "path": "root_cluster_02_1k.gltf",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/root_cluster_02/root_cluster_02_1k.gltf",
+      "size": 15712,
+      "md5": "f43d7caa6ef088ff70d924d239b8a5d7"
+    },
+    {
+      "path": "textures/root_cluster_02_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/root_cluster_02/root_cluster_02_arm_1k.jpg",
+      "size": 679976,
+      "md5": "0b2c0a8d5940dee2d8042da5a6297e01"
+    },
+    {
+      "path": "textures/root_cluster_02_diff_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/root_cluster_02/root_cluster_02_diff_1k.jpg",
+      "size": 522108,
+      "md5": "33f9e772a4b0ab1e7e55ad940752e4f3"
+    },
+    {
+      "path": "textures/root_cluster_02_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/root_cluster_02/root_cluster_02_nor_gl_1k.jpg",
+      "size": 949843,
+      "md5": "398d31188b991a38383ec05411e0e04a"
+    },
+    {
+      "path": "root_cluster_02.bin",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/root_cluster_02/root_cluster_02.bin",
+      "size": 11790508,
+      "md5": "73dab67407ffb274f4fc27de20e50428"
+    }
+  ],
+  "alphaMaps": {},
+  "downloaded": "2026-11-03"
+}

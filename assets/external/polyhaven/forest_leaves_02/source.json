@@ -1,0 +1,46 @@
+{
+  "id": "forest_leaves_02",
+  "name": "Forest Leaves 02",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/forest_leaves_02",
+  "api": {
+    "info": "https://api.polyhaven.com/info/forest_leaves_02",
+    "files": "https://api.polyhaven.com/files/forest_leaves_02"
+  },
+  "authors": {
+    "Rob Tuytel": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    3000.9725093841553,
+    3000.9801387786865
+  ],
+  "resolution": "2k",
+  "filesHash": "53c53424ef06fc766266b15b9b26ce257d20d141",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "forest_leaves_02_diffuse_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/forest_leaves_02/forest_leaves_02_diffuse_2k.jpg",
+      "size": 1668009,
+      "md5": "b7837ba1c51fb0e11af36d6b4e225c20"
+    },
+    {
+      "map": "nor_gl",
+      "path": "forest_leaves_02_nor_gl_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/forest_leaves_02/forest_leaves_02_nor_gl_2k.jpg",
+      "size": 2323898,
+      "md5": "f974000a2ddc7dcd22bc84c37aa5d7ce"
+    },
+    {
+      "map": "arm",
+      "path": "forest_leaves_02_arm_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/forest_leaves_02/forest_leaves_02_arm_2k.jpg",
+      "size": 1066850,
+      "md5": "4b476f0e4b633b2aef621afda5209baf"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

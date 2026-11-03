@@ -90,6 +90,51 @@
           "to": "content/stages/red-horizon/models"
         }
       ]
+    },
+    {
+      "script": "veil_kit.py",
+      "outputs": [
+        {
+          "from": "assets/blender/exports/veil",
+          "to": "content/stages/the-veil/models"
+        }
+      ]
+    },
+    {
+      "script": "veil_creatures.py",
+      "outputs": [
+        {
+          "from": "assets/blender/exports/veil",
+          "to": "content/stages/the-veil/models"
+        }
+      ]
+    },
+    {
+      "script": "frontier_town.py",
+      "outputs": [
+        {
+          "from": "assets/blender/exports/frontier",
+          "to": "content/stages/last-frontier/models"
+        }
+      ]
+    },
+    {
+      "script": "frontier_train.py",
+      "outputs": [
+        {
+          "from": "assets/blender/exports/frontier_train",
+          "to": "content/stages/last-frontier/models"
+        }
+      ]
+    },
+    {
+      "script": "frontier_riders.py",
+      "outputs": [
+        {
+          "from": "assets/blender/exports/frontier_riders",
+          "to": "content/stages/last-frontier/models"
+        }
+      ]
     }
   ]
 }

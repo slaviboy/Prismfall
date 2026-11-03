@@ -1,0 +1,126 @@
+{
+  "name": "rock_moss_set_01",
+  "input": "assets/external/polyhaven/rock_moss_set_01/rock_moss_set_01_1k.gltf",
+  "output": "assets/blender/exports/scans/rock_moss_set_01.glb",
+  "droppedLods": [],
+  "sourceTriangles": 63127,
+  "targetTriangles": 5000,
+  "triangles": 4996,
+  "vertices": 2494,
+  "dimensions": {
+    "width": 2.6461,
+    "depth": 3.3556,
+    "height": 1.7641
+  },
+  "objects": [
+    {
+      "name": "rock_moss_set_01_rock01",
+      "sourceTriangles": 11000,
+      "triangles": 870,
+      "dimensions": {
+        "width": 2.2443,
+        "depth": 3.3556,
+        "height": 1.4776
+      }
+    },
+    {
+      "name": "rock_moss_set_01_rock02",
+      "sourceTriangles": 10996,
+      "triangles": 870,
+      "dimensions": {
+        "width": 2.6461,
+        "depth": 3.2734,
+        "height": 1.2381
+      }
+    },
+    {
+      "name": "rock_moss_set_01_rock03",
+      "sourceTriangles": 5000,
+      "triangles": 396,
+      "dimensions": {
+        "width": 2.0945,
+        "depth": 2.0817,
+        "height": 1.0937
+      }
+    },
+    {
+      "name": "rock_moss_set_01_rock04",
+      "sourceTriangles": 10589,
+      "triangles": 838,
+      "dimensions": {
+        "width": 2.1392,
+        "depth": 1.9618,
+        "height": 1.7641
+      }
+    },
+    {
+      "name": "rock_moss_set_01_rock05",
+      "sourceTriangles": 16548,
+      "triangles": 1310,
+      "dimensions": {
+        "width": 1.8127,
+        "depth": 3.0074,
+        "height": 1.2089
+      }
+    },
+    {
+      "name": "rock_moss_set_01_rock06",
+      "sourceTriangles": 8994,
+      "triangles": 712,
+      "dimensions": {
+        "width": 2.1191,
+        "depth": 2.7642,
+        "height": 1.252
+      }
+    }
+  ],
+  "origin": "bottom centre of the bounding box of each object, every object at the origin",
+  "maxTexture": 1024,
+  "alphaModes": {
+    "rock_moss_set_01": "OPAQUE"
+  },
+  "alphaChanges": {},
+  "occlusionAddedFromArm": [],
+  "materials": [
+    {
+      "name": "rock_moss_set_01",
+      "textures": {
+        "Base Color": [
+          "rock_moss_set_01_diff"
+        ],
+        "Roughness": [
+          "rock_moss_set_01_rough"
+        ],
+        "Metallic": [
+          "rock_moss_set_01_rough"
+        ],
+        "Normal": [
+          "rock_moss_set_01_nor_gl"
+        ]
+      }
+    }
+  ],
+  "textures": [
+    {
+      "name": "rock_moss_set_01_diff",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "rock_moss_set_01_nor_gl",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "rock_moss_set_01_rough",
+      "size": [
+        1024,
+        1024
+      ]
+    }
+  ]
+}

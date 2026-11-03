@@ -1,0 +1,53 @@
+{
+  "id": "rock_06",
+  "name": "Rock 06",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/rock_06",
+  "api": {
+    "info": "https://api.polyhaven.com/info/rock_06",
+    "files": "https://api.polyhaven.com/files/rock_06"
+  },
+  "authors": {
+    "Rob Tuytel": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    1500,
+    1500
+  ],
+  "resolution": "1k",
+  "filesHash": "6be527d9eaabf2b64d5695a4a4c355c52f595a36",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "rock_06_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rock_06/rock_06_diff_1k.jpg",
+      "size": 913680,
+      "md5": "72a5bd7c0d441c750bf9b7c97e764e33"
+    },
+    {
+      "map": "nor_gl",
+      "path": "rock_06_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rock_06/rock_06_nor_gl_1k.jpg",
+      "size": 703275,
+      "md5": "ff69cca602dd3a3661e9f17cc085e70f"
+    },
+    {
+      "map": "Rough",
+      "path": "rock_06_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rock_06/rock_06_rough_1k.jpg",
+      "size": 216165,
+      "md5": "e86d5b5d63213ca6099fe91558a053c9"
+    },
+    {
+      "map": "arm",
+      "path": "rock_06_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rock_06/rock_06_arm_1k.jpg",
+      "size": 105457,
+      "md5": "1097b883d27159713e00ddc75ad0ba13"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

@@ -1,0 +1,53 @@
+{
+  "id": "brown_planks_09",
+  "name": "Brown Planks 09",
+  "type": "texture",
+  "generator": "scripts/fetch-polyhaven-textures.ts",
+  "page": "https://polyhaven.com/a/brown_planks_09",
+  "api": {
+    "info": "https://api.polyhaven.com/info/brown_planks_09",
+    "files": "https://api.polyhaven.com/files/brown_planks_09"
+  },
+  "authors": {
+    "Rob Tuytel": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "dimensionsMm": [
+    1000,
+    1000
+  ],
+  "resolution": "1k",
+  "filesHash": "c6eaecb296b2bc716c2b101e04357e2c01edf24e",
+  "files": [
+    {
+      "map": "Diffuse",
+      "path": "brown_planks_09_diffuse_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/brown_planks_09/brown_planks_09_diff_1k.jpg",
+      "size": 763538,
+      "md5": "6bd2fb72d60e81d670107367f5672fb4"
+    },
+    {
+      "map": "nor_gl",
+      "path": "brown_planks_09_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/brown_planks_09/brown_planks_09_nor_gl_1k.jpg",
+      "size": 730600,
+      "md5": "4052e8b59ac8d44861d8bdabc42d0a3b"
+    },
+    {
+      "map": "Rough",
+      "path": "brown_planks_09_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/brown_planks_09/brown_planks_09_rough_1k.jpg",
+      "size": 286034,
+      "md5": "dd92c5d06f0ff7d79dcf913af0a29027"
+    },
+    {
+      "map": "arm",
+      "path": "brown_planks_09_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/brown_planks_09/brown_planks_09_arm_1k.jpg",
+      "size": 489387,
+      "md5": "7ad30f3bd72d9149583f4f652b80e6fb"
+    }
+  ],
+  "downloaded": "2026-11-03"
+}

@@ -1,0 +1,60 @@
+{
+  "id": "tree_stump_02",
+  "name": "Tree Stump 02",
+  "source": "Poly Haven",
+  "page": "https://polyhaven.com/a/tree_stump_02",
+  "api": {
+    "info": "https://api.polyhaven.com/info/tree_stump_02",
+    "files": "https://api.polyhaven.com/files/tree_stump_02"
+  },
+  "authors": {
+    "Rob Tuytel": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "polycount": 62345,
+  "dimensionsMm": [
+    1521.6976404190063,
+    1392.5331234931946,
+    522.0921486616135
+  ],
+  "resolution": "1k",
+  "format": "glTF 2.0 (.gltf + .bin + JPEG textures)",
+  "gltf": "tree_stump_02_1k.gltf",
+  "gltfUrl": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/tree_stump_02/tree_stump_02_1k.gltf",
+  "filesHash": "014e407e84af210a9ec49adba0505c7581706544",
+  "files": [
+    {
+      "path": "tree_stump_02_1k.gltf",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/tree_stump_02/tree_stump_02_1k.gltf",
+      "size": 2802,
+      "md5": "b2344d2dfc9f0a00d82cdea8aee84c7a"
+    },
+    {
+      "path": "textures/tree_stump_02_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/tree_stump_02/tree_stump_02_nor_gl_1k.jpg",
+      "size": 1334839,
+      "md5": "c9cd86ad90819ca7a60a6ef9c77424e4"
+    },
+    {
+      "path": "tree_stump_02.bin",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/tree_stump_02/tree_stump_02.bin",
+      "size": 1433880,
+      "md5": "87f18fe07707d421da70fa2f69b12366"
+    },
+    {
+      "path": "textures/tree_stump_02_diff_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/tree_stump_02/tree_stump_02_diff_1k.jpg",
+      "size": 901605,
+      "md5": "e791fc07d2f7a0c2c44a3fcc42b1313d"
+    },
+    {
+      "path": "textures/tree_stump_02_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/tree_stump_02/tree_stump_02_arm_1k.jpg",
+      "size": 796214,
+      "md5": "0e3147e1cc44d37126fa2fb46ba425b1"
+    }
+  ],
+  "alphaMaps": {},
+  "downloaded": "2026-11-03"
+}
