@@ -8,6 +8,10 @@
  * attribution is recorded; NonCommercial and NoDerivatives licences are refused).
  *
  *   SKETCHFAB_TOKEN=... node scripts/fetch-sketchfab.ts <uid> <name> [--max-texture 1024]
+ *   node scripts/fetch-sketchfab.ts <uid> <name> --zip <downloaded glTF zip>
+ *
+ * With --zip, a glTF archive the owner downloaded from the model's page is used instead of the API
+ * download (no token needed); the licence and author still come from Sketchfab's public metadata.
  *
  * 1. Saves the glTF archive into assets/external/sketchfab/<name>/ with source.json (author, page,
  *    licence, download date, file MD5s).
@@ -50,19 +54,24 @@ const info = (await (await fetch(`${API}/models/${uid}`)).json()) as ModelInfo;
 const slug = info.license?.slug ?? '';
 if (!ALLOWED.includes(slug)) throw new Error(`"${info.name}" is licensed ${info.license?.label ?? 'unknown'}; only CC0, CC BY and CC BY-SA can be used`);
 if (!info.isDownloadable) throw new Error(`"${info.name}" is not downloadable`);
-const token = process.env.SKETCHFAB_TOKEN;
-if (!token) throw new Error('set SKETCHFAB_TOKEN to your Sketchfab API token (Settings > Password & API); downloads need a free account');
-
-const res = await fetch(`${API}/models/${uid}/download`, { headers: { Authorization: `Token ${token}` } });
-if (!res.ok) throw new Error(`download request failed: ${res.status} ${res.statusText}`);
-const links = (await res.json()) as { gltf?: { url: string; size: number } };
-if (!links.gltf) throw new Error('no glTF download offered for this model');
-
 const dir = join(ROOT, 'assets/external/sketchfab', name);
 mkdirSync(dir, { recursive: true });
 const zipPath = join(dir, `${name}.gltf.zip`);
-console.log(`downloading ${info.name} (${Math.round(links.gltf.size / 1048576)} MB)...`);
-const zip = Buffer.from(await (await fetch(links.gltf.url)).arrayBuffer());
+const localZip = process.argv.includes('--zip') ? opt('--zip', '') : '';
+let zip: Buffer;
+if (localZip) {
+  if (!existsSync(localZip)) throw new Error(`no such file: ${localZip}`);
+  zip = readFileSync(localZip);
+} else {
+  const token = process.env.SKETCHFAB_TOKEN;
+  if (!token) throw new Error('set SKETCHFAB_TOKEN to your Sketchfab API token (Settings > Password & API), or pass --zip with a glTF archive downloaded from the model page; downloads need a free account');
+  const res = await fetch(`${API}/models/${uid}/download`, { headers: { Authorization: `Token ${token}` } });
+  if (!res.ok) throw new Error(`download request failed: ${res.status} ${res.statusText}`);
+  const links = (await res.json()) as { gltf?: { url: string; size: number } };
+  if (!links.gltf) throw new Error('no glTF download offered for this model');
+  console.log(`downloading ${info.name} (${Math.round(links.gltf.size / 1048576)} MB)...`);
+  zip = Buffer.from(await (await fetch(links.gltf.url)).arrayBuffer());
+}
 writeFileSync(zipPath, zip);
 const extracted = join(dir, 'gltf');
 rmSync(extracted, { recursive: true, force: true });
