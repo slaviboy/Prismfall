@@ -776,7 +776,7 @@ kbd {
   font-size: calc(14px * var(--hud-scale, 1));
   color: var(--haze);
   /* A tight dark edge keeps labels legible over bright worlds (snow, desert sun). */
-  text-shadow: 0 0 2px rgba(var(--night-rgb), 0.95), 0 1px 3px rgba(var(--night-rgb), 0.9), 0 1px 10px rgba(var(--night-rgb), 0.8);
+  text-shadow: 0 0 2px rgba(var(--night-rgb), 0.95), 0 1px 3px rgba(var(--night-rgb), 0.9), 0 0 8px rgba(var(--night-rgb), 0.85), 0 1px 18px rgba(var(--night-rgb), 0.7);
 }
 
 .hud-value {

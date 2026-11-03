@@ -217,13 +217,13 @@ export function runRecipe(ctx: EffectContext, clear: ClearInfo, recipe: ClearRec
   if (recipe.wave && shareOfCells === 1 && clear.lines >= 2) {
     // A column of light crosses the board, taller and brighter for bigger clears.
     const c = pickColor('highlight', [1, 1, 1], ctx, 1);
-    const n = ctx.bursts.budget((20 + clear.lines * 10) * ctx.intensityScale);
+    const n = ctx.bursts.budget((40 + clear.lines * 18) * ctx.intensityScale);
     for (let i = 0; i < n; i++) {
       const y = (i / Math.max(1, n - 1)) * 20;
       const p0 = ctx.cellToWorld(-1, y);
       const k = 1 - Math.abs(y - 10) / 12;
       ctx.bursts.emit(
-        { x: p0.x, y: p0.y, z: 0.8, vx: 14, vy: 0, vz: 0, r: c[0] * 1.6 * k, g: c[1] * 1.6 * k, b: c[2] * 1.6 * k, size: 0.7 + clear.lines * 0.12, life: 0.85, delay: 0.05 + Math.abs(y - 10) * 0.004, drag: 0.15, shape: 'soft' },
+        { x: p0.x, y: p0.y, z: 0.8, vx: 14, vy: 0, vz: 0, r: c[0] * 0.9 * k, g: c[1] * 0.9 * k, b: c[2] * 0.9 * k, size: 1.3 + clear.lines * 0.15, life: 0.85, delay: 0.05 + Math.abs(y - 10) * 0.004, drag: 0.15, shape: 'soft' },
         clear.time,
       );
     }
