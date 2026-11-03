@@ -22,6 +22,7 @@ npm run build              # content validation + typecheck + vite build → dis
 - `npm run perf`: perf matrix; results in `perf-results/`.
 - `npm run build:test`: test build in `dist-test/`, with the debug hooks.
 - `npm run content:validate`: stage manifests, profiles and the campaign.
+- `npm run content:record`: gameplay video of every world (transitions, play, clears 1–4) plus frame pacing, into `reference-capture/ours/`. `-- --stages <id>` for one world.
 
 **Ports** (all `strictPort`):
 - 5173 dev;
@@ -30,7 +31,7 @@ npm run build              # content validation + typecheck + vite build → dis
 
 **Stale-build trap:**
 - Playwright reuses any server already listening on 4174 (`reuseExistingServer: true`). After changing code, **stop the 4174 preview server**; otherwise the tests run the old build. With the server stopped, Playwright rebuilds `dist-test/` and restarts it.
-- `scripts/perf.ts`, `content:thumbnails` and `content:shots` also reuse 4174 and only build `dist-test/` when it is missing. Run `npm run build:test`, with no stale server, before using them on new code.
+- `scripts/perf.ts`, `content:thumbnails`, `content:shots` and `content:record` also reuse 4174 and only build `dist-test/` when it is missing. Run `npm run build:test`, with no stale server, before using them on new code.
 
 **E2E behaviour:** tests fail on any console error or page error (`e2e/fixtures.ts`). They drive the game through the `window.__PRISMFALL__` debug hooks and the built-in AI (`shell.aiStep()`).
 

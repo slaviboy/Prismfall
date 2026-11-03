@@ -24,6 +24,7 @@
     "assets:blender": "node scripts/build-blender-assets.ts",
     "content:thumbnails": "node scripts/thumbnails.ts",
     "content:shots": "node scripts/stage-shots.ts",
+    "content:record": "node scripts/record-gameplay.ts",
     "audio:encode": "node scripts/encode-audio.ts"
   },
   "dependencies": {
