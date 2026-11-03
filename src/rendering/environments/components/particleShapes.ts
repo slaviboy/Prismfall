@@ -33,56 +33,177 @@ const schema = z.object({
 
 type Params = z.infer<typeof schema>;
 
-/** A six-fold snowflake of unit radius as length-weighted points along its spines and branches. */
-function snowflakePoints(rand: () => number, n: number): Float32Array {
-  const segs: [number, number, number, number][] = [];
-  const spines = 6;
-  const start = 0.1 + rand() * 0.06;
-  const branches = 3 + Math.floor(rand() * 3);
-  const spread = (50 + rand() * 20) * (Math.PI / 180);
-  const layout = Array.from({ length: branches }, (_, k) => ({ t: 0.28 + (k / branches) * 0.6 + rand() * 0.05, len: 0.18 + rand() * 0.3 }));
-  const plate = rand() < 0.5;
-  for (let a = 0; a < spines; a++) {
-    const ang = (a / spines) * Math.PI * 2;
-    const dx = Math.cos(ang);
-    const dy = Math.sin(ang);
-    segs.push([dx * start, dy * start, dx, dy]);
-    for (const b of layout) {
-      const bx = dx * b.t;
-      const by = dy * b.t;
-      const len = b.len * (1 - b.t * 0.55);
-      for (const side of [-1, 1]) {
-        const ba = ang + side * spread;
-        segs.push([bx, by, bx + Math.cos(ba) * len, by + Math.sin(ba) * len]);
+type Seg = [number, number, number, number];
+type Poly = [number, number][];
+
+/**
+ * Snowflake crystal types. Each is built as one arm in local coordinates (the arm runs along +x)
+ * from line segments and filled plates; the arm is repeated around the centre and mirrored.
+ */
+const KINDS = ['stellar', 'fern', 'sectored', 'starPlate', 'rings', 'spear', 'twelve', 'broad'] as const;
+type Kind = (typeof KINDS)[number];
+
+const DEG = Math.PI / 180;
+const hexagon = (cx: number, cy: number, r: number): Poly => Array.from({ length: 6 }, (_, k) => [cx + Math.cos((k * Math.PI) / 3) * r, cy + Math.sin((k * Math.PI) / 3) * r] as [number, number]);
+const outline = (poly: Poly): Seg[] =>
+  poly.map((pt, k) => {
+    const next = poly[(k + 1) % poly.length] as [number, number];
+    return [pt[0], pt[1], next[0], next[1]];
+  });
+/** The wedge between the arm axis and the next arm, out to radius r. */
+const wedge = (r: number): Poly => [
+  [0, 0],
+  [r, 0],
+  [Math.cos(60 * DEG) * r, Math.sin(60 * DEG) * r],
+];
+
+function arm(kind: Kind, rand: () => number): { segs: Seg[]; plates: Poly[] } {
+  const segs: Seg[] = [];
+  const plates: Poly[] = [];
+  // A branch leaving the axis at (x, 0); mirroring happens later, so one side is enough.
+  const branch = (x: number, ang: number, len: number) => segs.push([x, 0, x + Math.cos(ang) * len, Math.sin(ang) * len]);
+  switch (kind) {
+    case 'stellar': {
+      segs.push([0.08, 0, 1, 0]);
+      const n = 4 + Math.floor(rand() * 3);
+      for (let k = 0; k < n; k++) {
+        const t = 0.3 + (k / n) * 0.58;
+        const len = (0.2 + rand() * 0.18) * (1 - t * 0.6);
+        branch(t, 60 * DEG, len);
+        // Sub-branches growing off each branch towards the tip.
+        const sx = t + Math.cos(60 * DEG) * len * 0.55;
+        const sy = Math.sin(60 * DEG) * len * 0.55;
+        segs.push([sx, sy, sx + len * 0.35, sy]);
       }
+      break;
     }
-    // Centre hexagon edge.
-    const nx = Math.cos(ang + Math.PI / 3);
-    const ny = Math.sin(ang + Math.PI / 3);
-    segs.push([dx * start, dy * start, nx * start, ny * start]);
-    if (plate) {
-      // A small hexagonal plate at the tip.
-      const r = 0.07;
-      for (let k = 0; k < 6; k++) {
-        const p0 = (k / 6) * Math.PI * 2;
-        const p1 = ((k + 1) / 6) * Math.PI * 2;
-        segs.push([dx + Math.cos(p0) * r, dy + Math.sin(p0) * r, dx + Math.cos(p1) * r, dy + Math.sin(p1) * r]);
+    case 'fern': {
+      segs.push([0.06, 0, 1, 0]);
+      const n = 9 + Math.floor(rand() * 4);
+      for (let k = 0; k < n; k++) {
+        const t = 0.18 + (k / n) * 0.78;
+        branch(t, 58 * DEG, Math.sin(((t - 0.18) / 0.8) * Math.PI) * (0.16 + rand() * 0.05) + 0.02);
       }
+      break;
+    }
+    case 'sectored': {
+      const r = 0.62 + rand() * 0.12;
+      plates.push(wedge(r));
+      segs.push([0, 0, r, 0], [r, 0, Math.cos(60 * DEG) * r, Math.sin(60 * DEG) * r]);
+      // A ridge to the middle of the plate edge and a short spike beyond the corner.
+      segs.push([0, 0, Math.cos(30 * DEG) * r * 0.86, Math.sin(30 * DEG) * r * 0.86], [r, 0, r + 0.18, 0]);
+      break;
+    }
+    case 'starPlate': {
+      segs.push([0.22, 0, 0.9, 0]);
+      plates.push(hexagon(0.97, 0, 0.11 + rand() * 0.05), wedge(0.24));
+      segs.push(...outline(hexagon(0.97, 0, 0.13)));
+      if (rand() < 0.6) branch(0.55, 60 * DEG, 0.14);
+      break;
+    }
+    case 'rings': {
+      for (const r of [0.28, 0.56, 0.84]) segs.push([r, 0, Math.cos(60 * DEG) * r, Math.sin(60 * DEG) * r]);
+      segs.push([0, 0, 0.98, 0], [0.56 * Math.cos(30 * DEG), 0.56 * Math.sin(30 * DEG), 0.84 * Math.cos(30 * DEG), 0.84 * Math.sin(30 * DEG)]);
+      break;
+    }
+    case 'spear': {
+      segs.push([0.06, 0, 0.62, 0]);
+      const w = 0.09 + rand() * 0.04;
+      const tip: Poly = [
+        [0.6, 0],
+        [0.8, w],
+        [1.02, 0],
+        [0.8, -w],
+      ];
+      plates.push(tip);
+      segs.push(...outline(tip));
+      branch(0.36, 60 * DEG, 0.16);
+      break;
+    }
+    case 'twelve': {
+      segs.push([0.06, 0, 1, 0]);
+      branch(0.6, 55 * DEG, 0.14);
+      // The in-between spine at 30 degrees, shorter (mirroring gives the one at -30).
+      segs.push([0.06 * Math.cos(30 * DEG), 0.06 * Math.sin(30 * DEG), 0.62 * Math.cos(30 * DEG), 0.62 * Math.sin(30 * DEG)]);
+      break;
+    }
+    case 'broad': {
+      const w = 0.07 + rand() * 0.05;
+      const blade: Poly = [
+        [0.12, 0],
+        [0.3, w],
+        [0.92, w * 0.8],
+        [1.04, 0],
+        [0.92, -w * 0.8],
+        [0.3, -w],
+      ];
+      plates.push(blade);
+      segs.push(...outline(blade), [0.12, 0, 1.04, 0]);
+      break;
     }
   }
+  return { segs, plates };
+}
+
+function polyArea(poly: Poly): number {
+  let a = 0;
+  for (let k = 0; k < poly.length; k++) {
+    const [x0, y0] = poly[k] as [number, number];
+    const [x1, y1] = poly[(k + 1) % poly.length] as [number, number];
+    a += x0 * y1 - x1 * y0;
+  }
+  return Math.abs(a) / 2;
+}
+
+/** A snowflake of unit radius: points along its lines (by length) and inside its plates (by area). */
+function snowflakePoints(rand: () => number, n: number, kind: Kind): Float32Array {
+  const { segs, plates } = arm(kind, rand);
   const lengths = segs.map(([x0, y0, x1, y1]) => Math.hypot(x1 - x0, y1 - y0));
-  const total = lengths.reduce((s, l) => s + l, 0);
-  const out = new Float32Array(n * 3);
-  for (let i = 0; i < n; i++) {
+  const areas = plates.map(polyArea);
+  const lineTotal = lengths.reduce((t, l) => t + l, 0);
+  const areaTotal = areas.reduce((t, a) => t + a, 0);
+  // Plates get a lighter fill than the lines, so their outlines still read.
+  const plateWeight = areaTotal * 7;
+  const pick = (weights: number[], total: number): number => {
     let r = rand() * total;
     let k = 0;
-    while (k < segs.length - 1 && r > (lengths[k] as number)) r -= lengths[k++] as number;
-    const [x0, y0, x1, y1] = segs[k] as [number, number, number, number];
-    const t = rand();
-    const w = (rand() - 0.5) * 0.022;
-    const len = (lengths[k] as number) || 1;
-    out[i * 3] = x0 + (x1 - x0) * t + (-(y1 - y0) / len) * w;
-    out[i * 3 + 1] = y0 + (y1 - y0) * t + ((x1 - x0) / len) * w;
+    while (k < weights.length - 1 && r > (weights[k] as number)) r -= weights[k++] as number;
+    return k;
+  };
+  const out = new Float32Array(n * 3);
+  for (let i = 0; i < n; i++) {
+    let x: number;
+    let y: number;
+    if (plates.length > 0 && rand() * (lineTotal + plateWeight) < plateWeight) {
+      // A uniform point in one triangle of the plate's fan, triangles weighted by area.
+      const poly = plates[pick(areas, areaTotal)] as Poly;
+      const fan = Array.from({ length: poly.length - 2 }, (_, k) => polyArea([poly[0] as [number, number], poly[k + 1] as [number, number], poly[k + 2] as [number, number]]));
+      const k = 1 + pick(fan, fan.reduce((t, f) => t + f, 0));
+      let u = rand();
+      let v = rand();
+      if (u + v > 1) {
+        u = 1 - u;
+        v = 1 - v;
+      }
+      const [ax, ay] = poly[0] as [number, number];
+      const [bx, by] = poly[k] as [number, number];
+      const [cx, cy] = poly[k + 1] as [number, number];
+      x = ax + (bx - ax) * u + (cx - ax) * v;
+      y = ay + (by - ay) * u + (cy - ay) * v;
+    } else {
+      const k = pick(lengths, lineTotal);
+      const [x0, y0, x1, y1] = segs[k] as Seg;
+      const t = rand();
+      const len = (lengths[k] as number) || 1;
+      const w = (rand() - 0.5) * 0.02;
+      x = x0 + (x1 - x0) * t + (-(y1 - y0) / len) * w;
+      y = y0 + (y1 - y0) * t + ((x1 - x0) / len) * w;
+    }
+    // Repeat around the centre; half the points mirror across the arm axis (crystal symmetry).
+    if (rand() < 0.5) y = -y;
+    const ang = (Math.floor(rand() * 6) / 6) * Math.PI * 2;
+    out[i * 3] = x * Math.cos(ang) - y * Math.sin(ang);
+    out[i * 3 + 1] = x * Math.sin(ang) + y * Math.cos(ang);
     out[i * 3 + 2] = (rand() - 0.5) * 0.02;
   }
   return out;
@@ -103,15 +224,18 @@ export const particleShapesComponent: ComponentFactory<Params> = {
     const rand = seeded(p.seed * 4241);
     const detail = ctx.quality.detail === 'low' ? 0.45 : ctx.quality.detail === 'medium' ? 0.7 : 1;
     const per = Math.max(60, Math.round(p.particles * detail));
-    const designs = Array.from({ length: 4 }, () => snowflakePoints(rand, per));
+    // Two designs per shape slot (of different crystal types), alternating every cycle.
     const total = per * p.count;
     const a = new Float32Array(total * 4);
     const b = new Float32Array(total * 4);
+    const c = new Float32Array(total * 4);
     for (let s = 0; s < p.count; s++) {
-      const pts = designs[s % designs.length] as Float32Array;
+      const pts = snowflakePoints(rand, per, KINDS[(s * 2) % KINDS.length] as Kind);
+      const alt = snowflakePoints(rand, per, KINDS[(s * 2 + 3) % KINDS.length] as Kind);
       for (let i = 0; i < per; i++) {
         const o = (s * per + i) * 4;
         a.set([pts[i * 3] as number, pts[i * 3 + 1] as number, pts[i * 3 + 2] as number, rand()], o);
+        c.set([alt[i * 3] as number, alt[i * 3 + 1] as number, alt[i * 3 + 2] as number, 0], o);
         // Scatter direction (where the particle comes from and bursts to) and a size factor.
         const th = rand() * Math.PI * 2;
         const ph = Math.acos(rand() * 2 - 1);
@@ -120,6 +244,7 @@ export const particleShapesComponent: ComponentFactory<Params> = {
     }
     const pa = instancedBufferAttribute<'vec4'>(new InstancedBufferAttribute(a, 4), 'vec4');
     const pb = instancedBufferAttribute<'vec4'>(new InstancedBufferAttribute(b, 4), 'vec4');
+    const pc = instancedBufferAttribute<'vec4'>(new InstancedBufferAttribute(c, 4), 'vec4');
     const u = { presence: uniform(1), burst: uniform(0), brightness: uniform(p.brightness) };
     const time = ctx.uniforms.time;
 
@@ -149,10 +274,11 @@ export const particleShapesComponent: ComponentFactory<Params> = {
     const kick = u.burst;
     const burstAt = float(0.74).add(seed.mul(0.05));
     const burst = smoothstep(burstAt, burstAt.add(0.12), phase).max(kick);
-    // Local point: rotate the flake in its plane, then turn it a little towards the side.
-    const lx = pa.x.mul(cos(roll)).sub(pa.y.mul(sin(roll)));
-    const ly = pa.x.mul(sin(roll)).add(pa.y.mul(cos(roll)));
-    const target = vec3(lx.mul(cos(yaw)), ly, lx.mul(sin(yaw)).add(pa.z)).mul(scale);
+    // This cycle's design, rotated in its plane and turned a little towards the side.
+    const local = mix(pa.xyz, pc.xyz, fract(cycle.mul(0.5)).mul(2).floor());
+    const lx = local.x.mul(cos(roll)).sub(local.y.mul(sin(roll)));
+    const ly = local.x.mul(sin(roll)).add(local.y.mul(cos(roll)));
+    const target = vec3(lx.mul(cos(yaw)), ly, lx.mul(sin(yaw)).add(local.z)).mul(scale);
     const cloud = pb.xyz.mul(scale.mul(2.6));
     const formed = mix(cloud, target, form);
     const shimmer = pb.xyz.mul(sin(time.mul(seed.mul(3).add(2)).add(seed.mul(40))).mul(scale.mul(0.012)));
@@ -162,7 +288,7 @@ export const particleShapesComponent: ComponentFactory<Params> = {
     const fadeIn = smoothstep(0, 0.1, phase);
     const fadeOut = float(1).sub(smoothstep(0.35, 1, burst));
     const alive = fadeIn.mul(fadeOut).mul(u.presence);
-    const radius = length(vec3(pa.x, pa.y, 0));
+    const radius = length(vec3(local.x, local.y, 0));
     const core = float(1.2).sub(radius.mul(0.4));
     const q = uv().sub(0.5).mul(2);
     const dot = smoothstep(1, 0, length(q)).pow(1.6);
