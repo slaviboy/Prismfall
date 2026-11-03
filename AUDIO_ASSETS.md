@@ -90,6 +90,8 @@ Added tracks (each world's default track is still the one above):
 | Dead Acre | Fog Line (default) | `music/fog-line.ts` | 64 | 4/4 | C# Phrygian | Slow dread: a double-thump heartbeat on a deep sub, a low breathing saw drone, string and choir swells on chords with a flat second against the root, a detuned glass bell, a clock-like tick; the heartbeat thickens and a falling half-step lead sounds at the climax. -20.8 LUFS, peak -3.8 dBFS (`e2e/audio-tracks.spec.ts`) |
 | Dead Acre | Last Lamp | `music/last-lamp.ts` | 96 | 4/4 | F harmonic minor | Driving nocturne: muffled eighth-note bass, a low filtered arpeggio, a cracked bell tolling on downbeats, war-drum toms and choir at the climaxes, a long beatless break with only drone and bell. -20.5 LUFS, peak -5.1 dBFS |
 | Tradewind Cove | Spindrift | `music/spindrift.ts` | 112 | 4/4 | A Mixolydian | Breezy island dance: soft four-on-the-floor, log-drum toms, off-beat chord plucks, marimba hook, whistled lead, kalimba, beatless lagoon break |
+| Ashen Vigil | Witness (default) | `music/witness.ts` | 66 | 4/4 | D minor | Slow elegy: a low drone and a tolling inharmonic bell, strings and a cello-like gliding line over a distant heartbeat kick, low war drums like far thunder, a choir and a solo lament over metallic strikes at the climax, then drone and bell alone. -21.3 LUFS, peak -7.0 dBFS (`e2e/audio-tracks.spec.ts`); a deliberately even arc (1.3 LU between sections) |
+| Ashen Vigil | Ninth Sun | `music/ninth-sun.ts` | 96 | 4/4 | B minor | Dark industrial, half-time: a driven kick and a heavy snare on three, a grinding resonant sequenced bass, anvil and clank strikes, rattling hats, a cold arpeggio and a grim gliding lead over a low choir, a beatless middle on the drone. -18.9 LUFS, peak -7.1 dBFS |
 
 The instrument names describe the intended character, but each one is one of the synth kinds above. For example, `oud`, `koto` (Ancient Garden) and `harp` are `pluck` voices; Folded Sky's `koto` is an `epiano` FM voice; `taiko` and `doum` are `tom`; `cello` and `strings` are `strings`; and `brass` (Ember Core) is a `pluck`. The doc comment of the Enchanted Wilderness file says "A minor with Dorian colour"; its `scale` field is `dorian`.
 
@@ -139,6 +141,7 @@ Built-in materials and the stages that use them, with each stage's ambience and 
 | Future Nights | `neon` | `neon` | `neon` |
 | Folded Sky | `paper` | `paper` | `alpine` (level 0.9) |
 | Tradewind Cove | `pearl` | `organic` | `ocean` (level 0.9) |
+| Ashen Vigil | `obsidian` | `stone` | `volcanic` (level 0.7: a low rumble with distant impacts) |
 
 The `glass` profile is the fallback, and it is used whenever the "classic" block style is selected.
 

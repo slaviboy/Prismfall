@@ -5,6 +5,7 @@ import type { StageManifest } from '../../stages/schema';
 import { resolveBlockPreset, type BlockMaterialPreset } from '../materials/blockPresets';
 import { frameUniforms } from '../shaders/uniforms';
 import type { RenderSystem } from '../renderer/RenderSystem';
+import { reducedMotion } from '../../settings/store';
 import { emitWorldSound } from '../../audio/worldSounds';
 import { createGround } from './ground';
 import { StageEnvironment } from './StageEnvironment';
@@ -44,6 +45,9 @@ export class EnvironmentHost {
   private fogBlend = 1;
   /** Maximum number of built environments kept (current + preloaded). */
   cacheLimit = 2;
+  /** World tremors requested by stage components (ctx.shakeWorld), in frame-clock seconds. */
+  private readonly shakes: { start: number; strength: number; seconds: number; phase: number }[] = [];
+  private clock = 0;
 
   constructor(private readonly render: RenderSystem) {
     render.scene.fog = this.fog;
@@ -63,6 +67,9 @@ export class EnvironmentHost {
       palette: manifest.palette,
       ground: createGround(-14),
       sounds: { emit: emitWorldSound },
+      shakeWorld: (strength, seconds) => {
+        if (this.current?.manifest.id === manifest.id) this.shakeWorld(strength, seconds);
+      },
     };
     const env = await StageEnvironment.build(manifest, ctx, (f) => onProgress?.(f * 0.85));
     // Compile its shaders in the background before it is ever shown (the group stays at
@@ -192,12 +199,53 @@ export class EnvironmentHost {
       this.fog.density = MathUtils.lerp(this.fogFrom.density, this.fogTo.density, this.fogBlend);
     }
     frameUniforms.fogDensity.value = this.fog.density;
+    this.clock = time;
+    this.applyShake(time);
     const stagePresence = this.current?.presence ?? 0;
     this.render.backdrop.group.visible = stagePresence < 0.999;
   }
 
   onGameEvent(event: StageGameEvent): void {
     for (const a of this.active) a.env.onGameEvent(event);
+  }
+
+  /** Starts a world tremor (see EnvironmentContext.shakeWorld). */
+  shakeWorld(strength: number, seconds: number): void {
+    if (!(strength > 0) || !(seconds > 0)) return;
+    this.shakes.push({ start: this.clock, strength: Math.min(1, strength), seconds: Math.min(10, Math.max(0.3, seconds)), phase: Math.random() * 6.283 });
+    if (this.shakes.length > 4) this.shakes.shift();
+  }
+
+  /**
+   * Tilts and lifts the world root (never the board, lights or camera): a low sway that decays
+   * over the tremor and a short high shudder at its onset, at most a few tenths of a degree.
+   */
+  private applyShake(time: number): void {
+    const root = this.render.worldRoot;
+    const s = this.render.currentSettings;
+    const scale = this.render.presenter || (s && reducedMotion(s)) ? 0 : (s?.accessibility.screenEffects ?? 1);
+    let pitch = 0;
+    let roll = 0;
+    let yaw = 0;
+    let lift = 0;
+    for (let i = this.shakes.length - 1; i >= 0; i--) {
+      const k = this.shakes[i] as { start: number; strength: number; seconds: number; phase: number };
+      const t = time - k.start;
+      if (t > k.seconds || t < -1) {
+        this.shakes.splice(i, 1);
+        continue;
+      }
+      if (t < 0) continue;
+      const onset = Math.min(1, t / 0.06);
+      const sway = k.strength * onset * Math.exp((-3.2 * t) / k.seconds) * (1 - MathUtils.smoothstep(t, k.seconds * 0.8, k.seconds));
+      const shudder = k.strength * onset * Math.exp(-t / 0.3);
+      pitch += 0.0034 * sway * Math.sin(t * 9.4 + k.phase) + 0.0011 * shudder * Math.sin(t * 71 + k.phase * 2);
+      roll += 0.0042 * sway * Math.sin(t * 6.9 + k.phase * 1.7) + 0.0009 * shudder * Math.sin(t * 83 + k.phase);
+      yaw += 0.0008 * shudder * Math.sin(t * 59 + k.phase * 3);
+      lift += 0.04 * shudder * Math.sin(t * 64 + k.phase);
+    }
+    root.rotation.set(pitch * scale, yaw * scale, roll * scale);
+    root.position.y = lift * scale;
   }
 
   dispose(): void {

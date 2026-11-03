@@ -115,6 +115,8 @@ Real landscape photographs used as the distant horizon of a world (the `panorama
 | `content/stages/tradewind-cove/textures/aerial_beach_01_normal.webp` | Poly Haven texture "Aerial Beach 01" (https://polyhaven.com/a/aerial_beach_01) by Rob Tuytel; the 2k OpenGL normal map (2048 x 2048, a 30 m patch of wind-rippled beach sand) converted to WebP quality 90. The source is kept in `assets/external/polyhaven/aerial_beach_01/` | CC0 1.0 |
 | `content/stages/future-nights/textures/shanghai_bund_band.webp` | Poly Haven HDRI "Shanghai Bund" (https://polyhaven.com/a/shanghai_bund) by Greg Zaal; tonemapped JPG (8192 x 4096) cropped to elevations -5.9 to +40 degrees (8192 x 1044), unsharp mask, WebP quality 86 | CC0 1.0 |
 | `content/stages/future-nights/textures/shanghai_bund_detail.webp` | Poly Haven HDRI "Shanghai Bund" (https://polyhaven.com/a/shanghai_bund) by Greg Zaal; 16k HDR cropped to the visible directions (6372 x 2089, elevations -5.9 to +40 degrees), tone curve matched to Poly Haven's tonemapped JPG, light unsharp mask, WebP quality 90 | CC0 1.0 |
+| `content/stages/ashen-vigil/textures/aarfontein_pan_band.webp` | Poly Haven HDRI "Aarfontein Pan" (https://polyhaven.com/a/aarfontein_pan) by Dario Barresi; tonemapped JPG (8192 x 4096) cropped to elevations -32 to +40 degrees (8192 x 1638), unsharp mask, WebP quality 86 | CC0 1.0 |
+| `content/stages/ashen-vigil/textures/aarfontein_pan_detail.webp` | Poly Haven HDRI "Aarfontein Pan" (https://polyhaven.com/a/aarfontein_pan) by Dario Barresi; 16k HDR cropped to the visible directions (6372 x 3276, elevations -32 to +40 degrees), tone curve matched to Poly Haven's tonemapped JPG, light unsharp mask, WebP quality 90 | CC0 1.0 |
 
 ### Space imagery (Deep Cosmos)
 
@@ -148,6 +150,7 @@ Screenshots of the game's own rendering. `scripts/thumbnails.ts` (`npm run conte
 | `content/stages/northern-lights/previews/thumb.jpg` | render of the game, `scripts/thumbnails.ts` | Original work for Prismfall |
 | `content/stages/the-abyss/previews/thumb.jpg` | render of the game, `scripts/thumbnails.ts` | Original work for Prismfall |
 | `content/stages/dead-acre/previews/thumb.jpg` | render of the game, `scripts/thumbnails.ts` (also recorded in `content/stages/dead-acre/assets.json`) | Original work for Prismfall |
+| `content/stages/ashen-vigil/previews/thumb.jpg` | render of the game, `scripts/thumbnails.ts` (also recorded in `content/stages/ashen-vigil/assets.json`) | Original work for Prismfall |
 
 ## 7. Music, sound effects and ambience
 
@@ -199,6 +202,8 @@ See `AUDIO_ASSETS.md` for details.
 | `content/stages/dead-acre/music/last-lamp.ts` | "Last Lamp", authored composition | Original work for Prismfall |
 | `content/stages/tradewind-cove/music/trade-winds.ts` | "Trade Winds", authored composition (recorded in `assets.json`) | Original work for Prismfall |
 | `content/stages/tradewind-cove/music/spindrift.ts` | "Spindrift", authored composition (recorded in `assets.json`) | Original work for Prismfall |
+| `content/stages/ashen-vigil/music/witness.ts` | "Witness", authored composition (recorded in `assets.json`) | Original work for Prismfall |
+| `content/stages/ashen-vigil/music/ninth-sun.ts` | "Ninth Sun", authored composition (recorded in `assets.json`) | Original work for Prismfall |
 
 ## 8. Other content data and code
 
@@ -211,6 +216,7 @@ All hand-authored for Prismfall; licence "Original work for Prismfall".
 | `content/stages/folded-sky/assets.json` | Folded Sky licence metadata. It is the only stage with an `assets.json`. |
 | `content/stages/dead-acre/stage.json`, `stage.ts`, `figure.ts`, `horde.ts`, `fog.ts`, `lamps.ts`, `crows.ts`, `shared.ts` | Dead Acre manifest and SDK module: the procedural human figures and their GPU walk (no external models), ground fog, sodium lamps and crows. |
 | `content/stages/tradewind-cove/stage.json`, `stage.ts`, `cove.ts`, `palms.ts`, `env.ts`, `assets.json` | Tradewind Cove manifest and SDK module: the procedural coconut palms and their GPU wind, the sand islands and the lagoon shader, and the licence metadata. |
+| `content/stages/ashen-vigil/stage.json`, `stage.ts`, `stage.test.ts`, `assets.json` | Ashen Vigil manifest and SDK module: the smoke-filtered photographic sky with its measured skyline, the ray-marched nuclear detonations (fire, condensation, heat-wave refraction), drifting smoke and ash (all procedural, no external models), their unit tests and the licence metadata. |
 | `content/shared/reactivity/bass-breath.json`, `beat-lights.json`, `flux-turbulence.json`, `mid-architecture.json`, `section-swell.json`, `transient-strike.json`, `treble-sparkle.json` | Shared reactivity profiles. |
 | `content/campaigns/voyage.json` | The Voyage campaign. |
 

@@ -91,7 +91,7 @@ The SDK exports:
 | `defineStage`, `SDK_VERSION` | the stage module wrapper and the running SDK version |
 | `z` | zod, for component parameter schemas |
 | `zColor`, `zVec3`, `colorUniform`, `floatUniform`, `linear`, `seeded`, `scaledCount` | parameter types, TSL uniforms, sRGB-to-linear colour, deterministic random, quality-scaled counts |
-| `frameUniforms` | per-frame TSL uniforms (time, music features, clear pulse, danger, fog density) |
+| `frameUniforms` | per-frame TSL uniforms (time, music features, clear pulse, danger, fog density, flash limit, screen effects) |
 | `noBloom`, `additiveFog` | exclude a material from bloom; distance-fade an additive colour |
 | `makeRecipeEffect`, `runRecipe`, `BASE_RECIPE`, `ClearRecipe` | line-clear particle recipes |
 | `resolveBlockPreset`, `BLOCK_PRESETS` | block surface presets |
@@ -100,13 +100,14 @@ The SDK exports:
 
 ### SDK versions
 
-`src/sdk/version.ts` holds `SDK_VERSION = '1.2.0'`. Minor versions add API, major versions break it.
+`src/sdk/version.ts` holds `SDK_VERSION = '1.3.0'`. Minor versions add API, major versions break it.
 
 | Version | Added |
 |---|---|
 | 1.0 | the base API: everything not listed in a later row |
 | 1.1 | themed transitions (`TransitionEffect`, `sdk.transitions`), `WorldSounds` (`ctx.sounds.emit('footstep', …)`), `additiveFog` |
 | 1.2 | `GroundField.surface(x, z)` and `GroundField.setWaterLevel(y)` (the water component declares its surface so a VR viewer stands on it) |
+| 1.3 | `ctx.shakeWorld(strength, seconds)`: a decaying tremor of the world root only (never the board, HUD or camera; off under reduced motion and in VR, scaled by the screen-effects setting), and `frameUniforms.screenEffects` (the screen-effects setting, 0 in VR) for screen-space world effects. Ashen Vigil uses both |
 
 Two version checks exist:
 

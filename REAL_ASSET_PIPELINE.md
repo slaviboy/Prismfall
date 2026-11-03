@@ -51,6 +51,7 @@ In use:
 | Dead Acre | Kloppenheim 04 (Greg Zaal), night-graded | -32..40, the whole surroundings | 16k |
 | Tradewind Cove | Spiaggia di Mondello (Andreas Mischok) | -10..40, a 3D lagoon and sand islands in front | 20k |
 | Future Nights | Shanghai Bund (Greg Zaal) | -5.9..40, a 3D river in front: `occlude` 1500 and a `matte` ring end the water at the far bank and hide the photo's promenade | 16k |
+| Ashen Vigil | Aarfontein Pan (Dario Barresi) | -32..40, the whole surroundings, through the stage's own `ashenSky` (the built-in `occlude` classifier reads the warm horizon glow as land, so the stage measures the skyline column by column instead) | 16k |
 
 ## Space imagery
 

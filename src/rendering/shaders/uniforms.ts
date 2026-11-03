@@ -32,6 +32,8 @@ export const frameUniforms = {
   /** Global multipliers from settings / accessibility. */
   effectsIntensity: uniform(1),
   flashLimit: uniform(1),
+  /** Accessibility screen-effects intensity (0..1); 0 while VR is presenting. */
+  screenEffects: uniform(1),
   reactivity: uniform(1),
   /** Current scene fog density (FogExp2), for materials that fog themselves. */
   fogDensity: uniform(0),

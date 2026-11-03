@@ -371,6 +371,8 @@ export class RenderSystem implements GameView {
     frameUniforms.barPulse.value = react ? audio.barPulse : 0;
     frameUniforms.beatPhase.value = audio.beatPhase;
     frameUniforms.sectionIntensity.value = audio.sectionIntensity;
+    // Screen-space world effects (heat refraction, world shake) are off in VR for comfort.
+    frameUniforms.screenEffects.value = this.presenter ? 0 : (this.settings?.accessibility.screenEffects ?? 1);
 
     this.feedback.handle(frame.events, engine, time);
     this.board.sync(engine, frame.events, time);

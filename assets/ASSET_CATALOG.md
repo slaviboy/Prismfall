@@ -296,7 +296,6 @@ In game, use the material preset `keep` for `pyramidStone` to show the textures.
 | Animation | None |
 | Used by | Moving Sands sky (night desert under the Milky Way) |
 
-
 ### Shanghai Bund (Poly Haven HDRI)
 
 | Field | Value |
@@ -345,6 +344,22 @@ In game, use the material preset `keep` for `pyramidStone` to show the textures.
 | Final format | `content/stages/dead-acre/textures/kloppenheim_04_band.webp`, `kloppenheim_04_detail.webp` |
 | Animation | None |
 | Used by | Dead Acre sky (`panorama`, offset 0.57: a misty field at night, a tree line and lit farm buildings glowing in the fog); the Dead Acre components also read a small blurred copy of the band at runtime for fog and rim-light colour |
+
+### Aarfontein Pan (Poly Haven HDRI)
+
+| Field | Value |
+|---|---|
+| Asset name | Aarfontein Pan |
+| Source URL | https://polyhaven.com/a/aarfontein_pan |
+| Author | Dario Barresi |
+| Original download URL | see `assets/external/polyhaven/aarfontein_pan/source.json` (tonemapped JPG and 16k HDR, with MD5s) |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | Tonemapped equirectangular JPG, 8192 x 4096; 16k HDR (16384 x 8192) for the detail band |
+| Modifications | Band cropped to elevations -32 to +40 degrees (8192 x 1638), unsharp mask 5:5:0.6, WebP quality 86; detail crop of u 0.0555 to 0.4445 from the 16k HDR, tone-matched (6372 x 3276, 45.5 px per degree, WebP quality 90) (`scripts/fetch-panorama.ts`). No grade baked in: the smoke pall, the land's dusk light and the darkening with progress are applied in the stage's sky shader |
+| Final format | `content/stages/ashen-vigil/textures/aarfontein_pan_band.webp` (1.6 MB), `aarfontein_pan_detail.webp` (1.6 MB) |
+| Animation | None (the shader's smoke drifts over it) |
+| Used by | Ashen Vigil sky (`ashenSky`, offset 0.25: a dry cracked salt pan with low sunlit hills, facing away from the low sun). The skyline is measured from the band at load time; land pixels write depth so the detonations rise from behind the real hills |
 
 ### Spiaggia di Mondello (Poly Haven HDRI)
 

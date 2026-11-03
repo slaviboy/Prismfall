@@ -1,0 +1,34 @@
+{
+  "id": "aarfontein_pan",
+  "kind": "hdri",
+  "name": "Aarfontein Pan",
+  "page": "https://polyhaven.com/a/aarfontein_pan",
+  "api": {
+    "info": "https://api.polyhaven.com/info/aarfontein_pan",
+    "files": "https://api.polyhaven.com/files/aarfontein_pan"
+  },
+  "authors": {
+    "Dario Barresi": "All"
+  },
+  "licence": "CC0 1.0",
+  "licenceUrl": "https://polyhaven.com/license",
+  "files": [
+    {
+      "path": "aarfontein_pan_tonemapped.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/HDRIs/extra/Tonemapped%20JPG/aarfontein_pan.jpg",
+      "md5": "56dc0e187f5542c2e02c69089aa55747",
+      "size": 21104169
+    }
+  ],
+  "downloaded": "2026-11-03",
+  "derived": [
+    {
+      "path": "content/stages/ashen-vigil/textures/aarfontein_pan_band.webp",
+      "how": "ffmpeg crop=8192:1638:0:1138 (elevations -32..40 deg), unsharp 5:5:0.6, libwebp quality 86"
+    },
+    {
+      "path": "content/stages/ashen-vigil/textures/aarfontein_pan_detail.webp",
+      "how": "16k HDR https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/16k%2B/aarfontein_pan_16k.hdr (md5 e902b013f67fb510b5f19783f437e078): crop 6372x3276 (uRange 0.0555..0.4445), tone curve matched to the tonemapped JPG (scripts/panorama_match.py), libwebp quality 90"
+    }
+  ]
+}

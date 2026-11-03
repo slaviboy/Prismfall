@@ -1,0 +1,250 @@
+{
+  "schemaVersion": 1,
+  "id": "ashen-vigil",
+  "name": "Ashen Vigil",
+  "description": "A dry salt pan at dusk under a smoke-reddened sky. Far out on the horizon, distant suns are born and die: each detonation flares, rises into a rolling cloud and slowly spreads over the plain as ash drifts down.",
+  "order": 67,
+  "tags": [
+    "desert",
+    "dusk",
+    "apocalypse",
+    "photographic"
+  ],
+  "module": "stage.ts",
+  "requires": {
+    "sdk": "^1.3.0"
+  },
+  "palette": {
+    "accent": "#ff9a4a",
+    "secondary": "#b8a48e",
+    "highlight": "#ffe2c0",
+    "fog": "#6a5450",
+    "plate": "#0d0a0a"
+  },
+  "fog": {
+    "color": "#6a5450",
+    "density": 0.0008
+  },
+  "backdrop": {
+    "top": "#2a2430",
+    "bottom": "#3a2a22",
+    "glow": "#ff8a40"
+  },
+  "lighting": {
+    "key": {
+      "color": "#ffc79a",
+      "intensity": 2.2,
+      "azimuth": 55,
+      "elevation": 18
+    },
+    "rim": {
+      "color": "#c9b7d8",
+      "intensity": 0.8
+    },
+    "ambient": {
+      "sky": "#8a7a8c",
+      "ground": "#5a4234",
+      "intensity": 0.75
+    },
+    "accents": [
+      {
+        "color": "#ff8a46",
+        "intensity": 4,
+        "x": -9,
+        "y": -6,
+        "z": 6
+      },
+      {
+        "color": "#b8a0d0",
+        "intensity": 2.5,
+        "x": 9,
+        "y": 8,
+        "z": 6
+      }
+    ],
+    "beatResponse": 0.15
+  },
+  "grade": {
+    "exposure": 1,
+    "saturation": 1.02,
+    "contrast": 1.08,
+    "tint": [
+      1.02,
+      0.99,
+      0.97
+    ],
+    "vignette": 0.34,
+    "bloomThreshold": 0.85,
+    "bloomRadius": 0.4,
+    "toneMapping": "agx",
+    "envIntensity": 0.45
+  },
+  "camera": {
+    "pitch": -2,
+    "yaw": 0,
+    "sway": 0.3,
+    "targetY": 0
+  },
+  "blocks": {
+    "geometry": "chamfer",
+    "material": "volcanicObsidian",
+    "overrides": {
+      "clearcoatRoughness": 0.34,
+      "envIntensity": 0.32
+    },
+    "palette": {
+      "I": "#24a6d0",
+      "O": "#f4cf3a",
+      "T": "#9a4fd4",
+      "S": "#56b840",
+      "Z": "#d62c2c",
+      "J": "#3460e0",
+      "L": "#f07c1c"
+    }
+  },
+  "environment": {
+    "layers": [
+      {
+        "id": "sky",
+        "type": "ashenSky",
+        "params": {
+          "panorama": {
+            "src": "textures/aarfontein_pan_band.webp",
+            "elevation": [
+              -32,
+              40
+            ],
+            "offset": 0.25,
+            "fade": 8,
+            "detail": {
+              "src": "textures/aarfontein_pan_detail.webp",
+              "uRange": [
+                0.0555,
+                0.4445
+              ]
+            }
+          },
+          "occlude": 480,
+          "seed": 7
+        },
+        "bind": [
+          {
+            "feature": "game.progress",
+            "mode": "add",
+            "attackMs": 9000,
+            "releaseMs": 6000,
+            "target": "dusk",
+            "amount": 0.9
+          }
+        ]
+      },
+      {
+        "id": "detonations",
+        "type": "nuclearDetonations",
+        "params": {
+          "seed": 11
+        },
+        "bind": [
+          {
+            "feature": "game.progress",
+            "mode": "add",
+            "attackMs": 9000,
+            "releaseMs": 6000,
+            "target": "dusk",
+            "amount": 0.9
+          }
+        ]
+      },
+      {
+        "id": "smoke-layers",
+        "type": "smokeDrift",
+        "params": {
+          "seed": 5
+        },
+        "bind": [
+          {
+            "feature": "game.progress",
+            "mode": "add",
+            "attackMs": 9000,
+            "releaseMs": 6000,
+            "target": "dusk",
+            "amount": 0.9
+          }
+        ]
+      },
+      {
+        "id": "ash",
+        "type": "ashfall",
+        "params": {
+          "seed": 3
+        },
+        "bind": [
+          {
+            "feature": "game.progress",
+            "mode": "add",
+            "attackMs": 9000,
+            "releaseMs": 6000,
+            "target": "dusk",
+            "amount": 0.9
+          }
+        ]
+      }
+    ]
+  },
+  "reactivity": {
+    "profiles": [],
+    "bindings": []
+  },
+  "effects": {
+    "lineClear": {
+      "effect": "crumbleDust",
+      "params": {}
+    },
+    "landing": {
+      "shape": "soft"
+    },
+    "transition": {
+      "effect": "embers",
+      "params": {
+        "colors": [
+          "#8a8078",
+          "#5a5250",
+          "#ff8a3a",
+          "#ffc070"
+        ]
+      }
+    }
+  },
+  "music": {
+    "bpm": 66,
+    "beatsPerBar": 4,
+    "tracks": [
+      {
+        "id": "ashen-vigil-witness",
+        "title": "Witness",
+        "kind": "composition",
+        "src": "music/witness.ts"
+      },
+      {
+        "id": "ashen-vigil-ninth-sun",
+        "title": "Ninth Sun",
+        "kind": "composition",
+        "src": "music/ninth-sun.ts",
+        "bpm": 96
+      }
+    ],
+    "defaultTrack": "ashen-vigil-witness"
+  },
+  "ambience": {
+    "preset": "volcanic",
+    "level": 0.7
+  },
+  "sfx": {
+    "preset": "stone",
+    "material": "obsidian"
+  },
+  "unlock": {
+    "type": "always"
+  },
+  "thumbnail": "previews/thumb.jpg"
+}

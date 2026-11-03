@@ -91,6 +91,13 @@ export interface EnvironmentContext {
   readonly ground: GroundField;
   /** Positional world sounds (footfalls...); the audio system plays them if enabled. */
   readonly sounds: WorldSounds;
+  /**
+   * Shakes the world (the environment only: never the board, HUD or camera) with a tremor that
+   * starts strong and decays: `strength` 0..1 (1 = a few tenths of a degree), over `seconds`.
+   * Off under reduced motion and in VR, scaled by the screen-effects setting, and ignored for a
+   * stage that is not on screen. Since SDK 1.3.
+   */
+  readonly shakeWorld?: (strength: number, seconds: number) => void;
 }
 
 export interface WorldSounds {
