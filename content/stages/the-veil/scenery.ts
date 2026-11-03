@@ -172,6 +172,7 @@ export const sceneryComponent: ComponentFactory<Params> = {
       // Keep others off its real footprint (not a fixed radius): rocks and stumps are small.
       const footprint = Math.max(...parts.map((q) => (q.geometry.boundingBox ? Math.max(q.geometry.boundingBox.max.x - q.geometry.boundingBox.min.x, q.geometry.boundingBox.max.z - q.geometry.boundingBox.min.z) : 4))) * 0.5 * l.scale;
       placed.push({ x, z: zz, r: footprint });
+      if (l.object === 'tower') s.anchors.push({ x, y: Math.max(terrainHeight(x, zz), WATER), z: zz, r: 3.2 * l.scale, kind: 'tower' });
       addInstances(parts, [matrix(x, y, zz, l.yaw * DEG, l.scale)], l.tint, l.shadow, l.object);
     }
 
@@ -205,6 +206,8 @@ export const sceneryComponent: ComponentFactory<Params> = {
         placed.push({ x, z: zz, r: spacing });
         const k = Math.floor(r() * kinds.length);
         const scale = sc.scale[0] + (sc.scale[1] - sc.scale[0]) * r();
+        // Trunks the mist can curl around (the mist component picks from these).
+        if (dist < 190 && sc.objects[k]!.startsWith('tree_')) s.anchors.push({ x, y: Math.max(h, WATER), z: zz, r: 0.5 * scale, kind: 'trunk' });
         const base = Math.min(...kinds[k]!.map((q) => baseOf(q.geometry)));
         const tilt = sc.tilt * DEG;
         per[k]!.push(matrix(x, h - sc.sink - base * scale, zz, r() * Math.PI * 2, scale, (r() - 0.5) * 2 * tilt, (r() - 0.5) * 2 * tilt));

@@ -174,6 +174,32 @@ export class ShadowMaps {
     return cast<F>(result.clamp(0, 1).mul(this.strength).add(this.trigger as unknown as F));
   }
 
+  /**
+   * A cheaper shadow lookup for the fog volume: one blurred fetch per cascade (no contact
+   * hardening, which the mist cannot show). Sharper than about `lod` 2 turns the march's sparse
+   * samples into visible grain.
+   */
+  sampleFog(p: V3, lod = 2.3): F {
+    let result: F = cast<F>(float(0));
+    let chosen: F = cast<F>(float(0));
+    for (let i = 0; i < this.cascades.length; i++) {
+      const c = this.cascades[i]!;
+      const v = cast<V4>(c.view.mul(vec4(p, 1)));
+      const { l, r, b, t } = c.bounds;
+      const u = cast<F>(v.x.sub(l).div(r - l));
+      const w = cast<F>(float(t).sub(v.y).div(t - b));
+      const depth = cast<F>(v.z.negate().sub(NEAR).div(FAR - NEAR));
+      const s = cast<V4>(texture(c.target.texture, vec2(u, w)).level(float(lod - i * 0.3)));
+      const casterDepth = cast<F>(s.y.div(max(s.x, 1e-4)));
+      const occ = cast<F>(s.x.mul(depth.sub(casterDepth).mul(FAR - NEAR).sub(2).div(4).clamp(0, 1)));
+      const inside = u.greaterThan(0.01).and(u.lessThan(0.99)).and(w.greaterThan(0.01)).and(w.lessThan(0.99));
+      const take = cast<F>(select(chosen.lessThan(0.5).and(inside), float(1), float(0)));
+      result = cast<F>(result.add(occ.mul(take)));
+      chosen = cast<F>(chosen.add(take));
+    }
+    return cast<F>(result.clamp(0, 1).mul(this.strength).add(this.trigger as unknown as F));
+  }
+
   dispose(): void {
     for (const c of this.cascades) c.target.dispose();
   }

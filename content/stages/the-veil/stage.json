@@ -243,7 +243,7 @@
             "target": "density",
             "feature": "sectionIntensity",
             "mode": "mul",
-            "amount": 0.1,
+            "amount": 0.16,
             "attackMs": 8000,
             "releaseMs": 12000,
             "category": "environment"
@@ -764,6 +764,33 @@
         "params": {
           "exposure": 0.3
         }
+      },
+      {
+        "id": "mist",
+        "type": "veilMist",
+        "params": {
+          "exposure": 0.3
+        },
+        "bind": [
+          {
+            "target": "shafts",
+            "feature": "sectionIntensity",
+            "mode": "mul",
+            "amount": 0.35,
+            "attackMs": 9000,
+            "releaseMs": 12000,
+            "category": "lighting"
+          },
+          {
+            "target": "glow",
+            "feature": "mid",
+            "mode": "mul",
+            "amount": 0.2,
+            "attackMs": 2500,
+            "releaseMs": 6000,
+            "category": "lighting"
+          }
+        ]
       },
       {
         "id": "creatures",

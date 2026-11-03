@@ -4,6 +4,7 @@ import { creaturesComponent } from './creatures';
 import { veilDissolve } from './effects';
 import { landComponent } from './land';
 import { marshComponent } from './marsh';
+import { mistComponent } from './mist';
 import { sceneryComponent } from './scenery';
 
 /**
@@ -20,6 +21,7 @@ export default defineStage({
     sdk.components.register(landComponent as unknown as ComponentFactory);
     sdk.components.register(sceneryComponent as unknown as ComponentFactory);
     sdk.components.register(marshComponent as unknown as ComponentFactory);
+    sdk.components.register(mistComponent as unknown as ComponentFactory);
     sdk.components.register(creaturesComponent as unknown as ComponentFactory);
     sdk.lineClearEffects.register(veilDissolve);
   },

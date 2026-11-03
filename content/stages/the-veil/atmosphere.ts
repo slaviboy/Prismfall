@@ -149,6 +149,12 @@ export const atmosphereComponent: ComponentFactory<Params> = {
       pa[i]!.set(k[4], 0.35, 1, 0);
     });
     const firstDynamic = p.pockets.length;
+    // The static pockets breathe: they drift a little and swell or thin over a minute or two, so
+    // the banks and clearings are never quite where they were.
+    const breathing = p.pockets.map((k, i) => ({ x: k[0], y: k[1], z: k[2], r: k[3], amt: k[4], ph: i * 2.1 + 0.7 }));
+    // One more: a clearing that wanders through the mid-distance, opening and closing (the slot
+    // between the director's and the creatures').
+    const PARTING = MAX_POCKETS - 3;
     const lights = p.lights.map((l) => {
       const a = (l.at[0] * Math.PI) / 180;
       const x = EYE.x + Math.sin(a) * l.at[1];
@@ -183,12 +189,27 @@ export const atmosphereComponent: ComponentFactory<Params> = {
         s.fog.wind.value.addScaledVector(windV, dt * u.drift.value * calm);
         s.fog.windFine.value.addScaledVector(fineV, dt * u.fineDrift.value * calm);
         s.fog.shimmer.value = Math.max(0, u.fineDrift.value - 1);
+        s.fog.time.value += dt * calm * s.timeScale;
+        const T = s.fog.time.value;
+        breathing.forEach((b, i) => {
+          const swell = 0.5 + 0.5 * Math.sin(T * 0.021 + b.ph) * Math.cos(T * 0.0083 + b.ph * 1.7);
+          pv[i]!.set(b.x + 28 * Math.sin(T * 0.011 + b.ph), b.y, b.z + 22 * Math.cos(T * 0.009 + b.ph * 1.3), b.r * (0.85 + 0.3 * swell));
+          pa[i]!.set(b.amt * (0.35 + 0.95 * swell), 0.35, 1.2, 0);
+        });
+        if (PARTING >= firstDynamic + 3) {
+          const az = (-58 + 116 * (0.5 + 0.5 * Math.sin(T * 0.0047 + 0.4))) * (Math.PI / 180);
+          const pd = 120 + 55 * Math.sin(T * 0.0071 + 1.9);
+          const px = EYE.x + Math.sin(az) * pd;
+          const pz = EYE.z - Math.cos(az) * pd;
+          const opening = smooth(0.15, 0.85, 0.5 + 0.5 * Math.sin(T * 0.019 + 2.6));
+          pv[PARTING]!.set(px, terrainHeight(px, pz) + 6, pz, 58);
+          pa[PARTING]!.set(-0.92 * opening, 0.3, 1.5, 0);
+        }
         // Comfort: a calmer world is also a clearer one.
         const comfortDensity = comfort === 'off' ? 0.7 : comfort === 'calm' ? 0.82 : 1;
         let density = u.density.value * comfortDensity * handle.densityScale;
         // Director fog events.
         for (let slot = 0; slot < 3; slot++) setPocket(slot, 0, -9999, 0, 1, 0);
-        void MAX_POCKETS;
         const bank = director.find('bankRoll');
         if (bank) {
           const side = bank.event.variant < 0.5 ? -1 : 1;

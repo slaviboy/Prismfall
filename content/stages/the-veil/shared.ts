@@ -23,7 +23,8 @@ export const PANO = { src: 'textures/kloofendal_28d_misty_band.webp', elevation:
 export const MOON = { azimuth: -40, elevation: 15 };
 
 export const MAX_POCKETS = 9;
-export const MAX_LIGHTS = 4;
+/** Fog lights: up to four from the manifest (windows, the far light), the last two the drifting wisps. */
+export const MAX_LIGHTS = 6;
 
 export function moonDirection(): Vector3 {
   const a = (MOON.azimuth * Math.PI) / 180;
@@ -62,6 +63,21 @@ export interface FogUniforms {
   readonly shimmer: NumUniform;
   /** Development aid: 1 shows the moon-shadow term on surfaces (red). */
   readonly debug: NumUniform;
+  /** Mist time (seconds, slowed by reduced motion): the mist's own evolution, separate from the wind. */
+  readonly time: NumUniform;
+  /** Strength of the silver lining on thin, moon-backlit fringes. */
+  readonly silver: NumUniform;
+}
+
+/** Where wisps of mist gather: tree trunks and the tower's legs (filled in by the scenery). */
+export interface MistAnchor {
+  readonly x: number;
+  /** Ground or water level at the foot. */
+  readonly y: number;
+  readonly z: number;
+  /** Radius of the trunk or legs (metres). */
+  readonly r: number;
+  readonly kind: 'trunk' | 'tower';
 }
 
 export interface VeilShared {
@@ -71,6 +87,7 @@ export interface VeilShared {
   backdrop: Promise<DataTexture | null> | null;
   shadows: ShadowMaps | null;
   director: Director | null;
+  anchors: MistAnchor[];
   /** Development aid: speeds up the director and the creatures (captures). */
   timeScale: number;
   users: number;
@@ -103,12 +120,15 @@ export function shared(ctx: EnvironmentContext): VeilShared {
         flare: numU(0),
         shimmer: numU(0),
         debug: numU(0),
+        time: numU(0),
+        silver: numU(1),
       },
       noise3: null,
       noise2: null,
       backdrop: null,
       shadows: null,
       director: null,
+      anchors: [],
       timeScale: 1,
       users: 0,
     };

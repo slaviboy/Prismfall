@@ -384,6 +384,7 @@ All hand-authored for Prismfall; licence "Original work for Prismfall".
 | `content/shared/reactivity/bass-breath.json`, `beat-lights.json`, `flux-turbulence.json`, `mid-architecture.json`, `section-swell.json`, `transient-strike.json`, `treble-sparkle.json` | Shared reactivity profiles. |
 | `content/campaigns/voyage.json` | The Voyage campaign. |
 | `content/stages/the-veil/stage.json`, `stage.ts`, `shared.ts`, `terrain.ts`, `director.ts`, `director.test.ts`, `fogModel.ts`, `atmosphere.ts`, `shadow.ts`, `surface.ts`, `land.ts`, `marsh.ts`, `models.ts`, `scenery.ts`, `gait.ts`, `creatures.ts`, `effects.ts`, `assets.json` | The Veil manifest and SDK module: the terrain, the event director and its tests, the segmented ray-marched fog, the creature and tree moon-shadow maps, the shared surface lighting, the land and depth-aware marsh water, the procedural reed, sedge and dead-grass clumps, the scenery placement, the procedural locomotion (foot planting, two-bone IK, secondary motion), the creatures and the ray swarm, and the mist line clears. |
+| `content/stages/the-veil/mist.ts` | The Veil's living mist: wisps curling around trunks and the tower, moon shafts through the gaps, drifting will-o'-wisps that light the fog, and faint warm window glows (procedural shaders, no assets). |
 
 ## 9. Source assets that do not ship
 

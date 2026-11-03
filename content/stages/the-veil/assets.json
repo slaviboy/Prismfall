@@ -71,6 +71,13 @@
       "purpose": "procedural dead reed, sedge and grass clumps on the shores, wind sway"
     },
     {
+      "path": "mist.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "living mist: wisps around trunks and the tower, moon shafts, will-o'-wisps, window glows"
+    },
+    {
       "path": "models.ts",
       "license": "Original work for Prismfall",
       "author": "Prismfall",
