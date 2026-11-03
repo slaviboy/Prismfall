@@ -181,6 +181,15 @@
             "releaseMs": 2000
           }
         ]
+      },
+      {
+        "id": "dragonflies",
+        "type": "dragonflies",
+        "params": {
+          "count": 5,
+          "seed": 3
+        },
+        "bind": []
       }
     ]
   },

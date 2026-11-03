@@ -129,6 +129,25 @@
           }
         },
         "bind": []
+      },
+      {
+        "id": "fireflies",
+        "type": "fireflies",
+        "params": {
+          "count": 80,
+          "activity": 0.55,
+          "seed": 7
+        },
+        "bind": [
+          {
+            "target": "activity",
+            "feature": "sectionIntensity",
+            "amount": 0.8,
+            "category": "environment",
+            "attackMs": 4000,
+            "releaseMs": 6000
+          }
+        ]
       }
     ]
   },

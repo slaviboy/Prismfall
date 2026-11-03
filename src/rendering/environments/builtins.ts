@@ -6,6 +6,8 @@ import { cloudsComponent } from './components/clouds';
 import { conifersComponent } from './components/conifers';
 import { emitterComponent } from './components/emitter';
 import { fishSchoolComponent } from './components/fishSchool';
+import { firefliesComponent } from './components/fireflies';
+import { dragonfliesComponent } from './components/dragonflies';
 import { galaxyComponent } from './components/galaxy';
 import { gltfSceneComponent } from './components/gltfScene';
 import { jellyfishComponent } from './components/jellyfish';
@@ -51,6 +53,8 @@ export const BUILTIN_COMPONENTS: readonly ComponentFactory[] = [
   jellyfishComponent,
   fishSchoolComponent,
   meteorsComponent,
+  firefliesComponent,
+  dragonfliesComponent,
 ] as unknown as readonly ComponentFactory[];
 
 let registered = false;
