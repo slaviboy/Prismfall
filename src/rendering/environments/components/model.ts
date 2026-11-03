@@ -1,4 +1,4 @@
-import { AnimationMixer, Color, Group, Mesh, type AnimationClip, type Material, type Object3D } from 'three/webgpu';
+import { AnimationMixer, Box3, Color, Group, Mesh, Vector3, type AnimationClip, type Material, type Object3D } from 'three/webgpu';
 import { clone as cloneSkinned } from 'three/addons/utils/SkeletonUtils.js';
 import { z } from 'zod';
 import type { ComponentFactory } from '../../../sdk/types';
@@ -11,6 +11,8 @@ const schema = z.object({
   src: z.string(),
   /** Regex on top-level node names to keep (others are dropped). */
   include: z.string().optional(),
+  /** Move the kept nodes so their footprint centre is the origin and their base sits at y = 0. */
+  recenter: z.boolean().default(true),
   instances: z
     .array(
       z.object({
@@ -107,6 +109,11 @@ export const modelComponent: ComponentFactory<Params> = {
       if (p.include) {
         const re = new RegExp(p.include, 'i');
         for (const child of [...scene.children]) if (!re.test(child.name)) child.removeFromParent();
+      }
+      if (p.recenter) {
+        const box = new Box3().setFromObject(scene);
+        const c = box.getCenter(new Vector3());
+        scene.position.set(-c.x, -box.min.y, -c.z);
       }
       const root = new Group();
       root.add(scene);
