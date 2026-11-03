@@ -135,6 +135,8 @@ export class BoardView {
   private readonly active: InstanceSet;
   private readonly pods: InstanceSet;
   private readonly ghostMesh: InstancedMesh;
+  /** The ghost keeps a plain sharp box whatever the block style, so it never looks like a real block. */
+  private readonly ghostGeometry = new BoxGeometry(1, 1, 1);
   private readonly ghostDepthMesh: InstancedMesh;
   private readonly ghostDepth = createGhostDepthMaterial();
   /** Per-cell neighbour mask of the ghost (outline on the outer silhouette only). */
@@ -184,12 +186,12 @@ export class BoardView {
     this.active = new InstanceSet(this.geometry, 4, options.preset);
     this.pods = new InstanceSet(this.geometry, 4 * 7, options.preset);
     this.pods.mesh.castShadow = false;
-    this.ghostMesh = new InstancedMesh(this.geometry, this.ghost.material, 4);
+    this.ghostMesh = new InstancedMesh(this.ghostGeometry, this.ghost.material, 4);
     this.ghostMesh.count = 0;
     this.ghostMesh.frustumCulled = false;
     this.ghostMesh.renderOrder = 1001;
     // Depth pre-pass sharing the ghost's instance matrices, drawn just before the ghost.
-    this.ghostDepthMesh = new InstancedMesh(this.geometry, this.ghostDepth, 4);
+    this.ghostDepthMesh = new InstancedMesh(this.ghostGeometry, this.ghostDepth, 4);
     this.ghostDepthMesh.instanceMatrix = this.ghostMesh.instanceMatrix;
     this.ghostDepthMesh.count = 0;
     this.ghostDepthMesh.frustumCulled = false;
@@ -280,7 +282,7 @@ export class BoardView {
   setBlockGeometry(geometry: BufferGeometry): void {
     const old = this.geometry;
     this.geometry = geometry;
-    for (const mesh of [this.settled.mesh, this.active.mesh, this.pods.mesh, this.ghostMesh, this.ghostDepthMesh]) mesh.geometry = geometry;
+    for (const mesh of [this.settled.mesh, this.active.mesh, this.pods.mesh]) mesh.geometry = geometry;
     old.dispose();
   }
 
@@ -478,6 +480,7 @@ export class BoardView {
     this.pods.dispose();
     this.ghost.material.dispose();
     this.ghostDepth.dispose();
+    this.ghostGeometry.dispose();
     this.plate.material.dispose();
     this.frame.material.dispose();
     this.dim.material.dispose();

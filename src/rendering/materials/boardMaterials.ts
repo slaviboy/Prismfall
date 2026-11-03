@@ -24,7 +24,8 @@ import {
 } from 'three/tsl';
 import { frameUniforms, noBloom, type ColorUniform, type FloatUniform } from '../shaders/uniforms';
 
-const HALF = 0.47;
+/** Half size of the ghost's unit box. */
+const GHOST_HALF = 0.5;
 
 /**
  * Depth-only pre-pass for the ghost, so the translucent ghost colours only its front-most surface;
@@ -44,7 +45,8 @@ export function createGhostDepthMaterial(): MeshBasicNodeMaterial {
 /**
  * Ghost piece: an even translucent body in the piece colour with an outline on the piece's
  * outer silhouette only (per-cell neighbour mask: bits left, right, down, up), so it reads as
- * one shape. Cells are drawn slightly enlarged so they meet; the depth pre-pass resolves overlaps.
+ * one shape. Drawn on a unit box (not the block geometry), slightly enlarged so cells meet; the
+ * depth pre-pass resolves overlaps.
  */
 export function createGhostMaterial(mask: InstancedBufferAttribute): { material: MeshBasicNodeMaterial; color: ColorUniform; opacity: FloatUniform } {
   const color = uniform(new Vector3(1, 1, 1));
@@ -52,20 +54,24 @@ export function createGhostMaterial(mask: InstancedBufferAttribute): { material:
   const p = positionGeometry;
   const m = (instancedBufferAttribute(mask, 'vec4') as unknown as Node<'vec4'>).x;
   const bit = (i: number) => mod(floor(m.div(2 ** i)), 2);
-  const near = (v: Parameters<typeof smoothstep>[2]) => smoothstep(HALF - 0.1, HALF - 0.015, v);
+  // A crisp band along the silhouette (sharp inner edge), so it stays legible over bright worlds.
+  const near = (v: Parameters<typeof smoothstep>[2]) => smoothstep(GHOST_HALF - 0.075, GHOST_HALF - 0.06, v);
   const outer = max(
     max(bit(0).oneMinus().mul(near(p.x.negate())), bit(1).oneMinus().mul(near(p.x))),
     max(bit(2).oneMinus().mul(near(p.y.negate())), bit(3).oneMinus().mul(near(p.y))),
   );
   // Outline only toward the front, so the silhouette reads from the camera.
-  const front = smoothstep(0, HALF - 0.02, p.z);
+  const front = smoothstep(GHOST_HALF - 0.1, GHOST_HALF - 0.01, p.z);
   const outline = outer.mul(front) as unknown as Node<'float'>;
   const ndv = clamp(dot(normalView, positionViewDirection), 0, 1);
-  const shimmer = float(0.9).add(frameUniforms.beatPulse.mul(0.1));
-  const body = float(0.12).add(ndv.oneMinus().mul(0.06));
-  const alpha = clamp(body.add(outline.mul(0.9)), 0, 1).mul(opacity).mul(shimmer);
+  // Flat translucent fill (front face strongest) under a light outline: unmistakably a ghost
+  // next to the glossy bevelled blocks. Ghost visibility 0.5 (default) gives fill 0.3, outline 1.
+  const fill = mix(float(0.2), float(0.3), front).add(ndv.oneMinus().mul(0.05)).mul(opacity.mul(1.2).add(0.4));
+  const lineAlpha = clamp(opacity.mul(0.8).add(0.6), 0, 1);
+  const alpha = clamp(mix(fill, lineAlpha, outline), 0, 1);
+  const lineColor = mix(color, vec3(1), 0.45).mul(1.15);
   const material = new MeshBasicNodeMaterial();
-  material.colorNode = vec4(color.mul(float(0.8).add(outline.mul(0.9))), alpha);
+  material.colorNode = vec4(mix(color.mul(0.62), lineColor, outline), alpha);
   material.transparent = true;
   material.depthWrite = false;
   noBloom(material);
