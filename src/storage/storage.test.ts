@@ -32,6 +32,30 @@ describe('settings schema', () => {
     expect(settings.graphics.preset).toBe('high');
   });
 
+  it('loads an M5-era settings save (old-save fixture): new fields default, custom values survive', () => {
+    const m5 = {
+      version: 1,
+      keyboard: { moveLeft: ['KeyA'], moveRight: ['KeyD'], hardDrop: ['KeyW'], pause: ['Escape'] },
+      gamepad: { hold: ['button:3'] },
+      controller: { deadzoneInner: 0.3, profiles: { 'pad-1': { name: 'Old pad', family: 'generic', rawMap: { 'button:0': 'button:2' } } } },
+      graphics: { preset: 'ultra', motionBlur: 0.5 },
+      audio: { master: 0.4 },
+      reactivity: { preset: 'hypnotic' },
+    };
+    const { settings, valid } = migrateSettings(m5);
+    expect(valid).toBe(true);
+    expect(settings.keyboard.hardDrop).toEqual(['KeyW']);
+    expect(settings.keyboard.practiceUndo).toEqual(['Backspace']);
+    expect(settings.gamepad.hold).toEqual(['button:3']);
+    expect(settings.controller.deadzoneInner).toBe(0.3);
+    expect(settings.controller.profiles['pad-1']?.family).toBe('generic');
+    expect(settings.graphics.blockGlow).toBeCloseTo(0.6);
+    expect(settings.audio.master).toBe(0.4);
+    expect(settings.audio.musicPreview).toBe(true);
+    expect(settings.reactivity.preset).toBe('hypnotic');
+    expect(settings.setup.music).toBe('stage');
+  });
+
   it('detects quality presets and custom changes', () => {
     const g = applyPreset(defaultSettings().graphics, 'ultra');
     expect(detectPreset(g)).toBe('ultra');
