@@ -99,6 +99,20 @@ const schema = z.object({
       depth: z.number().default(1.1),
     })
     .optional(),
+  /**
+   * Ground kept below the board: under it and just in front of it (towards the viewer, +z) the
+   * terrain never rises above `below`, blended out over `margin`, so no slope (the town bench's
+   * reaches this far) covers the bottom rows. The board's bottom row sits at y = -10.
+   */
+  board: z
+    .object({
+      halfWidth: z.number().default(7),
+      back: z.number().default(-3),
+      front: z.number().default(6),
+      below: z.number().default(-10.7),
+      margin: z.number().default(10),
+    })
+    .prefault({}),
   /** The far plain rises gently to meet the photograph's horizon. */
   horizon: z
     .object({
@@ -247,6 +261,12 @@ export function makeHeight(p: Params): (x: number, z: number) => number {
       const k = 1 - smooth01((d - p.creek.width * 0.3) / (p.creek.width * 0.7));
       y -= k * p.creek.depth;
     }
+    // Last: the board's footprint stays clear (lowered only where the ground is higher).
+    const b = p.board;
+    const ex = Math.max(Math.abs(x) - b.halfWidth, 0);
+    const ez = Math.max(b.back - zz, zz - b.front, 0);
+    const kb = 1 - smooth01(Math.hypot(ex, ez) / b.margin);
+    if (y > b.below) y -= (y - b.below) * kb;
     return y;
   };
 }
