@@ -4,6 +4,7 @@ import { appStore, useApp } from '../../app/stores';
 import { MenuItem, MenuList } from '../components/controls';
 import { useNavScope } from '../navigation/useNavScope';
 import { SettingsPanel } from '../settings/SettingsScreen';
+import { VRMenuItem } from '../vr/VRControls';
 
 export function PauseOverlay(): ReactNode {
   const paused = useApp((s) => s.paused);
@@ -24,6 +25,7 @@ function PauseMenu(): ReactNode {
           {practice ? <MenuItem label="Undo last piece" onSelect={() => shell.practiceUndo()} testId="pause-undo" /> : null}
           {practice ? <MenuItem label="Reset board" onSelect={() => shell.practiceReset()} testId="pause-reset" /> : null}
           <MenuItem label="Restart" onSelect={() => shell.restart()} testId="pause-restart" />
+          <VRMenuItem />
           <MenuItem label="Settings" onSelect={() => appStore.setState({ pauseView: 'settings' })} testId="pause-settings" />
           <MenuItem label="Quit to menu" onSelect={() => shell.quitToMenu()} testId="pause-quit" />
         </MenuList>

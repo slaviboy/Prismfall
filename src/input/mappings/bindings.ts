@@ -129,8 +129,31 @@ export function clearBinding(bindings: Bindings, action: InputAction, slot: numb
   return next;
 }
 
+/** Every VR controller control that can be bound ("xr:<hand>:<control>"). */
+export const XR_CONTROLS: readonly string[] = (['right', 'left'] as const).flatMap((hand) =>
+  ['trigger', 'squeeze', ...(hand === 'right' ? ['a', 'b'] : ['x', 'y']), 'stick-press', 'stick-left', 'stick-right', 'stick-up', 'stick-down'].map((c) => `xr:${hand}:${c}`),
+);
+
+const XR_NAMES: Record<string, string> = {
+  trigger: 'Trigger',
+  squeeze: 'Grip',
+  a: 'A',
+  b: 'B',
+  x: 'X',
+  y: 'Y',
+  'stick-press': 'Stick Press',
+  'stick-left': 'Stick Left',
+  'stick-right': 'Stick Right',
+  'stick-up': 'Stick Up',
+  'stick-down': 'Stick Down',
+};
+
 /** Human-readable name of a keyboard code or gamepad control. */
 export function controlLabel(control: string, family: 'playstation' | 'xbox' | 'generic' = 'generic'): string {
+  if (control.startsWith('xr:')) {
+    const [, hand, c] = control.split(':');
+    return `${hand === 'left' ? 'Left' : 'Right'} ${XR_NAMES[c ?? ''] ?? c}`;
+  }
   if (control.startsWith('button:')) {
     const i = Number(control.slice(7));
     const names: Record<typeof family, readonly string[]> = {

@@ -27,7 +27,7 @@ export type SettingDef =
   | { kind: 'group'; label: string }
   | { kind: 'custom'; id: string };
 
-export type TabId = 'gameplay' | 'controls' | 'controller' | 'graphics' | 'audio' | 'reactivity' | 'camera' | 'interface' | 'accessibility' | 'data' | 'developer';
+export type TabId = 'gameplay' | 'controls' | 'controller' | 'vr' | 'graphics' | 'audio' | 'reactivity' | 'camera' | 'interface' | 'accessibility' | 'data' | 'developer';
 
 export interface TabDef {
   readonly id: TabId;
@@ -385,5 +385,56 @@ export const CONTROLLER_TAB: TabDef = {
   ],
 };
 
+const metres = (v: number): string => `${v.toFixed(2)} m`;
+const degrees = (v: number): string => `${Math.round(v)}\u00b0`;
+
+export const VR_TAB: TabDef = {
+  id: 'vr',
+  label: 'VR',
+  inGame: true,
+  resets: ['vr'],
+  rows: [
+    { kind: 'custom', id: 'vrStatus' },
+    { kind: 'group', label: 'Playfield' },
+    {
+      kind: 'choice',
+      section: 'vr',
+      key: 'layout',
+      label: 'Play position',
+      description: 'Seated brings the playfield to your eye level wherever you sit. Standing uses your real height above the floor.',
+      options: [
+        { value: 'seated', label: 'Seated' },
+        { value: 'standing', label: 'Standing' },
+      ],
+    },
+    { kind: 'slider', section: 'vr', key: 'boardDistance', label: 'Distance', description: 'How far the playfield floats in front of you.', min: 0.5, max: 3, step: 0.05, format: metres },
+    { kind: 'slider', section: 'vr', key: 'boardHeight', label: 'Height', description: 'Raise or lower the playfield relative to your eyes.', min: -0.6, max: 0.6, step: 0.01, format: metres },
+    { kind: 'slider', section: 'vr', key: 'boardScale', label: 'Size', description: '100% is about one metre tall.', min: 0.5, max: 2, step: 0.05, format: percent },
+    { kind: 'slider', section: 'vr', key: 'boardTilt', label: 'Tilt', description: 'Lean the top of the playfield away from you.', min: -30, max: 30, step: 1, format: degrees },
+    { kind: 'group', label: 'Score panel' },
+    { kind: 'slider', section: 'vr', key: 'hudOffset', label: 'Panel distance', description: 'How far the score panel sits in front of the playfield.', min: -0.3, max: 0.5, step: 0.01, format: metres },
+    { kind: 'slider', section: 'vr', key: 'hudScale', label: 'Panel size', min: 0.5, max: 2, step: 0.05, format: percent },
+    { kind: 'group', label: 'Comfort and quality' },
+    {
+      kind: 'choice',
+      section: 'vr',
+      key: 'graphics',
+      label: 'VR graphics',
+      description: 'Performance keeps the frame rate steady on standalone headsets; Quality renders sharper for PC VR.',
+      options: [
+        { value: 'performance', label: 'Performance' },
+        { value: 'balanced', label: 'Balanced' },
+        { value: 'quality', label: 'Quality' },
+      ],
+    },
+    { kind: 'slider', section: 'vr', key: 'dimWorld', label: 'Dim the world', description: 'Darkens the surroundings so the playfield stands out. The camera never moves in VR, and there is no shake or motion blur.', min: 0, max: 0.8, step: 0.05, format: percent },
+    { kind: 'toggle', section: 'vr', key: 'haptics', label: 'Controller vibration', description: 'Pulses on hard drops, locks and clears.' },
+    { kind: 'slider', section: 'vr', key: 'hapticStrength', label: 'Vibration strength', min: 0, max: 1, step: 0.05, format: percent, when: (s) => s.vr.haptics },
+    { kind: 'toggle', section: 'vr', key: 'showRays', label: 'Pointer rays', description: 'Lines from the controllers for pointing at menus.' },
+    { kind: 'custom', id: 'vrBindings' },
+  ],
+};
+
 registerTab(CONTROLS_TAB, 'graphics');
 registerTab(CONTROLLER_TAB, 'graphics');
+registerTab(VR_TAB, 'graphics');

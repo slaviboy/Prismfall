@@ -84,6 +84,8 @@ export class MenuNavigator {
   }
 
   private handle(e: ActionEvent<MenuAction>): void {
+    // VR controllers drive the in-headset panels; the page menus are not visible there.
+    if (e.device === 'xr') return;
     if (!e.down) {
       if (this.repeatAction === e.action) this.stopRepeat();
       return;

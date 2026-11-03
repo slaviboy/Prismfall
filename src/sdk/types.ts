@@ -73,6 +73,10 @@ export interface GroundField {
   height(x: number, z: number): number;
   /** Installs (or clears) the height function; the terrain component calls this. */
   provide(fn: ((x: number, z: number) => number) | null): void;
+  /** Where a viewer stands (VR): the ground, or a water surface above it. Since SDK 1.2. */
+  surface(x: number, z: number): number;
+  /** Declares (or clears) a water surface at world height `y`; the water component calls this. Since SDK 1.2. */
+  setWaterLevel(y: number | null): void;
 }
 
 /** Context passed to component factories and custom effects. */

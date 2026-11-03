@@ -19,6 +19,8 @@ import './settings/audioPanels';
 import './settings/developerPanels';
 import './settings/ControlsPanel';
 import './settings/ControllerPanel';
+import { VRPresentingOverlay } from './vr/VRControls';
+import './vr/VRBindings';
 
 /** Developer-only, loaded on first use. */
 const AudioDashboardPanel = lazy(() => import('./devtools/AudioDashboardPanel'));
@@ -81,6 +83,7 @@ export function App(): ReactNode {
       {screen === 'game' || screen === 'replay' ? <Hud /> : null}
       {screen === 'game' ? <PauseOverlay /> : null}
       {screen === 'replay' ? <ReplayControls /> : null}
+      <VRPresentingOverlay />
       <PerfOverlay />
       {dashboard ? (
         <Suspense fallback={null}>

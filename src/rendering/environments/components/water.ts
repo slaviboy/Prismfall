@@ -89,6 +89,7 @@ export const waterComponent: ComponentFactory<z.infer<typeof schema>> = {
     material.mrtNode = mrt({ emissive: vec4(glowC.mul(crest.mul(0.25)).add(colorUniform(p.rippleColor).mul(ripple.mul(0.8))).mul(u.presence), 1) });
     const mesh = new Mesh(geometry, material);
     mesh.position.y = p.y;
+    ctx.ground.setWaterLevel(p.y);
     mesh.frustumCulled = false;
     mesh.renderOrder = -8;
     return {
@@ -104,6 +105,7 @@ export const waterComponent: ComponentFactory<z.infer<typeof schema>> = {
         u.presence.value = v;
       },
       dispose() {
+        ctx.ground.setWaterLevel(null);
         geometry.dispose();
         material.dispose();
       },

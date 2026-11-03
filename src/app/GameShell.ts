@@ -1,6 +1,7 @@
 import { Vector3 } from 'three/webgpu';
 import { emitCue, hasCueListeners } from '../audio/cues';
 import { onWorldSound } from '../audio/worldSounds';
+import { XRManager, type XRHost } from '../xr/XRManager';
 import type { GameAction, GameEvent } from '../game/core/types';
 import type { Engine } from '../game/core/engine';
 import { GAME_ACTIONS } from '../game/core/types';
@@ -72,6 +73,12 @@ type FrameListener = (now: number, dt: number) => void;
  */
 export class GameShell {
   readonly input = new InputManager();
+  /** WebXR immersive mode (created once the renderer exists). */
+  xr: XRManager | null = null;
+  /** True while another loop (the XR session) drives frames instead of requestAnimationFrame. */
+  private externalFrames = false;
+  private readonly hapticListeners = new Set<(kind: 'drop' | 'clear' | 'quad' | 'lock') => void>();
+  private readonly listenerPose = { position: new Vector3(), forward: new Vector3() };
   backend!: SaveBackend;
   settingsRepo!: SettingsRepository;
   progressRepo!: ProgressRepository;
@@ -142,6 +149,11 @@ export class GameShell {
     registerBuiltinTransitions();
     this.view = await this.createView(canvas);
     this.setupStages();
+    if (this.renderSystem) {
+      this.xr = new XRManager(this.xrHost());
+      void this.xr.detect();
+      navigator.xr?.addEventListener('devicechange', () => void this.xr?.detect());
+    }
     window.addEventListener('resize', this.handleResize);
     window.addEventListener('wheel', this.handleWheel, { passive: true });
     this.handleResize();
@@ -445,6 +457,7 @@ export class GameShell {
     const applyBindings = (): void => {
       const s = getSettings();
       im.setBindings(s.keyboard, s.gamepad, s.controller.swapConfirmBack);
+      im.setXRBindings(s.xr);
       const c = s.controller;
       im.setTuning({
         deadzoneInner: c.deadzoneInner,
@@ -460,6 +473,7 @@ export class GameShell {
     subscribeSettings((s) => s.keyboard, applyBindings);
     subscribeSettings((s) => s.gamepad, applyBindings);
     subscribeSettings((s) => s.controller, applyBindings);
+    subscribeSettings((s) => s.xr, applyBindings);
     subscribeSettings(
       (s) => s.gameplay,
       () => this.session?.setHandling(handlingFromSettings(getSettings())),
@@ -901,8 +915,71 @@ export class GameShell {
 
   private readonly listenerDir = new Vector3();
 
-  private readonly frame = (now: number): void => {
+  /** XR takes over the frame loop while presenting (window rAF may be paused by the headset). */
+  beginExternalFrames(): void {
+    this.externalFrames = true;
+    cancelAnimationFrame(this.rafId);
+  }
+
+  endExternalFrames(): void {
+    if (!this.externalFrames) return;
+    this.externalFrames = false;
+    this.lastFrame = 0;
     this.rafId = requestAnimationFrame(this.frame);
+  }
+
+  externalFrame(now: number): void {
+    this.frame(now);
+  }
+
+  /** The narrow surface the XR manager drives. */
+  private xrHost(): XRHost {
+    return {
+      renderSystem: () => this.renderSystem,
+      input: this.input,
+      beginExternalFrames: () => this.beginExternalFrames(),
+      endExternalFrames: () => this.endExternalFrames(),
+      externalFrame: (now) => this.externalFrame(now),
+      appState: () => ({ screen: appStore.getState().screen, paused: appStore.getState().paused, running: this.session?.status === 'running' }),
+      hud: () => {
+        const h = hudStore.getState();
+        const last = h.callouts[h.callouts.length - 1];
+        return { score: h.score, level: h.level, lines: h.lines, timeMs: this.elapsedMs, callout: last ? last.title : '', combo: h.combo };
+      },
+      results: () => {
+        const r = appStore.getState().results;
+        return r ? { score: r.score, lines: r.lines, title: r.outcome === 'complete' ? 'Complete' : 'Game over' } : null;
+      },
+      startMode: (mode) => {
+        const s = getSettings();
+        if (mode === 'voyage') {
+          const area = getCampaign('voyage').campaign?.areas[0];
+          if (area) this.startGame({ modeId: 'voyage', variantId: `standard@${area.id}`, stageId: area.legs[0]?.stage ?? '', voyage: { areaId: area.id, difficulty: 'standard' } });
+        } else this.startGame({ modeId: mode, variantId: s.setup.variants[mode] ?? getMode(mode).defaultVariant, stageId: s.setup.stageId });
+      },
+      pause: () => this.pause(),
+      resume: () => this.resume(),
+      restart: () => this.restart(),
+      quitToMenu: () => this.quitToMenu(),
+      stages: () => {
+        const progress = progressStore.getState().progress;
+        const unlockAll = getSettings().setup.unlockAll;
+        return availableStages().filter((st) => st.manifest && isStageUnlocked(st.manifest, progress, unlockAll)).map((st) => ({ id: st.id, name: st.manifest?.name ?? st.id }));
+      },
+      currentStage: () => getSettings().setup.stageId,
+      chooseStage: (id) => {
+        updateSection('setup', { stageId: id });
+        void this.stageManager?.show(id, { transition: 1.2 });
+      },
+      onHaptic: (l) => {
+        this.hapticListeners.add(l);
+        return () => this.hapticListeners.delete(l);
+      },
+    };
+  }
+
+  private readonly frame = (now: number): void => {
+    if (!this.externalFrames) this.rafId = requestAnimationFrame(this.frame);
     const t = performance.now();
     const dt = Math.min(0.1, Math.max(0, (t - (this.lastFrame || t)) / 1000));
     this.lastFrame = t;
@@ -928,9 +1005,17 @@ export class GameShell {
     if (engine) this.syncHud(t);
     this.renderSystem?.tickPerf(t);
     const cam = this.renderSystem?.cameraRig.camera;
-    if (cam) {
+    const lp = this.listenerPose;
+    if (this.xr?.listenerPose(lp)) this.audio.setListener(lp.position.x, lp.position.y, lp.position.z, lp.forward.x, lp.forward.y, lp.forward.z);
+    else if (cam) {
       cam.getWorldDirection(this.listenerDir);
       this.audio.setListener(cam.position.x, cam.position.y, cam.position.z, this.listenerDir.x, this.listenerDir.y, this.listenerDir.z);
+    }
+    if (events.length > 0 && this.hapticListeners.size > 0) {
+      for (const e of events) {
+        const kind = e.type === 'hardDrop' ? 'drop' : e.type === 'lock' ? 'lock' : e.type === 'lineClear' ? (e.lines >= 4 ? 'quad' : 'clear') : null;
+        if (kind) this.hapticListeners.forEach((l) => l(kind));
+      }
     }
     if (this.shouldRender(t)) {
       this.view?.render({

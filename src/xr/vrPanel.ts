@@ -125,7 +125,7 @@ export class VRPanel {
     const display = fontFamily('--font-display', 'system-ui, sans-serif');
     const body = fontFamily('--font-body', 'system-ui, sans-serif');
     c.clearRect(0, 0, W, H);
-    c.fillStyle = 'rgba(8, 10, 22, 0.86)';
+    c.fillStyle = 'rgba(8, 10, 22, 0.96)';
     const r = this.px * 0.25;
     c.beginPath();
     c.roundRect(0, 0, W, H, r);
