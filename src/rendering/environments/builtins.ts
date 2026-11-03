@@ -1,6 +1,7 @@
 import { registries } from '../../sdk/registry';
 import { auroraComponent } from './components/aurora';
 import { beamsComponent } from './components/beams';
+import { birdFlockComponent } from './components/birdFlock';
 import { cityComponent } from './components/city';
 import { cloudsComponent } from './components/clouds';
 import { conifersComponent } from './components/conifers';
@@ -53,6 +54,7 @@ export const BUILTIN_COMPONENTS: readonly ComponentFactory[] = [
   jellyfishComponent,
   fishSchoolComponent,
   meteorsComponent,
+  birdFlockComponent,
   firefliesComponent,
   dragonfliesComponent,
 ] as unknown as readonly ComponentFactory[];

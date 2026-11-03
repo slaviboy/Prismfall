@@ -173,6 +173,67 @@
             "releaseMs": 1500
           }
         ]
+      },
+      {
+        "id": "murmuration",
+        "type": "birdFlock",
+        "params": {
+          "kind": "murmuration",
+          "roost": {
+            "at": {
+              "azimuth": -27.5,
+              "elevation": 11.5,
+              "distance": 105
+            },
+            "size": [
+              11,
+              7,
+              42
+            ]
+          },
+          "count": 2400,
+          "speed": 8,
+          "separation": 0.9,
+          "color": "#16171b",
+          "hazeColor": "#d4d8de",
+          "visibility": 2500,
+          "falcon": {
+            "every": 25,
+            "above": 40
+          },
+          "passing": {
+            "count": 260,
+            "at": {
+              "azimuth": -28,
+              "elevation": 12,
+              "distance": 50
+            },
+            "size": [
+              7,
+              4,
+              10
+            ],
+            "away": -60,
+            "period": 75
+          },
+          "seed": 5
+        },
+        "bind": [
+          {
+            "target": "tempo",
+            "feature": "sectionIntensity",
+            "amount": 0.2,
+            "attackMs": 2500,
+            "releaseMs": 4000
+          },
+          {
+            "target": "agitation",
+            "feature": "sectionIntensity",
+            "amount": 1,
+            "attackMs": 3000,
+            "releaseMs": 6000
+          }
+        ]
       }
     ]
   },

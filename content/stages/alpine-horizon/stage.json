@@ -129,6 +129,64 @@
           }
         },
         "bind": []
+      },
+      {
+        "id": "raptors",
+        "type": "birdFlock",
+        "params": {
+          "kind": "soaring",
+          "birds": [
+            {
+              "at": {
+                "azimuth": -27.5,
+                "elevation": 16.3,
+                "distance": 105
+              },
+              "radius": 9,
+              "speed": 8.5,
+              "drift": 3,
+              "climb": 2,
+              "start": 0.1,
+              "wingspan": 2.1
+            },
+            {
+              "at": {
+                "azimuth": 28.5,
+                "elevation": 16.8,
+                "distance": 135
+              },
+              "radius": 10,
+              "speed": 9,
+              "drift": 3,
+              "climb": 2,
+              "clockwise": true,
+              "start": 0.55,
+              "wingspan": 2.2
+            },
+            {
+              "at": {
+                "azimuth": 29,
+                "elevation": 15.6,
+                "distance": 145
+              },
+              "radius": 9,
+              "speed": 8.5,
+              "drift": 3,
+              "climb": 2,
+              "clockwise": true,
+              "start": 0.05,
+              "wingspan": 2.0
+            }
+          ],
+          "sun": {
+            "azimuth": -60,
+            "elevation": 45
+          },
+          "hazeColor": "#a8bcd4",
+          "visibility": 2500,
+          "seed": 3
+        },
+        "bind": []
       }
     ]
   },
