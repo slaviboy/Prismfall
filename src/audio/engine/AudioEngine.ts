@@ -7,6 +7,8 @@
  *   gameplay sfx ──────────────────────────────────┴→ sfxFader → master
  *   stage effects (signature clears, creatures) → stageFader → master
  *   ambience → ambFader → master     menu → uiFader → master
+ *   weather: rain, wind, thunderNear, thunderFar, crack (each its own fader) → weatherBus → master
+ *   (the music fader feeds the master through a duck that thunder can pull down briefly)
  *   master → masterFader (volume, mute) → headroom → limiter → destination
  */
 export interface AudioVolumes {
@@ -23,6 +25,16 @@ export interface AudioVolumes {
   /** Menu sounds. */
   menu: number;
   latencyOffsetMs: number;
+  /** Weather worlds' own buses (rain, wind, thunder near and far, lightning crack). */
+  weather?: WeatherVolumes;
+}
+
+export interface WeatherVolumes {
+  rain: number;
+  wind: number;
+  thunderNear: number;
+  thunderFar: number;
+  crack: number;
 }
 
 const RAMP = 0.04;
@@ -45,6 +57,15 @@ export class AudioEngine {
   stageFx!: GainNode;
   ambience!: GainNode;
   ui!: GainNode;
+  /** Weather buses (SDK 1.5 weather and storm sounds). */
+  rain!: GainNode;
+  wind!: GainNode;
+  thunderNear!: GainNode;
+  thunderFar!: GainNode;
+  crack!: GainNode;
+  private weatherBus!: GainNode;
+  /** Pulled down for a moment under big thunder (scheduled on the audio clock). */
+  private musicDuck!: GainNode;
   private master!: GainNode;
   private masterFader!: GainNode;
   private limiter!: DynamicsCompressorNode;
@@ -108,6 +129,13 @@ export class AudioEngine {
     this.stageFx = gain();
     this.ambience = gain();
     this.ui = gain();
+    this.rain = gain();
+    this.wind = gain();
+    this.thunderNear = gain();
+    this.thunderFar = gain();
+    this.crack = gain();
+    this.weatherBus = gain();
+    this.musicDuck = gain();
     this.master = gain();
     this.masterFader = gain();
     this.limiter = ctx.createDynamicsCompressor();
@@ -121,7 +149,10 @@ export class AudioEngine {
     this.musicPre.connect(this.musicFader);
     this.musicFader.connect(this.pauseFilter);
     this.pauseFilter.connect(this.pauseGain);
-    this.pauseGain.connect(this.master);
+    this.pauseGain.connect(this.musicDuck);
+    this.musicDuck.connect(this.master);
+    for (const bus of [this.rain, this.wind, this.thunderNear, this.thunderFar, this.crack]) bus.connect(this.weatherBus);
+    this.weatherBus.connect(this.master);
     this.impacts.connect(this.sfx);
     this.sfx.connect(this.master);
     this.stageFx.connect(this.master);
@@ -164,6 +195,26 @@ export class AudioEngine {
     // Calibration clicks stay audible even with menu sounds turned right down.
     set(this.ui, Math.max(this.calibrating ? 0.5 : 0, sliderToGain(v.menu)));
     set(this.ambience, sliderToGain(v.ambience) * bed);
+    const w = v.weather ?? { rain: 0.8, wind: 0.7, thunderNear: 0.85, thunderFar: 0.85, crack: 0.75 };
+    set(this.rain, sliderToGain(w.rain));
+    set(this.wind, sliderToGain(w.wind));
+    set(this.thunderNear, sliderToGain(w.thunderNear));
+    set(this.thunderFar, sliderToGain(w.thunderFar));
+    set(this.crack, sliderToGain(w.crack));
+    set(this.weatherBus, bed);
+  }
+
+  /**
+   * Lowers the music by `depth` (0..1 of its gain) at audio time `at`, holds it `hold` seconds and
+   * lets it return over about `release` seconds (big thunder rising over the music).
+   */
+  duckMusic(at: number, depth: number, hold: number, release: number): void {
+    const ctx = this.ctx;
+    if (!ctx) return;
+    const g = this.musicDuck.gain;
+    const t = Math.max(ctx.currentTime, at);
+    g.setTargetAtTime(1 - Math.max(0, Math.min(0.6, depth)), t, 0.12);
+    g.setTargetAtTime(1, t + Math.max(0.1, hold), Math.max(0.2, release) / 3);
   }
 
   private externalInput: AudioNode | null = null;

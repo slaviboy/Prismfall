@@ -13,6 +13,8 @@ import { keyRoot } from './sequencer/theory';
 import { Ambience } from './sound-effects/Ambience';
 import { resolveMaterialAudio, type MaterialAudioProfile } from './sound-effects/materialAudio';
 import { SFX_IDS, SfxBank, type SfxId } from './sound-effects/SfxBank';
+import { StormAudio } from './weather/StormAudio';
+import type { StormSound, WeatherSound } from './worldSounds';
 
 /** Publishes AudioFeatures: real analysis + music timeline while music plays, metronome otherwise. */
 class FeaturesHub implements AudioFeatureSource {
@@ -85,6 +87,8 @@ export class AudioSystem {
     () => (this.engine.ctx ? this.engine.ambience : null),
   );
   readonly hub = new FeaturesHub(this);
+  /** Weather worlds' rain, wind, thunder and lightning cracks (SDK 1.5). */
+  readonly storm = new StormAudio(this.engine);
   private settings: Settings | null = null;
   stage: StageAudio | null = null;
   private analysisKey = '';
@@ -191,6 +195,7 @@ export class AudioSystem {
       stageFx: a.stageFx,
       menu: a.menu,
       latencyOffsetMs: a.latencyOffsetMs,
+      weather: { rain: s.weather.rain, wind: s.weather.wind, thunderNear: s.weather.thunderNear, thunderFar: s.weather.thunderDistant, crack: s.weather.lightningCrack },
     });
     this.sfx.variation = a.sfxVariation;
     this.sfx.spatial = a.spatialAudio;
@@ -273,6 +278,17 @@ export class AudioSystem {
       l.upY.value = 1;
       l.upZ.value = 0;
     }
+    this.storm.setListener(px, py, pz, fx, fz);
+  }
+
+  /** A weather world's rain and wind (kept alive by its calls; see WorldSounds.weather). */
+  setWeather(w: WeatherSound): void {
+    this.storm.weather(w);
+  }
+
+  /** A weather world's thunder or lightning crack, scheduled on the audio clock (WorldSounds.storm). */
+  playStormSound(s: StormSound): void {
+    this.storm.schedule(s);
   }
 
   /** A world sound requested by an environment component (rate-limited token bucket). */
@@ -478,6 +494,7 @@ export class AudioSystem {
     this.director.dispose();
     this.analysis.teardown();
     this.ambience.stop();
+    this.storm.dispose();
     for (const v of this.drones.values()) v.osc.forEach((o) => o.stop());
     void this.engine.close();
   }

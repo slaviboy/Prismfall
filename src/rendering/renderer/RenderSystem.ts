@@ -290,7 +290,13 @@ export class RenderSystem implements GameView {
     frameUniforms.effectsIntensity.value = s.gameplay.effectsIntensity;
     frameUniforms.flashLimit.value = s.accessibility.flashReduction ? 0.45 : 1;
     frameUniforms.worldEvents.value = s.accessibility.worldEvents === 'off' ? 0 : s.accessibility.worldEvents === 'calm' ? 0.5 : 1;
+    this.applyWeather(s);
     frameUniforms.reactivity.value = s.reactivity.enabled ? s.reactivity.strength : 0;
+  }
+
+  /** The weather settings the shaders and weather worlds read (Storm intensity). */
+  applyWeather(s: Settings): void {
+    frameUniforms.weatherIntensity.value = { subtle: 0.55, normal: 1, heavy: 1.35, extreme: 1.7 }[s.weather.intensity];
   }
 
   resize(): void {

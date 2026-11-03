@@ -25,6 +25,8 @@ export type {
   StagePalette,
   GroundField,
   WorldSounds,
+  WeatherSound,
+  StormSound,
   TransitionContext,
   TransitionEffect,
 } from './types';
