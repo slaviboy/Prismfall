@@ -1,0 +1,77 @@
+# Real asset pipeline
+
+How real-world imagery and scanned models get into Prismfall's worlds. The rule from the visual brief is "real model first, particle enhancement second": anything that should read as a real place, rock, tree or creature comes from photography or photogrammetry. Procedural geometry is kept only for things that are procedural by nature (water, aurora, particles, the board).
+
+Every external asset is CC0 or another licence that allows this use. Each is recorded in [ASSET_LICENSES.md](ASSET_LICENSES.md) (checked by `src/stages/assetLicenses.test.ts`) and described in [assets/ASSET_CATALOG.md](assets/ASSET_CATALOG.md). Original downloads are kept in `assets/external/` as sources of record. The exception is the full-resolution HDRs, which are too large for the repository; their URLs and MD5s are in each `source.json`. Nothing is fetched at runtime.
+
+## Photographic horizons (panoramas)
+
+Source: [Poly Haven](https://polyhaven.com) HDRIs (CC0). Each world that uses one shows a real landscape as its horizon, or as its whole surroundings, through the `panorama` option of the `sky` component.
+
+```sh
+node scripts/fetch-panorama.ts <id> <stage> --elevation -32,40 --detail --center 0.62 --azimuth 70 [--keep-hdr]
+```
+
+What the script does:
+
+1. **Original download.** It downloads Poly Haven's tonemapped 8k JPG into `assets/external/polyhaven/<id>/`, checks the MD5 and writes `source.json`.
+2. **Band.** It crops the elevations the game shows into `content/stages/<stage>/textures/<id>_band.webp`. This covers the full 360 degrees at about 23 px per degree, as the fallback for VR and wide views. It also prints the band's top colour, which the sky gradient above it should continue from.
+3. **Detail (`--detail`).**
+   - It downloads the full-resolution HDR (20k where offered, else 16k).
+   - It crops the directions the camera can see (`--center` ± `--azimuth` degrees), at 45–57 px per degree, under the 8192 px texture limit.
+   - It tone-maps the crop with `scripts/panorama_match.py`, which uses numpy (development only). That script fits one curve on luminance quantiles of the full-resolution crop against Poly Haven's tonemapped JPG and applies it to all three channels. A single curve keeps neutral tones neutral, and fitting at full resolution keeps highlights from clipping.
+   - The result is `<id>_detail.webp`, and the script prints its `uRange` for the manifest.
+
+Manifest example (Frozen Kingdom):
+
+```json
+"panorama": {
+  "src": "textures/lago_disola_band.webp", "elevation": [-6, 40], "offset": 0.70, "fade": 8, "occlude": 500,
+  "detail": { "src": "textures/lago_disola_detail.webp", "uRange": [0.5056, 0.8944] }
+}
+```
+
+Panorama options:
+
+- **`offset`:** turns the panorama, as the fraction of a full turn that faces the board.
+- **`occlude`:** the photo's land pixels write depth at that distance, so 3D sky effects (the aurora) pass behind real mountains.
+- **`dusk`** (a sky option): darkens the photo and fades in stars as a bindable value rises. Stars are masked to the photo's sky.
+- **Detail on low settings:** the detail texture costs about 170 MB of video memory, and low detail settings skip it.
+
+In use:
+
+| World | Panorama | Visible elevations | Detail |
+|---|---|---|---|
+| Frozen Kingdom | Lago d'Isola (Andreas Mischok) | -6..40, a 3D lake in front | 20k |
+| Moving Sands | Rogland Clear Night (Greg Zaal) | -6..40, 3D dunes in front | 16k |
+| Alpine Horizon | Alps Field (Andreas Mischok) | -32..40, the whole surroundings | 20k |
+| Ancient Garden | Ninomaru Teien (Greg Zaal) | -32..40, the whole surroundings | 16k |
+| Enchanted Wilderness | Misty Pines (Greg Zaal) | -32..40, the whole surroundings | 16k |
+
+## Photoscanned models
+
+Source: Poly Haven models (CC0), decimated for real time.
+
+```sh
+npm run assets:scans                 # every entry in assets/external/scans.json
+node scripts/fetch-polyhaven.ts <id> # download one model with its source record
+```
+
+The pipeline is `scripts/process-external.ts`, followed by `assets/blender/scripts/import_external.py` run in Blender. It does the following:
+
+- decimates to a triangle target;
+- sets the origin at the bottom centre;
+- wires the AO, and alpha cut-outs where present;
+- caps textures at 1024 px;
+- renders a contact sheet;
+- writes a GLB, then optimises it with gltf-transform (meshopt, WebP) into `content/shared/scans/`.
+
+Section 12 of [BLENDER_PIPELINE.md](BLENDER_PIPELINE.md) has the details. The first set is two Namaqualand cliffs, two boulders, a loose-rock set, two quiver trees, a dead quiver trunk, a rock face and two moon rocks. They are used as asteroids in Celestial Drift and as boulders and trees in Moving Sands.
+
+Scans are placed with the `model` component. It keeps their PBR materials and offers `exposure`/`tint` (to dim real assets at night), ground snapping, `recenter`, a slow `spin`, skeletal `animation`, and the surface-particle render modes (see [PARTICLE_SURFACE_RENDERING.md](PARTICLE_SURFACE_RENDERING.md)).
+
+## What is not available automatically
+
+Realistic rigged animals (a camel, fish, birds) and photogrammetry of landmarks (the pyramids) are not offered under a free licence with direct download. The good ones are on Sketchfab, which needs an account login, or are paid; CGTrader and RenderHub camels cost about $10–50. The Smithsonian's CC0 3D collection blocks automated access.
+
+When such a file is added to `assets/external/<name>/`, the integration path already exists: the `model` component loads it with its skeleton and animation, and the surface particles follow its real surface and bones. Script-built pyramids were tried and removed because they read as game assets.
