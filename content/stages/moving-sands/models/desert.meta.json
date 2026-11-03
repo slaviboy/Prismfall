@@ -1,0 +1,14 @@
+{
+  "generator": "assets/blender/scripts/desert_kit.py",
+  "objects": 17,
+  "triangles": 48352,
+  "placement": "origins at object bases; the game snaps each object to the dunes",
+  "materials": [
+    "sandstone",
+    "sandstoneRed",
+    "paleStone",
+    "darkStone",
+    "glyphGlow"
+  ],
+  "license": "Original work for Prismfall"
+}

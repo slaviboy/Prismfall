@@ -8,8 +8,11 @@ export interface ClearRecipe {
   shape: ParticleShape;
   perCell: number;
   speed: [number, number];
-  /** radial: away from row centre · up · down · sweep: along the row · implode: pull in then burst · rise: gentle float */
-  motion: 'radial' | 'up' | 'down' | 'sweep' | 'implode' | 'rise';
+  /**
+   * radial: away from row centre · up · down · sweep: along the row · implode: pull in then burst ·
+   * rise: gentle float · spiral: orbit the cleared rows' centre while rising · wind: blown out into the world
+   */
+  motion: 'radial' | 'up' | 'down' | 'sweep' | 'implode' | 'rise' | 'spiral' | 'wind';
   spread: number;
   gravity: number;
   drag: number;
@@ -20,6 +23,8 @@ export interface ClearRecipe {
   swirl: number;
   /** Extra light streak along each cleared row. */
   streak: boolean;
+  /** Energy wave that sweeps across the whole board on multi-line clears. */
+  wave?: boolean;
   /** Secondary particles (embers, sparks, seeds). */
   secondary?: Partial<ClearRecipe> & { share: number };
 }
@@ -52,6 +57,21 @@ export const CLEAR_RECIPES: Record<string, Partial<ClearRecipe>> = {
   frostShatter: { shape: 'shard', speed: [5, 13], motion: 'radial', gravity: -7, drag: 1.4, color: 'white', brightness: 2.4, secondary: { share: 0.5, shape: 'star', motion: 'rise', speed: [0.5, 2], gravity: 0.5, life: [1.2, 2], size: [0.1, 0.22], color: 'highlight' } },
   bloomSeeds: { shape: 'petal', motion: 'up', speed: [2, 6], gravity: -1.2, drag: 1.6, swirl: 2.6, life: [1.4, 2.6], size: [0.2, 0.42], color: 'mix', secondary: { share: 0.4, shape: 'soft', motion: 'rise', speed: [0.5, 1.5], gravity: 0.8, life: [2, 3], size: [0.08, 0.16], color: 'highlight' } },
   fadeToLight: { shape: 'soft', motion: 'rise', speed: [0.8, 2.4], gravity: 1.2, drag: 0.8, swirl: 0.6, life: [1.6, 2.8], size: [0.25, 0.6], color: 'white', brightness: 1.5, streak: true },
+  sandSpiral: {
+    shape: 'soft',
+    perCell: 14,
+    motion: 'spiral',
+    speed: [2, 6],
+    gravity: -1.2,
+    drag: 1.1,
+    swirl: 2.8,
+    life: [1, 2.1],
+    size: [0.07, 0.17],
+    color: 'mix',
+    brightness: 1.7,
+    wave: true,
+    secondary: { share: 0.3, shape: 'soft', motion: 'wind', speed: [3, 7], gravity: 0.4, drag: 0.5, swirl: 1.2, life: [2, 3.6], size: [0.5, 1.1], color: 'accent', brightness: 0.3 },
+  },
 };
 
 const tmp = new Color();
@@ -112,6 +132,25 @@ export function runRecipe(ctx: EffectContext, clear: ClearInfo, recipe: ClearRec
           vy = (rand() - 0.3) * recipe.spread * speed;
           delay = Math.abs(cell.x - 4.5) * 0.012;
           break;
+        case 'spiral': {
+          // Tangential to the cleared rows' centre (counter-clockwise), drifting outward and up.
+          const cy = clear.rows.reduce((sum, r) => sum + r, 0) / Math.max(1, clear.rows.length);
+          const c = ctx.cellToWorld(4.5, cy);
+          const dx = p.x - c.x;
+          const dy = p.y - c.y + (rand() - 0.5);
+          const len = Math.hypot(dx, dy) || 1;
+          vx = (-dy / len) * speed + (dx / len) * speed * 0.35;
+          vy = (dx / len) * speed + speed * 0.3;
+          vz = (rand() - 0.5) * speed * 0.5;
+          delay = rand() * 0.06;
+          break;
+        }
+        case 'wind':
+          vx = speed * (0.7 + rand() * 0.6);
+          vy = speed * (0.1 + rand() * 0.25);
+          vz = -speed * (0.3 + rand() * 0.5);
+          delay = 0.1 + rand() * 0.25;
+          break;
         case 'implode':
           vx = (p.x - centerX) * -0.4 + (rand() - 0.5) * speed;
           vy = (rand() - 0.5) * speed * 1.4;
@@ -160,9 +199,23 @@ export function runRecipe(ctx: EffectContext, clear: ClearInfo, recipe: ClearRec
       }
     }
   }
+  if (recipe.wave && shareOfCells === 1 && clear.lines >= 2) {
+    // A column of light crosses the board, taller and brighter for bigger clears.
+    const c = pickColor('highlight', [1, 1, 1], ctx, 1);
+    const n = ctx.bursts.budget((20 + clear.lines * 10) * ctx.intensityScale);
+    for (let i = 0; i < n; i++) {
+      const y = (i / Math.max(1, n - 1)) * 20;
+      const p0 = ctx.cellToWorld(-1, y);
+      const k = 1 - Math.abs(y - 10) / 12;
+      ctx.bursts.emit(
+        { x: p0.x, y: p0.y, z: 0.8, vx: 14, vy: 0, vz: 0, r: c[0] * 1.6 * k, g: c[1] * 1.6 * k, b: c[2] * 1.6 * k, size: 0.7 + clear.lines * 0.12, life: 0.85, delay: 0.05 + Math.abs(y - 10) * 0.004, drag: 0.15, shape: 'soft' },
+        clear.time,
+      );
+    }
+  }
   if (recipe.secondary && shareOfCells === 1) {
     const { share, ...rest } = recipe.secondary;
-    runRecipe(ctx, clear, { ...recipe, ...rest, secondary: undefined, streak: false }, share);
+    runRecipe(ctx, clear, { ...recipe, ...rest, secondary: undefined, streak: false, wave: false }, share);
   }
 }
 

@@ -26,6 +26,9 @@ const schema = z.object({
   top: zColor.default('#05071a'),
   horizon: zColor.default('#1b1440'),
   bottom: zColor.default('#020208'),
+  /** Optional middle colour stop (dusk and dawn skies), reached at `midHeight` above the horizon. */
+  mid: zColor.optional(),
+  midHeight: z.number().min(0.02).max(0.8).default(0.22),
   horizonGlow: z.number().default(0.6),
   horizonWidth: z.number().default(0.18),
   stars: z.number().min(0).max(1).default(0.5),
@@ -66,7 +69,10 @@ export const skyComponent: ComponentFactory<SkyParams> = {
     const y = dir.y;
     const up = smoothstep(0, 0.9, y);
     const down = smoothstep(0, -0.6, y);
-    let color = mix(mix(u.horizon, u.top, up), u.bottom, down);
+    const upper = p.mid
+      ? mix(mix(u.horizon, colorUniform(p.mid), smoothstep(0, p.midHeight, y)), u.top, smoothstep(p.midHeight, 0.9, y))
+      : mix(u.horizon, u.top, up);
+    let color = mix(upper, u.bottom, down);
     const band = exp(abs(y).div(p.horizonWidth).negate()).mul(u.glow);
     color = color.add(u.horizon.mul(band));
 

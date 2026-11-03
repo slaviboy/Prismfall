@@ -1,0 +1,606 @@
+{
+  "schemaVersion": 1,
+  "id": "moving-sands",
+  "name": "Moving Sands",
+  "description": "An endless sea of dunes at dusk. Caravans of glowing sand cross beneath ancient stone, and the wind rises with the music.",
+  "order": 20,
+  "tags": [
+    "desert",
+    "warm",
+    "dusk",
+    "creatures"
+  ],
+  "intensity": 0.55,
+  "recommendedQuality": "high",
+  "palette": {
+    "accent": "#ffb257",
+    "secondary": "#ff7a45",
+    "highlight": "#ffe6b8",
+    "fog": "#c08060",
+    "plate": "#140a06"
+  },
+  "fog": {
+    "color": "#c08060",
+    "density": 0.0022
+  },
+  "backdrop": {
+    "top": "#1d1840",
+    "bottom": "#2a140c",
+    "glow": "#ff8a3d"
+  },
+  "lighting": {
+    "key": {
+      "color": "#ffd2a0",
+      "intensity": 2.3,
+      "azimuth": -35,
+      "elevation": 30
+    },
+    "rim": {
+      "color": "#ff8a45",
+      "intensity": 2.4
+    },
+    "ambient": {
+      "sky": "#5a3a6a",
+      "ground": "#3a1e12",
+      "intensity": 0.9
+    },
+    "accents": [
+      {
+        "color": "#ffb257",
+        "intensity": 22,
+        "x": -9,
+        "y": -6,
+        "z": 6
+      },
+      {
+        "color": "#ff6a3a",
+        "intensity": 18,
+        "x": 9,
+        "y": 8,
+        "z": 6
+      }
+    ],
+    "beatResponse": 0.3
+  },
+  "grade": {
+    "saturation": 1.0,
+    "contrast": 1.05,
+    "tint": [
+      1.03,
+      1.0,
+      0.96
+    ],
+    "vignette": 0.4,
+    "bloomThreshold": 0.2,
+    "bloomRadius": 0.5,
+    "toneMapping": "neutral",
+    "envIntensity": 0.3,
+    "exposure": 0.95
+  },
+  "camera": {
+    "pitch": 6,
+    "yaw": 0,
+    "sway": 0.7,
+    "targetY": 0
+  },
+  "blocks": {
+    "geometry": "chamfer",
+    "material": "desertSandstone",
+    "palette": {
+      "I": "#4fc7c0",
+      "O": "#f2c14e",
+      "T": "#a86bd1",
+      "S": "#7fbf4d",
+      "Z": "#d9533b",
+      "J": "#4a7fd6",
+      "L": "#ee8a35"
+    }
+  },
+  "environment": {
+    "layers": [
+      {
+        "id": "sky",
+        "type": "sky",
+        "params": {
+          "top": "#1e2c5c",
+          "horizon": "#f0a86c",
+          "bottom": "#4a2a1a",
+          "horizonGlow": 0.4,
+          "horizonWidth": 0.1,
+          "stars": 0.28,
+          "starSize": 0.8,
+          "nebula": 0.0,
+          "disc": {
+            "direction": [
+              -0.33,
+              0.17,
+              -1
+            ],
+            "color": "#ffd8a6",
+            "size": 2.6,
+            "halo": 6,
+            "intensity": 0.9
+          },
+          "mid": "#b88e8e",
+          "midHeight": 0.15
+        },
+        "bind": []
+      },
+      {
+        "id": "dunes",
+        "type": "terrain",
+        "params": {
+          "height": {
+            "base": -15,
+            "seed": 7,
+            "layers": [
+              {
+                "type": "dunes",
+                "amplitude": 10,
+                "wavelength": 58,
+                "direction": 24,
+                "crest": 0.8,
+                "warp": 0.5,
+                "variation": 0.55
+              },
+              {
+                "type": "dunes",
+                "amplitude": 3.2,
+                "wavelength": 17,
+                "direction": 62,
+                "crest": 0.72,
+                "warp": 0.35,
+                "variation": 0.7,
+                "offset": [
+                  40,
+                  13
+                ]
+              },
+              {
+                "type": "terraces",
+                "amplitude": 30,
+                "scale": 170,
+                "steps": 3,
+                "threshold": 0.58,
+                "band": {
+                  "near": 260,
+                  "ramp": 80,
+                  "far": 2000
+                }
+              },
+              {
+                "type": "ridged",
+                "amplitude": 90,
+                "scale": 300,
+                "octaves": 3,
+                "sharpness": 1.6,
+                "band": {
+                  "near": 470,
+                  "ramp": 120,
+                  "far": 5000
+                }
+              }
+            ],
+            "clearing": {
+              "center": [
+                0,
+                6
+              ],
+              "radius": 26,
+              "falloff": 34,
+              "depth": -1.5
+            }
+          },
+          "mesh": {
+            "near": 12,
+            "far": 1100,
+            "rows": 230,
+            "cols": 240,
+            "spread": 1.45
+          },
+          "colors": {
+            "low": "#6a3a24",
+            "high": "#e3a669",
+            "rock": "#94573a",
+            "sparkle": "#ffe3ad"
+          },
+          "ripples": {
+            "strength": 0.4,
+            "wavelength": 1.3,
+            "direction": 24,
+            "speed": 0.05,
+            "fadeDistance": 150
+          },
+          "sparkle": 0.55,
+          "roughness": 0.93,
+          "rockSlope": 0.45,
+          "glow": {
+            "color": "#ff9a4a",
+            "strength": 0.1
+          },
+          "heatHaze": 0.5
+        },
+        "bind": [
+          {
+            "target": "glow",
+            "feature": "bass",
+            "amount": 0.12,
+            "attackMs": 80,
+            "releaseMs": 700
+          }
+        ]
+      },
+      {
+        "id": "ruins",
+        "type": "gltfScene",
+        "params": {
+          "src": "models/desert.glb",
+          "snapToGround": true,
+          "sink": 0.8,
+          "vertexAO": true,
+          "materials": [
+            {
+              "match": "^sandstoneRed",
+              "preset": "stone",
+              "color": "#8e4f33",
+              "roughness": 0.92
+            },
+            {
+              "match": "^sandstone",
+              "preset": "stone",
+              "color": "#c48455",
+              "roughness": 0.9
+            },
+            {
+              "match": "^paleStone",
+              "preset": "stone",
+              "color": "#d9b78c",
+              "roughness": 0.85
+            },
+            {
+              "match": "^darkStone",
+              "preset": "stone",
+              "color": "#6b4530",
+              "roughness": 0.88
+            },
+            {
+              "match": "^glyphGlow",
+              "preset": "emissive",
+              "color": "#3a2010",
+              "emissive": "#ffb35c",
+              "emissiveIntensity": 0.9,
+              "musicGlow": 0.8
+            }
+          ]
+        },
+        "bind": [
+          {
+            "target": "emissive",
+            "feature": "sectionIntensity",
+            "amount": 0.5,
+            "category": "lighting",
+            "attackMs": 300,
+            "releaseMs": 1500
+          }
+        ]
+      },
+      {
+        "id": "camels",
+        "type": "creatureHerd",
+        "params": {
+          "model": "/content/shared/creatures/camel.glb",
+          "rig": "/content/shared/creatures/camel.rig.json",
+          "representation": "particles",
+          "groups": [
+            {
+              "path": {
+                "kind": "line",
+                "from": [
+                  -190,
+                  0,
+                  -112
+                ],
+                "to": [
+                  200,
+                  0,
+                  -134
+                ]
+              },
+              "members": 5,
+              "formation": "caravan",
+              "spacing": 3.5,
+              "speed": 1.05,
+              "scale": 3.2,
+              "start": 0.22,
+              "rest": 14,
+              "fade": 14
+            },
+            {
+              "path": {
+                "kind": "line",
+                "from": [
+                  70,
+                  0,
+                  -42
+                ],
+                "to": [
+                  -90,
+                  0,
+                  -60
+                ]
+              },
+              "members": 1,
+              "speed": 0.8,
+              "scale": 2.4,
+              "start": 0.08,
+              "rest": 25,
+              "stopEvery": 24,
+              "stopFor": 6,
+              "fade": 9
+            },
+            {
+              "path": {
+                "kind": "line",
+                "from": [
+                  -240,
+                  0,
+                  -196
+                ],
+                "to": [
+                  250,
+                  0,
+                  -176
+                ]
+              },
+              "members": 3,
+              "formation": "herd",
+              "spacing": 4,
+              "speed": 1.25,
+              "scale": 4.2,
+              "start": 0.62,
+              "rest": 10,
+              "fade": 18
+            },
+            {
+              "path": {
+                "kind": "line",
+                "from": [
+                  330,
+                  0,
+                  -320
+                ],
+                "to": [
+                  -340,
+                  0,
+                  -300
+                ]
+              },
+              "members": 8,
+              "formation": "caravan",
+              "spacing": 3.6,
+              "speed": 0.75,
+              "scale": 5.5,
+              "start": 0.3,
+              "rest": 8,
+              "fade": 24
+            }
+          ],
+          "particles": {
+            "perCreature": 2600,
+            "size": 0.075,
+            "color": "#ffcb78",
+            "colorB": "#ff9442",
+            "brightness": 1.15,
+            "jitter": 0.03,
+            "bloom": 0.45,
+            "scatter": 8,
+            "wind": [
+              1.2,
+              0.3,
+              0.25
+            ],
+            "lodDistance": 80
+          },
+          "dust": {
+            "enabled": true,
+            "color": "#e0b07a",
+            "amount": 1,
+            "size": 0.6
+          },
+          "seed": 3
+        },
+        "bind": [
+          {
+            "target": "pace",
+            "feature": "sectionIntensity",
+            "amount": 0.35,
+            "attackMs": 1500,
+            "releaseMs": 3000
+          },
+          {
+            "target": "brightness",
+            "feature": "bass",
+            "amount": 0.25,
+            "category": "particles",
+            "attackMs": 60,
+            "releaseMs": 500
+          }
+        ]
+      },
+      {
+        "id": "blowing-sand",
+        "type": "particles",
+        "params": {
+          "count": 6000,
+          "center": [
+            10,
+            -11,
+            -70
+          ],
+          "size": [
+            260,
+            7,
+            150
+          ],
+          "color": "#ffd7a0",
+          "colorB": "#e09a60",
+          "minSize": 0.05,
+          "maxSize": 0.16,
+          "velocity": [
+            7,
+            0.25,
+            1.4
+          ],
+          "turbulence": 0.5,
+          "twinkle": 0.3,
+          "brightness": 0.55,
+          "shape": "streak",
+          "density": 0.75,
+          "seed": 21,
+          "bloom": 0.2
+        },
+        "bind": [
+          {
+            "target": "density",
+            "feature": "sectionIntensity",
+            "amount": 0.4,
+            "category": "particles",
+            "attackMs": 500,
+            "releaseMs": 2000
+          },
+          {
+            "target": "speed",
+            "feature": "overallEnergy",
+            "amount": 0.6,
+            "category": "particles",
+            "attackMs": 200,
+            "releaseMs": 1500
+          }
+        ]
+      },
+      {
+        "id": "golden-motes",
+        "type": "particles",
+        "params": {
+          "count": 2600,
+          "center": [
+            0,
+            -2,
+            -45
+          ],
+          "size": [
+            170,
+            34,
+            110
+          ],
+          "color": "#ffd28a",
+          "colorB": "#ffb05a",
+          "minSize": 0.04,
+          "maxSize": 0.12,
+          "velocity": [
+            0.7,
+            0.18,
+            0.15
+          ],
+          "turbulence": 0.6,
+          "twinkle": 0.8,
+          "brightness": 1.0,
+          "shape": "soft",
+          "seed": 8,
+          "bloom": 0.5
+        },
+        "bind": []
+      },
+      {
+        "id": "sandstorm",
+        "type": "clouds",
+        "params": {
+          "count": 34,
+          "center": [
+            40,
+            6,
+            -260
+          ],
+          "spread": [
+            700,
+            40,
+            160
+          ],
+          "size": [
+            70,
+            150
+          ],
+          "color": "#c47a48",
+          "colorB": "#8a4a30",
+          "opacity": 0.22,
+          "drift": [
+            5,
+            0,
+            0.6
+          ],
+          "additive": false,
+          "seed": 5
+        },
+        "bind": [
+          {
+            "target": "opacity",
+            "feature": "sectionIntensity",
+            "amount": 0.5,
+            "attackMs": 1200,
+            "releaseMs": 3000
+          }
+        ]
+      }
+    ]
+  },
+  "reactivity": {
+    "profiles": [
+      {
+        "name": "treble-sparkle",
+        "layers": [
+          "golden-motes"
+        ]
+      },
+      {
+        "name": "flux-turbulence",
+        "layers": [
+          "blowing-sand",
+          "golden-motes"
+        ]
+      }
+    ],
+    "bindings": []
+  },
+  "effects": {
+    "lineClear": {
+      "effect": "sandSpiral",
+      "params": {}
+    },
+    "landing": {
+      "shape": "soft"
+    }
+  },
+  "music": {
+    "bpm": 94,
+    "beatsPerBar": 4,
+    "tracks": [
+      {
+        "id": "moving-sands-caravan-of-embers",
+        "title": "Caravan of Embers",
+        "kind": "composition",
+        "src": "music/main.ts"
+      }
+    ],
+    "defaultTrack": "moving-sands-caravan-of-embers"
+  },
+  "ambience": {
+    "preset": "wind"
+  },
+  "sfx": {
+    "preset": "stone"
+  },
+  "unlock": {
+    "type": "always"
+  },
+  "thumbnail": "previews/thumb.jpg"
+}

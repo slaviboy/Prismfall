@@ -63,6 +63,16 @@ export interface StageAssets {
   loadGLTF(relativePath: string): Promise<GLTF>;
   /** Releases a GLTF obtained with loadGLTF (ref-counted; disposed when unused). */
   release(relativePath: string): void;
+  /** Parsed data file (e.g. a creature rig, *.rig.json) or null if missing. */
+  json(relativePath: string): unknown;
+}
+
+/** Terrain height shared between components (dunes provide it; creatures and props stand on it). */
+export interface GroundField {
+  /** World-space ground height at (x, z). Falls back to the stage's base ground level. */
+  height(x: number, z: number): number;
+  /** Installs (or clears) the height function; the terrain component calls this. */
+  provide(fn: ((x: number, z: number) => number) | null): void;
 }
 
 /** Context passed to component factories and custom effects. */
@@ -74,6 +84,7 @@ export interface EnvironmentContext {
   readonly assets: StageAssets;
   readonly bursts: BurstSystem;
   readonly palette: StagePalette;
+  readonly ground: GroundField;
 }
 
 export interface StagePalette {

@@ -16,6 +16,7 @@ const ASSET_URLS = import.meta.glob('/content/**/*.{glb,gltf,png,jpg,jpeg,webp,a
 const JSON_FILES = import.meta.glob('/content/**/music/*.json', { eager: true, import: 'default' }) as Record<string, unknown>;
 const PROFILES = import.meta.glob('/content/shared/reactivity/*.json', { eager: true, import: 'default' }) as Record<string, unknown>;
 const CAMPAIGNS = import.meta.glob('/content/campaigns/*.json', { eager: true, import: 'default' }) as Record<string, unknown>;
+const DATA_FILES = import.meta.glob('/content/**/*.rig.json', { eager: true, import: 'default' }) as Record<string, unknown>;
 
 export const ENGINE_VERSION_STRING = '1.0.0';
 
@@ -37,7 +38,13 @@ function folderOf(path: string): string {
 }
 
 function existsInContent(path: string): boolean {
-  return path in ASSET_URLS || path in STAGE_MODULES || path in MUSIC_MODULES || path in JSON_FILES;
+  return path in ASSET_URLS || path in STAGE_MODULES || path in MUSIC_MODULES || path in JSON_FILES || path in DATA_FILES;
+}
+
+/** Parsed data file (creature rigs) by stage-relative or absolute content path. */
+export function readDataFile(dir: string, relative: string): unknown {
+  const clean = relative.replace(/^\.\//, '');
+  return DATA_FILES[clean.startsWith('/') ? clean : `${dir}/${clean}`] ?? null;
 }
 
 /** Resolves a stage-relative path to a served URL (hashed in production builds). */

@@ -18,6 +18,24 @@
           "to": "content/stages/ember-foundry/models"
         }
       ]
+    },
+    {
+      "script": "creatures.py",
+      "outputs": [
+        {
+          "from": "assets/blender/exports/creatures",
+          "to": "content/shared/creatures"
+        }
+      ]
+    },
+    {
+      "script": "desert_kit.py",
+      "outputs": [
+        {
+          "from": "assets/blender/exports/desert",
+          "to": "content/stages/moving-sands/models"
+        }
+      ]
     }
   ]
 }

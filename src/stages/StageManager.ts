@@ -3,7 +3,7 @@ import type { StageEnvironment } from '../rendering/environments/StageEnvironmen
 import type { RenderSystem } from '../rendering/renderer/RenderSystem';
 import { perfStore } from '../rendering/renderer/perfStore';
 import type { StageAssets } from '../sdk/types';
-import { availableStages, getStage, loadStageModule, resolveAsset, type StageInfo } from './registry';
+import { availableStages, getStage, loadStageModule, readDataFile, resolveAsset, type StageInfo } from './registry';
 
 export interface ShowOptions {
   /** Crossfade length in seconds (0 = cut). */
@@ -41,6 +41,7 @@ export class StageManager {
         const url = resolve(rel);
         if (url) assetCache.release(url);
       },
+      json: (rel) => readDataFile(info.dir, rel),
     };
   }
 

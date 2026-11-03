@@ -1,5 +1,5 @@
 import type { Object3D} from 'three/webgpu';
-import { AnimationMixer, Color, Group, Mesh, MeshPhysicalNodeMaterial, MeshStandardNodeMaterial, type Material } from 'three/webgpu';
+import { AnimationMixer, Box3, Color, Group, Mesh, MeshPhysicalNodeMaterial, MeshStandardNodeMaterial, Vector3, type Material } from 'three/webgpu';
 import { attribute, float, mix, mrt, sin, vec4 } from 'three/tsl';
 import { z } from 'zod';
 import type { ComponentFactory } from '../../../sdk/types';
@@ -30,6 +30,10 @@ const schema = z.object({
   pistons: z.array(z.object({ match: z.string(), axis: z.enum(['x', 'y', 'z']), distance: z.number(), beats: z.number().default(4), stagger: z.number().default(0.5) })).default([]),
   animationSpeed: z.number().default(1),
   castShadow: z.boolean().default(false),
+  /** Drop each top-level object onto the stage ground (terrain layers must come first). */
+  snapToGround: z.boolean().default(false),
+  /** How far snapped objects sink below the lowest ground point under them. */
+  sink: z.number().default(0.5),
 });
 
 type Params = z.infer<typeof schema>;
@@ -110,6 +114,22 @@ export const gltfSceneComponent: ComponentFactory<Params> = {
         }
       }
     });
+    if (p.snapToGround) {
+      // Sample the ground under each object's footprint and rest it on the lowest point, so nothing
+      // floats over a dune trough (partly buried reads naturally in sand and snow).
+      root.updateMatrixWorld(true);
+      const box = new Box3();
+      for (const child of [...scene.children]) {
+        box.setFromObject(child);
+        const cx = (box.min.x + box.max.x) / 2;
+        const cz = (box.min.z + box.max.z) / 2;
+        let ground = Infinity;
+        for (const [x, z] of [[cx, cz], [box.min.x, box.min.z], [box.max.x, box.min.z], [box.min.x, box.max.z], [box.max.x, box.max.z]] as const) ground = Math.min(ground, ctx.ground.height(x, z));
+        const worldBase = new Vector3().setFromMatrixPosition(child.matrixWorld).y;
+        child.position.y += (ground - p.sink - worldBase) / root.scale.y;
+      }
+      root.updateMatrixWorld(true);
+    }
     const mixer = gltf.animations.length > 0 ? new AnimationMixer(scene) : null;
     if (mixer) for (const clip of gltf.animations) mixer.clipAction(clip).play();
     return {
