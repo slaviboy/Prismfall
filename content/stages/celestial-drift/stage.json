@@ -1,13 +1,14 @@
 {
   "schemaVersion": 1,
   "id": "celestial-drift",
-  "name": "Celestial Drift",
-  "description": "Adrift among nebulae, a ringed giant turning below. Pulsars keep time with the music.",
-  "order": 90,
+  "name": "Deep Cosmos",
+  "description": "Adrift in deep space among nebulae and a ringed giant. A spiral galaxy turns, asteroids tumble past, and a leviathan made of stars swims through the dark.",
+  "order": 30,
   "tags": [
     "space",
     "nebula",
-    "vast"
+    "vast",
+    "creatures"
   ],
   "intensity": 0.6,
   "recommendedQuality": "high",
@@ -83,7 +84,16 @@
   },
   "blocks": {
     "geometry": "faceted",
-    "material": "stellarGlass"
+    "material": "cosmicCrystal",
+    "palette": {
+      "I": "#40d8ff",
+      "O": "#ffd85a",
+      "T": "#b46cff",
+      "S": "#5cf09a",
+      "Z": "#ff5a7a",
+      "J": "#5a7aff",
+      "L": "#ff9a4a"
+    }
   },
   "environment": {
     "layers": [
@@ -111,6 +121,46 @@
             "amount": 0.35,
             "attackMs": 200,
             "releaseMs": 1400
+          }
+        ]
+      },
+      {
+        "id": "galaxy",
+        "type": "galaxy",
+        "params": {
+          "count": 32000,
+          "position": [
+            360,
+            250,
+            -760
+          ],
+          "tilt": [
+            1.15,
+            -0.3
+          ],
+          "radius": 240,
+          "arms": 3,
+          "twist": 3.4,
+          "thickness": 0.05,
+          "core": "#fff0d8",
+          "arm": "#8ab0ff",
+          "dust": "#ff86c4",
+          "brightness": 0.75,
+          "spin": 0.006,
+          "size": [
+            2.6,
+            6.5
+          ],
+          "seed": 6
+        },
+        "bind": [
+          {
+            "target": "brightness",
+            "feature": "sectionIntensity",
+            "amount": 0.4,
+            "category": "lighting",
+            "attackMs": 800,
+            "releaseMs": 2500
           }
         ]
       },
@@ -144,6 +194,287 @@
           }
         },
         "bind": []
+      },
+      {
+        "id": "asteroids",
+        "type": "scatter",
+        "params": {
+          "src": "/content/shared/flora/flora.glb",
+          "count": 90,
+          "seed": 12,
+          "items": [
+            {
+              "mesh": "asteroid",
+              "weight": 3,
+              "scale": [
+                0.6,
+                2.4
+              ],
+              "tintJitter": 0.15
+            },
+            {
+              "mesh": "rock_a",
+              "weight": 1,
+              "scale": [
+                0.5,
+                1.6
+              ],
+              "tintJitter": 0.15
+            }
+          ],
+          "area": {
+            "kind": "volume",
+            "center": [
+              0,
+              10,
+              -160
+            ],
+            "size": [
+              420,
+              120,
+              140
+            ]
+          },
+          "spin": 0.08,
+          "sway": {
+            "amount": 0.0
+          },
+          "materials": [
+            {
+              "match": "^rock",
+              "preset": "stone",
+              "color": "#9a8e86",
+              "roughness": 0.75
+            }
+          ]
+        },
+        "bind": []
+      },
+      {
+        "id": "star-whale",
+        "type": "creatureHerd",
+        "params": {
+          "model": "/content/shared/creatures/whale.glb",
+          "rig": "/content/shared/creatures/whale.rig.json",
+          "representation": "particles",
+          "groups": [
+            {
+              "path": {
+                "kind": "loop",
+                "center": [
+                  20,
+                  22,
+                  -170
+                ],
+                "radius": [
+                  150,
+                  60
+                ],
+                "clockwise": false
+              },
+              "members": 1,
+              "speed": 1.2,
+              "scale": 2.4,
+              "start": 0.3,
+              "fade": 30,
+              "followGround": false
+            },
+            {
+              "path": {
+                "kind": "loop",
+                "center": [
+                  -60,
+                  48,
+                  -260
+                ],
+                "radius": [
+                  120,
+                  50
+                ],
+                "clockwise": true
+              },
+              "members": 2,
+              "formation": "herd",
+              "spacing": 12,
+              "speed": 1.0,
+              "scale": 1.6,
+              "start": 0.7,
+              "fade": 30,
+              "followGround": false
+            }
+          ],
+          "particles": {
+            "perCreature": 5000,
+            "size": 0.13,
+            "color": "#bcd2ff",
+            "colorB": "#d68cff",
+            "brightness": 1.1,
+            "jitter": 0.12,
+            "bloom": 0.6,
+            "scatter": 10,
+            "wind": [
+              0.3,
+              0.4,
+              0.2
+            ],
+            "lodDistance": 140
+          },
+          "dust": {
+            "enabled": false
+          },
+          "seed": 11
+        },
+        "bind": [
+          {
+            "target": "brightness",
+            "feature": "bass",
+            "amount": 0.35,
+            "category": "particles",
+            "attackMs": 60,
+            "releaseMs": 700
+          },
+          {
+            "target": "pace",
+            "feature": "sectionIntensity",
+            "amount": 0.3,
+            "attackMs": 1500,
+            "releaseMs": 3000
+          }
+        ]
+      },
+      {
+        "id": "meteors",
+        "type": "particles",
+        "params": {
+          "count": 40,
+          "center": [
+            0,
+            70,
+            -300
+          ],
+          "size": [
+            700,
+            120,
+            200
+          ],
+          "color": "#ffffff",
+          "colorB": "#a8c8ff",
+          "minSize": 0.5,
+          "maxSize": 1.2,
+          "velocity": [
+            -60,
+            -36,
+            0
+          ],
+          "turbulence": 0,
+          "twinkle": 0,
+          "brightness": 2.2,
+          "shape": "streak",
+          "angle": -59,
+          "density": 0.6,
+          "seed": 41,
+          "bloom": 0.8
+        },
+        "bind": [
+          {
+            "target": "density",
+            "feature": "transientIntensity",
+            "amount": 0.4,
+            "category": "particles",
+            "attackMs": 30,
+            "releaseMs": 1200
+          }
+        ]
+      },
+      {
+        "id": "energy-streams",
+        "type": "particles",
+        "params": {
+          "count": 2200,
+          "center": [
+            0,
+            -12,
+            -110
+          ],
+          "size": [
+            360,
+            8,
+            70
+          ],
+          "color": "#5ae0ff",
+          "colorB": "#b46cff",
+          "minSize": 0.06,
+          "maxSize": 0.16,
+          "velocity": [
+            12,
+            0.4,
+            0
+          ],
+          "turbulence": 0.8,
+          "twinkle": 0.4,
+          "brightness": 1.2,
+          "shape": "streak",
+          "angle": 90,
+          "seed": 43,
+          "bloom": 0.6
+        },
+        "bind": [
+          {
+            "target": "speed",
+            "feature": "overallEnergy",
+            "amount": 0.7,
+            "category": "particles",
+            "attackMs": 200,
+            "releaseMs": 1200
+          },
+          {
+            "target": "brightness",
+            "feature": "beatPulse",
+            "amount": 0.5,
+            "category": "particles",
+            "attackMs": 20,
+            "releaseMs": 400
+          }
+        ]
+      },
+      {
+        "id": "cosmic-dust",
+        "type": "clouds",
+        "params": {
+          "count": 30,
+          "center": [
+            -40,
+            -40,
+            -200
+          ],
+          "spread": [
+            600,
+            80,
+            220
+          ],
+          "size": [
+            80,
+            180
+          ],
+          "color": "#3a1a6a",
+          "colorB": "#123a6a",
+          "opacity": 0.22,
+          "drift": [
+            0.8,
+            0.3,
+            0
+          ],
+          "seed": 19
+        },
+        "bind": [
+          {
+            "target": "opacity",
+            "feature": "sectionIntensity",
+            "amount": 0.4,
+            "attackMs": 1200,
+            "releaseMs": 3000
+          }
+        ]
       },
       {
         "id": "near-stars",
@@ -304,7 +635,9 @@
   "effects": {
     "lineClear": {
       "effect": "supernova",
-      "params": {}
+      "params": {
+        "wave": true
+      }
     },
     "landing": {
       "shape": "star"
@@ -315,9 +648,15 @@
     }
   },
   "music": {
-    "bpm": 92,
+    "bpm": 84,
     "beatsPerBar": 4,
     "tracks": [
+      {
+        "id": "celestial-drift-leviathan",
+        "title": "Leviathan of Stars",
+        "kind": "composition",
+        "src": "music/leviathan.ts"
+      },
       {
         "id": "celestial-drift-orbit-of-glass",
         "title": "Orbit of Glass",
@@ -325,14 +664,16 @@
         "src": "music/main.ts"
       }
     ],
-    "defaultTrack": "celestial-drift-orbit-of-glass"
+    "defaultTrack": "celestial-drift-leviathan"
   },
   "ambience": {
-    "preset": "space"
+    "preset": "cosmos",
+    "level": 1
   },
   "sfx": {
-    "preset": "crystal",
-    "material": "cosmic"
+    "preset": "void",
+    "material": "cosmic",
+    "overrides": {}
   },
   "unlock": {
     "type": "voyageLeg",

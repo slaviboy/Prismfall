@@ -1,0 +1,102 @@
+import { arp, bassline, beat, composition, hold, melody, once } from '@prismfall/sdk';
+
+/**
+ * "Leviathan of Stars": immense, slow cinematic electronica in C minor. Deep drones and sub bass,
+ * evolving pads, a patient sequenced arpeggio and an ethereal lead over restrained percussion.
+ */
+export default composition({
+  id: 'celestial-drift-leviathan',
+  title: 'Leviathan of Stars',
+  bpm: 84,
+  beatsPerBar: 4,
+  key: 'C',
+  scale: 'minor',
+  swing: 0.02,
+  space: { decay: 8, wet: 0.5, damping: 0.35 },
+  stinger: 'glass',
+  instruments: {
+    drone: { kind: 'pad', wave: 'sawtooth', voices: 4, detune: 14, cutoff: 420, attack: 4, release: 6, gain: 0.4, reverb: 0.8 },
+    pad: { kind: 'pad', wave: 'sawtooth', voices: 4, detune: 18, cutoff: 1600, attack: 2.6, release: 5, gain: 0.3, reverb: 0.85, layer: 0.3 },
+    choir: { kind: 'choir', attack: 3, release: 5, gain: 0.24, reverb: 0.9, layer: 0.6 },
+    seq: { kind: 'pluck', wave: 'sawtooth', cutoff: 900, envAmount: 3.2, decay: 0.28, gain: 0.24, delay: 0.55, reverb: 0.4, pan: 0.2, layer: 0.25 },
+    lead: { kind: 'lead', wave: 'triangle', cutoff: 2400, envAmount: 0.6, attack: 0.3, decay: 2.2, gain: 0.22, reverb: 0.8, delay: 0.45, glide: 0.12, layer: 0.5 },
+    bell: { kind: 'bell', ratio: 4.5, index: 1, decay: 4, gain: 0.16, reverb: 0.9, delay: 0.5 },
+    sub: { kind: 'sub', gain: 0.55, duck: 0.35, layer: 0.2 },
+    kick: { kind: 'kick', tone: 80, decay: 0.55, gain: 0.55, layer: 0.45 },
+    snare: { kind: 'snare', tone: 160, decay: 0.3, gain: 0.26, reverb: 0.8, layer: 0.55 },
+    hat: { kind: 'hat', tone: 9000, decay: 0.03, gain: 0.12, pan: -0.3, layer: 0.5 },
+    riser: { kind: 'riser', gain: 0.4, reverb: 0.7 },
+    impact: { kind: 'impact', gain: 0.5, reverb: 0.9 },
+  },
+  sections: [
+    {
+      name: 'event horizon',
+      kind: 'intro',
+      bars: 8,
+      intensity: 0.15,
+      chords: ['i', 'VI', 'iv', 'i'],
+      parts: {
+        drone: hold({ octave: 2, voicing: 'open', vel: 0.55 }),
+        bell: melody('5:16 | 3:16 | 4:12 2:4 | 1:16', { octave: 5, vel: 0.35 }),
+      },
+    },
+    {
+      name: 'drift',
+      kind: 'verse',
+      bars: 16,
+      intensity: 0.4,
+      chords: ['i', 'VI', 'III', 'VII', 'i', 'VI', 'iv', 'v'],
+      parts: {
+        drone: hold({ octave: 2, voicing: 'open', vel: 0.5 }),
+        pad: hold({ octave: 3, voicing: 'spread', vel: 0.42, every: 2 }),
+        seq: arp({ rate: 2, octave: 3, span: 2, order: 'up', vel: 0.4, accent: 0.4 }),
+        sub: bassline('x...............', { octave: 1 }),
+        hat: beat('..x...x...x...x.', { vel: 0.5, prob: 0.7 }),
+      },
+    },
+    {
+      name: 'gravity well',
+      kind: 'build',
+      bars: 4,
+      intensity: 0.65,
+      chords: ['iv', 'v', 'VI', 'VII'],
+      parts: {
+        pad: hold({ octave: 3, voicing: 'spread', vel: 0.5 }),
+        seq: arp({ rate: 1, octave: 3, span: 2, order: 'up', vel: 0.42 }),
+        kick: beat('x.......x.......', { fillLastBar: 'x...x...x.x.xxxx' }),
+        riser: once({ dur: 64, vel: 0.7 }),
+      },
+    },
+    {
+      name: 'leviathan',
+      kind: 'drop',
+      bars: 16,
+      intensity: 0.85,
+      chords: ['i', 'VI', 'III', 'VII', 'i', 'VI', 'iv', 'v'],
+      parts: {
+        impact: once({ dur: 4, vel: 0.75 }),
+        drone: hold({ octave: 2, voicing: 'open', vel: 0.5 }),
+        pad: hold({ octave: 3, voicing: 'spread', vel: 0.46 }),
+        choir: hold({ octave: 4, voicing: 'open', vel: 0.34, every: 2 }),
+        lead: melody('5:8 6:4 5:4 | 3:12 2:4 | 1:6 2:2 3:8 | 5:16 | 6:8 5:4 3:4 | 4:12 3:4 | 2:6 1:2 7,:8 | 1:16', { octave: 4, vel: 0.52 }),
+        seq: arp({ rate: 2, octave: 3, span: 2, order: 'pendulum', vel: 0.36 }),
+        sub: bassline('x.......x.....x.', { octave: 1, fifths: 0.15 }),
+        kick: beat('x.......x.......'),
+        snare: beat('........x.......'),
+        hat: beat('x.x.x.x.x.x.x.x.', { vel: 0.45, prob: 0.85 }),
+      },
+    },
+    {
+      name: 'starfall',
+      kind: 'break',
+      bars: 8,
+      intensity: 0.25,
+      chords: ['VI', 'iv', 'i', 'VII'],
+      parts: {
+        drone: hold({ octave: 2, voicing: 'open', vel: 0.5 }),
+        bell: melody("1':8 7:8 | 6:8 5:8 | 4:8 3:4 2:4 | 1:16", { octave: 5, vel: 0.4 }),
+      },
+    },
+  ],
+  loopFrom: 1,
+});
