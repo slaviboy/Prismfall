@@ -1,0 +1,61 @@
+{
+  "generator": "scripts/process-external.ts (fetch-polyhaven.ts, import_external.py, glTF-Transform optimize)",
+  "id": "dead_quiver_trunk",
+  "name": "Dead Quiver Trunk",
+  "file": "content/shared/scans/dead_quiver_trunk.glb",
+  "source": "Poly Haven",
+  "page": "https://polyhaven.com/a/dead_quiver_trunk",
+  "downloadUrl": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/dead_quiver_trunk/dead_quiver_trunk_1k.gltf",
+  "sourceFilesHash": "5e1897094f635d4f7a0903be28a8ebe54dd1bdcf",
+  "downloaded": "2026-11-03",
+  "authors": {
+    "James Ray Cock": "Photography",
+    "Dario Barresi": "Photography",
+    "Rico Cilliers": "modeling"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "attribution": "None required (CC0); credit given anyway",
+  "originalFormat": "glTF 2.0 (.gltf + .bin + JPEG textures), 1k",
+  "originalTriangles": 17978,
+  "modifications": [
+    "meshes joined into one object; collapse-decimated from 17,978 to 4,000 triangles (target 4,000), UVs kept",
+    "custom normals cleared, smooth shading",
+    "origin moved to the bottom centre of the bounding box, transforms applied",
+    "textures capped at 1024 px (1k source) and re-encoded as WebP",
+    "ambient occlusion wired from the red channel of the packed ARM texture",
+    "meshopt compression and quantisation (glTF-Transform optimize)"
+  ],
+  "animation": "none",
+  "triangles": 4000,
+  "dimensionsMetres": {
+    "width": 0.3071,
+    "depth": 0.2667,
+    "height": 1.9928
+  },
+  "objects": [
+    {
+      "name": "dead_quiver_trunk",
+      "sourceTriangles": 17978,
+      "triangles": 4000,
+      "dimensions": {
+        "width": 0.3071,
+        "depth": 0.2667,
+        "height": 1.9928
+      }
+    }
+  ],
+  "materials": [
+    {
+      "name": "dead_quiver_trunk",
+      "alphaMode": "OPAQUE",
+      "textures": [
+        "baseColor",
+        "metallicRoughness",
+        "normal",
+        "occlusion"
+      ]
+    }
+  ],
+  "bytes": 320624
+}

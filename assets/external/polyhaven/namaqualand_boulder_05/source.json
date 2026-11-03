@@ -1,0 +1,61 @@
+{
+  "id": "namaqualand_boulder_05",
+  "name": "Namaqualand Boulder 05",
+  "source": "Poly Haven",
+  "page": "https://polyhaven.com/a/namaqualand_boulder_05",
+  "api": {
+    "info": "https://api.polyhaven.com/info/namaqualand_boulder_05",
+    "files": "https://api.polyhaven.com/files/namaqualand_boulder_05"
+  },
+  "authors": {
+    "Jenelle van Heerden": "modeling",
+    "Dario Barresi": "Photography"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "polycount": 117622,
+  "dimensionsMm": [
+    1364.0307188034058,
+    748.7391829490662,
+    538.3217036724091
+  ],
+  "resolution": "1k",
+  "format": "glTF 2.0 (.gltf + .bin + JPEG textures)",
+  "gltf": "namaqualand_boulder_05_1k.gltf",
+  "gltfUrl": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/namaqualand_boulder_05/namaqualand_boulder_05_1k.gltf",
+  "filesHash": "db0437675da1e8fcd3fdd7b0d933cac1c9462456",
+  "files": [
+    {
+      "path": "namaqualand_boulder_05_1k.gltf",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/namaqualand_boulder_05/namaqualand_boulder_05_1k.gltf",
+      "size": 2872,
+      "md5": "93b2f39714f9b4d19197335eb22d9283"
+    },
+    {
+      "path": "textures/namaqualand_boulder_05_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/namaqualand_boulder_05/namaqualand_boulder_05_arm_1k.jpg",
+      "size": 713844,
+      "md5": "aa40bbddb8be6e13b0e6cba68c99b3e0"
+    },
+    {
+      "path": "textures/namaqualand_boulder_05_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/namaqualand_boulder_05/namaqualand_boulder_05_nor_gl_1k.jpg",
+      "size": 1099873,
+      "md5": "0337869f7d21c538f307792a927c8db2"
+    },
+    {
+      "path": "namaqualand_boulder_05.bin",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/namaqualand_boulder_05/namaqualand_boulder_05.bin",
+      "size": 2015628,
+      "md5": "64bca194605dee7e361d43beabb3d4b7"
+    },
+    {
+      "path": "textures/namaqualand_boulder_05_diff_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/namaqualand_boulder_05/namaqualand_boulder_05_diff_1k.jpg",
+      "size": 867775,
+      "md5": "de60e1accb73ea17db74fc2fedda85b5"
+    }
+  ],
+  "alphaMaps": {},
+  "downloaded": "2026-11-03"
+}

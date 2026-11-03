@@ -1,0 +1,80 @@
+{
+  "id": "quiver_tree_01",
+  "name": "Quiver Tree 01",
+  "source": "Poly Haven",
+  "page": "https://polyhaven.com/a/quiver_tree_01",
+  "api": {
+    "info": "https://api.polyhaven.com/info/quiver_tree_01",
+    "files": "https://api.polyhaven.com/files/quiver_tree_01"
+  },
+  "authors": {
+    "James Ray Cock": "Photography",
+    "Dario Barresi": "Photography",
+    "Rico Cilliers": "modeling"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "polycount": 269522,
+  "dimensionsMm": [
+    1181.235671043396,
+    968.5054421424866,
+    2715.5103981494904
+  ],
+  "resolution": "1k",
+  "format": "glTF 2.0 (.gltf + .bin + JPEG textures)",
+  "gltf": "quiver_tree_01_1k.gltf",
+  "gltfUrl": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/quiver_tree_01/quiver_tree_01_1k.gltf",
+  "filesHash": "8ceb1c433e141026dbb41873681ad75ae4b686f6",
+  "files": [
+    {
+      "path": "quiver_tree_01_1k.gltf",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/quiver_tree_01/quiver_tree_01_1k.gltf",
+      "size": 5080,
+      "md5": "0899227b1eeee2f8cbaf2e4693fc7ded"
+    },
+    {
+      "path": "textures/quiver_tree_01_trunk_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/quiver_tree_01/quiver_tree_01_trunk_arm_1k.jpg",
+      "size": 492139,
+      "md5": "b7b46a8529e62e706b9a0e3417af1309"
+    },
+    {
+      "path": "textures/quiver_tree_01_trunk_diff_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/quiver_tree_01/quiver_tree_01_trunk_diff_1k.jpg",
+      "size": 741115,
+      "md5": "d112fb7af9fb2921d7e5ade4e84f5586"
+    },
+    {
+      "path": "textures/quiver_tree_01_leaf_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/quiver_tree_01/quiver_tree_01_leaf_nor_gl_1k.jpg",
+      "size": 898833,
+      "md5": "f954c80f430b126b7126fad32f381bb9"
+    },
+    {
+      "path": "textures/quiver_tree_01_trunk_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/quiver_tree_01/quiver_tree_01_trunk_nor_gl_1k.jpg",
+      "size": 940495,
+      "md5": "b592c0f7abdefab0c9e2f354b9274683"
+    },
+    {
+      "path": "textures/quiver_tree_01_leaf_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/quiver_tree_01/quiver_tree_01_leaf_arm_1k.jpg",
+      "size": 737159,
+      "md5": "23212753d3e3464d7d74702ed6a1d178"
+    },
+    {
+      "path": "quiver_tree_01.bin",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/quiver_tree_01/quiver_tree_01.bin",
+      "size": 4413204,
+      "md5": "4d02b6a0e57a20fbaee31c6b7820b0f2"
+    },
+    {
+      "path": "textures/quiver_tree_01_leaf_diff_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/quiver_tree_01/quiver_tree_01_leaf_diff_1k.jpg",
+      "size": 652456,
+      "md5": "ac7692d306b779c530177c14ddbba622"
+    }
+  ],
+  "alphaMaps": {},
+  "downloaded": "2026-11-03"
+}

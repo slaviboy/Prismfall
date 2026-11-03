@@ -1,0 +1,81 @@
+{
+  "name": "namaqualand_boulder_05",
+  "input": "assets/external/polyhaven/namaqualand_boulder_05/namaqualand_boulder_05_1k.gltf",
+  "output": "assets/blender/exports/scans/namaqualand_boulder_05.glb",
+  "droppedLods": [],
+  "sourceTriangles": 89618,
+  "targetTriangles": 5000,
+  "triangles": 5000,
+  "vertices": 2502,
+  "dimensions": {
+    "width": 1.3618,
+    "depth": 0.7456,
+    "height": 0.5365
+  },
+  "objects": [
+    {
+      "name": "namaqualand_boulder_05",
+      "sourceTriangles": 89618,
+      "triangles": 5000,
+      "dimensions": {
+        "width": 1.3618,
+        "depth": 0.7456,
+        "height": 0.5365
+      }
+    }
+  ],
+  "origin": "bottom centre of the bounding box",
+  "maxTexture": 1024,
+  "alphaModes": {
+    "namaqualand_boulder_05": "OPAQUE"
+  },
+  "alphaChanges": {},
+  "occlusionAddedFromArm": [
+    "namaqualand_boulder_05"
+  ],
+  "materials": [
+    {
+      "name": "namaqualand_boulder_05",
+      "textures": {
+        "Base Color": [
+          "namaqualand_boulder_05_diff"
+        ],
+        "Roughness": [
+          "namaqualand_boulder_05_rough"
+        ],
+        "Metallic": [
+          "namaqualand_boulder_05_rough"
+        ],
+        "Normal": [
+          "namaqualand_boulder_05_nor_gl"
+        ],
+        "Occlusion": [
+          "namaqualand_boulder_05_rough"
+        ]
+      }
+    }
+  ],
+  "textures": [
+    {
+      "name": "namaqualand_boulder_05_diff",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "namaqualand_boulder_05_nor_gl",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "namaqualand_boulder_05_rough",
+      "size": [
+        1024,
+        1024
+      ]
+    }
+  ]
+}

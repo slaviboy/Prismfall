@@ -1,0 +1,62 @@
+{
+  "id": "moon_rock_03",
+  "name": "Moon Rock 03",
+  "source": "Poly Haven",
+  "page": "https://polyhaven.com/a/moon_rock_03",
+  "api": {
+    "info": "https://api.polyhaven.com/info/moon_rock_03",
+    "files": "https://api.polyhaven.com/files/moon_rock_03"
+  },
+  "authors": {
+    "Greg Zaal": "Photography",
+    "Rico Cilliers": "Photography",
+    "Jenelle van Heerden": "Processing"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "polycount": 10492,
+  "dimensionsMm": [
+    112.28010803461075,
+    86.23043820261955,
+    58.39346128050238
+  ],
+  "resolution": "1k",
+  "format": "glTF 2.0 (.gltf + .bin + JPEG textures)",
+  "gltf": "moon_rock_03_1k.gltf",
+  "gltfUrl": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/moon_rock_03/moon_rock_03_1k.gltf",
+  "filesHash": "91e6ba46a8ce2620ab298cb0cabe82d60027ccb1",
+  "files": [
+    {
+      "path": "moon_rock_03_1k.gltf",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/moon_rock_03/moon_rock_03_1k.gltf",
+      "size": 2789,
+      "md5": "147dd843eeb4dd7fb661e26befca7f62"
+    },
+    {
+      "path": "textures/moon_rock_03_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/moon_rock_03/moon_rock_03_nor_gl_1k.jpg",
+      "size": 686128,
+      "md5": "4d5d635dfcaab32267d845e3c6140fa2"
+    },
+    {
+      "path": "textures/moon_rock_03_diff_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/moon_rock_03/moon_rock_03_diff_1k.jpg",
+      "size": 299288,
+      "md5": "c8c1e94c7004977fe2b8cde7ebf472d5"
+    },
+    {
+      "path": "textures/moon_rock_03_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/moon_rock_03/moon_rock_03_arm_1k.jpg",
+      "size": 349061,
+      "md5": "96d560db01b47fa5b3572b5f5a2515fd"
+    },
+    {
+      "path": "moon_rock_03.bin",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/moon_rock_03/moon_rock_03.bin",
+      "size": 131060,
+      "md5": "6d0b79c8e72e2340c0e8be38e78267e2"
+    }
+  ],
+  "alphaMaps": {},
+  "downloaded": "2026-11-03"
+}

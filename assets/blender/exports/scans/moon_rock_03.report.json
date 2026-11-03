@@ -1,0 +1,81 @@
+{
+  "name": "moon_rock_03",
+  "input": "assets/external/polyhaven/moon_rock_03/moon_rock_03_1k.gltf",
+  "output": "assets/blender/exports/scans/moon_rock_03.glb",
+  "droppedLods": [],
+  "sourceTriangles": 5598,
+  "targetTriangles": 3000,
+  "triangles": 3000,
+  "vertices": 1502,
+  "dimensions": {
+    "width": 0.112,
+    "depth": 0.0862,
+    "height": 0.0582
+  },
+  "objects": [
+    {
+      "name": "moon_rock_03",
+      "sourceTriangles": 5598,
+      "triangles": 3000,
+      "dimensions": {
+        "width": 0.112,
+        "depth": 0.0862,
+        "height": 0.0582
+      }
+    }
+  ],
+  "origin": "bottom centre of the bounding box",
+  "maxTexture": 1024,
+  "alphaModes": {
+    "moon_rock_03": "OPAQUE"
+  },
+  "alphaChanges": {},
+  "occlusionAddedFromArm": [
+    "moon_rock_03"
+  ],
+  "materials": [
+    {
+      "name": "moon_rock_03",
+      "textures": {
+        "Base Color": [
+          "moon_rock_03_diff"
+        ],
+        "Roughness": [
+          "moon_rock_03_rough"
+        ],
+        "Metallic": [
+          "moon_rock_03_rough"
+        ],
+        "Normal": [
+          "moon_rock_03_nor_gl"
+        ],
+        "Occlusion": [
+          "moon_rock_03_rough"
+        ]
+      }
+    }
+  ],
+  "textures": [
+    {
+      "name": "moon_rock_03_diff",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "moon_rock_03_nor_gl",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "moon_rock_03_rough",
+      "size": [
+        1024,
+        1024
+      ]
+    }
+  ]
+}

@@ -22,6 +22,7 @@
     "preview": "vite preview",
     "perf": "node scripts/perf.ts",
     "assets:blender": "node scripts/build-blender-assets.ts",
+    "assets:scans": "node scripts/process-external.ts",
     "content:thumbnails": "node scripts/thumbnails.ts",
     "content:shots": "node scripts/stage-shots.ts",
     "content:record": "node scripts/record-gameplay.ts",

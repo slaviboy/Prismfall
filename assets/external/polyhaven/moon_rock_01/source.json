@@ -1,0 +1,63 @@
+{
+  "id": "moon_rock_01",
+  "name": "Moon Rock 01",
+  "source": "Poly Haven",
+  "page": "https://polyhaven.com/a/moon_rock_01",
+  "api": {
+    "info": "https://api.polyhaven.com/info/moon_rock_01",
+    "files": "https://api.polyhaven.com/files/moon_rock_01"
+  },
+  "authors": {
+    "Greg Zaal": "Photography",
+    "Rico Cilliers": "Photography",
+    "Jenelle van Heerden": "Processing",
+    "Dario Barresi": "Processing"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "polycount": 18668,
+  "dimensionsMm": [
+    212.27321028709412,
+    111.70050874352455,
+    75.25125704705715
+  ],
+  "resolution": "1k",
+  "format": "glTF 2.0 (.gltf + .bin + JPEG textures)",
+  "gltf": "moon_rock_01_1k.gltf",
+  "gltfUrl": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/moon_rock_01/moon_rock_01_1k.gltf",
+  "filesHash": "8aac337ef1b7cd03ee522258ce658dbc1bffe554",
+  "files": [
+    {
+      "path": "moon_rock_01_1k.gltf",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/moon_rock_01/moon_rock_01_1k.gltf",
+      "size": 7088,
+      "md5": "86c6b4f7792f9600ae33cb3b4d42bb20"
+    },
+    {
+      "path": "textures/moon_rock_01_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/moon_rock_01/moon_rock_01_nor_gl_1k.jpg",
+      "size": 645714,
+      "md5": "5d222c1e40b180e8f376d72aec26703a"
+    },
+    {
+      "path": "textures/moon_rock_01_diff_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/moon_rock_01/moon_rock_01_diff_1k.jpg",
+      "size": 276354,
+      "md5": "4cd48b9b451eef5f35c7be91deca6ead"
+    },
+    {
+      "path": "textures/moon_rock_01_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/moon_rock_01/moon_rock_01_arm_1k.jpg",
+      "size": 330395,
+      "md5": "f04ce87fb751ced28add48ad9eb50d0f"
+    },
+    {
+      "path": "moon_rock_01.bin",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/moon_rock_01/moon_rock_01.bin",
+      "size": 448168,
+      "md5": "5dc30dc1be5e8dd5fff64dd824cad828"
+    }
+  ],
+  "alphaMaps": {},
+  "downloaded": "2026-11-03"
+}

@@ -1,0 +1,72 @@
+{
+  "generator": "scripts/process-external.ts (fetch-polyhaven.ts, import_external.py, glTF-Transform optimize)",
+  "id": "quiver_tree_01",
+  "name": "Quiver Tree 01",
+  "file": "content/shared/scans/quiver_tree_01.glb",
+  "source": "Poly Haven",
+  "page": "https://polyhaven.com/a/quiver_tree_01",
+  "downloadUrl": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/quiver_tree_01/quiver_tree_01_1k.gltf",
+  "sourceFilesHash": "8ceb1c433e141026dbb41873681ad75ae4b686f6",
+  "downloaded": "2026-11-03",
+  "authors": {
+    "James Ray Cock": "Photography",
+    "Dario Barresi": "Photography",
+    "Rico Cilliers": "modeling"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "attribution": "None required (CC0); credit given anyway",
+  "originalFormat": "glTF 2.0 (.gltf + .bin + JPEG textures), 1k",
+  "originalTriangles": 150124,
+  "modifications": [
+    "meshes joined into one object; collapse-decimated from 150,124 to 12,000 triangles (target 12,000), UVs kept",
+    "custom normals cleared, smooth shading",
+    "origin moved to the bottom centre of the bounding box, transforms applied",
+    "textures capped at 1024 px (1k source) and re-encoded as WebP",
+    "ambient occlusion wired from the red channel of the packed ARM texture",
+    "alpha mode changed: quiver_tree_01_leaf BLEND -> OPAQUE (its base colour texture has no alpha channel and no alpha map was given)",
+    "meshopt compression and quantisation (glTF-Transform optimize)"
+  ],
+  "animation": "none",
+  "triangles": 12000,
+  "dimensionsMetres": {
+    "width": 1.1822,
+    "depth": 0.9702,
+    "height": 2.7143
+  },
+  "objects": [
+    {
+      "name": "quiver_tree_01",
+      "sourceTriangles": 150124,
+      "triangles": 12000,
+      "dimensions": {
+        "width": 1.1822,
+        "depth": 0.9702,
+        "height": 2.7143
+      }
+    }
+  ],
+  "materials": [
+    {
+      "name": "quiver_tree_01_trunk",
+      "alphaMode": "OPAQUE",
+      "textures": [
+        "baseColor",
+        "metallicRoughness",
+        "normal",
+        "occlusion"
+      ]
+    },
+    {
+      "name": "quiver_tree_01_leaf",
+      "alphaMode": "OPAQUE",
+      "textures": [
+        "baseColor",
+        "metallicRoughness",
+        "normal",
+        "occlusion"
+      ]
+    }
+  ],
+  "bytes": 852676
+}

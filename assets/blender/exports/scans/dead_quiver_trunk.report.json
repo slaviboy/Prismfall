@@ -1,0 +1,81 @@
+{
+  "name": "dead_quiver_trunk",
+  "input": "assets/external/polyhaven/dead_quiver_trunk/dead_quiver_trunk_1k.gltf",
+  "output": "assets/blender/exports/scans/dead_quiver_trunk.glb",
+  "droppedLods": [],
+  "sourceTriangles": 17978,
+  "targetTriangles": 4000,
+  "triangles": 4000,
+  "vertices": 2176,
+  "dimensions": {
+    "width": 0.3071,
+    "depth": 0.2667,
+    "height": 1.9928
+  },
+  "objects": [
+    {
+      "name": "dead_quiver_trunk",
+      "sourceTriangles": 17978,
+      "triangles": 4000,
+      "dimensions": {
+        "width": 0.3071,
+        "depth": 0.2667,
+        "height": 1.9928
+      }
+    }
+  ],
+  "origin": "bottom centre of the bounding box",
+  "maxTexture": 1024,
+  "alphaModes": {
+    "dead_quiver_trunk": "OPAQUE"
+  },
+  "alphaChanges": {},
+  "occlusionAddedFromArm": [
+    "dead_quiver_trunk"
+  ],
+  "materials": [
+    {
+      "name": "dead_quiver_trunk",
+      "textures": {
+        "Base Color": [
+          "dead_quiver_trunk_diff"
+        ],
+        "Roughness": [
+          "dead_quiver_trunk_rough"
+        ],
+        "Metallic": [
+          "dead_quiver_trunk_rough"
+        ],
+        "Normal": [
+          "dead_quiver_trunk_nor_gl"
+        ],
+        "Occlusion": [
+          "dead_quiver_trunk_rough"
+        ]
+      }
+    }
+  ],
+  "textures": [
+    {
+      "name": "dead_quiver_trunk_diff",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "dead_quiver_trunk_nor_gl",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "dead_quiver_trunk_rough",
+      "size": [
+        1024,
+        1024
+      ]
+    }
+  ]
+}

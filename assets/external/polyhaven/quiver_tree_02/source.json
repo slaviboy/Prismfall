@@ -1,0 +1,61 @@
+{
+  "id": "quiver_tree_02",
+  "name": "Quiver Tree 02",
+  "source": "Poly Haven",
+  "page": "https://polyhaven.com/a/quiver_tree_02",
+  "api": {
+    "info": "https://api.polyhaven.com/info/quiver_tree_02",
+    "files": "https://api.polyhaven.com/files/quiver_tree_02"
+  },
+  "authors": {
+    "Dario Barresi": "photography",
+    "Rico Cilliers": "modeling"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "polycount": 153887,
+  "dimensionsMm": [
+    872.0614314079285,
+    880.8198273181915,
+    1468.88018399477
+  ],
+  "resolution": "1k",
+  "format": "glTF 2.0 (.gltf + .bin + JPEG textures)",
+  "gltf": "quiver_tree_02_1k.gltf",
+  "gltfUrl": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/quiver_tree_02/quiver_tree_02_1k.gltf",
+  "filesHash": "0587f20a8675f71008bafe89b42256c1ffda2cf7",
+  "files": [
+    {
+      "path": "quiver_tree_02_1k.gltf",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/quiver_tree_02/quiver_tree_02_1k.gltf",
+      "size": 2809,
+      "md5": "1002e67d6921204df06b9a97f4f30cff"
+    },
+    {
+      "path": "quiver_tree_02.bin",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/quiver_tree_02/quiver_tree_02.bin",
+      "size": 2060604,
+      "md5": "63635d61c58151eb4fb0b2caaf6b373c"
+    },
+    {
+      "path": "textures/quiver_tree_02_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/quiver_tree_02/quiver_tree_02_arm_1k.jpg",
+      "size": 759729,
+      "md5": "36d19d0ef3d38ed92c557d9eb2203302"
+    },
+    {
+      "path": "textures/quiver_tree_02_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/quiver_tree_02/quiver_tree_02_nor_gl_1k.jpg",
+      "size": 988408,
+      "md5": "5ddb37eb256e324a0929e465d429f5a7"
+    },
+    {
+      "path": "textures/quiver_tree_02_diff_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/quiver_tree_02/quiver_tree_02_diff_1k.jpg",
+      "size": 736321,
+      "md5": "7f14325c48fc30112476b851d7e05232"
+    }
+  ],
+  "alphaMaps": {},
+  "downloaded": "2026-11-03"
+}

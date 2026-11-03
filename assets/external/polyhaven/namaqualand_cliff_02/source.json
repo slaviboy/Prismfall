@@ -1,0 +1,61 @@
+{
+  "id": "namaqualand_cliff_02",
+  "name": "Namaqualand Cliff 02",
+  "source": "Poly Haven",
+  "page": "https://polyhaven.com/a/namaqualand_cliff_02",
+  "api": {
+    "info": "https://api.polyhaven.com/info/namaqualand_cliff_02",
+    "files": "https://api.polyhaven.com/files/namaqualand_cliff_02"
+  },
+  "authors": {
+    "Dario Barresi": "Photography",
+    "Rico Cilliers": "modeling"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "polycount": 363896,
+  "dimensionsMm": [
+    20229.52938079834,
+    6593.420505523682,
+    7187.2673481702805
+  ],
+  "resolution": "1k",
+  "format": "glTF 2.0 (.gltf + .bin + JPEG textures)",
+  "gltf": "namaqualand_cliff_02_1k.gltf",
+  "gltfUrl": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/namaqualand_cliff_02/namaqualand_cliff_02_1k.gltf",
+  "filesHash": "050412eba9cffa4604402f2cf5eed251b0ed3d26",
+  "files": [
+    {
+      "path": "namaqualand_cliff_02_1k.gltf",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/namaqualand_cliff_02/namaqualand_cliff_02_1k.gltf",
+      "size": 2857,
+      "md5": "3a4f323a98171ce6670f906db122c538"
+    },
+    {
+      "path": "textures/namaqualand_cliff_02_diff_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/namaqualand_cliff_02/namaqualand_cliff_02_diff_1k.jpg",
+      "size": 793208,
+      "md5": "1bdbd81c80c6693ea589a3005164fd2b"
+    },
+    {
+      "path": "textures/namaqualand_cliff_02_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/namaqualand_cliff_02/namaqualand_cliff_02_nor_gl_1k.jpg",
+      "size": 1071907,
+      "md5": "db4096e8ccf0ace17c228de9f5e69180"
+    },
+    {
+      "path": "namaqualand_cliff_02.bin",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/namaqualand_cliff_02/namaqualand_cliff_02.bin",
+      "size": 5697152,
+      "md5": "2920477744cce1a827a61c0d36a1061a"
+    },
+    {
+      "path": "textures/namaqualand_cliff_02_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/namaqualand_cliff_02/namaqualand_cliff_02_arm_1k.jpg",
+      "size": 813799,
+      "md5": "67a9604a9d78af65ce82316d19275f0e"
+    }
+  ],
+  "alphaMaps": {},
+  "downloaded": "2026-11-03"
+}

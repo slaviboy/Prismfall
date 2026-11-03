@@ -19,3 +19,7 @@ Thumbs.db
 
 # Reference screenshots and screen recordings of other games: local study material only, never committed
 reference-capture/
+
+# External photoscans (npm run assets:scans): the original downloads in assets/external/ are kept as
+# sources of record; the intermediate Blender exports are rebuilt from them.
+assets/blender/exports/scans/*.glb

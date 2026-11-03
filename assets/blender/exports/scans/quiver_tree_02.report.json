@@ -1,0 +1,81 @@
+{
+  "name": "quiver_tree_02",
+  "input": "assets/external/polyhaven/quiver_tree_02/quiver_tree_02_1k.gltf",
+  "output": "assets/blender/exports/scans/quiver_tree_02.glb",
+  "droppedLods": [],
+  "sourceTriangles": 82074,
+  "targetTriangles": 9000,
+  "triangles": 9000,
+  "vertices": 4517,
+  "dimensions": {
+    "width": 0.8671,
+    "depth": 0.878,
+    "height": 1.4675
+  },
+  "objects": [
+    {
+      "name": "quiver_tree_02",
+      "sourceTriangles": 82074,
+      "triangles": 9000,
+      "dimensions": {
+        "width": 0.8671,
+        "depth": 0.878,
+        "height": 1.4675
+      }
+    }
+  ],
+  "origin": "bottom centre of the bounding box",
+  "maxTexture": 1024,
+  "alphaModes": {
+    "quiver_tree_02": "OPAQUE"
+  },
+  "alphaChanges": {},
+  "occlusionAddedFromArm": [
+    "quiver_tree_02"
+  ],
+  "materials": [
+    {
+      "name": "quiver_tree_02",
+      "textures": {
+        "Base Color": [
+          "quiver_tree_02_diff"
+        ],
+        "Roughness": [
+          "quiver_tree_02_rough"
+        ],
+        "Metallic": [
+          "quiver_tree_02_rough"
+        ],
+        "Normal": [
+          "quiver_tree_02_nor_gl"
+        ],
+        "Occlusion": [
+          "quiver_tree_02_rough"
+        ]
+      }
+    }
+  ],
+  "textures": [
+    {
+      "name": "quiver_tree_02_diff",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "quiver_tree_02_nor_gl",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "quiver_tree_02_rough",
+      "size": [
+        1024,
+        1024
+      ]
+    }
+  ]
+}

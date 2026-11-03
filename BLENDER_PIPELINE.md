@@ -264,3 +264,45 @@ After regenerating:
 5. Reference the GLB from a `gltfScene` or `scatter` layer, with one `materials` rule per Blender material name.
 
 `make_material`'s docstring calls Blender colours "previews only". That holds only when every rule sets `color`. A rule without `color`, and any material left unmatched in a `gltfScene`, uses the Blender colour in game. Also, `bake_dirty_vertex_ao` accepts a `strength` argument but does not use it, so the value `desert_kit.py` passes has no effect.
+
+## 12. External photoscans (Poly Haven)
+
+`npm run assets:scans` (`scripts/process-external.ts`) turns CC0 photoscans from [Poly Haven](https://polyhaven.com) into real-time GLBs in `content/shared/scans/`. The asset list and the per-asset settings are in `assets/external/scans.json`.
+
+```
+npm run assets:scans                     # every asset in assets/external/scans.json
+npm run assets:scans -- quiver rock_face # only ids containing one of the filters
+npm run assets:scans -- --skip-fetch     # reuse existing downloads, no API calls
+npm run assets:scans -- --force-fetch    # download every file again
+npm run assets:scans -- --no-preview     # skip the contact sheets
+```
+
+| Manifest field | Meaning (default in `defaults`) |
+|---|---|
+| `id` | Poly Haven asset id (`https://polyhaven.com/a/<id>`). |
+| `targetTris` | Decimation target for the whole asset. |
+| `res` | glTF resolution to download (`1k`). |
+| `maxTexture` | Texture size cap in pixels, in Blender and in glTF-Transform (`1024`). |
+| `alpha` | `auto`, `opaque`, `mask` or `keep` (`auto`, see below). |
+| `split` | Keep separate source meshes as separate objects instead of joining them (`false`; `true` for `namaqualand_rocks_01`, four loose rocks). |
+
+For each asset the driver runs:
+
+1. **Fetch.** `node scripts/fetch-polyhaven.ts <id> [--res 1k] [--force] [--out <dir>]` reads `https://api.polyhaven.com/info/<id>` and `/files/<id>`, downloads the glTF and every file in its `include` map into `assets/external/polyhaven/<id>/` (relative paths kept, MD5 checked, cached files skipped) and writes `source.json`: id, page URL, API URLs, authors with roles, licence `CC0 1.0`, polycount, dimensions in mm, resolution, file list with MD5s, Poly Haven's `files_hash` and the download date. When a material uses alpha it also downloads every map named `*alpha` (Poly Haven's glTFs mark cut-out foliage MASK or BLEND but reference JPEG base colour, which has no alpha channel) and lists it as `alphaMaps`.
+2. **Blender.** `blender -b --factory-startup --python-exit-code 1 --python assets/blender/scripts/import_external.py -- --input <gltf> --output assets/blender/exports/scans/<id>.glb --name <id> --target-tris <n> [--max-texture 1024] [--alpha auto] [--alpha-map KEY=<image>] [--ao auto|none] [--split] [--no-preview]`:
+   - imports with vertices merged, so UV seams stay connected and decimation cannot open cracks along them;
+   - keeps only `_LOD0` when the file has LODs (`moon_rock_01` has four), unparents, deletes non-mesh objects, joins the meshes into one object named `<id>` and applies transforms;
+   - collapse-decimates (triangulated, UVs interpolated) to `targetTris`, with up to four passes; split objects share the budget by their source triangle counts;
+   - clears custom split normals and shades smooth;
+   - moves the origin to the bottom centre of the bounding box and the object to the world origin, like the flora kit (split objects: each to its own bottom centre, all at the origin);
+   - alpha (`auto`): a material whose alpha comes from a texture without a real alpha channel gets the matching `--alpha-map` as an alpha-tested MASK (cutoff 0.5; the exporter packs it into the base colour alpha), or becomes OPAQUE when there is none (Quiver Tree 01's solid leaves are BLEND with a JPEG). A real alpha channel is exported as MASK;
+   - wires ambient occlusion from the red channel of Poly Haven's packed ARM texture (= glTF ORM), which its glTFs leave out; occlusion and metal-roughness then share one texture;
+   - shrinks larger textures to `--max-texture`, exports a GLB with embedded textures (no tangents, no vertex colours), writes `<id>.report.json` and renders `<id>.preview.png`: a Cycles contact sheet of four 512 px views (front, side, back three-quarter, high three-quarter; one three-quarter view per object for split sets) on neutral grey, lit by a sun and a uniform sky, with the camera fitted to the model. It prints `IMPORT_OK` with the triangle count and the bounding box in metres.
+3. **Optimise.** glTF-Transform `optimize` with the section 8 flags plus `--texture-size <maxTexture>`: meshopt, quantisation, WebP textures (the alpha channel survives), no simplify, instance, flatten, join or palette.
+4. **Metadata.** Writes `content/shared/scans/<id>.meta.json` (source, download URL, authors, licence, modifications, triangles, dimensions, materials, size) and regenerates the generated block of `assets/ASSET_CATALOG.md`. A final GLB over 3 MB, or an alpha mode that changed during optimisation, prints a warning.
+
+The pipeline is deterministic: a second run reproduces the same GLBs byte for byte. Unlike the kits (section 10), the downloads in `assets/external/polyhaven/<id>/` (about 48 MB for the first eleven assets) and the raw GLBs in `assets/blender/exports/scans/` (about 35 MB) are git-ignored, because the pipeline can rebuild them from `scans.json` and the committed `source.json` files. Commit `source.json`, `<id>.preview.png`, `<id>.report.json`, `content/shared/scans/<id>.glb` and `<id>.meta.json`, and add new GLBs to `ASSET_LICENSES.md`. `import_external.py` sets `sys.dont_write_bytecode` so it never rewrites the committed `__pycache__`.
+
+Check every new contact sheet before committing: holes, missing or black textures, orientation. Compare with an undecimated render (`--target-tris 100000000` to a scratch output) when in doubt. The cliffs and the rock face are open shells scanned from the front, exactly as Poly Haven ships them.
+
+Using a scan in a stage: the object is named `<id>` (split sets `<id>_<suffix>`) and keeps Poly Haven's material name (listed in its `.meta.json`, for example `drone_rock_01` for `namaqualand_cliff_01`). The scanned textures only show where the material is left as exported: a `gltfScene` layer with no matching rule or a `keep` rule (without the crossfade reveal mask). Every other preset rebuilds the material from a flat colour, and `scatter` bakes geometry without UVs, so scattering scans with their textures needs runtime support first.

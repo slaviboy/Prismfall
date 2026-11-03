@@ -1,0 +1,60 @@
+{
+  "generator": "scripts/process-external.ts (fetch-polyhaven.ts, import_external.py, glTF-Transform optimize)",
+  "id": "quiver_tree_02",
+  "name": "Quiver Tree 02",
+  "file": "content/shared/scans/quiver_tree_02.glb",
+  "source": "Poly Haven",
+  "page": "https://polyhaven.com/a/quiver_tree_02",
+  "downloadUrl": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/quiver_tree_02/quiver_tree_02_1k.gltf",
+  "sourceFilesHash": "0587f20a8675f71008bafe89b42256c1ffda2cf7",
+  "downloaded": "2026-11-03",
+  "authors": {
+    "Dario Barresi": "photography",
+    "Rico Cilliers": "modeling"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "attribution": "None required (CC0); credit given anyway",
+  "originalFormat": "glTF 2.0 (.gltf + .bin + JPEG textures), 1k",
+  "originalTriangles": 82074,
+  "modifications": [
+    "meshes joined into one object; collapse-decimated from 82,074 to 9,000 triangles (target 9,000), UVs kept",
+    "custom normals cleared, smooth shading",
+    "origin moved to the bottom centre of the bounding box, transforms applied",
+    "textures capped at 1024 px (1k source) and re-encoded as WebP",
+    "ambient occlusion wired from the red channel of the packed ARM texture",
+    "meshopt compression and quantisation (glTF-Transform optimize)"
+  ],
+  "animation": "none",
+  "triangles": 9000,
+  "dimensionsMetres": {
+    "width": 0.8671,
+    "depth": 0.878,
+    "height": 1.4675
+  },
+  "objects": [
+    {
+      "name": "quiver_tree_02",
+      "sourceTriangles": 82074,
+      "triangles": 9000,
+      "dimensions": {
+        "width": 0.8671,
+        "depth": 0.878,
+        "height": 1.4675
+      }
+    }
+  ],
+  "materials": [
+    {
+      "name": "quiver_tree_02",
+      "alphaMode": "OPAQUE",
+      "textures": [
+        "baseColor",
+        "metallicRoughness",
+        "normal",
+        "occlusion"
+      ]
+    }
+  ],
+  "bytes": 525228
+}

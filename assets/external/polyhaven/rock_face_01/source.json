@@ -1,0 +1,60 @@
+{
+  "id": "rock_face_01",
+  "name": "Rock Face 01",
+  "source": "Poly Haven",
+  "page": "https://polyhaven.com/a/rock_face_01",
+  "api": {
+    "info": "https://api.polyhaven.com/info/rock_face_01",
+    "files": "https://api.polyhaven.com/files/rock_face_01"
+  },
+  "authors": {
+    "Dario Barresi": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "polycount": 20174,
+  "dimensionsMm": [
+    7108.232021331787,
+    5624.304533004761,
+    4980.4371148347855
+  ],
+  "resolution": "1k",
+  "format": "glTF 2.0 (.gltf + .bin + JPEG textures)",
+  "gltf": "rock_face_01_1k.gltf",
+  "gltfUrl": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/rock_face_01/rock_face_01_1k.gltf",
+  "filesHash": "a39e6911cc84e0ceef097a98b1146885afb4afb3",
+  "files": [
+    {
+      "path": "rock_face_01_1k.gltf",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/rock_face_01/rock_face_01_1k.gltf",
+      "size": 2793,
+      "md5": "b4855bc7e841a17a94332561a9b301c0"
+    },
+    {
+      "path": "textures/rock_face_01_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/rock_face_01/rock_face_01_arm_1k.jpg",
+      "size": 693610,
+      "md5": "5799e7f5546350576b87bf67c34fb49f"
+    },
+    {
+      "path": "textures/rock_face_01_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/rock_face_01/rock_face_01_nor_gl_1k.jpg",
+      "size": 1023400,
+      "md5": "46e01f5c3b8ac4463aeef2b4c61d1cd4"
+    },
+    {
+      "path": "textures/rock_face_01_diff_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/rock_face_01/rock_face_01_diff_1k.jpg",
+      "size": 853749,
+      "md5": "98ee9f024a6383d7e6cab44ed41e1f15"
+    },
+    {
+      "path": "rock_face_01.bin",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/rock_face_01/rock_face_01.bin",
+      "size": 476436,
+      "md5": "06caed23e725af568b64f8cbee210c1c"
+    }
+  ],
+  "alphaMaps": {},
+  "downloaded": "2026-11-03"
+}

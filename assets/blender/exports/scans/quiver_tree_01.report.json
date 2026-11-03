@@ -1,0 +1,126 @@
+{
+  "name": "quiver_tree_01",
+  "input": "assets/external/polyhaven/quiver_tree_01/quiver_tree_01_1k.gltf",
+  "output": "assets/blender/exports/scans/quiver_tree_01.glb",
+  "droppedLods": [],
+  "sourceTriangles": 150124,
+  "targetTriangles": 12000,
+  "triangles": 12000,
+  "vertices": 6367,
+  "dimensions": {
+    "width": 1.1822,
+    "depth": 0.9702,
+    "height": 2.7143
+  },
+  "objects": [
+    {
+      "name": "quiver_tree_01",
+      "sourceTriangles": 150124,
+      "triangles": 12000,
+      "dimensions": {
+        "width": 1.1822,
+        "depth": 0.9702,
+        "height": 2.7143
+      }
+    }
+  ],
+  "origin": "bottom centre of the bounding box",
+  "maxTexture": 1024,
+  "alphaModes": {
+    "quiver_tree_01_trunk": "OPAQUE",
+    "quiver_tree_01_leaf": "OPAQUE"
+  },
+  "alphaChanges": {
+    "quiver_tree_01_leaf": "BLEND -> OPAQUE (its base colour texture has no alpha channel and no alpha map was given)"
+  },
+  "occlusionAddedFromArm": [
+    "quiver_tree_01_trunk",
+    "quiver_tree_01_leaf"
+  ],
+  "materials": [
+    {
+      "name": "quiver_tree_01_trunk",
+      "textures": {
+        "Base Color": [
+          "quiver_tree_01_trunk_diff"
+        ],
+        "Roughness": [
+          "quiver_tree_01_trunk_rough"
+        ],
+        "Metallic": [
+          "quiver_tree_01_trunk_rough"
+        ],
+        "Normal": [
+          "quiver_tree_01_trunk_nor_gl"
+        ],
+        "Occlusion": [
+          "quiver_tree_01_trunk_rough"
+        ]
+      }
+    },
+    {
+      "name": "quiver_tree_01_leaf",
+      "textures": {
+        "Base Color": [
+          "quiver_tree_01_leaf_diff"
+        ],
+        "Roughness": [
+          "quiver_tree_01_leaf_rough"
+        ],
+        "Metallic": [
+          "quiver_tree_01_leaf_rough"
+        ],
+        "Normal": [
+          "quiver_tree_01_leaf_nor_gl"
+        ],
+        "Occlusion": [
+          "quiver_tree_01_leaf_rough"
+        ]
+      }
+    }
+  ],
+  "textures": [
+    {
+      "name": "quiver_tree_01_leaf_diff",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "quiver_tree_01_leaf_nor_gl",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "quiver_tree_01_leaf_rough",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "quiver_tree_01_trunk_diff",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "quiver_tree_01_trunk_nor_gl",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "quiver_tree_01_trunk_rough",
+      "size": [
+        1024,
+        1024
+      ]
+    }
+  ]
+}

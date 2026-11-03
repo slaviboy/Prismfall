@@ -1,0 +1,81 @@
+{
+  "name": "namaqualand_cliff_01",
+  "input": "assets/external/polyhaven/namaqualand_cliff_01/namaqualand_cliff_01_1k.gltf",
+  "output": "assets/blender/exports/scans/namaqualand_cliff_01.glb",
+  "droppedLods": [],
+  "sourceTriangles": 94369,
+  "targetTriangles": 14000,
+  "triangles": 13999,
+  "vertices": 7161,
+  "dimensions": {
+    "width": 8.2784,
+    "depth": 4.3877,
+    "height": 4.9609
+  },
+  "objects": [
+    {
+      "name": "namaqualand_cliff_01",
+      "sourceTriangles": 94369,
+      "triangles": 13999,
+      "dimensions": {
+        "width": 8.2784,
+        "depth": 4.3877,
+        "height": 4.9609
+      }
+    }
+  ],
+  "origin": "bottom centre of the bounding box",
+  "maxTexture": 1024,
+  "alphaModes": {
+    "drone_rock_01": "OPAQUE"
+  },
+  "alphaChanges": {},
+  "occlusionAddedFromArm": [
+    "drone_rock_01"
+  ],
+  "materials": [
+    {
+      "name": "drone_rock_01",
+      "textures": {
+        "Base Color": [
+          "namaqualand_cliff_01_diff"
+        ],
+        "Roughness": [
+          "namaqualand_cliff_01_rough"
+        ],
+        "Metallic": [
+          "namaqualand_cliff_01_rough"
+        ],
+        "Normal": [
+          "namaqualand_cliff_01_nor_gl"
+        ],
+        "Occlusion": [
+          "namaqualand_cliff_01_rough"
+        ]
+      }
+    }
+  ],
+  "textures": [
+    {
+      "name": "namaqualand_cliff_01_diff",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "namaqualand_cliff_01_nor_gl",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "namaqualand_cliff_01_rough",
+      "size": [
+        1024,
+        1024
+      ]
+    }
+  ]
+}

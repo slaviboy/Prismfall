@@ -1,0 +1,61 @@
+{
+  "id": "namaqualand_rocks_01",
+  "name": "Namaqualand Rocks 01",
+  "source": "Poly Haven",
+  "page": "https://polyhaven.com/a/namaqualand_rocks_01",
+  "api": {
+    "info": "https://api.polyhaven.com/info/namaqualand_rocks_01",
+    "files": "https://api.polyhaven.com/files/namaqualand_rocks_01"
+  },
+  "authors": {
+    "Greg Zaal": "Photography",
+    "Jenelle van Heerden": "modeling"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "polycount": 160716,
+  "dimensionsMm": [
+    1448.4741687774658,
+    217.12086349725723,
+    152.61786431074142
+  ],
+  "resolution": "1k",
+  "format": "glTF 2.0 (.gltf + .bin + JPEG textures)",
+  "gltf": "namaqualand_rocks_01_1k.gltf",
+  "gltfUrl": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/namaqualand_rocks_01/namaqualand_rocks_01_1k.gltf",
+  "filesHash": "b3db262e3bbee2c87c984ee85daad2baaaeeebee",
+  "files": [
+    {
+      "path": "namaqualand_rocks_01_1k.gltf",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/namaqualand_rocks_01/namaqualand_rocks_01_1k.gltf",
+      "size": 7463,
+      "md5": "0426d6445f947a872f67dffba7ab5dbd"
+    },
+    {
+      "path": "textures/namaqualand_rocks_01_diff_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/namaqualand_rocks_01/namaqualand_rocks_01_diff_1k.jpg",
+      "size": 868888,
+      "md5": "3b0bb3ffafa585b8e85565f2debb2dd1"
+    },
+    {
+      "path": "textures/namaqualand_rocks_01_arm_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/namaqualand_rocks_01/namaqualand_rocks_01_arm_1k.jpg",
+      "size": 802099,
+      "md5": "ffeb3aba0ebf19f325fc4ec4cc9ae5c2"
+    },
+    {
+      "path": "namaqualand_rocks_01.bin",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/8k/namaqualand_rocks_01/namaqualand_rocks_01.bin",
+      "size": 1952600,
+      "md5": "26f7ff48dc3d03e0c3f98b0a3d2c1b72"
+    },
+    {
+      "path": "textures/namaqualand_rocks_01_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Models/jpg/1k/namaqualand_rocks_01/namaqualand_rocks_01_nor_gl_1k.jpg",
+      "size": 1171905,
+      "md5": "46c9238b7d2cbcbc7bbf417a7ffd6e56"
+    }
+  ],
+  "alphaMaps": {},
+  "downloaded": "2026-11-03"
+}

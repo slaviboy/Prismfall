@@ -1,0 +1,60 @@
+{
+  "generator": "scripts/process-external.ts (fetch-polyhaven.ts, import_external.py, glTF-Transform optimize)",
+  "id": "namaqualand_boulder_05",
+  "name": "Namaqualand Boulder 05",
+  "file": "content/shared/scans/namaqualand_boulder_05.glb",
+  "source": "Poly Haven",
+  "page": "https://polyhaven.com/a/namaqualand_boulder_05",
+  "downloadUrl": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/namaqualand_boulder_05/namaqualand_boulder_05_1k.gltf",
+  "sourceFilesHash": "db0437675da1e8fcd3fdd7b0d933cac1c9462456",
+  "downloaded": "2026-11-03",
+  "authors": {
+    "Jenelle van Heerden": "modeling",
+    "Dario Barresi": "Photography"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "attribution": "None required (CC0); credit given anyway",
+  "originalFormat": "glTF 2.0 (.gltf + .bin + JPEG textures), 1k",
+  "originalTriangles": 89618,
+  "modifications": [
+    "meshes joined into one object; collapse-decimated from 89,618 to 5,000 triangles (target 5,000), UVs kept",
+    "custom normals cleared, smooth shading",
+    "origin moved to the bottom centre of the bounding box, transforms applied",
+    "textures capped at 1024 px (1k source) and re-encoded as WebP",
+    "ambient occlusion wired from the red channel of the packed ARM texture",
+    "meshopt compression and quantisation (glTF-Transform optimize)"
+  ],
+  "animation": "none",
+  "triangles": 5000,
+  "dimensionsMetres": {
+    "width": 1.3618,
+    "depth": 0.7456,
+    "height": 0.5365
+  },
+  "objects": [
+    {
+      "name": "namaqualand_boulder_05",
+      "sourceTriangles": 89618,
+      "triangles": 5000,
+      "dimensions": {
+        "width": 1.3618,
+        "depth": 0.7456,
+        "height": 0.5365
+      }
+    }
+  ],
+  "materials": [
+    {
+      "name": "namaqualand_boulder_05",
+      "alphaMode": "OPAQUE",
+      "textures": [
+        "baseColor",
+        "metallicRoughness",
+        "normal",
+        "occlusion"
+      ]
+    }
+  ],
+  "bytes": 607024
+}

@@ -1,0 +1,17 @@
+{
+  "$comment": "External photoscans processed by scripts/process-external.ts (npm run assets:scans). targetTris is the decimation target; res is the Poly Haven glTF resolution downloaded; maxTexture caps texture size in pixels; split keeps separate source meshes as separate objects (sets of loose rocks).",
+  "defaults": { "source": "polyhaven", "res": "1k", "maxTexture": 1024, "alpha": "auto", "split": false },
+  "assets": [
+    { "id": "namaqualand_cliff_01", "targetTris": 14000 },
+    { "id": "namaqualand_cliff_02", "targetTris": 20000 },
+    { "id": "namaqualand_boulder_02", "targetTris": 6000 },
+    { "id": "namaqualand_boulder_05", "targetTris": 5000 },
+    { "id": "namaqualand_rocks_01", "targetTris": 5000, "split": true },
+    { "id": "quiver_tree_01", "targetTris": 12000 },
+    { "id": "quiver_tree_02", "targetTris": 9000 },
+    { "id": "dead_quiver_trunk", "targetTris": 4000 },
+    { "id": "rock_face_01", "targetTris": 12000 },
+    { "id": "moon_rock_01", "targetTris": 3000 },
+    { "id": "moon_rock_03", "targetTris": 3000 }
+  ]
+}

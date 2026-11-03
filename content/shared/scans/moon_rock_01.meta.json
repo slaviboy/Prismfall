@@ -1,0 +1,63 @@
+{
+  "generator": "scripts/process-external.ts (fetch-polyhaven.ts, import_external.py, glTF-Transform optimize)",
+  "id": "moon_rock_01",
+  "name": "Moon Rock 01",
+  "file": "content/shared/scans/moon_rock_01.glb",
+  "source": "Poly Haven",
+  "page": "https://polyhaven.com/a/moon_rock_01",
+  "downloadUrl": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/moon_rock_01/moon_rock_01_1k.gltf",
+  "sourceFilesHash": "8aac337ef1b7cd03ee522258ce658dbc1bffe554",
+  "downloaded": "2026-11-03",
+  "authors": {
+    "Greg Zaal": "Photography",
+    "Rico Cilliers": "Photography",
+    "Jenelle van Heerden": "Processing",
+    "Dario Barresi": "Processing"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "attribution": "None required (CC0); credit given anyway",
+  "originalFormat": "glTF 2.0 (.gltf + .bin + JPEG textures), 1k",
+  "originalTriangles": 9958,
+  "modifications": [
+    "kept LOD0 only (dropped moon_rock_01_LOD1, moon_rock_01_LOD2, moon_rock_01_LOD3)",
+    "meshes joined into one object; collapse-decimated from 9,958 to 3,000 triangles (target 3,000), UVs kept",
+    "custom normals cleared, smooth shading",
+    "origin moved to the bottom centre of the bounding box, transforms applied",
+    "textures capped at 1024 px (1k source) and re-encoded as WebP",
+    "ambient occlusion wired from the red channel of the packed ARM texture",
+    "meshopt compression and quantisation (glTF-Transform optimize)"
+  ],
+  "animation": "none",
+  "triangles": 3000,
+  "dimensionsMetres": {
+    "width": 0.2121,
+    "depth": 0.1113,
+    "height": 0.0751
+  },
+  "objects": [
+    {
+      "name": "moon_rock_01",
+      "sourceTriangles": 9958,
+      "triangles": 3000,
+      "dimensions": {
+        "width": 0.2121,
+        "depth": 0.1113,
+        "height": 0.0751
+      }
+    }
+  ],
+  "materials": [
+    {
+      "name": "moon_rock_01",
+      "alphaMode": "OPAQUE",
+      "textures": [
+        "baseColor",
+        "metallicRoughness",
+        "normal",
+        "occlusion"
+      ]
+    }
+  ],
+  "bytes": 152072
+}

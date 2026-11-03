@@ -1,0 +1,60 @@
+{
+  "generator": "scripts/process-external.ts (fetch-polyhaven.ts, import_external.py, glTF-Transform optimize)",
+  "id": "namaqualand_cliff_01",
+  "name": "Namaqualand Cliff 01",
+  "file": "content/shared/scans/namaqualand_cliff_01.glb",
+  "source": "Poly Haven",
+  "page": "https://polyhaven.com/a/namaqualand_cliff_01",
+  "downloadUrl": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/namaqualand_cliff_01/namaqualand_cliff_01_1k.gltf",
+  "sourceFilesHash": "92420ba154192b67e304f16a1559b17804ec0854",
+  "downloaded": "2026-11-03",
+  "authors": {
+    "Jenelle van Heerden": "Photography",
+    "Rico Cilliers": "modeling"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "attribution": "None required (CC0); credit given anyway",
+  "originalFormat": "glTF 2.0 (.gltf + .bin + JPEG textures), 1k",
+  "originalTriangles": 94369,
+  "modifications": [
+    "meshes joined into one object; collapse-decimated from 94,369 to 13,999 triangles (target 14,000), UVs kept",
+    "custom normals cleared, smooth shading",
+    "origin moved to the bottom centre of the bounding box, transforms applied",
+    "textures capped at 1024 px (1k source) and re-encoded as WebP",
+    "ambient occlusion wired from the red channel of the packed ARM texture",
+    "meshopt compression and quantisation (glTF-Transform optimize)"
+  ],
+  "animation": "none",
+  "triangles": 13999,
+  "dimensionsMetres": {
+    "width": 8.2784,
+    "depth": 4.3877,
+    "height": 4.9609
+  },
+  "objects": [
+    {
+      "name": "namaqualand_cliff_01",
+      "sourceTriangles": 94369,
+      "triangles": 13999,
+      "dimensions": {
+        "width": 8.2784,
+        "depth": 4.3877,
+        "height": 4.9609
+      }
+    }
+  ],
+  "materials": [
+    {
+      "name": "drone_rock_01",
+      "alphaMode": "OPAQUE",
+      "textures": [
+        "baseColor",
+        "metallicRoughness",
+        "normal",
+        "occlusion"
+      ]
+    }
+  ],
+  "bytes": 487812
+}

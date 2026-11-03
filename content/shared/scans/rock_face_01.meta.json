@@ -1,0 +1,59 @@
+{
+  "generator": "scripts/process-external.ts (fetch-polyhaven.ts, import_external.py, glTF-Transform optimize)",
+  "id": "rock_face_01",
+  "name": "Rock Face 01",
+  "file": "content/shared/scans/rock_face_01.glb",
+  "source": "Poly Haven",
+  "page": "https://polyhaven.com/a/rock_face_01",
+  "downloadUrl": "https://dl.polyhaven.org/file/ph-assets/Models/gltf/1k/rock_face_01/rock_face_01_1k.gltf",
+  "sourceFilesHash": "a39e6911cc84e0ceef097a98b1146885afb4afb3",
+  "downloaded": "2026-11-03",
+  "authors": {
+    "Dario Barresi": "All"
+  },
+  "license": "CC0 1.0",
+  "licenseUrl": "https://polyhaven.com/license",
+  "attribution": "None required (CC0); credit given anyway",
+  "originalFormat": "glTF 2.0 (.gltf + .bin + JPEG textures), 1k",
+  "originalTriangles": 20174,
+  "modifications": [
+    "meshes joined into one object; collapse-decimated from 20,174 to 12,000 triangles (target 12,000), UVs kept",
+    "custom normals cleared, smooth shading",
+    "origin moved to the bottom centre of the bounding box, transforms applied",
+    "textures capped at 1024 px (1k source) and re-encoded as WebP",
+    "ambient occlusion wired from the red channel of the packed ARM texture",
+    "meshopt compression and quantisation (glTF-Transform optimize)"
+  ],
+  "animation": "none",
+  "triangles": 12000,
+  "dimensionsMetres": {
+    "width": 4.9535,
+    "depth": 3.8273,
+    "height": 3.5651
+  },
+  "objects": [
+    {
+      "name": "rock_face_01",
+      "sourceTriangles": 20174,
+      "triangles": 12000,
+      "dimensions": {
+        "width": 4.9535,
+        "depth": 3.8273,
+        "height": 3.5651
+      }
+    }
+  ],
+  "materials": [
+    {
+      "name": "rock_face_01",
+      "alphaMode": "OPAQUE",
+      "textures": [
+        "baseColor",
+        "metallicRoughness",
+        "normal",
+        "occlusion"
+      ]
+    }
+  ],
+  "bytes": 592656
+}

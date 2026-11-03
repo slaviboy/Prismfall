@@ -1,0 +1,111 @@
+{
+  "name": "namaqualand_rocks_01",
+  "input": "assets/external/polyhaven/namaqualand_rocks_01/namaqualand_rocks_01_1k.gltf",
+  "output": "assets/blender/exports/scans/namaqualand_rocks_01.glb",
+  "droppedLods": [],
+  "sourceTriangles": 85716,
+  "targetTriangles": 5000,
+  "triangles": 4998,
+  "vertices": 2507,
+  "dimensions": {
+    "width": 0.228,
+    "depth": 0.2155,
+    "height": 0.153
+  },
+  "objects": [
+    {
+      "name": "namaqualand_rocks_01_a",
+      "sourceTriangles": 13582,
+      "triangles": 792,
+      "dimensions": {
+        "width": 0.228,
+        "depth": 0.2155,
+        "height": 0.153
+      }
+    },
+    {
+      "name": "namaqualand_rocks_01_b",
+      "sourceTriangles": 24792,
+      "triangles": 1446,
+      "dimensions": {
+        "width": 0.2182,
+        "depth": 0.1626,
+        "height": 0.0819
+      }
+    },
+    {
+      "name": "namaqualand_rocks_01_c",
+      "sourceTriangles": 22432,
+      "triangles": 1308,
+      "dimensions": {
+        "width": 0.2145,
+        "depth": 0.1664,
+        "height": 0.0842
+      }
+    },
+    {
+      "name": "namaqualand_rocks_01_d",
+      "sourceTriangles": 24910,
+      "triangles": 1452,
+      "dimensions": {
+        "width": 0.1985,
+        "depth": 0.1564,
+        "height": 0.1225
+      }
+    }
+  ],
+  "origin": "bottom centre of the bounding box of each object, every object at the origin",
+  "maxTexture": 1024,
+  "alphaModes": {
+    "namaqualand_rocks_02": "OPAQUE"
+  },
+  "alphaChanges": {},
+  "occlusionAddedFromArm": [
+    "namaqualand_rocks_02"
+  ],
+  "materials": [
+    {
+      "name": "namaqualand_rocks_02",
+      "textures": {
+        "Base Color": [
+          "namaqualand_rocks_02_diff"
+        ],
+        "Roughness": [
+          "namaqualand_rocks_02_rough"
+        ],
+        "Metallic": [
+          "namaqualand_rocks_02_rough"
+        ],
+        "Normal": [
+          "namaqualand_rocks_02_nor_gl"
+        ],
+        "Occlusion": [
+          "namaqualand_rocks_02_rough"
+        ]
+      }
+    }
+  ],
+  "textures": [
+    {
+      "name": "namaqualand_rocks_02_diff",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "namaqualand_rocks_02_nor_gl",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "namaqualand_rocks_02_rough",
+      "size": [
+        1024,
+        1024
+      ]
+    }
+  ]
+}

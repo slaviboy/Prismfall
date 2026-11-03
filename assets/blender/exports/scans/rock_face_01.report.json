@@ -1,0 +1,81 @@
+{
+  "name": "rock_face_01",
+  "input": "assets/external/polyhaven/rock_face_01/rock_face_01_1k.gltf",
+  "output": "assets/blender/exports/scans/rock_face_01.glb",
+  "droppedLods": [],
+  "sourceTriangles": 20174,
+  "targetTriangles": 12000,
+  "triangles": 12000,
+  "vertices": 6324,
+  "dimensions": {
+    "width": 4.9535,
+    "depth": 3.8273,
+    "height": 3.5651
+  },
+  "objects": [
+    {
+      "name": "rock_face_01",
+      "sourceTriangles": 20174,
+      "triangles": 12000,
+      "dimensions": {
+        "width": 4.9535,
+        "depth": 3.8273,
+        "height": 3.5651
+      }
+    }
+  ],
+  "origin": "bottom centre of the bounding box",
+  "maxTexture": 1024,
+  "alphaModes": {
+    "rock_face_01": "OPAQUE"
+  },
+  "alphaChanges": {},
+  "occlusionAddedFromArm": [
+    "rock_face_01"
+  ],
+  "materials": [
+    {
+      "name": "rock_face_01",
+      "textures": {
+        "Base Color": [
+          "rock_face_01_diff"
+        ],
+        "Roughness": [
+          "rock_face_01_rough"
+        ],
+        "Metallic": [
+          "rock_face_01_rough"
+        ],
+        "Normal": [
+          "rock_face_01_nor_gl"
+        ],
+        "Occlusion": [
+          "rock_face_01_rough"
+        ]
+      }
+    }
+  ],
+  "textures": [
+    {
+      "name": "rock_face_01_diff",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "rock_face_01_nor_gl",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "rock_face_01_rough",
+      "size": [
+        1024,
+        1024
+      ]
+    }
+  ]
+}
