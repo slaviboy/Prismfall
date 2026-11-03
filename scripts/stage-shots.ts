@@ -3,7 +3,10 @@
  * seconds apart (so animation and creatures can be judged), at an ultrawide and a 16:9 size.
  *
  * Usage: npm run content:shots -- [--stages a,b] [--out docs/acceptance] [--settle 5] [--sizes 2560x1080,1920x1080]
- * Requires a test build (npm run build:test); the preview server is started if needed.
+ *   [--port 4174 --dist dist-test]
+ * Requires a test build (npm run build:test, or `vite build --mode test --outDir <dist>`); the
+ * preview server for that build is started on the port if needed. A separate --dist and --port let
+ * parallel work capture its own build without disturbing the shared test build.
  */
 import { chromium, type Page } from '@playwright/test';
 import { execSync, spawn, type ChildProcess } from 'node:child_process';
@@ -21,19 +24,22 @@ const outDir = resolve(ROOT, opt('out', 'docs/acceptance'));
 const settleS = Number(opt('settle', '5'));
 const sizes = opt('sizes', '2560x1080').split(',').map((s) => s.split('x').map(Number) as [number, number]);
 const gameplay = !args.includes('--world-only');
+const port = opt('port', '4174');
+const dist = opt('dist', 'dist-test');
+const BASE = `http://localhost:${port}/`;
 
 async function ensureServer(): Promise<ChildProcess | null> {
   try {
-    if ((await fetch('http://localhost:4174/')).ok) return null;
+    if ((await fetch(BASE)).ok) return null;
   } catch {
     /* not running */
   }
-  if (!existsSync(join(ROOT, 'dist-test/index.html'))) execSync('npm run build:test', { cwd: ROOT, stdio: 'inherit' });
-  const server = spawn(process.execPath, [join(ROOT, 'node_modules/vite/bin/vite.js'), 'preview', '--mode', 'test', '--outDir', 'dist-test'], { cwd: ROOT, stdio: 'ignore' });
+  if (!existsSync(join(ROOT, dist, 'index.html'))) execSync(`npx vite build --mode test --outDir ${dist}`, { cwd: ROOT, stdio: 'inherit' });
+  const server = spawn(process.execPath, [join(ROOT, 'node_modules/vite/bin/vite.js'), 'preview', '--mode', 'test', '--outDir', dist, '--port', port, '--strictPort'], { cwd: ROOT, stdio: 'ignore' });
   for (let i = 0; i < 60; i++) {
     await new Promise((r) => setTimeout(r, 500));
     try {
-      if ((await fetch('http://localhost:4174/')).ok) return server;
+      if ((await fetch(BASE)).ok) return server;
     } catch {
       /* starting */
     }
@@ -63,7 +69,7 @@ try {
       if (m.type() === 'error' || m.type() === 'warning') console.log(`  [${m.type()}] ${m.text().slice(0, 300)}`);
     });
     page.on('pageerror', (e) => console.log(`  [pageerror] ${e.message}`));
-    await page.goto('http://localhost:4174/');
+    await page.goto(BASE);
     await page.getByTestId('boot-start').click();
     await page.getByTestId('main-menu').waitFor();
     await page.evaluate(() => (window as unknown as { __PRISMFALL__: { updateSection(s: string, p: unknown): void } }).__PRISMFALL__.updateSection('setup', { unlockAll: true }));

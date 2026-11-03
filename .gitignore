@@ -1,6 +1,8 @@
 node_modules/
 dist/
 dist-test/
+# Private test builds for parallel captures (stage-shots --dist)
+dist-*/
 coverage/
 test-results/
 playwright-report/
