@@ -99,7 +99,9 @@ kbd {
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* safe: centred when it fits, top-aligned when it overflows (plain center made the top of
+     long lists unreachable by scrolling). */
+  justify-content: safe center;
   gap: clamp(16px, 3vh, 32px);
   padding: clamp(28px, 7vh, 88px) var(--gutter) clamp(24px, 5vh, 56px) calc(var(--rail-x) + clamp(28px, 2.4vw, 48px));
   min-height: 0;

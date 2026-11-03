@@ -61,4 +61,24 @@ test.describe('world select', () => {
     await expect(page.getByTestId('mode-setup')).toBeVisible();
     await expect.poll(() => hooks<string | null>(page, 'h.shell.stageManager.activeId'), { timeout: 15_000 }).toBe(selected);
   });
+
+  test('a long world list scrolls to its first and last worlds', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 600 });
+    await openMenu(page);
+    await page.getByTestId('menu-play').click();
+    await page.getByTestId('mode-marathon').click();
+    await page.getByTestId('setup-world').click();
+    await expect(page.getByTestId('stage-select')).toBeVisible();
+    const column = page.locator('.menu-column').first();
+    const cards = page.locator('.world-card');
+    const box = async (i: number) => (await cards.nth(i).boundingBox())!;
+    const area = async () => (await column.boundingBox())!;
+    expect(await column.evaluate((el) => el.scrollHeight > el.clientHeight)).toBe(true);
+    await column.evaluate((el) => el.scrollTo(0, 0));
+    expect((await box(0)).y).toBeGreaterThanOrEqual((await area()).y - 1);
+    await column.evaluate((el) => el.scrollTo(0, el.scrollHeight));
+    const last = await box((await cards.count()) - 1);
+    const view = await area();
+    expect(last.y + last.height).toBeLessThanOrEqual(view.y + view.height + 1);
+  });
 });

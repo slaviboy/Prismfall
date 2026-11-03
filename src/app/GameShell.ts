@@ -197,9 +197,10 @@ export class GameShell {
     this.stageManager = manager;
     manager.onActivate = (info) => {
       hudStore.setState({ stageName: info.manifest?.name ?? '' });
-      // While browsing worlds, the music follows only if music previews are on.
+      // While browsing worlds, the music follows only if music previews are on (but a world
+      // that activates before any music has loaded, e.g. a slow first load, still brings its own).
       const browsing = ['stages', 'setup'].includes(appStore.getState().screen);
-      if (!browsing || getSettings().audio.musicPreview) void this.loadStageAudio(info);
+      if (!browsing || getSettings().audio.musicPreview || this.audio.stageId === null) void this.loadStageAudio(info);
     };
     // Rebuild environments when their quality inputs change.
     let rebuildTimer: ReturnType<typeof setTimeout> | null = null;
