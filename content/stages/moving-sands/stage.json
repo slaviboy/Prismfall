@@ -594,10 +594,12 @@
     "defaultTrack": "moving-sands-caravan-of-embers"
   },
   "ambience": {
-    "preset": "wind"
+    "preset": "desert",
+    "level": 1
   },
   "sfx": {
-    "preset": "stone"
+    "preset": "oasis",
+    "material": "sandstone"
   },
   "unlock": {
     "type": "always"

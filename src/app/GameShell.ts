@@ -1,4 +1,6 @@
+import { Vector3 } from 'three/webgpu';
 import { emitCue, hasCueListeners } from '../audio/cues';
+import { onWorldSound } from '../audio/worldSounds';
 import type { GameAction, GameEvent } from '../game/core/types';
 import type { Engine } from '../game/core/engine';
 import { GAME_ACTIONS } from '../game/core/types';
@@ -39,6 +41,8 @@ import type { Composition } from '../audio/sequencer/composition';
 import { loadMusicModule, readTrackMeta, resolveAsset, type StageInfo } from '../stages/registry';
 import { UserMusicLibrary } from '../audio/library/UserMusic';
 import type { FileTrackMeta } from '../audio/music-director/tracks';
+import { resolveMaterialAudio, type MaterialAudioInput } from '../audio/sound-effects/materialAudio';
+import type { StageManifest } from '../stages/schema';
 
 /** A playable track: a world's own music or one of the player's files. */
 export interface CatalogTrack {
@@ -123,8 +127,14 @@ export class GameShell {
     this.setupPersistence();
     this.setupInput();
     this.audio.applySettings(getSettings());
+    onWorldSound((s) => this.audio.playWorldSound(s.id, s.x, s.y, s.z, s.gain));
     settingsStore.subscribe((state, prev) => {
       if (state.settings.audio !== prev.settings.audio || state.settings.reactivity !== prev.settings.reactivity) this.audio.applySettings(state.settings);
+      // Classic block style swaps every world's blocks for glass: the impact sounds follow.
+      if (state.settings.graphics.blockStyle !== prev.settings.graphics.blockStyle) {
+        const info = this.audio.stageId ? getStage(this.audio.stageId) : undefined;
+        if (info) void this.loadStageAudio(info);
+      }
     });
     registerBuiltinComponents();
     registerBuiltinEffects();
@@ -213,8 +223,22 @@ export class GameShell {
       ambience: m.ambience?.preset ?? null,
       ambienceLevel: m.ambience?.level ?? 1,
       sfxPreset: m.sfx.preset,
+      ...this.stageMaterial(m),
     };
     await this.audio.setStage(stageAudio);
+  }
+
+  /** Loads a world's music and sound palette for the sound test (visuals stay as they are). */
+  async auditionStage(id: string): Promise<void> {
+    const info = getStage(id);
+    if (info) await this.loadStageAudio(info);
+  }
+
+  /** The block impact sound for a stage; classic block style plays the classic glass blocks. */
+  private stageMaterial(m: StageManifest): { material: StageAudio['material']; materialKey: string } {
+    if (getSettings().graphics.blockStyle === 'classic') return { material: resolveMaterialAudio('glass'), materialKey: 'glass' };
+    const ref = m.sfx.material as string | MaterialAudioInput | undefined;
+    return { material: resolveMaterialAudio(ref), materialKey: typeof ref === 'string' ? ref : ref ? `${m.id}:custom` : 'glass' };
   }
 
   /** A stage's audio-file track with its beat metadata (track.json). */
@@ -778,6 +802,7 @@ export class GameShell {
             : null,
         };
         appStore.setState({ results });
+        if (unlocked.length > 0) window.setTimeout(() => this.audio.play('unlock'), 900);
       }
     } catch (err) {
       console.error('[shell] failed to save results', err);
@@ -866,6 +891,8 @@ export class GameShell {
     hudStore.setState({ boardRect: this.view?.boardRect() ?? null });
   };
 
+  private readonly listenerDir = new Vector3();
+
   private readonly frame = (now: number): void => {
     this.rafId = requestAnimationFrame(this.frame);
     const t = performance.now();
@@ -892,6 +919,11 @@ export class GameShell {
     if (engine) this.audio.onGameEvents(events, engine, dt);
     if (engine) this.syncHud(t);
     this.renderSystem?.tickPerf(t);
+    const cam = this.renderSystem?.cameraRig.camera;
+    if (cam) {
+      cam.getWorldDirection(this.listenerDir);
+      this.audio.setListener(cam.position.x, cam.position.y, cam.position.z, this.listenerDir.x, this.listenerDir.y, this.listenerDir.z);
+    }
     if (this.shouldRender(t)) {
       this.view?.render({
         now: t,

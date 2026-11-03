@@ -415,7 +415,8 @@
     "preset": "foundry"
   },
   "sfx": {
-    "preset": "metal"
+    "preset": "metal",
+    "material": "metal"
   },
   "unlock": {
     "type": "voyageLeg",

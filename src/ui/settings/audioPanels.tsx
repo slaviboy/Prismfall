@@ -3,7 +3,8 @@ import { shell } from '../../app/GameShell';
 import { toast } from '../../app/stores';
 import { LatencyCalibrator, WARMUP_CLICKS, type CalibrationResult } from '../../audio/calibration/LatencyCalibrator';
 import { getSettings, updateSection, useSettings } from '../../settings/store';
-import { Button, useTicker } from '../components/controls';
+import type { SfxId } from '../../audio/sound-effects/SfxBank';
+import { Button, ChoiceRow, SliderRow, useTicker } from '../components/controls';
 import { registerCustomPanel } from './customPanels';
 
 type Phase = { kind: 'idle' } | { kind: 'running' } | { kind: 'done'; result: CalibrationResult | null };
@@ -212,5 +213,104 @@ function AnalysisInfo(): ReactNode {
   );
 }
 
+const SOUND_GROUPS: readonly { label: string; sounds: readonly [SfxId, string][] }[] = [
+  { label: 'Piece', sounds: [['spawn', 'Spawn'], ['move', 'Move'], ['rotate', 'Rotate right'], ['rotateCcw', 'Rotate left'], ['softDrop', 'Soft drop'], ['hold', 'Hold']] },
+  { label: 'Impacts', sounds: [['land', 'Land'], ['lock', 'Lock'], ['hardDrop', 'Hard drop'], ['hardDropHeavy', 'Hard drop (full height)'], ['impactResponse', 'World response']] },
+  { label: 'Clears', sounds: [['clear1', 'Single'], ['clear2', 'Double'], ['clear3', 'Triple'], ['clear4', 'Quad'], ['signature', 'World quad answer'], ['tspin', 'Spin'], ['b2b', 'Back-to-back'], ['perfect', 'Perfect clear']] },
+  { label: 'Combos', sounds: [['combo', 'Combo 1–2'], ['comboMid', 'Combo 3–5'], ['comboHigh', 'Combo 6+']] },
+  { label: 'Moments', sounds: [['levelUp', 'Level up'], ['stageComplete', 'Goal reached'], ['unlock', 'World unlocked'], ['danger', 'Danger'], ['gameOver', 'Game over'], ['pause', 'Pause'], ['resume', 'Resume']] },
+];
+
+/** Sound test: the selected world's music and every gameplay sound, one button each. */
+function AudioTest(): ReactNode {
+  const [stageId, setStageId] = useState<string>(() => shell.audio.stageId ?? shell.stageManager?.stages()[0]?.id ?? '');
+  const [intensity, setIntensity] = useState(0.5);
+  const [loading, setLoading] = useState(false);
+  const stages = shell.stageManager?.stages() ?? [];
+  const info = useTicker(() => {
+    const d = shell.audio.director;
+    const section = d.current ? shell.audio.features.features.section || 'playing' : 'stopped';
+    return `${shell.audio.stage?.materialKey ?? 'glass'} blocks · music: ${section}`;
+  }, 300);
+
+  const ensure = async (): Promise<void> => {
+    shell.unlockAudio();
+    await shell.audio.unlock();
+  };
+  const choose = async (id: string): Promise<void> => {
+    setStageId(id);
+    setLoading(true);
+    await ensure();
+    await shell.auditionStage(id);
+    setLoading(false);
+  };
+  const play = async (id: SfxId): Promise<void> => {
+    await ensure();
+    shell.audio.play(id);
+  };
+  const footsteps = async (): Promise<void> => {
+    await ensure();
+    // A creature walking from left to right in front of the listener.
+    for (let i = 0; i < 8; i++) window.setTimeout(() => shell.audio.sfx.playAt('footstep', -60 + i * 17, -14, -40, { gain: 0.8 }), i * 380);
+  };
+
+  return (
+    <div className="audio-test" data-testid="audio-test">
+      <h3 className="settings-group">Sound test</h3>
+      <ChoiceRow label="World" value={stageId} options={stages.map((s) => ({ value: s.id, label: s.manifest?.name ?? s.id }))} onChange={(v) => void choose(v)} testId="audio-test-world" />
+      <p className="menu-note">
+        <span ref={info} />
+        {loading ? ' · loading…' : ''}
+      </p>
+      <div className="settings-actions">
+        <Button
+          onClick={async () => {
+            await ensure();
+            await shell.audio.setOverride(null);
+          }}
+          testId="audio-test-music"
+        >
+          Play world music
+        </Button>
+        <Button onClick={() => shell.audio.director.stop(1.2)}>Stop music</Button>
+      </div>
+      <SliderRow
+        label="Preview intensity"
+        description="How far the arrangement builds (layers join as it rises)."
+        value={intensity}
+        min={0.1}
+        max={1}
+        step={0.05}
+        format={(v) => `${Math.round(v * 100)}%`}
+        onChange={(v) => {
+          setIntensity(v);
+          shell.audio.director.setIntensity(v);
+        }}
+      />
+      {SOUND_GROUPS.map((g) => (
+        <div key={g.label} className="audio-test-group">
+          <span className="setting-label">{g.label}</span>
+          <div className="settings-actions">
+            {g.sounds.map(([id, label]) => (
+              <Button key={id} onClick={() => void play(id)} testId={`sfx-${id}`}>
+                {label}
+              </Button>
+            ))}
+          </div>
+        </div>
+      ))}
+      <div className="audio-test-group">
+        <span className="setting-label">World</span>
+        <div className="settings-actions">
+          <Button onClick={() => void footsteps()} testId="sfx-footsteps">
+            Creature passing (spatial)
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 registerCustomPanel('latencyCalibration', LatencyCalibration);
+registerCustomPanel('audioTest', AudioTest);
 registerCustomPanel('analysisInfo', AnalysisInfo);

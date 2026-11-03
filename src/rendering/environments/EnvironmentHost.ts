@@ -5,6 +5,7 @@ import type { StageManifest } from '../../stages/schema';
 import { resolveBlockPreset, type BlockMaterialPreset } from '../materials/blockPresets';
 import { frameUniforms } from '../shaders/uniforms';
 import type { RenderSystem } from '../renderer/RenderSystem';
+import { emitWorldSound } from '../../audio/worldSounds';
 import { createGround } from './ground';
 import { StageEnvironment } from './StageEnvironment';
 import type { ReactivitySettings } from './reactivity';
@@ -61,6 +62,7 @@ export class EnvironmentHost {
       bursts: this.render.bursts,
       palette: manifest.palette,
       ground: createGround(-14),
+      sounds: { emit: emitWorldSound },
     };
     const env = await StageEnvironment.build(manifest, ctx, (f) => onProgress?.(f * 0.85));
     // Warm up: render one frame through the real pipeline (same MRT targets as play) with the

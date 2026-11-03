@@ -30,7 +30,8 @@ async function boot(): Promise<void> {
   const navigator = new MenuNavigator(shell.input);
   navigator.attach();
   navigator.onNavigate = (kind) => {
-    if (kind === 'move' || kind === 'adjust' || kind === 'tab') shell.audio.play('menuMove');
+    if (kind === 'move' || kind === 'tab') shell.audio.play('menuMove');
+    else if (kind === 'adjust') shell.audio.play('menuSelect');
     else if (kind === 'confirm') shell.audio.play('menuConfirm');
     else if (kind === 'back') shell.audio.play('menuBack');
   };

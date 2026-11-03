@@ -386,7 +386,11 @@ export const creatureHerdComponent: ComponentFactory<Params> = {
             for (const foot of feet) {
               const contact = (((0.3 - foot.phase) % 1) + 1) % 1;
               const crossed = prev <= gaitPhase ? prev < contact && contact <= gaitPhase : contact > prev || contact <= gaitPhase;
-              if (crossed) kickDust(m, a, foot, ctx.uniforms.time.value);
+              if (crossed) {
+                kickDust(m, a, foot, ctx.uniforms.time.value);
+                // Soft footfalls for the nearer walkers (the audio system pans them in 3D).
+                if (foot === feet[0] || foot === feet[2]) ctx.sounds.emit('footstep', a.x, a.y, a.z, Math.min(1, m.scale / 3) * 0.6);
+              }
             }
           }
         }

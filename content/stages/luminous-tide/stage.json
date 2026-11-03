@@ -328,7 +328,8 @@
     "preset": "ocean"
   },
   "sfx": {
-    "preset": "glass"
+    "preset": "glass",
+    "material": "pearl"
   },
   "unlock": {
     "type": "always"

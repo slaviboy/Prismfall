@@ -24,6 +24,34 @@ test.describe('audio and reactivity settings', () => {
     await expect(page.getByTestId('analysis-info')).toContainText('Analyser node');
   });
 
+  test('sound test plays a world\u2019s material sounds on their own buses and settings persist', async ({ page }) => {
+    await openMenu(page);
+    await expect.poll(() => hooks<string>(page, 'h.shell.audio.engine.state'), { timeout: 10_000 }).toBe('running');
+    await page.getByTestId('menu-settings').click();
+    await page.getByRole('tab', { name: 'Audio', exact: true }).click();
+    await expect(page.getByTestId('audio-test')).toBeVisible();
+    // Choose the desert: its sandstone palette is rendered (material layers come from the worker).
+    await page.evaluate(() => (window as unknown as { __PRISMFALL__: { shell: { auditionStage(id: string): Promise<void> } } }).__PRISMFALL__.shell.auditionStage('moving-sands'));
+    await expect.poll(() => hooks<string>(page, 'h.shell.audio.stage?.materialKey'), { timeout: 10_000 }).toBe('sandstone');
+    await expect.poll(() => hooks<boolean>(page, 'h.shell.audio.sfx.has("signature") && h.shell.audio.sfx.has("footstep") && h.shell.audio.sfx.has("hardDropHeavy")'), { timeout: 10_000 }).toBe(true);
+    // Hard drop variants exist (round robin) and the effect is audible over silence.
+    expect(await hooks<number>(page, 'h.shell.audio.sfx.buffers.get("hardDrop").length')).toBe(3);
+    await page.evaluate(() => (window as unknown as { __PRISMFALL__: { shell: { audio: { director: { stop(f: number): void } } } } }).__PRISMFALL__.shell.audio.director.stop(0.05));
+    await page.waitForTimeout(600);
+    await page.getByTestId('sfx-hardDrop').click();
+    await expect.poll(() => hooks<number>(page, 'h.shell.audio.engine.outputRms()'), { timeout: 2000 }).toBeGreaterThan(0.002);
+    // The hard-drop slider controls the impacts bus only.
+    await page.evaluate(() => (window as unknown as { __PRISMFALL__: { updateSection(s: string, p: unknown): void } }).__PRISMFALL__.updateSection('audio', { hardDrop: 0, sfxVariation: 0.2, adaptiveMusic: false }));
+    await expect.poll(() => hooks<number>(page, 'h.shell.audio.engine.impacts.gain.value'), { timeout: 2000 }).toBeLessThan(0.01);
+    expect(await hooks<number>(page, 'h.shell.audio.engine.sfx.gain.value')).toBeGreaterThan(0.1);
+    expect(await hooks<number>(page, 'h.shell.audio.sfx.variation')).toBeCloseTo(0.2);
+    await page.waitForTimeout(900); // debounced save
+    await page.reload();
+    await page.getByTestId('boot-start').click();
+    await expect.poll(() => hooks<boolean>(page, 'h.getSettings().audio.adaptiveMusic')).toBe(false);
+    expect(await hooks<number>(page, 'h.getSettings().audio.hardDrop')).toBe(0);
+  });
+
   test('tap-along calibration measures and applies an audio offset', async ({ page }) => {
     test.setTimeout(60_000);
     await openMenu(page);

@@ -267,12 +267,16 @@ export async function runCorpus(seconds = 16): Promise<StyleReport[]> {
   return out;
 }
 
-/** Peak/NaN/DC checks of every SFX in every preset. */
+const PRESET_MATERIAL: Record<string, string> = { glass: 'glass', metal: 'metal', crystal: 'cosmic', organic: 'organic', neon: 'neon', paper: 'paper', stone: 'mineral', ice: 'ice', oasis: 'sandstone', koto: 'wood', void: 'water' };
+const materialFor = (preset: string): string => PRESET_MATERIAL[preset] ?? 'glass';
+
+/** Peak/NaN/DC checks of every SFX in every preset (each with a matching block material). */
 export async function checkSfx(presets: readonly string[]): Promise<{ id: string; preset: string; peakDb: number; nan: boolean }[]> {
   const out: { id: string; preset: string; peakDb: number; nan: boolean }[] = [];
   for (const preset of presets) {
     for (const id of SFX_IDS) {
-      const buf = await renderSfx(id, preset, 2, SR);
+      const buf = await renderSfx(id, preset, 2, SR, materialFor(preset));
+      if (!buf) continue;
       let peak = 0;
       let nan = false;
       for (let ch = 0; ch < 2; ch++) {
@@ -284,6 +288,53 @@ export async function checkSfx(presets: readonly string[]): Promise<{ id: string
         }
       }
       out.push({ id, preset, peakDb: 20 * Math.log10(Math.max(1e-9, peak)), nan });
+    }
+  }
+  return out;
+}
+
+export interface ImpactReport {
+  readonly material: string;
+  readonly id: string;
+  readonly rms: number;
+  readonly peakDb: number;
+  /** Spectral centroid (Hz) of the first 200 ms: brightness of the material. */
+  readonly centroid: number;
+  readonly seconds: number;
+}
+
+/** Loudness, brightness and length of the material sounds (hard drop vs lock vs soft drop, per world). */
+export async function impactReport(materials: readonly string[], ids: readonly string[] = ['softDrop', 'land', 'lock', 'hardDrop', 'hardDropHeavy', 'clear4']): Promise<ImpactReport[]> {
+  const out: ImpactReport[] = [];
+  for (const material of materials) {
+    for (const id of ids) {
+      const buf = await renderSfx(id as (typeof SFX_IDS)[number], 'glass', 0, SR, material);
+      if (!buf) continue;
+      const d = buf.getChannelData(0);
+      let sum = 0;
+      let peak = 0;
+      for (let i = 0; i < d.length; i++) {
+        sum += (d[i] as number) ** 2;
+        peak = Math.max(peak, Math.abs(d[i] as number));
+      }
+      // Centroid from zero-crossing-free DFT bins over the first 200 ms (coarse, 64 bands).
+      const n = Math.min(d.length, Math.round(SR * 0.2));
+      let num = 0;
+      let den = 0;
+      for (let k = 1; k <= 64; k++) {
+        const f = 60 * Math.pow(12000 / 60, k / 64);
+        let re = 0;
+        let im = 0;
+        const w = (2 * Math.PI * f) / SR;
+        for (let i = 0; i < n; i += 2) {
+          re += (d[i] as number) * Math.cos(w * i);
+          im += (d[i] as number) * Math.sin(w * i);
+        }
+        const mag = Math.hypot(re, im) * f;
+        num += f * mag;
+        den += mag;
+      }
+      out.push({ material, id, rms: Math.sqrt(sum / d.length), peakDb: 20 * Math.log10(Math.max(1e-9, peak)), centroid: den > 0 ? num / den : 0, seconds: buf.length / SR });
     }
   }
   return out;

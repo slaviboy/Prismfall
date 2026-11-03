@@ -80,6 +80,117 @@ const PRESETS: Record<string, Preset> = {
   },
   arctic: { layers: [{ noise: 'pink', filter: 'bandpass', freq: 800, q: 1.2, gain: 0.4, lfo: [0.1, 0.85], sweep: 600 }] },
   horizon: { layers: [{ noise: 'pink', filter: 'lowpass', freq: 380, q: 0.5, gain: 0.25, lfo: [0.05, 0.5] }] },
+  // World beds (brief §27): each world recognisable with eyes closed.
+  desert: {
+    layers: [
+      { noise: 'pink', filter: 'bandpass', freq: 520, q: 0.7, gain: 0.38, lfo: [0.07, 0.85], sweep: 380 },
+      { noise: 'white', filter: 'highpass', freq: 4800, q: 0.5, gain: 0.045, lfo: [0.07, 0.95] },
+      { noise: 'pink', filter: 'lowpass', freq: 140, q: 0.7, gain: 0.25, lfo: [0.03, 0.4] },
+    ],
+    // A far-off caravan bell now and then.
+    event: { every: [10, 20], play: (c, o, t) => void playNote(c, o, { kind: 'bell', ratio: 2.4, index: 1.1, decay: 3.2 }, 62 + [0, 1, 4, 7][Math.floor(Math.random() * 4)]!, t, 0.1, 0.07) },
+  },
+  ice: {
+    layers: [
+      { noise: 'pink', filter: 'bandpass', freq: 950, q: 1.4, gain: 0.32, lfo: [0.09, 0.85], sweep: 700 },
+      { noise: 'white', filter: 'highpass', freq: 6000, q: 0.4, gain: 0.03, lfo: [0.12, 0.8] },
+    ],
+    // Ice creaks deep below and crystalline tinkles.
+    event: {
+      every: [5, 12],
+      play: (c, o, t) =>
+        Math.random() < 0.5
+          ? void playNote(c, o, { kind: 'mallet', ratio: 1.41, index: 4.5, decay: 0.7 }, 33 + Math.floor(Math.random() * 8), t, 0.1, 0.1)
+          : [0, 0.09, 0.2].forEach((d, i) => playNote(c, o, { kind: 'bell', ratio: 5.4, index: 0.9, decay: 1.6 }, 90 + i * 3 + Math.floor(Math.random() * 3), t + d, 0.05, 0.035)),
+    },
+  },
+  garden: {
+    layers: [
+      { noise: 'pink', filter: 'bandpass', freq: 700, q: 0.5, gain: 0.16, lfo: [0.06, 0.6] },
+      { noise: 'white', filter: 'bandpass', freq: 2600, q: 2.2, gain: 0.05, lfo: [1.7, 0.55] },
+    ],
+    // A bamboo water knocker and the odd bird.
+    event: {
+      every: [7, 15],
+      play: (c, o, t) => {
+        if (Math.random() < 0.6) {
+          playNote(c, o, { kind: 'mallet', ratio: 1.01, index: 0.6, decay: 0.28 }, 57, t, 0.05, 0.16);
+          playNote(c, o, { kind: 'mallet', ratio: 1.01, index: 0.6, decay: 0.2 }, 57, t + 0.18, 0.05, 0.07);
+        } else for (let i = 0; i < 2; i++) playNote(c, o, { kind: 'bell', ratio: 1, index: 0.25, decay: 0.18 }, 91 - i * 3, t + i * 0.14, 0.05, 0.05);
+      },
+    },
+  },
+  cosmos: {
+    layers: [
+      { noise: 'pink', filter: 'lowpass', freq: 90, q: 1.8, gain: 0.55, lfo: [0.025, 0.45], sweep: 35 },
+      { noise: 'white', filter: 'bandpass', freq: 4800, q: 7, gain: 0.025, lfo: [0.09, 0.85], sweep: 1800 },
+    ],
+    event: { every: [8, 16], play: (c, o, t) => void playNote(c, o, { kind: 'bell', ratio: 4.5, index: 0.9, decay: 5 }, 80 + Math.floor(Math.random() * 12), t, 0.1, 0.05) },
+  },
+  alpine: {
+    layers: [
+      { noise: 'pink', filter: 'bandpass', freq: 430, q: 0.6, gain: 0.4, lfo: [0.05, 0.85], sweep: 300 },
+      { noise: 'white', filter: 'bandpass', freq: 3200, q: 0.8, gain: 0.03, lfo: [0.05, 0.9] },
+    ],
+    // A distant raptor call echoing off the peaks.
+    event: {
+      every: [12, 24],
+      play: (c, o, t) => {
+        playNote(c, o, { kind: 'bell', ratio: 1, index: 0.3, decay: 0.6 }, 86, t, 0.2, 0.05);
+        playNote(c, o, { kind: 'bell', ratio: 1, index: 0.3, decay: 0.8 }, 82, t + 0.25, 0.3, 0.04);
+        playNote(c, o, { kind: 'bell', ratio: 1, index: 0.3, decay: 0.8 }, 82, t + 0.95, 0.3, 0.015);
+      },
+    },
+  },
+  abyss: {
+    layers: [
+      { noise: 'pink', filter: 'lowpass', freq: 200, q: 1.3, gain: 0.7, lfo: [0.05, 0.5], sweep: 70 },
+      { noise: 'pink', filter: 'bandpass', freq: 800, q: 3, gain: 0.05, lfo: [0.11, 0.8], sweep: 300 },
+    ],
+    // Bubbles and, rarely, a deep song from something large.
+    event: {
+      every: [2, 7],
+      play: (c, o, t) =>
+        Math.random() < 0.15
+          ? void playNote(c, o, { kind: 'pad', wave: 'sine', voices: 1, attack: 0.8, release: 2.5, cutoff: 900 }, 41 + Math.floor(Math.random() * 5), t, 1.6, 0.18)
+          : void playNote(c, o, { kind: 'mallet', ratio: 1, index: 0.3, decay: 0.1 }, 72 + Math.floor(Math.random() * 16), t, 0.05, 0.1),
+    },
+  },
+  wilderness: {
+    layers: [
+      { noise: 'pink', filter: 'bandpass', freq: 900, q: 0.4, gain: 0.17, lfo: [0.07, 0.5] },
+      { noise: 'white', filter: 'bandpass', freq: 5200, q: 1.2, gain: 0.025, lfo: [0.15, 0.9] },
+    ],
+    event: {
+      every: [0.8, 2.6],
+      play: (c, o, t) => {
+        const n = 94 + Math.floor(Math.random() * 8);
+        const k = 2 + Math.floor(Math.random() * 3);
+        for (let i = 0; i < k; i++) playNote(c, o, { kind: 'mallet', ratio: 1.01, index: 0.4, decay: 0.05 }, n + (i % 2) * 2, t + i * 0.07, 0.03, 0.05);
+      },
+    },
+  },
+  volcanic: {
+    layers: [
+      { noise: 'pink', filter: 'lowpass', freq: 120, q: 1, gain: 0.7, lfo: [0.04, 0.45] },
+      { noise: 'white', filter: 'bandpass', freq: 3000, q: 3, gain: 0.03, lfo: [2.6, 0.95] },
+    ],
+    event: { every: [9, 18], play: (c, o, t) => void playNote(c, o, { kind: 'impact' }, 36, t, 1, 0.12) },
+  },
+  aurora: {
+    layers: [
+      { noise: 'pink', filter: 'bandpass', freq: 1100, q: 2, gain: 0.2, lfo: [0.06, 0.9], sweep: 900 },
+      { noise: 'pink', filter: 'lowpass', freq: 160, q: 0.8, gain: 0.18, lfo: [0.03, 0.4] },
+    ],
+    event: { every: [6, 13], play: (c, o, t) => [0, 0.3, 0.7].forEach((d, i) => playNote(c, o, { kind: 'bell', ratio: 3.02, index: 0.7, decay: 3 }, 84 + [0, 4, 7][i]!, t + d, 0.1, 0.03)) },
+  },
+  neon: {
+    layers: [
+      { noise: 'pink', filter: 'lowpass', freq: 220, q: 0.6, gain: 0.4, lfo: [0.04, 0.3] },
+      { noise: 'white', filter: 'highpass', freq: 2600, q: 0.3, gain: 0.12 },
+    ],
+    event: { every: [6, 14], play: (c, o, t) => void playNote(c, o, { kind: 'riser' }, 60, t, 1.4, 0.08) },
+  },
 };
 
 export const AMBIENCE_PRESETS = Object.keys(PRESETS);

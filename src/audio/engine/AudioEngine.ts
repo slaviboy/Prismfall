@@ -3,8 +3,11 @@
  *
  *   music sources → musicPre ─┬→ analysisTap (pre-fader, for the Music Analysis Engine)
  *                             └→ musicFader → pauseFilter → master
- *   sfx → sfxFader → master     ambience → ambFader → master     ui → uiFader → master
- *   master → masterFader (volume, mute) → limiter → destination
+ *   impacts (hard drop, land, lock) → impactFader ─┐
+ *   gameplay sfx ──────────────────────────────────┴→ sfxFader → master
+ *   stage effects (signature clears, creatures) → stageFader → master
+ *   ambience → ambFader → master     menu → uiFader → master
+ *   master → masterFader (volume, mute) → headroom → limiter → destination
  */
 export interface AudioVolumes {
   enabled: boolean;
@@ -13,6 +16,12 @@ export interface AudioVolumes {
   music: number;
   sfx: number;
   ambience: number;
+  /** Hard drop / landing / lock level within gameplay effects. */
+  impacts: number;
+  /** Stage-specific effects (world responses, creature sounds). */
+  stageFx: number;
+  /** Menu sounds. */
+  menu: number;
   latencyOffsetMs: number;
 }
 
@@ -32,6 +41,8 @@ export class AudioEngine {
   private pauseFilter!: BiquadFilterNode;
   private pauseGain!: GainNode;
   sfx!: GainNode;
+  impacts!: GainNode;
+  stageFx!: GainNode;
   ambience!: GainNode;
   ui!: GainNode;
   private master!: GainNode;
@@ -39,7 +50,7 @@ export class AudioEngine {
   private limiter!: DynamicsCompressorNode;
   /** Post-limiter meter: what the player actually hears (tests, dashboard). */
   outputMeter!: AnalyserNode;
-  private volumes: AudioVolumes = { enabled: true, muted: false, master: 0.8, music: 0.8, sfx: 0.75, ambience: 0.6, latencyOffsetMs: 0 };
+  private volumes: AudioVolumes = { enabled: true, muted: false, master: 0.8, music: 0.8, sfx: 0.75, ambience: 0.6, impacts: 0.8, stageFx: 0.7, menu: 0.7, latencyOffsetMs: 0 };
   /** Smoothed offset (ms) such that heardAt(audioTime) = audioTime*1000 + offset. */
   private clockOffset: number | null = null;
   private readonly listeners = new Set<(state: AudioContextState | 'none') => void>();
@@ -93,6 +104,8 @@ export class AudioEngine {
     this.pauseFilter.Q.value = 0.5;
     this.pauseGain = gain();
     this.sfx = gain();
+    this.impacts = gain();
+    this.stageFx = gain();
     this.ambience = gain();
     this.ui = gain();
     this.master = gain();
@@ -109,7 +122,9 @@ export class AudioEngine {
     this.musicFader.connect(this.pauseFilter);
     this.pauseFilter.connect(this.pauseGain);
     this.pauseGain.connect(this.master);
+    this.impacts.connect(this.sfx);
     this.sfx.connect(this.master);
+    this.stageFx.connect(this.master);
     this.ambience.connect(this.master);
     this.ui.connect(this.master);
     this.master.connect(this.masterFader);
@@ -144,8 +159,10 @@ export class AudioEngine {
     const bed = this.calibrating ? 0.15 : 1;
     set(this.musicFader, sliderToGain(v.music) * bed);
     set(this.sfx, sliderToGain(v.sfx));
-    // UI sounds (and calibration clicks) stay audible even with effects turned right down.
-    set(this.ui, Math.max(this.calibrating ? 0.5 : 0, sliderToGain(v.sfx) * 0.8));
+    set(this.impacts, sliderToGain(v.impacts) * 1.15);
+    set(this.stageFx, sliderToGain(v.stageFx) * sliderToGain(Math.max(v.sfx, v.ambience)) * bed);
+    // Calibration clicks stay audible even with menu sounds turned right down.
+    set(this.ui, Math.max(this.calibrating ? 0.5 : 0, sliderToGain(v.menu)));
     set(this.ambience, sliderToGain(v.ambience) * bed);
   }
 

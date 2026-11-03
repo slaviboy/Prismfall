@@ -83,6 +83,28 @@ test.describe('music analysis acceptance corpus', () => {
     for (const r of reports) expect.soft(r.maxEnergyStep, `${r.id} energy step per hop`).toBeLessThan(0.35);
   });
 
+  test('material impacts: hard drop outweighs lock and soft drop, and each world has its own colour', async ({ page }) => {
+    await openMenu(page);
+    type Row = { material: string; id: string; rms: number; peakDb: number; centroid: number; seconds: number };
+    const rows = await page.evaluate(async () => {
+      const lab = await (window as unknown as { __PRISMFALL__: { lab(): Promise<Record<string, (...a: unknown[]) => Promise<unknown>>> } }).__PRISMFALL__.lab();
+      return (await lab.impactReport!(['sandstone', 'ice', 'wood', 'cosmic', 'mineral', 'water', 'organic', 'obsidian', 'aurora', 'neon'])) as Row[];
+    });
+    const get = (material: string, id: string): Row => rows.find((r) => r.material === material && r.id === id) as Row;
+    for (const material of new Set(rows.map((r) => r.material))) {
+      const energy = (id: string): number => get(material, id).rms * Math.sqrt(get(material, id).seconds);
+      expect.soft(energy('hardDrop'), `${material} hard drop > lock`).toBeGreaterThan(energy('lock') * 1.3);
+      expect.soft(energy('lock'), `${material} lock > soft drop`).toBeGreaterThan(energy('softDrop'));
+      expect.soft(energy('hardDropHeavy'), `${material} full-height drop >= hard drop`).toBeGreaterThanOrEqual(energy('hardDrop') * 0.95);
+      for (const r of rows.filter((x) => x.material === material)) expect.soft(r.peakDb, `${material}/${r.id} peak`).toBeLessThanOrEqual(-1);
+    }
+    // Brightness follows the material: ice rings above sandstone, wood and water stay darker than glassy worlds.
+    expect(get('ice', 'hardDrop').centroid).toBeGreaterThan(get('sandstone', 'hardDrop').centroid);
+    expect(get('aurora', 'hardDrop').centroid).toBeGreaterThan(get('water', 'hardDrop').centroid);
+    // Sand carries a granular tail; wood is a short knock.
+    expect(get('sandstone', 'hardDrop').seconds).toBeGreaterThan(get('wood', 'lock').seconds);
+  });
+
   test('every SFX in every preset and every shipped track keeps headroom without NaN or DC', async ({ page }) => {
     await openMenu(page);
     const result = await page.evaluate(async () => {

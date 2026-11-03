@@ -85,6 +85,12 @@ export interface EnvironmentContext {
   readonly bursts: BurstSystem;
   readonly palette: StagePalette;
   readonly ground: GroundField;
+  /** Positional world sounds (footfalls...); the audio system plays them if enabled. */
+  readonly sounds: WorldSounds;
+}
+
+export interface WorldSounds {
+  emit(sound: 'footstep', x: number, y: number, z: number, gain?: number): void;
 }
 
 export interface StagePalette {

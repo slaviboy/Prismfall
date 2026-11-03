@@ -327,7 +327,8 @@
     "preset": "space"
   },
   "sfx": {
-    "preset": "crystal"
+    "preset": "crystal",
+    "material": "cosmic"
   },
   "unlock": {
     "type": "voyageLeg",

@@ -11,6 +11,7 @@ import { CompositionPlayer, FileTrackPlayer, type FileTrackMeta } from './music-
 import type { Composition } from './sequencer/composition';
 import { keyRoot } from './sequencer/theory';
 import { Ambience } from './sound-effects/Ambience';
+import { resolveMaterialAudio, type MaterialAudioProfile } from './sound-effects/materialAudio';
 import { SfxBank, type SfxId } from './sound-effects/SfxBank';
 
 /** Publishes AudioFeatures: real analysis + music timeline while music plays, metronome otherwise. */
@@ -54,6 +55,9 @@ export interface StageAudio {
   readonly ambience: string | null;
   readonly ambienceLevel: number;
   readonly sfxPreset: string;
+  /** Block impact profile (MaterialAudioProfile) and a key identifying it for caching. */
+  readonly material?: MaterialAudioProfile;
+  readonly materialKey?: string;
 }
 
 /**
@@ -66,8 +70,11 @@ export class AudioSystem {
   readonly analysis = new AnalysisEngine(this.engine);
   readonly sfx = new SfxBank(
     () => this.engine.ctx,
-    () => (this.engine.ctx ? this.engine.sfx : null),
-    () => (this.engine.ctx ? this.engine.ui : null),
+    (bus) => {
+      const e = this.engine;
+      if (!e.ctx) return null;
+      return bus === 'impacts' ? e.impacts : bus === 'stage' ? e.stageFx : bus === 'ui' ? e.ui : e.sfx;
+    },
   );
   readonly ambience = new Ambience(
     () => this.engine.ctx,
@@ -102,7 +109,7 @@ export class AudioSystem {
     if (!ok) return false;
     this.director.startScheduler();
     await this.configureAnalysis(true);
-    if (!this.sfx.ready) await this.sfx.build(this.stage?.sfxPreset ?? 'glass', this.stage?.composition ? keyRoot(this.stage.composition.key) : 0);
+    if (!this.sfx.ready) await this.buildSfx(this.stage);
     if (this.stage) await this.startStageAudio(this.overrideTrack ?? this.stage, 0.5);
     return true;
   }
@@ -131,10 +138,29 @@ export class AudioSystem {
     return this.analysis.processor.tuning;
   }
 
+  /** Renders the stage's sound palette: tonal preset in the music's key plus its block material. */
+  private buildSfx(stage: StageAudio | null): Promise<void> {
+    const material = stage?.material ?? resolveMaterialAudio('glass');
+    return this.sfx.build(stage?.sfxPreset ?? 'glass', stage?.composition ? keyRoot(stage.composition.key) : 0, material, stage?.materialKey ?? 'glass');
+  }
+
   applySettings(s: Settings): void {
     this.settings = s;
     const a = s.audio;
-    this.engine.setVolumes({ enabled: a.enabled, muted: a.muted, master: a.master, music: a.music, sfx: a.sfx, ambience: a.ambience, latencyOffsetMs: a.latencyOffsetMs });
+    this.engine.setVolumes({
+      enabled: a.enabled,
+      muted: a.muted,
+      master: a.master,
+      music: a.music,
+      sfx: a.sfx,
+      ambience: a.ambience,
+      impacts: a.hardDrop,
+      stageFx: a.stageFx,
+      menu: a.menu,
+      latencyOffsetMs: a.latencyOffsetMs,
+    });
+    this.sfx.variation = a.sfxVariation;
+    this.sfx.spatial = a.spatialAudio;
     this.director.pauseMode = a.pauseBehavior;
     this.analysis.setTuning(this.tuningFor(s));
     void this.configureAnalysis();
@@ -142,13 +168,13 @@ export class AudioSystem {
 
   /** Switches to a stage's music, ambience and sound palette. */
   async setStage(stage: StageAudio): Promise<void> {
-    const changed = this.stage?.id !== stage.id;
+    const changed = this.stage?.id !== stage.id || this.stage?.materialKey !== stage.materialKey;
     this.stage = stage;
     this.hub.metronome.setBpm(stage.bpm);
     this.hub.metronome.beatsPerBar = stage.beatsPerBar;
     if (!changed || !this.engine.ready) return;
     this.director.extendHorizon(2500);
-    await this.sfx.build(stage.sfxPreset, stage.composition ? keyRoot(stage.composition.key) : 0);
+    await this.buildSfx(stage);
     if (!this.overrideTrack) await this.startStageAudio(stage, 2.5);
     this.ambience.set(stage.ambience ?? '', stage.ambienceLevel);
   }
@@ -180,11 +206,44 @@ export class AudioSystem {
   }
 
   pause(): void {
+    this.sfx.play('pause');
     this.director.pause();
   }
 
   resume(): void {
+    this.sfx.play('resume');
     this.director.resume();
+  }
+
+  /** Audio listener follows the camera (spatial creature and environment sounds). */
+  setListener(px: number, py: number, pz: number, fx: number, fy: number, fz: number): void {
+    const ctx = this.engine.ctx;
+    if (!ctx) return;
+    const l = ctx.listener;
+    if (l.positionX) {
+      const t = ctx.currentTime;
+      l.positionX.setTargetAtTime(px, t, 0.05);
+      l.positionY.setTargetAtTime(py, t, 0.05);
+      l.positionZ.setTargetAtTime(pz, t, 0.05);
+      l.forwardX.setTargetAtTime(fx, t, 0.05);
+      l.forwardY.setTargetAtTime(fy, t, 0.05);
+      l.forwardZ.setTargetAtTime(fz, t, 0.05);
+      l.upX.value = 0;
+      l.upY.value = 1;
+      l.upZ.value = 0;
+    }
+  }
+
+  /** A world sound requested by an environment component (rate-limited token bucket). */
+  private spatialBudget = 6;
+  private spatialStamp = 0;
+  playWorldSound(id: SfxId, x: number, y: number, z: number, gain = 1): void {
+    const now = performance.now();
+    this.spatialBudget = Math.min(6, this.spatialBudget + ((now - this.spatialStamp) / 1000) * 6);
+    this.spatialStamp = now;
+    if (this.spatialBudget < 1 || !this.sfx.has(id)) return;
+    this.spatialBudget--;
+    this.sfx.playAt(id, x, y, z, { gain });
   }
 
   play(id: SfxId, options?: Parameters<SfxBank['play']>[1]): void {
@@ -207,12 +266,17 @@ export class AudioSystem {
     let hardDropped = false;
     for (const e of events) {
       switch (e.type) {
+        case 'spawn':
+          this.sfx.play('spawn', { gain: 0.45, minGapMs: 60 });
+          break;
         case 'move':
           this.sfx.play('move', { gain: e.auto ? 0.55 : 0.9, pan: engine?.active ? (engine.active.x - 4) / 8 : 0 });
           break;
-        case 'rotate':
-          this.sfx.play('rotate');
+        case 'rotate': {
+          const turn = (e.to - e.from + 4) % 4;
+          this.sfx.play(turn === 3 ? 'rotateCcw' : 'rotate', { pan: engine?.active ? (engine.active.x - 4) / 10 : 0 });
           break;
+        }
         case 'rotateFailed':
           this.sfx.play('rotateFail', { gain: 0.6 });
           this.caption('Rotation blocked (click)', 'info', 'rotateFail');
@@ -220,12 +284,17 @@ export class AudioSystem {
         case 'softDrop':
           this.sfx.play('softDrop', { gain: 0.5, minGapMs: 45 });
           break;
-        case 'hardDrop':
+        case 'hardDrop': {
           hardDropped = true;
-          this.sfx.play('hardDrop', { gain: Math.min(1, 0.65 + e.rows * 0.02) });
+          // Distance dropped sets the strength: short taps stay light, full-height slams go heavy.
+          const heavy = e.rows >= 10;
+          const pan = e.cells.length > 0 ? (e.cells.reduce((sum, c) => sum + c.x, 0) / e.cells.length - 4.5) / 9 : 0;
+          this.sfx.play(heavy ? 'hardDropHeavy' : 'hardDrop', { gain: Math.min(1, 0.6 + e.rows * 0.025), pan });
+          if (e.rows >= 6) this.sfx.play('impactResponse', { gain: Math.min(1, e.rows / 18) });
           break;
+        }
         case 'land':
-          this.sfx.play('land', { gain: 0.7 });
+          if (!hardDropped) this.sfx.play('land', { gain: 0.7 });
           break;
         case 'lock':
           if (!hardDropped) this.sfx.play('lock');
@@ -240,9 +309,11 @@ export class AudioSystem {
         case 'lineClear': {
           const id = (['clear1', 'clear2', 'clear3', 'clear4'] as const)[Math.min(4, e.lines) - 1] ?? 'clear1';
           this.sfx.play(id);
+          if (e.lines >= 4 || e.perfectClear) this.sfx.play('signature');
           if (e.spin !== 'none') this.sfx.play('tspin');
           if (e.combo >= 1) {
-            this.sfx.play('combo', { semitones: SfxBank.comboSemitones(e.combo), gain: 0.8 });
+            const tier = e.combo >= 6 ? 'comboHigh' : e.combo >= 3 ? 'comboMid' : 'combo';
+            this.sfx.play(tier, { semitones: SfxBank.comboSemitones(e.combo), gain: 0.8 });
             this.caption(`Combo chime, rising (${e.combo})`, 'info', 'combo');
           }
           if (e.backToBack) this.sfx.play('b2b', { gain: 0.8 });
@@ -268,7 +339,8 @@ export class AudioSystem {
           if (this.settings?.audio.sfxAccentLayer ?? true) this.director.stinger(0.6);
           break;
         case 'goal':
-          this.sfx.play('levelUp');
+          this.sfx.play('stageComplete');
+          this.caption('Goal reached fanfare', 'music', 'goal');
           break;
         case 'boardReset':
           this.sfx.play('clear4', { gain: 0.7 });
@@ -282,12 +354,17 @@ export class AudioSystem {
       }
     }
     if (!engine) return;
-    // Music follows the game: level, combos, recent clears and danger raise intensity.
+    // Music follows the game: level, combos, recent clears and danger raise intensity. With
+    // adaptive music off the arrangement holds steady; the intensity setting scales the build-up.
     this.clearEnergy = Math.max(0, this.clearEnergy - dt * 0.12);
     const height = engine.board.stackHeight();
     this.danger = height >= 16;
-    const intensity = 0.3 + Math.min(0.35, (engine.level - 1) * 0.025) + Math.min(0.2, Math.max(0, engine.combo) * 0.04) + this.clearEnergy * 0.25 + (this.danger ? 0.15 : 0);
-    this.director.setIntensity(intensity);
+    const a = this.settings?.audio;
+    const adaptive = a?.adaptiveMusic ?? true;
+    const scale = a?.musicIntensity ?? 1;
+    const dynamic = Math.min(0.35, (engine.level - 1) * 0.025) + Math.min(0.2, Math.max(0, engine.combo) * 0.04) + this.clearEnergy * 0.25 + (this.danger ? 0.15 : 0);
+    const intensity = adaptive ? 0.3 + dynamic * scale : 0.45 * scale;
+    this.director.setIntensity(Math.max(0.1, Math.min(1, intensity)));
     if (this.danger && !engine.isOver) {
       this.dangerTimer -= dt;
       if (this.dangerTimer <= 0) {

@@ -163,6 +163,19 @@ export const settingsSchema = z.object({
       music: n(0, 1, 0.8),
       sfx: n(0, 1, 0.75),
       ambience: n(0, 1, 0.6),
+      /** Hard drops, landings and locks (within gameplay effects). */
+      hardDrop: n(0, 1, 0.8),
+      /** World-specific effects: signature clears, creature sounds. */
+      stageFx: n(0, 1, 0.7),
+      menu: n(0, 1, 0.7),
+      /** Scales how strongly the music builds with gameplay (0.5 calm .. 1.5 intense). */
+      musicIntensity: n(0.5, 1.5, 1),
+      /** Music layers follow the game; off = a steady arrangement. */
+      adaptiveMusic: b(true),
+      /** HRTF positioning for creature and environment sounds (headphones). */
+      spatialAudio: b(true),
+      /** Pitch and level spread between repeated sounds (0 = identical repeats). */
+      sfxVariation: n(0, 1, 0.5),
       latencyOffsetMs: n(-250, 250, 0),
       pauseBehavior: e(['duck', 'stop'] as const, 'duck'),
       musicPreview: b(true),

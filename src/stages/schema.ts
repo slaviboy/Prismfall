@@ -134,7 +134,14 @@ export const stageManifestSchema = z.object({
     .prefault({}),
   music: z.object({ bpm: z.number().min(30).max(300), beatsPerBar: z.number().int().default(4), tracks: z.array(trackSchema).default([]), defaultTrack: z.string().optional() }),
   ambience: z.object({ preset: z.string(), level: z.number().default(1) }).optional(),
-  sfx: z.object({ preset: z.string().default('glass'), overrides: z.record(z.string(), z.string()).default({}) }).prefault({}),
+  sfx: z
+    .object({
+      preset: z.string().default('glass'),
+      /** Block impact sound: a built-in MaterialAudioProfile name or an inline profile. */
+      material: z.union([z.string(), z.record(z.string(), z.unknown())]).default('glass'),
+      overrides: z.record(z.string(), z.string()).default({}),
+    })
+    .prefault({}),
   unlock: unlockSchema.default({ type: 'always' }),
 });
 
