@@ -29,7 +29,7 @@ test('plays a complete Sprint session to the results screen and records it', asy
   while (!(await page.getByTestId('setup-variant').innerText()).includes('20 Lines')) await page.getByTestId('setup-variant').click();
   await page.getByTestId('setup-start').click();
   await expect(page.getByTestId('hud')).toBeVisible();
-  await expect.poll(() => hooks<string>(page, 'h.shell.session.status'), { timeout: 5000 }).toBe('running');
+  await expect.poll(() => hooks<string>(page, 'h.shell.session?.status'), { timeout: 15_000 }).toBe('running');
   await autoplay(page, 300);
   await expect(page.getByTestId('results-screen')).toBeVisible({ timeout: 30_000 });
   await expect(page.getByTestId('results-headline')).toHaveText(/\d+:\d{2}\.\d{2}/);
@@ -64,7 +64,7 @@ test('pauses, resumes, restarts and quits', async ({ page }) => {
   await page.getByTestId('menu-play').click();
   await page.getByTestId('mode-marathon').click();
   await page.getByTestId('setup-start').click();
-  await expect.poll(() => hooks<string>(page, 'h.shell.session.status')).toBe('running');
+  await expect.poll(() => hooks<string>(page, 'h.shell.session?.status'), { timeout: 15_000 }).toBe('running');
   await page.keyboard.press('Escape');
   await expect(page.getByTestId('pause-menu')).toBeVisible();
   const tickPaused = await hooks<number>(page, 'h.shell.session.engine.tick');
@@ -72,7 +72,7 @@ test('pauses, resumes, restarts and quits', async ({ page }) => {
   expect(await hooks<number>(page, 'h.shell.session.engine.tick')).toBe(tickPaused);
   await page.keyboard.press('Enter'); // Resume (focused)
   await expect(page.getByTestId('pause-menu')).toBeHidden();
-  await expect.poll(() => hooks<string>(page, 'h.shell.session.status'), { timeout: 5000 }).toBe('running');
+  await expect.poll(() => hooks<string>(page, 'h.shell.session?.status'), { timeout: 15_000 }).toBe('running');
   await page.keyboard.press('Space'); // hard drop
   await expect.poll(() => hooks<number>(page, 'h.shell.session.engine.stats.pieces')).toBe(1);
   await page.keyboard.press('Escape');

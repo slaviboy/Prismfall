@@ -37,6 +37,8 @@ How to read the Evidence column:
 | Web Audio API | Done | `src/audio/engine/AudioEngine.ts`; `e2e/audio.spec.ts` |
 | Keyboard and controllers | Done | `src/input/`; `input.test.ts`, `e2e/controls.spec.ts`, `e2e/gamepad.spec.ts` |
 | Mouse control (optional): piece follows the pointer, left click hard drop, right click rotate, middle click hold | Done | `src/input/mouse/mouseControl.ts` (one-cell `nudge` actions, replay-safe); `mouseControl.test.ts`, `e2e/mouse.spec.ts` |
+| Level creator: your own levels from any world, music and block design, saved with the settings and played in any free-play mode | Done | `src/ui/menus/LevelCreator.tsx`, `src/app/levels.ts`, `GameShell.ts`; `levels.test.ts`, `e2e/level-creator.spec.ts` |
+| Block design setting: one design (22 in the library) in every world | Done | `src/rendering/materials/blockDesigns.ts`, `RenderSystem.applyBlockStyle`; `blockDesigns.test.ts` |
 | Developer mode unlocks every world, with a switch | Done | `DataPanel.tsx`, `StageSelect.tsx`, Developer tab; `e2e/stage-select.spec.ts` |
 | Extensive settings | Partial | See §11: reflection quality is not implemented |
 | Data-driven levels | Done | `src/stages/`, `content/stages/`; `src/stages/content.test.ts` |

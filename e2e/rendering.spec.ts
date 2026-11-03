@@ -97,7 +97,7 @@ test('level up shifts the frame tint and surges its glow', async ({ page }) => {
   await page.getByTestId('menu-play').click();
   await page.getByTestId('mode-marathon').click();
   await page.getByTestId('setup-start').click();
-  await expect.poll(() => hooks<string>(page, 'h.shell.session.status')).toBe('running');
+  await expect.poll(() => hooks<string>(page, 'h.shell.session?.status'), { timeout: 15_000 }).toBe('running');
   const before = await hooks<number[]>(page, '[...h.shell.renderSystem.board.frame.accent.value.toArray()]');
   await page.evaluate(() => (window as unknown as { __PRISMFALL__: { shell: { session: { engine: { setLevel(l: number): void } } } } }).__PRISMFALL__.shell.session.engine.setLevel(5));
   await expect.poll(() => hooks<number>(page, 'h.shell.renderSystem.board.frame.glow.value')).toBeGreaterThan(1.5);

@@ -1,5 +1,6 @@
 import type { Settings, SettingsSection } from '../../settings/schema';
 import { ms, percent } from '../format';
+import { BLOCK_DESIGNS } from '../../rendering/materials/blockDesigns';
 
 export type SettingDef =
   | { kind: 'toggle'; section: SettingsSection; key: string; label: string; description?: string; when?: (s: Settings) => boolean }
@@ -188,6 +189,15 @@ export const GRAPHICS_TAB: TabDef = {
         { value: 'stage', label: 'World theme' },
         { value: 'classic', label: 'Classic' },
       ],
+    },
+    {
+      kind: 'choice',
+      section: 'graphics',
+      key: 'blockDesign',
+      label: 'Block design',
+      description: "One design for every world, or each world's own. Your levels can choose their own blocks too.",
+      options: [{ value: '', label: "Each world's own" }, ...BLOCK_DESIGNS.map((d) => ({ value: d.id, label: d.name }))],
+      when: (s) => s.graphics.blockStyle !== 'classic',
     },
     { kind: 'slider', section: 'graphics', key: 'blockGlow', label: 'Block glow', description: 'How brightly the pieces glow on their own. Lower values give calmer, more solid blocks.', min: 0, max: 1.5, step: 0.05, format: percent },
     { kind: 'slider', section: 'graphics', key: 'bloom', label: 'Bloom intensity', min: 0, max: 2, step: 0.05, format: percent, when: (s) => s.graphics.postProcessing },

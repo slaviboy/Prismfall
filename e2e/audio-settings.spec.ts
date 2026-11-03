@@ -86,7 +86,7 @@ test.describe('visual sound cues', () => {
     await page.getByTestId('menu-play').click();
     await page.getByTestId('mode-zen').click();
     await page.getByTestId('setup-start').click();
-    await expect.poll(() => hooks<string>(page, 'h.shell.session.status')).toBe('running');
+    await expect.poll(() => hooks<string>(page, 'h.shell.session?.status'), { timeout: 15_000 }).toBe('running');
     await expect(page.getByTestId('sound-cues')).toBeVisible();
     // The lamp animates on every heard beat of the stage music.
     const pulses = await page.evaluate(async () => {

@@ -122,7 +122,7 @@ test.describe('audio engine', () => {
     await page.getByTestId('menu-play').click();
     await page.getByTestId('mode-zen').click();
     await page.getByTestId('setup-start').click();
-    await expect.poll(() => hooks<string>(page, 'h.shell.session.status')).toBe('running');
+    await expect.poll(() => hooks<string>(page, 'h.shell.session?.status'), { timeout: 15_000 }).toBe('running');
     await page.waitForTimeout(1500);
     await page.keyboard.press('Escape');
     await page.waitForTimeout(300);

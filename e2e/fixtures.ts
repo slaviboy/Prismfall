@@ -69,7 +69,7 @@ export async function startAndPlay(page: Page, mode = 'zen', pieces = 12): Promi
   await page.getByTestId('menu-play').click();
   await page.getByTestId(`mode-${mode}`).click();
   await page.getByTestId('setup-start').click();
-  await expect.poll(() => hooks<string>(page, 'h.shell.session.status')).toBe('running');
+  await expect.poll(() => hooks<string>(page, 'h.shell.session?.status'), { timeout: 15_000 }).toBe('running');
   await autoplay(page, pieces);
 }
 

@@ -8,6 +8,7 @@ import { CameraRig } from '../camera/CameraRig';
 import { DefaultBackdrop } from '../environments/DefaultBackdrop';
 import { LightRig } from '../lighting/LightRig';
 import { resolveBlockPreset, type BlockMaterialPreset } from '../materials/blockPresets';
+import { getBlockDesign } from '../materials/blockDesigns';
 import { PostPipeline } from '../postprocessing/PostPipeline';
 import { frameUniforms } from '../shaders/uniforms';
 import type { BoardRect, GameView, ViewFrame } from '../view';
@@ -204,15 +205,28 @@ export class RenderSystem implements GameView {
     this.applyBlockStyle();
   }
 
-  /** Stage theme, or classic colours and glass blocks; high contrast always wins for colours. */
+  /** A player level's block design for the current game (a BLOCK_DESIGNS id), or null. */
+  private blockOverride: string | null = null;
+
+  setBlockOverride(id: string | null): void {
+    if (id === this.blockOverride) return;
+    this.blockOverride = id;
+    this.applyBlockStyle();
+  }
+
+  /**
+   * Classic glass blocks, a chosen design (a player level's, else the Block design setting), or
+   * the world's own theme. Chosen designs keep the world's colours; high contrast always wins.
+   */
   private applyBlockStyle(): void {
     const s = this.settings;
     const classic = s?.graphics.blockStyle === 'classic';
+    const design = classic ? null : getBlockDesign(this.blockOverride ?? s?.graphics.blockDesign ?? '');
     const palette = s?.accessibility.highContrast ? paletteFor(true) : classic || !this.stageBlocks.palette ? DEFAULT_PALETTE : this.stageBlocks.palette;
     this.board.setPalette(palette);
     this.feedback.piecePalette = palette;
-    this.board.setPreset(classic ? resolveBlockPreset('prism') : this.stageBlocks.preset);
-    void this.setBlockDesign(classic ? 'framed' : this.stageBlocks.geometry);
+    this.board.setPreset(classic ? resolveBlockPreset('prism') : design ? resolveBlockPreset(design.material) : this.stageBlocks.preset);
+    void this.setBlockDesign(classic ? 'framed' : design ? design.geometry : this.stageBlocks.geometry);
   }
 
   async setBlockDesign(id: string): Promise<void> {

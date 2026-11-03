@@ -1,3 +1,4 @@
+import { LevelCreatorScreen } from './menus/LevelCreator';
 import { Component, lazy, Suspense, type ErrorInfo, type ReactNode } from 'react';
 import { shell } from '../app/GameShell';
 import { navigate, useApp } from '../app/stores';
@@ -80,6 +81,7 @@ export function App(): ReactNode {
       {screen === 'highscores' ? <HighScoresScreen /> : null}
       {screen === 'settings' ? <SettingsScreen /> : null}
       {screen === 'credits' ? <CreditsScreen /> : null}
+      {screen === 'creator' ? <LevelCreatorScreen /> : null}
       {screen === 'game' || screen === 'replay' ? <Hud /> : null}
       {screen === 'game' ? <PauseOverlay /> : null}
       {screen === 'replay' ? <ReplayControls /> : null}

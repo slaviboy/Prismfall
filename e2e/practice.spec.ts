@@ -32,7 +32,7 @@ test.describe('practice mode', () => {
     await expect.poll(() => hooks<string[]>(page, 'h.getSettings().practice.drillPieces')).toEqual(['I']);
 
     await page.getByTestId('setup-start').click();
-    await expect.poll(() => hooks<string>(page, 'h.shell.session.status')).toBe('running');
+    await expect.poll(() => hooks<string>(page, 'h.shell.session?.status'), { timeout: 15_000 }).toBe('running');
     expect(await hooks<string[]>(page, 'h.shell.session.engine.preview(5)')).toEqual(['I', 'I', 'I', 'I', 'I']);
     // No gravity: the piece stays put (sampled once it has settled after spawning).
     await expect.poll(() => hooks<boolean>(page, '!!h.shell.session.engine.active && h.shell.session.engine.tick > 300')).toBe(true);

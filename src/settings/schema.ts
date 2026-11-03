@@ -99,6 +99,19 @@ const padProfileSchema = z.object({
   rawMap: z.record(z.string(), z.string()).catch({}).default({}),
 });
 
+/** One player-made level. Unknown worlds, tracks or designs fall back to the world's own at play time. */
+export const customLevelSchema = z.object({
+  id: z.string().catch(''),
+  name: z.string().max(40).catch('My level').default('My level'),
+  stageId: z.string().catch(''),
+  /** 'stage' = the world's music, or a music catalogue id ("stage:<world>:<track>", "user:<id>"). */
+  music: z.string().catch('stage').default('stage'),
+  /** 'stage' = the world's blocks, or a BLOCK_DESIGNS id. */
+  blocks: z.string().catch('stage').default('stage'),
+  created: z.number().catch(0).default(0),
+});
+export type CustomLevel = z.infer<typeof customLevelSchema>;
+
 export const settingsSchema = z.object({
   version: z.number().catch(SETTINGS_VERSION).default(SETTINGS_VERSION),
   gameplay: z
@@ -180,6 +193,8 @@ export const settingsSchema = z.object({
       blockGlow: n(0, 1.5, 0.6),
       /** 'stage' = each world's block theme; 'classic' = traditional colours and glass blocks everywhere. */
       blockStyle: e(['stage', 'classic'] as const, 'stage'),
+      /** A design from BLOCK_DESIGNS used in every world; '' = each world's own design. */
+      blockDesign: z.string().catch('').default(''),
       shadows: e(['off', 'low', 'medium', 'high'] as const, 'medium'),
       particleDensity: n(0, 2, 1),
       environmentDetail: e(['low', 'medium', 'high', 'ultra'] as const, 'high'),
@@ -296,6 +311,21 @@ export const settingsSchema = z.object({
       /** 'stage' = stage default, 'shuffle', or a track id. */
       music: z.string().catch('stage').default('stage'),
       unlockAll: b(false),
+      /** The player's level chosen for play (an id from creator.levels); '' = the world itself. */
+      levelId: z.string().catch('').default(''),
+    })
+    .prefault({}),
+  /** Levels made in the level creator: a world, its music and its blocks, under a name. */
+  creator: z
+    .object({
+      levels: z
+        .array(z.unknown())
+        .catch([])
+        .default([])
+        .transform((items) => items.flatMap((item) => {
+          const parsed = customLevelSchema.safeParse(item);
+          return parsed.success && parsed.data.id && parsed.data.stageId ? [parsed.data] : [];
+        })),
     })
     .prefault({}),
   developer: z

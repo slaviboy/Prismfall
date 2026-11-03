@@ -45,6 +45,7 @@ import { loadMusicModule, readTrackMeta, resolveAsset, type StageInfo } from '..
 import { UserMusicLibrary } from '../audio/library/UserMusic';
 import type { FileTrackMeta } from '../audio/music-director/tracks';
 import { TrackRotation } from '../audio/music-director/trackRotation';
+import { activeLevel, levelBlocks, levelMusic } from './levels';
 import { resolveMaterialAudio, type MaterialAudioInput } from '../audio/sound-effects/materialAudio';
 import type { StageManifest } from '../stages/schema';
 
@@ -368,9 +369,8 @@ export class GameShell {
     });
   }
 
-  /** Free play: the world's music, a shuffled track or the chosen track (Music Room). */
-  private async applyFreePlayMusic(): Promise<void> {
-    const choice = getSettings().setup.music;
+  /** Free play: the world's music, a shuffled track or the chosen track (Music Room, or the player's level). */
+  private async applyFreePlayMusic(choice = getSettings().setup.music): Promise<void> {
     if (choice === 'stage') {
       await this.playTrack(null);
       return;
@@ -604,18 +604,22 @@ export class GameShell {
         voyageRules = { goal: { kind: 'lines', lines: plan.totalLines }, startLevel: first.level };
       }
     }
+    // The player's level (level creator) brings its own music and blocks to free play.
+    const level = options.modeId !== 'voyage' ? activeLevel(getSettings()) : null;
+    const musicChoice = (level && level.stageId === options.stageId ? levelMusic(level) : null) ?? getSettings().setup.music;
+    this.renderSystem?.setBlockOverride(level && level.stageId === options.stageId ? levelBlocks(level) : null);
     await this.ensureStage(options.stageId);
     const stageInfo = getStage(options.stageId);
     const manifest = stageInfo?.manifest;
     // Free play with world music: the world's tracks take turns, one game each (the first game
     // plays its default track). Menus, world previews and Voyage keep each world's default track.
-    const turn = options.modeId !== 'voyage' && getSettings().setup.music === 'stage' && manifest ? this.worldRotation.next(manifest.id, manifest.music.tracks.map((t) => t.id), manifest.music.defaultTrack) : undefined;
+    const turn = options.modeId !== 'voyage' && musicChoice === 'stage' && manifest ? this.worldRotation.next(manifest.id, manifest.music.tracks.map((t) => t.id), manifest.music.defaultTrack) : undefined;
     this.gameWorldTrack = turn && manifest ? { stageId: manifest.id, trackId: turn } : null;
     const wanted = turn ?? (manifest ? GameShell.defaultTrackId(manifest) : undefined);
     // The world may have been previewed without its music (music previews off), or be playing another of its tracks.
     if (stageInfo?.available && (this.audio.stageId !== options.stageId || this.audio.stage?.trackId !== wanted)) await this.loadStageAudio(stageInfo, wanted);
     if (options.modeId === 'voyage') await this.playTrack(null);
-    else await this.applyFreePlayMusic();
+    else await this.applyFreePlayMusic(musicChoice);
     this.announceTrack(options.stageId);
     const s = getSettings();
     const mode = getMode(options.modeId);
@@ -912,6 +916,7 @@ export class GameShell {
     }
     this.session = null;
     this.replayReturn = appStore.getState().screen;
+    this.renderSystem?.setBlockOverride(null);
     this.replaySession = new ReplaySession(replay, stageId);
     hudStore.setState({ visible: true, modeId: this.replaySession.mode.id, intro: null, callouts: [], best: null, linesGoal: null, timeLimitMs: null });
     navigate('replay');

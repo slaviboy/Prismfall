@@ -17,6 +17,7 @@ import { isStageUnlocked, unlockHint } from '../../stages/progression';
 import { PracticeOptions } from './PracticeOptions';
 import { StageArt, orderedStages } from './StageSelect';
 import { hoverFocus } from '../navigation/hoverFocus';
+import { activeLevel } from '../../app/levels';
 import { VRMenuItem } from '../vr/VRControls';
 
 function useHints(extra: readonly { keys: string; label: string }[] = []): readonly { keys: string; label: string }[] {
@@ -64,6 +65,7 @@ export function MainMenu(): ReactNode {
         <MenuItem label="Voyage" description="A journey through the worlds, one after another, as the music carries you on." onSelect={() => navigate('voyage')} testId="menu-voyage" />
         <MenuItem label="Play" description="Choose a mode and a world to play in." onSelect={() => navigate('modes')} autoFocus testId="menu-play" />
         <VRMenuItem />
+        <MenuItem label="Level creator" description="Make your own levels: any world, any music and any blocks." onSelect={() => navigate('creator')} testId="menu-creator" />
         <MenuItem label="Music Room" description="Listen to every world's music, add your own and choose what plays in free play." onSelect={() => navigate('musicRoom')} testId="menu-music" />
         <MenuItem label="High scores" description="Your best runs in every mode, with replays." onSelect={() => navigate('highscores')} testId="menu-highscores" />
         <MenuItem label="Settings" description="Controls, graphics, audio, camera and accessibility." onSelect={() => navigate('settings')} testId="menu-settings" />
@@ -99,22 +101,30 @@ export function ModeSelectScreen(props: { onPick: (id: ModeId) => void }): React
 function WorldRow(): ReactNode {
   const stageId = useSettings((s) => s.setup.stageId);
   const unlockAll = useSettings((s) => s.setup.unlockAll);
+  const level = useSettings(activeLevel);
   const progress = useProgress((s) => s.progress);
   const stages = orderedStages();
   if (stages.length === 0) return null;
-  const info = getStage(stageId) ?? stages[0];
+  const info = getStage(level?.stageId ?? stageId) ?? stages[0];
   const m = info?.manifest;
   const locked = m ? !isStageUnlocked(m, progress, unlockAll) : false;
   const name = (id: string): string => getStage(id)?.manifest?.name ?? id;
   return (
-    <button type="button" className="setup-world" data-focusable onClick={() => navigate('stages')} onMouseEnter={hoverFocus} data-testid="setup-world">
-      <StageArt info={info} className="setup-world-art" />
-      <span className="setup-world-text">
-        <span className="setup-world-label">World</span>
-        <span className="setup-world-name">{m?.name ?? stageId}</span>
-        <span className="setup-world-desc">{locked && m ? unlockHint(m, name) : 'Change world'}</span>
-      </span>
-    </button>
+    <>
+      <button type="button" className="setup-world" data-focusable onClick={() => navigate('stages')} onMouseEnter={hoverFocus} data-testid="setup-world">
+        <StageArt info={info} className="setup-world-art" />
+        <span className="setup-world-text">
+          <span className="setup-world-label">{level ? 'Your level' : 'World'}</span>
+          <span className="setup-world-name">{level ? level.name : (m?.name ?? stageId)}</span>
+          <span className="setup-world-desc">{locked && m ? unlockHint(m, name) : level ? `In ${m?.name ?? level.stageId}. Change world` : 'Change world'}</span>
+        </span>
+      </button>
+      {level ? (
+        <Button onClick={() => updateSection('setup', { levelId: '' })} testId="setup-clear-level">
+          Play {m?.name ?? 'the world'} as it is
+        </Button>
+      ) : null}
+    </>
   );
 }
 

@@ -95,6 +95,8 @@ Button names and glyphs follow the detected controller family (PlayStation, Xbox
 
 In play, the mouse wheel zooms the camera. With developer tools enabled (Settings → Data), F9 toggles the audio analysis dashboard, and every world is unlocked (a switch on the world list and in the Developer tab turns this off again).
 
+**Level creator** (main menu): make your own levels from any world, any world's music (or your own files from the Music Room) and any block design. Levels are saved with your settings. Play one and it becomes the world in the mode setup, until you choose another world or press "Play … as it is". **Block design** (Settings → Graphics) uses one design in every world.
+
 **Mouse control** (Settings → Gameplay, off by default): move the mouse and the piece, with its ghost, follows the pointer across the board. Left click hard drops, right click rotates clockwise and middle click holds. The keyboard and controllers keep working; the mouse steers again as soon as it moves or clicks.
 
 ## Saves and data

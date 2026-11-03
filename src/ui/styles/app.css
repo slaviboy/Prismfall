@@ -1857,3 +1857,36 @@ kbd {
 .vr-overlay-text { max-width: 36ch; margin: 0 auto; color: var(--haze); }
 .vr-status { display: flex; flex-direction: column; gap: 0.5rem; }
 .vr-bindings { display: grid; grid-template-columns: auto 1fr; gap: 0.35rem 1rem; align-items: center; }
+
+/* Level creator */
+.level-name-row {
+  cursor: text;
+}
+
+.level-name-input {
+  min-width: 0;
+  width: 14em;
+  padding: 0.35em 0.6em;
+  border: 1px solid rgba(233, 238, 245, 0.28);
+  border-radius: 6px;
+  background: rgba(8, 10, 18, 0.55);
+  color: inherit;
+  font: inherit;
+  font-size: 1.05rem;
+}
+
+.level-name-input:focus {
+  outline: 2px solid var(--focus, #9fc4ff);
+  outline-offset: 2px;
+  border-color: transparent;
+}
+
+.level-preview-art {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 0.9rem;
+}

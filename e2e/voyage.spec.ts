@@ -47,7 +47,7 @@ test.describe('voyage', () => {
     await expect.poll(() => hooks<string | null>(page, 'h.shell.stageManager.activeId'), { timeout: 15_000 }).toBe('ancient-garden');
     await expect.poll(() => hooks<string | null>(page, 'h.shell.audio.stageId'), { timeout: 15_000 }).toBe('ancient-garden');
     // The board carried over the transition.
-    expect(await hooks<string>(page, 'h.shell.session.status')).toBe('running');
+    expect(await hooks<string>(page, 'h.shell.session?.status'), { timeout: 15_000 }).toBe('running');
 
     // Jump to the last leg and finish the journey.
     const total = (plan[11] as { endLines: number }).endLines;

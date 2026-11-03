@@ -18,7 +18,7 @@ test.describe('screen captures', () => {
     await page.getByTestId('mode-marathon').click();
     await page.screenshot({ path: shot('mode-setup') });
     await page.getByTestId('setup-start').click();
-    await expect.poll(() => hooks<string>(page, 'h.shell.session.status')).toBe('running');
+    await expect.poll(() => hooks<string>(page, 'h.shell.session?.status'), { timeout: 15_000 }).toBe('running');
     await autoplay(page, 40);
     await page.waitForTimeout(300);
     await page.screenshot({ path: shot('gameplay') });

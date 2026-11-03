@@ -24,7 +24,7 @@ test.describe('world select', () => {
     await expect(page.getByTestId('mode-setup')).toBeVisible();
     expect(await hooks<string>(page, 'h.getSettings().setup.stageId')).toBe(target);
     await page.getByTestId('setup-start').click();
-    await expect.poll(() => hooks<string>(page, 'h.shell.session.status'), { timeout: 15_000 }).toBe('running');
+    await expect.poll(() => hooks<string>(page, 'h.shell.session?.status'), { timeout: 15_000 }).toBe('running');
     expect(await hooks<string | null>(page, 'h.shell.stageManager.activeId')).toBe(target);
     await expect.poll(() => hooks<string | null>(page, 'h.shell.audio.stageId'), { timeout: 15_000 }).toBe(target);
   });

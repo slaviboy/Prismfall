@@ -21,6 +21,7 @@ export type Screen =
   | 'settings'
   | 'musicRoom'
   | 'credits'
+  | 'creator'
   | 'replay';
 
 export interface Toast {

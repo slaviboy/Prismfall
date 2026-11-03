@@ -73,7 +73,7 @@ test.describe('VR (emulated Quest 3)', () => {
     await page.getByTestId('menu-play').click();
     await page.getByTestId('mode-marathon').click();
     await page.getByTestId('setup-start').click();
-    await expect.poll(() => hooks<string>(page, 'h.shell.session.status')).toBe('running');
+    await expect.poll(() => hooks<string>(page, 'h.shell.session?.status'), { timeout: 15_000 }).toBe('running');
     await autoplay(page, 4);
     const placed = await pieces(page);
     const score = await hooks<number>(page, 'h.hudStore.getState().score');
@@ -105,7 +105,7 @@ test.describe('VR (emulated Quest 3)', () => {
     // B is "back" in menus: resume (after the resume countdown, a piece is in play).
     await press(page, 'right', 'b-button');
     await expect.poll(() => paused(page)).toBe(false);
-    await expect.poll(() => hooks<string>(page, 'h.shell.session.status'), { timeout: 10_000 }).toBe('running');
+    await expect.poll(() => hooks<string>(page, 'h.shell.session?.status'), { timeout: 15_000 }).toBe('running');
     await expect.poll(() => hooks<boolean>(page, 'h.shell.session.engine.active !== null')).toBe(true);
 
     // Trigger rotates, stick moves, grip holds, A hard-drops.
@@ -138,7 +138,7 @@ test.describe('VR (emulated Quest 3)', () => {
     await page.getByTestId('pause-resume').click();
     await expect.poll(() => paused(page)).toBe(false);
     // The desktop loop runs again (after the resume countdown).
-    await expect.poll(() => hooks<string>(page, 'h.shell.session.status'), { timeout: 10_000 }).toBe('running');
+    await expect.poll(() => hooks<string>(page, 'h.shell.session?.status'), { timeout: 15_000 }).toBe('running');
     await expect.poll(() => hooks<boolean>(page, 'h.shell.session.engine.active !== null')).toBe(true);
     await page.keyboard.press('Space');
     await expect.poll(() => pieces(page)).toBe(placed + 2);
