@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "northern-lights",
   "name": "Northern Lights",
-  "description": "A polar night by a still lake. The aurora folds across the sky and mirrors in the water, spruce stands black against it, and reindeer pass along the shore.",
+  "description": "A polar night by a still lake. The aurora folds across the sky and mirrors in the water, spruce stands black against it, and meteors streak across the stars.",
   "order": 55,
   "tags": [
     "aurora",
@@ -468,72 +468,6 @@
               "seed": 5
             }
           ]
-        },
-        "bind": []
-      },
-      {
-        "id": "reindeer",
-        "type": "creatureHerd",
-        "params": {
-          "model": "/content/shared/creatures/deer.glb",
-          "rig": "/content/shared/creatures/deer.rig.json",
-          "representation": "mesh",
-          "groups": [
-            {
-              "path": {
-                "kind": "line",
-                "from": [
-                  -150,
-                  0,
-                  -17
-                ],
-                "to": [
-                  150,
-                  0,
-                  -19
-                ]
-              },
-              "members": 5,
-              "formation": "herd",
-              "spacing": 4.5,
-              "speed": 0.85,
-              "scale": 3.0,
-              "start": 0.3,
-              "rest": 18,
-              "fade": 16,
-              "stopEvery": 26,
-              "stopFor": 7
-            }
-          ],
-          "particles": {
-            "perCreature": 1200,
-            "size": 0.05,
-            "color": "#c8fff0",
-            "colorB": "#8ae0ff",
-            "brightness": 0.35,
-            "jitter": 0.02,
-            "bloom": 0.2,
-            "scatter": 5,
-            "wind": [
-              0.4,
-              0.5,
-              0.2
-            ],
-            "lodDistance": 80
-          },
-          "mesh": {
-            "color": "#070707",
-            "roughness": 0.85,
-            "rim": "#a8e0cc",
-            "rimStrength": 0.16
-          },
-          "dust": {
-            "enabled": false,
-            "color": "#e0f0ff",
-            "amount": 0.6,
-            "size": 0.45
-          },
-          "seed": 9
         },
         "bind": []
       },

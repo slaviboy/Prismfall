@@ -24,6 +24,14 @@ const schema = z.object({
         snapToGround: z.boolean().default(true),
         /** Slow tumble around a random axis, degrees per second (floating rocks, debris). */
         spin: z.number().default(0),
+        /**
+         * Walks from `position` to `to` at `speed` units per second and loops, assembling from its
+         * particles at the start and dispersing at the end (`fade`: share of the path). It faces the
+         * way it walks; `yaw` is then the model's own heading offset.
+         */
+        walk: z
+          .object({ to: zVec3, speed: z.number().positive().default(1.2), phase: z.number().min(0).max(1).default(0), fade: z.number().min(0.01).max(0.45).default(0.12) })
+          .optional(),
       }),
     )
     .min(1),
@@ -102,6 +110,23 @@ export const modelComponent: ComponentFactory<Params> = {
     const presence = floatUniform(1);
     const remapper = createRemapper(p.materials, { time: ctx.uniforms.time, presence, music: floatUniform(0), emissive: floatUniform(1) }, false);
     const fading: Material[] = [];
+    interface Walker {
+      root: Group;
+      from: Vector3;
+      to: Vector3;
+      length: number;
+      speed: number;
+      phase: number;
+      fade: number;
+      heading: number;
+      lift: number;
+      snap: boolean;
+      particles: SurfaceParticles | null;
+      materials: Material[];
+      /** 0 = whole, 1 = dispersed (at the path ends). */
+      apart: number;
+    }
+    const walkers: Walker[] = [];
     const mixers: AnimationMixer[] = [];
     const spinners: { obj: Object3D; axis: Vector3; speed: number }[] = [];
     const particleSets: SurfaceParticles[] = [];
@@ -132,6 +157,7 @@ export const modelComponent: ComponentFactory<Params> = {
         root.rotation.set(rand() * Math.PI * 2, root.rotation.y, rand() * Math.PI * 2);
         spinners.push({ obj: root, axis: new Vector3(rand() - 0.5, rand() - 0.5, rand() - 0.5).normalize(), speed: (inst.spin * Math.PI) / 180 });
       }
+      const instanceMaterials: Material[] = [];
       scene.traverse((o) => {
         if (!(o instanceof Mesh)) return;
         const convert = (m: Material): Material => {
@@ -144,6 +170,7 @@ export const modelComponent: ComponentFactory<Params> = {
             if (p.tint) c.multiply(new Color(p.tint));
           }
           fading.push(out);
+          instanceMaterials.push(out);
           return out;
         };
         o.material = Array.isArray(o.material) ? o.material.map(convert) : convert(o.material);
@@ -160,12 +187,12 @@ export const modelComponent: ComponentFactory<Params> = {
         action.play();
         mixers.push(mixer);
       }
+      let instanceParticles: SurfaceParticles | null = null;
       if (p.render !== 'solid' && perInstance > 0) {
         const sets = sampleModel(scene, perInstance, rand);
         // Sizes and distances are given in world units; particles live in model units.
         const unit = 1 / inst.scale;
-        particleSets.push(
-          createSurfaceParticles(
+        instanceParticles = createSurfaceParticles(
             sets,
             {
               size: p.particles.size * unit,
@@ -179,8 +206,27 @@ export const modelComponent: ComponentFactory<Params> = {
               bloom: p.particles.bloom,
             },
             ctx.uniforms.time,
-          ),
-        );
+          );
+        particleSets.push(instanceParticles);
+      }
+      if (inst.walk) {
+        const from = new Vector3(x, y, zPos);
+        const to = new Vector3(...inst.walk.to);
+        walkers.push({
+          root,
+          from,
+          to,
+          length: Math.max(0.01, from.distanceTo(to)),
+          speed: inst.walk.speed,
+          phase: inst.walk.phase,
+          fade: inst.walk.fade,
+          heading: (inst.yaw * Math.PI) / 180,
+          lift: y,
+          snap: inst.snapToGround,
+          particles: instanceParticles,
+          materials: instanceMaterials,
+          apart: 0,
+        });
       }
       if (p.render === 'particles') scene.traverse((o) => o instanceof Mesh && !o.name.endsWith(':particles') && (o.material = hiddenMaterial(o.material)));
     }
@@ -194,12 +240,32 @@ export const modelComponent: ComponentFactory<Params> = {
       }
       const solid = p.render === 'dissolve' ? 1 - smooth(Math.min(1, dissolve * 1.4)) : 1;
       for (const m of fading) m.opacity = solid * presenceValue;
+      // Walkers assemble and disperse at their path ends on top of any shared dissolve.
+      for (const w of walkers) {
+        const d = Math.max(dissolve, w.apart);
+        if (w.particles) w.particles.uniforms.dissolve.value = d;
+        const wSolid = 1 - smooth(Math.min(1, d * 1.4));
+        for (const m of w.materials) m.opacity = wSolid * presenceValue;
+      }
     };
+    const step = new Vector3();
+    const walk = (time: number): void => {
+      for (const w of walkers) {
+        const t = (((w.phase + (time * w.speed) / w.length) % 1) + 1) % 1;
+        step.lerpVectors(w.from, w.to, t);
+        const ground = w.snap ? ctx.ground.height(step.x, step.z) + w.lift : step.y;
+        w.root.position.set(step.x, ground, step.z);
+        w.root.rotation.y = Math.atan2(w.to.x - w.from.x, w.to.z - w.from.z) + w.heading;
+        w.apart = 1 - smooth(Math.min(1, t / w.fade, (1 - t) / w.fade));
+      }
+    };
+    walk(0);
     apply(0);
     return {
       object: group,
       update(frame) {
         for (const m of mixers) m.update(frame.dt);
+        walk(frame.time);
         for (const s of spinners) s.obj.rotateOnAxis(s.axis, s.speed * frame.dt);
         burst = Math.max(0, burst - frame.dt / 6);
         let dissolve = 0;

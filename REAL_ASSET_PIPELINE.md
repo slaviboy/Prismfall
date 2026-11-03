@@ -89,3 +89,24 @@ Scans are placed with the `model` component. It keeps their PBR materials and of
 Realistic rigged animals (a camel, fish, birds) and photogrammetry of landmarks (the pyramids) are not offered under a free licence with direct download. The good ones are on Sketchfab, which needs an account login, or are paid; CGTrader and RenderHub camels cost about $10–50. The Smithsonian's CC0 3D collection blocks automated access.
 
 When such a file is added to `assets/external/<name>/`, the integration path already exists: the `model` component loads it with its skeleton and animation, and the surface particles follow its real surface and bones. Script-built pyramids were tried and removed because they read as game assets.
+
+### Sketchfab models
+
+Sketchfab hosts realistic rigged animals under CC BY, but downloads need a free account. With the owner's personal API token (Sketchfab, Settings, Password & API) in `SKETCHFAB_TOKEN`, `scripts/fetch-sketchfab.ts` downloads through Sketchfab's official download API:
+
+```sh
+SKETCHFAB_TOKEN=... node scripts/fetch-sketchfab.ts <uid> <name>
+```
+
+- It refuses licences other than CC0, CC BY and CC BY-SA.
+- It records the author, page, licence and file MD5 in `assets/external/sketchfab/<name>/source.json`.
+- It packs the glTF into a GLB with its skeleton and clips, optimises it into `content/shared/creatures/<name>.glb`, and prints the clip names and the ASSET_LICENSES.md row.
+
+The token is sent only to api.sketchfab.com and never stored.
+
+The `model` component's `walk` option moves an instance along a path, facing the way it goes, following the ground, and assembling from or dispersing into its particles at the ends. With `render: "particles"` and the model's walk clip, this gives a herd or caravan drawn entirely from particles on the animals' real surfaces.
+
+Chosen candidates (CC BY):
+- **Camel:** "Camel" by eb78 (`99af7daa5baf450ea7b809937937e6d5`; clips Idle_01, Idle_02, WalkCycle; 17,880 vertices).
+- **Elk:** "Realistic Animated Elk 3D Model" by WildMesh 3D (`787834f9caa2474d9f1814b807c072d7`; 53 clips; 4,003 vertices). Its author notes rigging flaws in this free version.
+

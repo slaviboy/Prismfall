@@ -11,7 +11,7 @@ Per-world status of what is on screen, judged from in-game screenshots and recor
 | Alpine Horizon | Photo (Alps Field, 20k), whole surroundings | None | Everything around the board | None | A plain valley with a village; no landmark |
 | Ancient Garden | Photo (Ninomaru Teien, 16k), whole surroundings | None | Garden, fences, rock garden | Drifting petals | None known |
 | Enchanted Wilderness | Photo (Misty Pines, 16k), whole surroundings | None | Forest, fog, ferns | None | None known |
-| Northern Lights | Procedural night sky | Mirror lake, dark ridge silhouettes, spruce silhouettes, reindeer silhouettes | None | Everything | Candidate for a real night panorama with snow and mountains (none found on Poly Haven) |
+| Northern Lights | Procedural night sky | Mirror lake, dark ridge silhouettes, spruce silhouettes, meteors | None | Everything | Elk drawn as particles from a licensed rigged model (needs a Sketchfab download, see REAL_ASSET_PIPELINE.md); candidate for a real night panorama with snow and mountains (none found on Poly Haven) |
 | The Abyss | Procedural deep water | Seafloor, light shafts, moon jellyfish, silver fish schools | None | Everything | Jellyfish (pulsing bell, canals, oral arms, trailing tentacles) and herring schools (swimming body wave, countershading, silver flash) are anatomical procedural models; no licensed animated sea life found |
 | Luminous Tide | Procedural moonlit sea | Ocean with glitter path, headland silhouettes | None | Everything | Candidate for a real moonlit-sea panorama |
 | Deep Cosmos (`celestial-drift`) | Photo all-sky Milky Way (ESO/S. Brunier) with crisp shader stars | Ringed gas giant, scanned asteroids | Milky Way and its dust lanes, the giant's surface (Cassini's Jupiter maps), moon-rock scans | Ring system (from Saturn's measured radii), stars | None known; the hidden sun swings round the giant with progress, from a thin crescent to a broad lit face |
@@ -33,6 +33,7 @@ These looked primitive or gimmicky in game and were taken out:
 - **Future Nights:** the drones and data motes.
 - **Ember Core:** the obsidian spires and fire birds.
 - **Moving Sands:** the mesas, arch, particle camels and the script-built pyramids.
+- **Northern Lights:** the script-built reindeer (they read as four sticks).
 - **Folded Sky:** the paper hills, the paper-crane flocks, the lantern and cherry grove, paper scraps and paper clouds (the world became a real summit under cirrus).
 - **Alpine, Garden and Forest:** the procedural ranges, low-poly tree scatter, particle birds and creatures, and haze sprites.
 
