@@ -1337,8 +1337,20 @@ kbd {
 
 .dash-buttons {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   margin-top: 6px;
+}
+
+.dash-buttons button[aria-pressed='true'] {
+  border-color: var(--aqua);
+}
+
+.dash-note {
+  margin: 6px 0 0;
+  max-width: 48ch;
+  color: var(--haze);
+  font-size: 0.85em;
 }
 
 .dash-buttons button {

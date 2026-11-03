@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { shell } from '../../app/GameShell';
 import { toast } from '../../app/stores';
 import { DEFAULT_TUNING, type ProcessorTuning } from '../../audio/analysis/dsp/featureProcessor';
+import { ExternalCapture } from '../../audio/analysis/externalCapture';
 import { AudioDashboard } from '../../devtools/AudioDashboard';
 import { getSettings, updateSection } from '../../settings/store';
 
@@ -24,6 +25,24 @@ function Range(props: { label: string; value: number; min: number; max: number; 
 export default function AudioDashboardPanel(): ReactNode {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [tuning, setTuning] = useState<ProcessorTuning>(() => shell.audio.tuning);
+  const [sharing, setSharing] = useState(false);
+  const capture = useRef<ExternalCapture | null>(null);
+  // Closing the dashboard ends any capture and gives analysis back to the game music.
+  useEffect(() => () => capture.current?.stop(), []);
+
+  const toggleCapture = async (): Promise<void> => {
+    if (capture.current?.active) {
+      capture.current.stop();
+      setSharing(false);
+      return;
+    }
+    shell.unlockAudio();
+    capture.current ??= new ExternalCapture(shell.audio.engine, () => setSharing(false));
+    const result = await capture.current.start();
+    setSharing(result === 'ok');
+    if (result === 'no-audio') toast('Nothing to analyse: share a tab with "Share tab audio" ticked, or a screen with "Share system audio".', 'warning', 6000);
+    else if (result === 'unsupported') toast('This browser cannot share audio from other tabs or apps.', 'warning');
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -103,10 +122,16 @@ export default function AudioDashboardPanel(): ReactNode {
           <button type="button" onClick={reset}>
             Reset tuning
           </button>
+          {ExternalCapture.supported() ? (
+            <button type="button" onClick={() => void toggleCapture()} data-testid="dashboard-capture" aria-pressed={sharing}>
+              {sharing ? 'Stop shared audio' : 'Analyse shared audio (experimental)'}
+            </button>
+          ) : null}
           <button type="button" onClick={() => updateSection('developer', { audioDashboard: false })} data-testid="dashboard-close">
             Close (F9)
           </button>
         </div>
+        {sharing ? <p className="dash-note">Analysing shared audio instead of the game music. It is not played back here; stop sharing to return to the game music.</p> : null}
       </div>
     </aside>
   );

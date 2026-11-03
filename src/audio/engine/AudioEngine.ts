@@ -166,6 +166,20 @@ export class AudioEngine {
     set(this.ambience, sliderToGain(v.ambience) * bed);
   }
 
+  private externalInput: AudioNode | null = null;
+
+  /**
+   * Replaces the game music as the analysis input (experimental external capture, developer
+   * tools); null restores the music bus. The external node only feeds analysis, never the speakers.
+   */
+  setAnalysisInput(node: AudioNode | null): void {
+    if (!this.ctx) return;
+    if (this.externalInput) this.externalInput.disconnect(this.analysisTap);
+    else this.musicPre.disconnect(this.analysisTap);
+    this.externalInput = node;
+    (node ?? this.musicPre).connect(this.analysisTap);
+  }
+
   setCalibrating(on: boolean): void {
     this.calibrating = on;
     this.applyVolumes(false);
