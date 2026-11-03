@@ -70,7 +70,8 @@ export const QUALITY_PRESETS: Record<QualityPreset, PresetFields> = {
     reflections: 'high',
     ambientOcclusion: true,
     postProcessing: true,
-    depthOfField: true,
+    // Off in every preset: blurring the background softens the photographic horizons.
+    depthOfField: false,
     screenSpaceEffects: true,
   },
 };

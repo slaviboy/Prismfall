@@ -4,7 +4,7 @@ import { z } from 'zod';
  * Persistent settings. Every field has a default so partial or older data parses
  * into a complete object; `migrateSettings` handles structural changes between versions.
  */
-export const SETTINGS_VERSION = 2;
+export const SETTINGS_VERSION = 3;
 
 export const INPUT_ACTIONS = [
   'moveLeft',
@@ -319,6 +319,8 @@ export function migrateSettings(raw: unknown): { settings: Settings; migrated: b
   const from = typeof data.version === 'number' ? data.version : 0;
   // v2: the playfield stays still by default; camera shake and movement become opt-in.
   if (from < 2 && data.camera && typeof data.camera === 'object') data.camera = { ...(data.camera as Record<string, unknown>), shake: false, movementIntensity: 0 };
+  // v3: background depth of field is off (it blurred the photographic horizons); it stays opt-in.
+  if (from < 3 && data.graphics && typeof data.graphics === 'object') data.graphics = { ...(data.graphics as Record<string, unknown>), depthOfField: false };
   data.version = SETTINGS_VERSION;
   const parsed = settingsSchema.safeParse(data);
   if (!parsed.success) return { settings: defaultSettings(), migrated: false, valid: false };
