@@ -255,8 +255,10 @@ export class BoardView {
     this.plate.u.grid.value = on ? 1 : 0;
   }
 
+  /** Background dimming also sets how much of the world shows through the plate: 0 → 45 %, default 0.25 → 60 %, 0.9 → 95 % opaque. */
   setBackgroundDim(strength: number): void {
     this.dim.strength.value = strength;
+    this.plate.u.opacity.value = Math.min(0.95, 0.45 + strength * 0.6);
   }
 
   setAccent(rgb: readonly [number, number, number], plateTint: readonly [number, number, number]): void {

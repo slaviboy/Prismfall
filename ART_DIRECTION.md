@@ -12,7 +12,7 @@ The rules every world follows. They come from the reference audit, the gap analy
 
 - **Dark key:** a near-black frame, with light reserved for a few subjects (aurora, moon glitter, lava, city windows).
 - **Bright key:** a photographic daylight scene.
-- **The board's interior stays dark in both,** so the stack reads.
+- **The board's interior is a semi-transparent dark plate in both:** the world shows through, dimmed, and the stack still reads. The Background dimming setting sets its opacity (60 % by default).
 - **No evenly lit mid-grey haze.** Fog is only atmospheric perspective; its colour matches the horizon.
 
 ## 3. Sharpness
