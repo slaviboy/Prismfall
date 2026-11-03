@@ -59,8 +59,12 @@ export class XRControllerInput {
       const hasStick = g.axes.length >= 4;
       const x = g.axes[hasStick ? 2 : 0] ?? 0;
       const y = g.axes[hasStick ? 3 : 1] ?? 0;
-      // A touchpad only counts while pressed, so resting a thumb on it does nothing.
-      const padGate = hasStick || (g.buttons[2]?.pressed ?? false);
+      // A touchpad only counts while pressed, so resting a thumb on it does nothing. Without a
+      // thumbstick, a press near the pad's centre is the "stick press" (Vive wands have no A/B/X/Y).
+      const padPressed = !hasStick && (g.buttons[2]?.pressed ?? false);
+      const centre = padPressed && Math.hypot(g.axes[0] ?? 0, g.axes[1] ?? 0) < 0.4;
+      if (!hasStick) this.set(`xr:${hand}:stick-press`, centre, pad, time);
+      const padGate = hasStick || (padPressed && !centre);
       const dir = (name: string, value: number): void => {
         const key = `xr:${hand}:stick-${name}`;
         const was = this.held.get(key) ?? false;

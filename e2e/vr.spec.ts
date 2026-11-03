@@ -5,7 +5,7 @@ import { test, expect, hooks, openMenu, autoplay, canvasStats } from './fixtures
  * WebXR through Meta's Immersive Web Emulation Runtime (IWER): an emulated Quest 3 with Touch
  * controllers replaces navigator.xr, so the real session, frame loop and controller polling run.
  * What it can't prove (comfort, real tracking, controller feel, frame rate in a headset) is listed
- * in MANUAL_CHECKS.md.
+ * in VR_TESTING.md (real headset checklist).
  */
 
 async function installHeadset(page: Page): Promise<void> {

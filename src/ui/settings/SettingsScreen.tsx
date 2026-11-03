@@ -72,7 +72,7 @@ export function SettingsPanel(props: { inGame?: boolean; onClose: () => void }):
         <div className="settings-actions">
           {tab.resets ? (
             <Button onClick={() => tab.resets?.forEach((section) => resetSection(section))} testId="settings-reset-tab">
-              Restore defaults for {tab.label.toLowerCase()}
+              Restore defaults for {/^[A-Z]+$/.test(tab.label) ? tab.label : tab.label.toLowerCase()}
             </Button>
           ) : null}
           <Button onClick={props.onClose} testId="settings-close">

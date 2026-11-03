@@ -117,6 +117,9 @@ export class XRManager {
   private vrEnvironment: Texture | null = null;
   /** The world the layout was computed for; a new world has its own ground height. */
   private layoutWorld: unknown = null;
+  /** Reference space of the running session (chosen at entry; the layout setting may change later). */
+  private refSpace: 'local' | 'local-floor' = 'local';
+  private particleCap = 1;
 
   constructor(private readonly host: XRHost) {
     this.input = new XRControllerInput((e) => host.input.handleXR(e));
@@ -220,7 +223,10 @@ export class XRManager {
     r.outputColorSpace = rs.renderer.outputColorSpace;
     r.shadowMap.enabled = false;
     r.xr.enabled = true;
-    r.xr.setReferenceSpaceType(settings.vr.layout === 'standing' ? 'local-floor' : 'local');
+    // local-floor is only requested as optional: fall back to local if the runtime refused it.
+    const floorOk = (session as XRSession & { enabledFeatures?: readonly string[] }).enabledFeatures?.includes('local-floor') ?? true;
+    this.refSpace = settings.vr.layout === 'standing' && floorOk ? 'local-floor' : 'local';
+    r.xr.setReferenceSpaceType(this.refSpace);
     r.xr.setFramebufferScaleFactor(profile.framebuffer);
     r.xr.setFoveation(profile.foveation);
     // three captures the renderer's animation loop when the session starts and calls it from its
@@ -255,8 +261,7 @@ export class XRManager {
     this.unsubs.push(settingsStore.subscribe((s, prev) => s.settings.vr !== prev.settings.vr && this.applyLayout()));
     this.unsubs.push(this.host.input.onMenu((e) => this.handleMenu(e)));
     this.unsubs.push(this.host.onHaptic((kind) => this.haptic(kind)));
-    rs.bursts.density = Math.min(rs.bursts.density, profile.particles);
-    rs.boardBursts.density = Math.min(rs.boardBursts.density, profile.particles);
+    this.particleCap = profile.particles;
     rs.presenter = () => this.draw();
     this.presenting = true;
     this.starting = false;
@@ -322,8 +327,10 @@ export class XRManager {
     // the measured head: seated puts the eyes 1.2 m above the stage ground, standing uses the
     // player's real height above their floor. Either way the playfield is centred on the head.
     const head = this.head;
-    const eye = standing ? ground + (head ? head.y : STANDING_EYE) : ground + SEATED_EYE;
-    const headY = head ? head.y : standing ? STANDING_EYE : 0;
+    // Real standing height is only known in a floor-relative space; otherwise use a typical one.
+    const floorSpace = this.refSpace === 'local-floor';
+    const eye = standing && floorSpace && head ? ground + head.y : ground + (standing ? STANDING_EYE : SEATED_EYE);
+    const headY = head ? head.y : floorSpace ? STANDING_EYE : 0;
     this.rig.position.set(-(head?.x ?? 0), eye - headY, 30 - (head?.z ?? 0));
     const s = vr.boardScale / BOARD_UNITS_PER_METRE;
     rs.boardRoot.scale.setScalar(s);
@@ -338,10 +345,13 @@ export class XRManager {
     if (vr.dimWorld > 0) {
       if (!this.dimmer) {
         const m = new MeshBasicNodeMaterial({ color: 0x000000, transparent: true, side: BackSide, depthWrite: false });
-        this.dimmer = new Mesh(new SphereGeometry(60, 24, 16), m);
+        this.dimmer = new Mesh(new SphereGeometry(1, 32, 16), m);
         this.dimmer.renderOrder = 20;
       }
       (this.dimmer.material as MeshBasicNodeMaterial).opacity = vr.dimWorld;
+      // A sphere around the head just beyond the playfield: everything outside it is darkened.
+      this.dimmer.scale.setScalar(vr.boardDistance + 1.5);
+      this.dimmer.position.set(head?.x ?? 0, headY, head?.z ?? 0);
       this.rig.add(this.dimmer);
     } else this.dimmer?.removeFromParent();
     for (const l of this.rays) l.visible = vr.showRays;
@@ -431,7 +441,8 @@ export class XRManager {
       default:
         break;
     }
-    this.input.pulse('right', 0.25 * getSettings().vr.hapticStrength, 30);
+    const vr = getSettings().vr;
+    if (vr.haptics) this.input.pulse('right', 0.25 * vr.hapticStrength, 30);
   }
 
   private haptic(kind: 'drop' | 'clear' | 'quad' | 'lock'): void {
@@ -450,6 +461,11 @@ export class XRManager {
     const r = this.renderer;
     if (!rs || !r) return;
     if (rs.environments.current !== this.layoutWorld) this.applyLayout();
+    // Graphics changes during VR reset these on the shared scene; keep the VR profile's limits.
+    rs.bursts.density = Math.min(rs.bursts.density, this.particleCap);
+    rs.boardBursts.density = Math.min(rs.boardBursts.density, this.particleCap);
+    r.toneMapping = rs.renderer.toneMapping;
+    r.toneMappingExposure = rs.renderer.toneMappingExposure;
     this.updateUi();
     r.render(rs.scene, this.camera);
     // After a render the eye cameras hold their poses in reference space; the head is their midpoint.
@@ -542,9 +558,9 @@ export class XRManager {
   /** Camera the audio listener should follow while presenting. */
   listenerPose(out: { position: Vector3; forward: Vector3 }): boolean {
     if (!this.presenting || !this.renderer) return false;
-    const cam = this.renderer.xr.getCamera();
-    cam.getWorldPosition(out.position);
-    cam.getWorldDirection(out.forward);
+    // The rig's camera holds the head pose after each render, including the rig's world offset.
+    this.camera.getWorldPosition(out.position);
+    this.camera.getWorldDirection(out.forward);
     return true;
   }
 

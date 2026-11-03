@@ -41,6 +41,16 @@ describe('XR controller input', () => {
     expect(events.map((e) => e.control)).toEqual(['xr:right:stick-left']);
   });
 
+  it('treats a centre press on a touchpad as the stick press (Vive wands)', () => {
+    const events: RawInputEvent[] = [];
+    const input = new XRControllerInput((e) => events.push(e));
+    input.poll([controller('left', { buttons: [0, 0, 1], axes: [0.1, -0.1] })], 1);
+    expect(events.map((e) => `${e.control}:${e.down}`)).toEqual(['xr:left:stick-press:true']);
+    events.length = 0;
+    input.poll([controller('left', { buttons: [0, 0, 0], axes: [0.1, -0.1] })], 2);
+    expect(events.map((e) => `${e.control}:${e.down}`)).toEqual(['xr:left:stick-press:false']);
+  });
+
   it('releases a controller that disappears', () => {
     const events: RawInputEvent[] = [];
     const input = new XRControllerInput((e) => events.push(e));

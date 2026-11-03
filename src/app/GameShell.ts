@@ -486,7 +486,7 @@ export class GameShell {
         const override = info ? getSettings().controller.profiles[info.id]?.family : undefined;
         const family = override && override !== 'auto' ? override : (info?.family ?? 'generic');
         if (state.device !== 'gamepad' || state.padFamily !== family) appStore.setState({ device: 'gamepad', padFamily: family });
-      } else if (state.device !== 'keyboard') appStore.setState({ device: 'keyboard' });
+      } else if (e.device === 'keyboard' && state.device !== 'keyboard') appStore.setState({ device: 'keyboard' });
     });
     im.onGameplay((e) => this.handleGameplayAction(e));
     im.onFocusLost(() => {
@@ -893,7 +893,8 @@ export class GameShell {
   /** Frame limiter: simulation and input run every rAF; only rendering is capped. */
   private shouldRender(now: number): boolean {
     const cap = getSettings().graphics.fpsCap;
-    if (cap === 'display') return true;
+    // The headset sets the pace in VR; the desktop frame cap must never drop headset frames.
+    if (cap === 'display' || this.externalFrames) return true;
     const refresh = this.renderSystem?.perf.refreshHz ?? 60;
     const target = cap === 'half' ? refresh / 2 : cap === 'third' ? refresh / 3 : Number(cap);
     if (!(target > 0) || target >= refresh - 0.5) return true;

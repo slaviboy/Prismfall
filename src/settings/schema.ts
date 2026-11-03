@@ -78,7 +78,8 @@ export const DEFAULT_XR: Record<InputAction, string[]> = {
   rotateCCW: ['xr:left:trigger'],
   rotate180: [],
   hold: ['xr:right:squeeze', 'xr:left:squeeze'],
-  pause: ['xr:left:y', 'xr:right:b'],
+  // Stick press (or a touchpad centre press) pauses on controllers without face buttons.
+  pause: ['xr:left:y', 'xr:left:stick-press'],
   practiceUndo: ['xr:left:x'],
   practiceReset: [],
   confirm: ['xr:right:trigger', 'xr:right:a'],

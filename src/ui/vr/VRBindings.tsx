@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { toast } from '../../app/stores';
-import { ACTION_LABELS, assignBinding, clearBinding, controlLabel, XR_CONTROLS } from '../../input/mappings/bindings';
+import { ACTION_LABELS, assignBinding, clearBinding, controlLabel, REQUIRED_ACTIONS, XR_CONTROLS } from '../../input/mappings/bindings';
 import { DEFAULT_XR, type InputAction } from '../../settings/schema';
 import { getSettings, updateSection, useSettings } from '../../settings/store';
 import { Button, ChoiceRow } from '../components/controls';
@@ -29,13 +29,21 @@ function VRBindings(): ReactNode {
     }
     // A second slot can't be filled before the first.
     const s = Math.min(slot, current[action].length);
-    updateSection('xr', assignBinding(current, action, s, control, 'swap'));
+    const next = assignBinding(current, action, s, control, 'swap');
+    const stripped = REQUIRED_ACTIONS.find((a) => next[a].length === 0);
+    if (stripped) {
+      toast(`${controlLabel(control)} is the only control for ${ACTION_LABELS[stripped]}; choose another.`, 'warning');
+      return;
+    }
+    updateSection('xr', next);
   };
 
   return (
     <section className="binding-group vr-bindings-panel" data-testid="vr-bindings">
       <h3 className="settings-group">Controller buttons</h3>
-      <p className="menu-note">Works the same on Quest, Index, Vive and Windows Mixed Reality controllers. Trackpads act as sticks when pressed.</p>
+      <p className="menu-note">
+        The same names are used on every controller. Touchpads act as sticks when pressed near an edge; a press in the middle is the stick press. Vive and Windows Mixed Reality controllers have no A, B, X or Y buttons, so keep the stick press on Pause.
+      </p>
       {ACTIONS.map((action) =>
         [0, 1].map((slot) =>
           slot === 1 && !xr[action][0] ? null : (
