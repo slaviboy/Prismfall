@@ -792,27 +792,6 @@ kbd {
   font-size: calc(34px * var(--hud-scale, 1));
 }
 
-.hud-streaks {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-top: calc(300px * var(--hud-scale, 1));
-}
-
-.streak {
-  font-family: var(--font-display);
-  font-size: calc(17px * var(--hud-scale, 1));
-  text-shadow: 0 2px 12px rgba(var(--night-rgb), 0.85);
-}
-
-.streak.b2b {
-  color: var(--amber);
-}
-
-.streak.combo {
-  color: var(--aqua);
-}
-
 .hud-practice {
   color: var(--haze);
   font-size: calc(14px * var(--hud-scale, 1));

@@ -79,14 +79,12 @@ export function Hud(): ReactNode {
               <Timer limitMs={hud.timeLimitMs} />
             </Stat>
           ) : null}
+          {ui.showCombo && hud.combo >= 1 ? <Stat label="Combo">{hud.combo}</Stat> : null}
+          {ui.showCombo && hud.backToBack >= 1 ? <Stat label="Back-to-back">{hud.backToBack}</Stat> : null}
         </div>
       </div>
       <div className={`hud-column ${ui.mirrored ? 'end' : 'start'}`} style={rightSide}>
         {showNext ? <span className="hud-label pod-label">Next</span> : null}
-        <div className="hud-streaks">
-          {ui.showCombo && hud.combo >= 1 ? <span className="streak combo">Combo ×{hud.combo}</span> : null}
-          {ui.showCombo && hud.backToBack >= 1 ? <span className="streak b2b">Back-to-back ×{hud.backToBack}</span> : null}
-        </div>
         {hud.modeId === 'practice' && ui.showPracticeStats ? <PracticeStats /> : null}
       </div>
       {ui.showCallouts ? (
