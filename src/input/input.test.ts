@@ -47,6 +47,15 @@ describe('bindings', () => {
     expect(swapped.hold.length).toBeLessThanOrEqual(2);
   });
 
+  it('replaces the chosen slot and swaps within an action', () => {
+    expect(assignBinding(DEFAULT_KEYBOARD, 'hardDrop', 0, 'KeyW').hardDrop).toEqual(['KeyW']);
+    const two = assignBinding(DEFAULT_KEYBOARD, 'rotateCW', 1, 'KeyV').rotateCW;
+    expect(two).toEqual(['ArrowUp', 'KeyV']);
+    const swapped = assignBinding(DEFAULT_KEYBOARD, 'rotateCW', 0, 'KeyX').rotateCW;
+    expect(swapped).toEqual(['KeyX', 'ArrowUp']);
+    expect(assignBinding(DEFAULT_KEYBOARD, 'hardDrop', 1, 'KeyW').hardDrop).toEqual(['Space', 'KeyW']);
+  });
+
   it('refuses to leave required actions unbound', () => {
     const one = { ...DEFAULT_KEYBOARD, pause: ['KeyP'] } as Record<InputAction, string[]>;
     expect(clearBinding(one, 'pause', 0)).toBeNull();

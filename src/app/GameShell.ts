@@ -436,7 +436,9 @@ export class GameShell {
     im.onAnyInput((e) => {
       const state = appStore.getState();
       if (e.device === 'gamepad') {
-        const family = im.gamepad.connectedPads().find((p) => p.index === e.pad)?.family ?? 'generic';
+        const info = im.gamepad.connectedPads().find((p) => p.index === e.pad);
+        const override = info ? getSettings().controller.profiles[info.id]?.family : undefined;
+        const family = override && override !== 'auto' ? override : (info?.family ?? 'generic');
         if (state.device !== 'gamepad' || state.padFamily !== family) appStore.setState({ device: 'gamepad', padFamily: family });
       } else if (state.device !== 'keyboard') appStore.setState({ device: 'keyboard' });
     });

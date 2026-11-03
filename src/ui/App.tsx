@@ -17,6 +17,8 @@ import { PerfOverlay } from './hud/PerfOverlay';
 import './settings/graphicsPanels';
 import './settings/audioPanels';
 import './settings/developerPanels';
+import './settings/ControlsPanel';
+import './settings/ControllerPanel';
 
 /** Developer-only, loaded on first use. */
 const AudioDashboardPanel = lazy(() => import('./devtools/AudioDashboardPanel'));

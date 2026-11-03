@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
 import { useNavScope } from '../navigation/useNavScope';
+import { Glyph, isGlyphLabel } from '../components/Glyph';
+import { useApp } from '../../app/stores';
 
 /** Shared layout for menu screens: left column of typography over a scrim, world visible on the right. */
 export function MenuScreen(props: {
@@ -34,11 +36,13 @@ export function MenuScreen(props: {
 
 /** Small hint line showing what confirm/back do on the current device. */
 export function ControlHints(props: { hints: readonly { keys: string; label: string }[] }): ReactNode {
+  // Glyphs only for controller buttons (a keyboard "A" or "X" stays a key).
+  const pad = useApp((s) => s.device) === 'gamepad';
   return (
     <div className="control-hints">
       {props.hints.map((h) => (
         <span key={h.label} className="hint">
-          <kbd>{h.keys}</kbd>
+          {pad && isGlyphLabel(h.keys) ? <Glyph label={h.keys} /> : <kbd>{h.keys}</kbd>}
           {h.label}
         </span>
       ))}

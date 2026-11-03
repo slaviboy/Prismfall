@@ -120,10 +120,12 @@ export class InputManager {
   beginCapture(listener: Listener<RawInputEvent>): void {
     this.releaseActive(performance.now());
     this.captureListener = listener;
+    this.keyboard.captureAll = true;
   }
 
   endCapture(): void {
     this.captureListener = null;
+    this.keyboard.endCaptureAll();
   }
 
   get capturing(): boolean {

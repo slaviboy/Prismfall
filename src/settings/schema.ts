@@ -73,7 +73,8 @@ const bindingsSchema = (defaults: Record<InputAction, string[]>) =>
 /** Remapping for a specific non-standard pad: logical standard id -> raw control on that pad. */
 const padProfileSchema = z.object({
   name: z.string().catch('Controller'),
-  family: e(['playstation', 'xbox', 'generic'] as const, 'generic'),
+  /** Button-name style; 'auto' follows the detected controller. */
+  family: e(['auto', 'playstation', 'xbox', 'generic'] as const, 'auto'),
   rawMap: z.record(z.string(), z.string()).catch({}).default({}),
 });
 

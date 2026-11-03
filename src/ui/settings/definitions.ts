@@ -181,9 +181,7 @@ export const GRAPHICS_TAB: TabDef = {
     { kind: 'slider', section: 'graphics', key: 'bloom', label: 'Bloom intensity', min: 0, max: 2, step: 0.05, format: percent, when: (s) => s.graphics.postProcessing },
     { kind: 'choice', section: 'graphics', key: 'shadows', label: 'Shadow quality', options: [{ value: 'off', label: 'Off' }, { value: 'low', label: 'Low' }, { value: 'medium', label: 'Medium' }, { value: 'high', label: 'High' }] },
     { kind: 'toggle', section: 'graphics', key: 'ambientOcclusion', label: 'Ambient occlusion', description: 'Screen-space contact shadows (GTAO).', when: (s) => s.graphics.postProcessing },
-    { kind: 'choice', section: 'graphics', key: 'reflections', label: 'Reflection quality', options: [{ value: 'off', label: 'Off' }, { value: 'low', label: 'Low' }, { value: 'high', label: 'High' }, { value: 'ultra', label: 'Ultra' }] },
     { kind: 'toggle', section: 'graphics', key: 'depthOfField', label: 'Depth of field', description: 'Softly blurs the distant world. The playfield always stays sharp.', when: (s) => s.graphics.postProcessing },
-    { kind: 'slider', section: 'graphics', key: 'motionBlur', label: 'Motion blur', description: 'World motion only, never applied to pieces.', min: 0, max: 1, step: 0.05, format: percent, when: (s) => s.graphics.postProcessing },
     { kind: 'toggle', section: 'graphics', key: 'screenSpaceEffects', label: 'Screen-space effects', description: 'Shockwave distortion and light streaks on big clears.' },
     { kind: 'group', label: 'World' },
     { kind: 'slider', section: 'graphics', key: 'particleDensity', label: 'Particle density', min: 0, max: 2, step: 0.05, format: percent },
@@ -339,3 +337,32 @@ export const DEVELOPER_TAB: TabDef = {
 };
 
 registerTab(DEVELOPER_TAB);
+
+export const CONTROLS_TAB: TabDef = {
+  id: 'controls',
+  label: 'Controls',
+  inGame: true,
+  rows: [{ kind: 'custom', id: 'controls' }],
+};
+
+export const CONTROLLER_TAB: TabDef = {
+  id: 'controller',
+  label: 'Controller',
+  inGame: true,
+  resets: ['controller'],
+  rows: [
+    { kind: 'custom', id: 'controller' },
+    { kind: 'group', label: 'Sticks and triggers' },
+    { kind: 'slider', section: 'controller', key: 'deadzoneInner', label: 'Stick dead zone', description: 'Stick movement ignored around the centre. Raise it if pieces drift on their own.', min: 0, max: 0.6, step: 0.01, format: percent },
+    { kind: 'slider', section: 'controller', key: 'deadzoneOuter', label: 'Stick outer edge', description: 'Where the stick counts as fully pushed.', min: 0.7, max: 1, step: 0.01, format: percent },
+    { kind: 'slider', section: 'controller', key: 'stickThreshold', label: 'Stick sensitivity', description: 'How far the stick must be pushed to move a piece. Lower is more sensitive.', min: 0.2, max: 0.95, step: 0.01, format: percent },
+    { kind: 'slider', section: 'controller', key: 'triggerThreshold', label: 'Trigger threshold', description: 'How far a trigger must be pulled to count as pressed.', min: 0.05, max: 0.95, step: 0.01, format: percent },
+    { kind: 'group', label: 'Feedback and buttons' },
+    { kind: 'toggle', section: 'controller', key: 'rumble', label: 'Rumble', description: 'Vibration on hard drops, clears and danger, when the controller supports it.' },
+    { kind: 'slider', section: 'controller', key: 'rumbleStrength', label: 'Rumble strength', min: 0, max: 1, step: 0.05, format: percent, when: (s) => s.controller.rumble },
+    { kind: 'toggle', section: 'controller', key: 'swapConfirmBack', label: 'Swap confirm and back', description: 'Use the right face button to confirm and the bottom one to go back in menus.' },
+  ],
+};
+
+registerTab(CONTROLS_TAB, 'graphics');
+registerTab(CONTROLLER_TAB, 'graphics');

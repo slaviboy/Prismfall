@@ -15,7 +15,7 @@ test.describe('gamepad', () => {
     await expect.poll(() => hooks<string>(page, 'h.appStore.getState().device')).toBe('gamepad');
     await expect.poll(() => hooks<string>(page, 'h.appStore.getState().padFamily')).toBe('playstation');
     // Button names follow the controller family.
-    await expect(page.locator('.control-hints')).toContainText('Cross');
+    await expect(page.locator('.control-hints svg[aria-label="Cross"]')).toBeVisible();
     await expect(page.getByTestId('menu-play')).toBeFocused();
     await padPress(page, 13);
     await expect(page.getByTestId('menu-music')).toBeFocused();
@@ -26,9 +26,9 @@ test.describe('gamepad', () => {
     await expect(page.getByTestId('settings-panel')).toBeVisible();
     // Shoulder buttons change tabs.
     await padPress(page, 5);
-    await expect(page.getByRole('tab', { selected: true })).toHaveText('Graphics');
+    await expect(page.locator('.settings-header [role=tab][aria-selected=true]')).toHaveText('Controls');
     await padPress(page, 4);
-    await expect(page.getByRole('tab', { selected: true })).toHaveText('Gameplay');
+    await expect(page.locator('.settings-header [role=tab][aria-selected=true]')).toHaveText('Gameplay');
     await padPress(page, 1);
     await expect(page.getByTestId('main-menu')).toBeVisible();
     // Into a game: Play → Marathon → Start.

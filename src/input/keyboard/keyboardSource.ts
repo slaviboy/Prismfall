@@ -10,6 +10,15 @@ export class KeyboardSource {
   private readonly onFocusLost: () => void;
   /** Codes whose default browser action should be suppressed (bound gameplay keys). */
   preventDefaultCodes = new Set<string>();
+  /** Rebinding capture: every key's default action is suppressed. */
+  captureAll = false;
+  /** Keys held when capture ended: their key-up is suppressed too (no stray button activation). */
+  private readonly swallowUp = new Set<string>();
+
+  endCaptureAll(): void {
+    this.captureAll = false;
+    for (const code of this.held) this.swallowUp.add(code);
+  }
   private attached = false;
 
   constructor(onRaw: (e: RawInputEvent) => void, onFocusLost: () => void) {
@@ -52,14 +61,14 @@ export class KeyboardSource {
 
   private readonly handleDown = (e: KeyboardEvent): void => {
     if (this.isTextField(e.target) && e.code !== 'Escape') return;
-    if (this.preventDefaultCodes.has(e.code)) e.preventDefault();
+    if (this.captureAll || this.preventDefaultCodes.has(e.code)) e.preventDefault();
     if (e.repeat || this.held.has(e.code)) return;
     this.held.add(e.code);
     this.onRaw({ device: 'keyboard', pad: -1, control: e.code, down: true, time: e.timeStamp });
   };
 
   private readonly handleUp = (e: KeyboardEvent): void => {
-    if (this.preventDefaultCodes.has(e.code)) e.preventDefault();
+    if (this.captureAll || this.swallowUp.delete(e.code) || this.preventDefaultCodes.has(e.code)) e.preventDefault();
     if (!this.held.delete(e.code)) return;
     this.onRaw({ device: 'keyboard', pad: -1, control: e.code, down: false, time: e.timeStamp });
   };

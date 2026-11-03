@@ -493,7 +493,7 @@ kbd {
   position: absolute;
   inset: 0;
   right: auto;
-  width: min(880px, 64vw);
+  width: min(960px, 70vw);
   display: flex;
   flex-direction: column;
   padding: clamp(24px, 5vh, 56px) var(--gutter) 24px calc(var(--rail-x) + 24px);
@@ -509,7 +509,7 @@ kbd {
 .tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 22px;
+  gap: 4px clamp(12px, 1.1vw, 22px);
 }
 
 .tab {
@@ -518,7 +518,7 @@ kbd {
   padding: 4px 0 8px;
   color: var(--haze-dim);
   cursor: pointer;
-  font-size: 16px;
+  font-size: clamp(14px, 0.85vw, 16px);
   border-bottom: 2px solid transparent;
 }
 
@@ -1706,4 +1706,131 @@ kbd {
 .replay-time {
   min-width: 11ch;
   font-variant-numeric: tabular-nums;
+}
+
+
+/* ------------------------------------------------------- controls and pads */
+
+.controls-panel .tabs {
+  margin-bottom: 8px;
+}
+
+.binding-row {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) 150px 150px;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 0;
+}
+
+.binding-label {
+  color: var(--starlight);
+}
+
+.binding-slot {
+  padding: 7px 10px;
+  background: rgba(var(--night-rgb), 0.5);
+  border: 1px solid rgba(238, 240, 255, 0.2);
+  color: var(--starlight);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.binding-slot.is-empty {
+  color: var(--haze-dim);
+  border-style: dashed;
+}
+
+.binding-slot:focus-visible,
+.binding-slot:hover {
+  border-color: var(--starlight);
+}
+
+.binding-slot.is-capturing {
+  border-color: var(--aqua);
+  color: var(--aqua);
+}
+
+.capture-prompt {
+  margin: 8px 0;
+  color: var(--aqua);
+}
+
+.pad-card {
+  margin-bottom: 18px;
+}
+
+.pad-meta {
+  margin: 0 0 6px;
+  color: var(--haze);
+  font-size: 14px;
+}
+
+.pad-tester {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.pad-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(70px, auto));
+  gap: 6px;
+}
+
+.pad-button {
+  padding: 4px 6px;
+  border: 1px solid rgba(238, 240, 255, 0.2);
+  color: var(--haze);
+  font-size: 12px;
+  text-align: center;
+}
+
+.pad-button.is-down {
+  background: var(--aqua);
+  border-color: var(--aqua);
+  color: var(--night);
+}
+
+.pad-sticks {
+  display: flex;
+  gap: 16px;
+}
+
+.pad-stick {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 1px solid rgba(238, 240, 255, 0.3);
+}
+
+.pad-stick span {
+  position: absolute;
+  left: 24px;
+  top: 24px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--aqua);
+}
+
+
+.glyph {
+  width: 1.35em;
+  height: 1.35em;
+  vertical-align: -0.3em;
+}
+
+.glyph-ring {
+  fill: rgba(var(--night-rgb), 0.85);
+  stroke: rgba(238, 240, 255, 0.55);
+  stroke-width: 1.2;
+}
+
+.control-hints .glyph {
+  margin-right: 6px;
 }

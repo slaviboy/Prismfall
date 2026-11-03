@@ -101,13 +101,13 @@ export function assignBinding(
     if (resolution === 'swap' && previous && !next[other].includes(previous)) next[other][idx] = previous;
     else next[other].splice(idx, 1);
   }
-  const own = next[action].filter((c) => c !== control);
-  if (slot >= own.length) own.push(control);
-  else own.splice(slot, 0, control);
-  if (previous && own.length > 2) {
-    const prevIdx = own.indexOf(previous);
-    if (prevIdx >= 0) own.splice(prevIdx, 1);
-  }
+  // The slot is replaced; a control already in the action's other slot swaps places with it.
+  const own = [...next[action]];
+  const existing = own.indexOf(control);
+  if (existing >= 0) {
+    if (existing !== slot && slot < own.length) [own[existing], own[slot]] = [own[slot] as string, own[existing] as string];
+  } else if (slot < own.length) own[slot] = control;
+  else own.push(control);
   next[action] = own.slice(0, 2);
   return next;
 }
