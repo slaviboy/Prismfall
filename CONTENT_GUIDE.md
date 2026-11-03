@@ -111,7 +111,7 @@ Two version checks exist:
 - `stage.json` `requires.sdk` (default `^1.0.0`) is checked during validation. A mismatch makes the stage unavailable.
 - `stage.ts` `sdkVersion` is checked when the module loads. A missing `^` is added, so `'1.1.0'` means `^1.1.0`. A mismatch throws, and the stage fails to load at that moment.
 
-Ranges support `^x.y.z` (same major, not lower), `>=x.y.z`, an exact `x.y.z`, and `*`. Folded Sky's module declares `sdkVersion: '1.1.0'` because it registers a transition. Its manifest keeps the default `requires.sdk` of `^1.0.0`. Set `requires.sdk` to the same minimum as the module, so that an older build lists the stage as unavailable instead of failing when it loads.
+Ranges support `^x.y.z` (same major, not lower), `>=x.y.z`, an exact `x.y.z`, and `*`. Folded Sky's module declares `sdkVersion: '1.1.0'` because it registers a transition, and its manifest sets `requires.sdk` to `^1.1.0` to match. Always set `requires.sdk` to the same minimum as the module, so that an older build lists the stage as unavailable instead of failing when it loads.
 
 ## 4. Worked example, step 1: the manifest
 
@@ -378,7 +378,7 @@ export default composition({
 | `swing` | 0 to 0.5; delays every off-beat sixteenth. |
 | `space` | Reverb `{ decay, wet, damping }` (default 3.2, 0.32, 0.5). |
 | `stinger` | Instrument for gameplay flourishes (clears, level-ups), quantised to the next sixteenth. Without it the first `bell`, `pluck`, `mallet` or `epiano` instrument is used. |
-| `instruments` | Named instruments. `kind` is one of `pad`, `strings`, `choir`, `pluck`, `lead`, `bass`, `sub`, `bell`, `epiano`, `mallet`, `kick`, `snare`, `clap`, `hat`, `openhat`, `ride`, `shaker`, `tom`, `perc`, `crash`, `riser`, `impact`. Common options are `gain`, `pan`, `reverb` and `delay` sends, `layer` and `duck`. Synth options (`wave`, `cutoff`, `resonance`, `attack`, `decay`, `sustain`, `release`, `detune`, `voices`, `ratio`, `index`, `envAmount`, `drive`, `tone`) are interpreted per kind. `glide` is part of the type, but the synthesizer does not read it. |
+| `instruments` | Named instruments. `kind` is one of `pad`, `strings`, `choir`, `pluck`, `lead`, `bass`, `sub`, `bell`, `epiano`, `mallet`, `kick`, `snare`, `clap`, `hat`, `openhat`, `ride`, `shaker`, `tom`, `perc`, `crash`, `riser`, `impact`. Common options are `gain`, `pan`, `reverb` and `delay` sends, `layer` and `duck`. Synth options (`wave`, `cutoff`, `resonance`, `attack`, `decay`, `sustain`, `release`, `detune`, `voices`, `ratio`, `index`, `envAmount`, `drive`, `tone`) are interpreted per kind. `glide` (seconds, lead instruments) slides each note of a phrase from the previous pitch; notes that start together or more than 2 s apart don't glide. |
 | `layer` | Intensity threshold 0..1. Once per bar, an instrument opens when `min(1, sectionIntensity × 0.65 + gameIntensity × 0.5)` reaches its threshold. A small hysteresis stops it flickering. 0 means always on. |
 | `duck` | Sidechain amount: the instrument dips on every kick. |
 | `sections` | `name`, `kind` (`intro`, `verse`, `build`, `drop`, `break`, `bridge`, `outro`), `bars`, `intensity` (the composed baseline), `chords` (Roman numerals, one per bar, cycled), `parts` (instrument name to a generator or an array of generators). |
@@ -418,9 +418,9 @@ For recorded or produced music, use `kind: "file"` with an audio file and a `tra
 | Field | Values |
 |---|---|
 | `ambience.preset` | `ocean`, `foundry`, `space`, `forest`, `wind`, `rain`, `underwater`, `city`, `cathedral`, `arctic`, `horizon`, `desert`, `ice`, `garden`, `cosmos`, `alpine`, `abyss`, `wilderness`, `volcanic`, `aurora`, `neon` (`src/audio/sound-effects/Ambience.ts`). Each preset is filtered noise layers with slow LFOs, plus occasional synthesised events. An unknown name plays silence. |
-| `sfx.preset` | The tonal family for gameplay sounds: `glass`, `metal`, `crystal`, `organic`, `neon`, `paper`, `stone`, `ice`, `oasis`, `koto`, `void` (`SFX_PRESETS` in `SfxBank.ts`). Unknown names fall back to `glass`. |
-| `sfx.material` | The block impact sound: a built-in `MaterialAudioProfile` name (`glass`, `pearl`, `metal`, `sandstone`, `ice`, `wood`, `cosmic`, `mineral`, `water`, `organic`, `obsidian`, `aurora`, `neon`, `paper`) or an inline profile. Unknown names and invalid inline profiles fall back to `glass` without an error. |
-| `sfx.overrides` | A map from sound id to a stage file. Validation checks that the files exist, but no runtime code reads this map, so overrides currently have no effect. |
+| `sfx.preset` | The tonal family for gameplay sounds: `glass`, `metal`, `crystal`, `organic`, `neon`, `paper`, `stone`, `ice`, `oasis`, `koto`, `void` (`SFX_PRESETS` in `SfxBank.ts`). Unknown names fail `npm run content:validate`. |
+| `sfx.material` | The block impact sound: a built-in `MaterialAudioProfile` name (`glass`, `pearl`, `metal`, `sandstone`, `ice`, `wood`, `cosmic`, `mineral`, `water`, `organic`, `obsidian`, `aurora`, `neon`, `paper`) or an inline profile. Unknown names fail `npm run content:validate`; an invalid inline profile falls back to `glass` at runtime. |
+| `sfx.overrides` | A map from sound id (`SFX_IDS` in `SfxBank.ts`, e.g. `lock`, `hardDrop`, `clear4`) to a stage audio file. The file replaces the generated sound for that id (no variations). Validation checks that the files exist; unknown ids are skipped with a console warning. |
 
 An inline profile overrides any of the synthesis layers (`materialAudioSchema` in `src/audio/sound-effects/materialAudio.ts`): `gain`, `transient`, `body` (modal `modes` as ratio, decay, gain), `resonance` (`band`, `cavity`, `comb`), `scatter` (`sand`, `dust`, `pebbles`, `shards`, `chimes`, `bubbles`, `crackle`, `leaves`, `sparks`), `tail` (`hiss`, `air`, `rumble`, `shimmer`), `reverb` and `sub`. Two optional partial overrides add more: `signature` is layered on four-line clears, and `response` is the environment's answer to a hard drop. The built-in `paper` profile written inline:
 
@@ -504,7 +504,7 @@ Things to know:
 - **Validation cannot run the module.** For a stage with a `module`, the validator accepts any layer type, and the content test accepts any line-clear effect name and skips parameter checks for module-provided layers. If the module does not actually register a type, the layer is skipped with a warning when the stage builds.
 - **Materials.** There is no material registry. Block surfaces come from `blocks.material` (a `BLOCK_PRESETS` name) plus `blocks.overrides`. Blender scenery is recoloured with `materials` rules in `gltfScene` and `scatter`. A custom component builds its own TSL node materials, as `paperCranes` does with `MeshStandardNodeMaterial`. Use `noBloom(material)` to keep a material out of the emissive bloom target, and `additiveFog(color)` for additive materials.
 - **Line-clear effects** implement `trigger(ctx, clear, params)`. `makeRecipeEffect(id, partialRecipe, description)` builds one from the recipe system below.
-- **Transitions** implement `play(ctx, params)`. They run once when a world crossfades in (only for crossfades longer than 0.6 s) and use fire-and-forget burst particles. Respect `ctx.intensityScale`, `ctx.reducedMotion` and `ctx.bursts.budget()`. An unknown transition name falls back to `warp`.
+- **Transitions** implement `play(ctx, params)`. They run once when a world crossfades in (only for crossfades longer than 0.6 s) and use fire-and-forget burst particles. Respect `ctx.intensityScale`, `ctx.reducedMotion` and `ctx.bursts.budget()`. An unknown transition name fails `npm run content:validate` (unless the stage has a module, which may register it).
 
 ### Built-in line-clear recipes
 
@@ -610,7 +610,7 @@ This runs `vitest run src/stages/content.test.ts`. `npm run build` runs it first
 
 The full suite (`npm test`) also runs `src/stages/assetLicenses.test.ts`.
 
-What validation does not check: names of transitions, ambience presets, SFX presets and sound materials (all fall back silently); `creatureHerd` `model` and `rig` paths (only a layer's `params.src` is checked); layers provided by stage modules; and file-track stems. Check these in game, and watch the console for `[stage <id>]` and `[audio]` warnings.
+`npm run content:validate` also rejects unknown transition, ambience preset, SFX preset and sound material names for shipped stages. What it does not check: `creatureHerd` `model` and `rig` paths (only a layer's `params.src` is checked); layers provided by stage modules; and file-track stems. Check these in game, and watch the console for `[stage <id>]` and `[audio]` warnings.
 
 ### When a stage is unavailable
 
@@ -633,7 +633,7 @@ What validation does not check: names of transitions, ambience presets, SFX pres
 
 A missing thumbnail and `placeholder: true` only produce warnings.
 
-Unavailable stages are left out of the stage select and the Music Room. Settings → Developer → Content lists every discovered stage with its folder, its errors and warnings, and a summary such as "13 stages found, 12 available, 1 unavailable". The console also logs `[stages] "<id>" unavailable: <errors>`. If an unavailable stage is a Voyage leg, the whole campaign is rejected too (section 10).
+Unavailable stages are listed at the end of world selection as "Unavailable (reason)" and can't be chosen; the Music Room leaves them out. Settings → Developer → Content lists every discovered stage with its folder, its errors and warnings, and a summary such as "13 stages found, 12 available, 1 unavailable". The console also logs `[stages] "<id>" unavailable: <errors>`. If an unavailable stage is a Voyage leg, the whole campaign is rejected too (section 10).
 
 A stage can also pass validation and still fail to load: its module may target an incompatible SDK or throw. In that case `StageManager.show` returns false, logs `[stages] failed to load "<id>"` and keeps `lastError`, and the game does not crash.
 

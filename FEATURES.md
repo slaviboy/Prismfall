@@ -36,7 +36,7 @@ How to read the Evidence column:
 | Custom deterministic engine | Done | `src/game/`; `engine.test.ts` (replay reproduces the state hash; 200k-tick fuzz) |
 | Web Audio API | Done | `src/audio/engine/AudioEngine.ts`; `e2e/audio.spec.ts` |
 | Keyboard and controllers | Done | `src/input/`; `input.test.ts`, `e2e/controls.spec.ts`, `e2e/gamepad.spec.ts` |
-| Extensive settings | Partial | See §11: motion blur and reflection quality are not implemented |
+| Extensive settings | Partial | See §11: reflection quality is not implemented |
 | Data-driven levels | Done | `src/stages/`, `content/stages/`; `src/stages/content.test.ts` |
 | High-DPI and high-refresh displays | Done / Manual check | `e2e/rendering.spec.ts` (DPR 2, resize to 2560×1080); 144 Hz feel is a manual check |
 | Saves settings and progress | Done | `src/storage/`; `storage.test.ts`, `e2e/smoke.spec.ts` (a setting survives a reload) |
@@ -149,7 +149,7 @@ How to read the Evidence column:
 | Graphics presets Low to Ultra, plus Custom | Done | `src/settings/presets.ts`; `storage.test.ts`, `e2e/rendering.spec.ts` |
 | Render scale, display info, fullscreen, frame-rate limit, AA, bloom, shadows, particle density, environment detail, AO, post-processing, DOF, FOV, zoom, screen-space effects, dynamic resolution | Done | Graphics and Camera tabs (`definitions.ts`), `RenderSystem.ts`, `PostPipeline.ts`; `e2e/rendering.spec.ts` covers part of this |
 | Reflection quality | Not done | `graphics.reflections` is in the schema and presets, and it reaches environments as `quality.reflections`, but no component reads it and it is not in the Settings UI |
-| Motion blur | Not done | `graphics.motionBlur` exists in the schema only. There is no blur pass and no UI control |
+| Motion blur | Done | Graphics → Motion blur (off by default). Velocity MRT plus three's `motionBlur` in `PostPipeline.ts`, masked by depth so only the world behind the playfield blurs; off with reduced motion |
 | Restore recommended graphics | Done | `graphicsPanels.tsx` (`recommendPreset`) |
 | VSync explained honestly; live FPS and renderer indicator | Done | Frame rate limit description (`definitions.ts`), `src/ui/hud/PerfOverlay.tsx` |
 | Audio: master, music, SFX, ambience, mute, enable, reactivity on/off, latency calibration | Done | Audio tab, `src/audio/calibration/LatencyCalibrator.ts`; `calibration.test.ts`, `e2e/audio-settings.spec.ts` (tap-along calibration) |
@@ -222,7 +222,7 @@ How to read the Evidence column:
 | Gameplay: responsive keyboard and controller | Manual check | Timing is unit-tested; feel needs a person |
 | Graphics: real 3D, distinct worlds, particles, music-reactive visuals, no placeholders | Done / Manual check | `content.test.ts` rejects placeholder content in release builds; the art itself needs review |
 | Audio: engine, SFX, independent volumes, transitions, beat-aware effects, original content | Done / Manual check | Audio e2e and unit tests; listening review pending |
-| User experience: menus, settings, remapping, stage select, modes, persistence | Partial | Complete except motion blur and reflection quality (§11) |
+| User experience: menus, settings, remapping, stage select, modes, persistence | Partial | Complete except reflection quality (§11) |
 | Performance: no per-frame React, no leaks, no degradation, measured | Done (results: see PERFORMANCE.md) | Soak test and perf matrix |
 | Project quality: strict TypeScript, no console errors, documented setup and deployment | Done | Typecheck, lint, e2e console-error guard, README.md, DEPLOYMENT.md |
 
@@ -322,13 +322,13 @@ How to read the Evidence column:
 | B. Dedicated XR subsystem; the rest of the app is independent of WebXR | Done | `src/xr/XRManager.ts`, `xrInput.ts`, `vrPanel.ts`; [VR_ARCHITECTURE.md](VR_ARCHITECTURE.md) |
 | C. Verified backend for VR: WebGL 2; WebGPU VR not enabled | Done | `XRManager.setUp` creates a `forceWebGL` renderer for the session |
 | D. Detection, Enter VR button, explanation when unavailable, user gesture, exit back to the same game | Done | `XRManager.detect`, `enter`, `tearDown`; `src/ui/vr/VRControls.tsx`; `e2e/vr.spec.ts` (emulated Quest 3) |
-| D. Session interruption and focus changes | Partial | Session end restores the desktop game. There is no handler for `XRSession` visibility changes, such as the headset's system menu |
+| D. Session interruption and focus changes | Done | Session end restores the desktop game; the game pauses when the session becomes hidden or blurred (headset system menu), `XRManager.setUp` |
 | E. Spatial playfield at real-world scale: seated default and standing; distance, height, scale, tilt, HUD distance and scale; reset | Done | `XRManager.applyLayout`, VR tab ("Reset this tab"), "Recentre view" in the headset panel; `e2e/vr.spec.ts`. There is no sideways board offset |
 | F. All worlds in VR | Done / Manual check | VR renders the same scene graph; tested in emulation |
 | G. Controllers: input profiles, remapping, sticks and touchpads, buttons, triggers, haptics, buffering, no double activation | Done | `xrInput.ts`, `src/ui/vr/VRBindings.tsx`; `xrInput.test.ts`, `e2e/vr.spec.ts` |
-| G. VR controller sensitivity; detected-controller status in settings | Not done | Thresholds are fixed, with hysteresis. `XRManager.controllerProfiles()` exists, but nothing displays it |
+| G. VR controller sensitivity; detected-controller status in settings | Partial | Detected controllers are listed in Settings → VR (`VRControls.tsx`). Stick and trigger thresholds are fixed, with hysteresis; there is no sensitivity setting |
 | H. VR menus with rays and sticks | Partial | The in-headset panel offers Marathon, Zen, Voyage, world choice, recentre and exit, plus pause and results panels. Sprint, Ultra, Practice and the settings, audio, graphics and controller configuration are not available inside the headset; they are on the desktop VR tab |
-| I. VR HUD | Partial | Score, level, lines, time and combo or callout panel; next and hold are 3D pods on the board; distance and scale adjustable. Secondary elements cannot be hidden: the desktop HUD toggles do not apply in VR |
+| I. VR HUD | Done | Score, level, lines, time and combo or callout panel, following the Interface tab's visibility toggles; next and hold are 3D pods on the board; distance and scale adjustable |
 | J. Same audio engine and analysis; spatial audio | Partial | Shared engine, and the listener follows the headset. Only creature footsteps are positioned; ambience is stereo |
 | K. VR graphics profiles | Partial | Three profiles (Performance, Balanced, Quality) set framebuffer scale, foveation and the particle cap. There is no Low/Medium/High/Ultra/Custom set and no separate VR render scale, particle, shadow or post-processing controls. VR renders without post-processing (no bloom) and without shadows |
 | L. Comfort: stationary viewpoint, no shake or motion blur, world dimming, fades, exit at any time | Done | Fixed camera rig in `XRManager`, VR tab "Dim the world" |
@@ -359,22 +359,19 @@ How to read the Evidence column:
 ## Known limitations
 
 1. **Reference game never inspected.** No desktop-control tools were available, so REFERENCE_NOTES.md rests on genre conventions and the brief. No feature parity is claimed.
-2. **Motion blur is not implemented.** `graphics.motionBlur` exists only in the settings schema.
-3. **Reflection quality does nothing.** The `graphics.reflections` setting is passed to environments but read by none, and it is not in the UI. Reflections come only from the environment map and material fresnel; there are no screen-space or planar reflections. ARCHITECTURE.md §4 lists SSR among the optional post effects, but no SSR pass exists in `PostPipeline.ts`.
+2. **Motion blur is background-only by design.** It is off by default and never applied to the playfield; samples near the board's edge can pick up a little of the board's colour.
+3. **Reflection quality does nothing.** The `graphics.reflections` setting is passed to environments but read by none, and it is not in the UI. Reflections come only from the environment map and material fresnel; there are no screen-space or planar reflections.
 4. **VR is unverified on hardware.** It has been tested only under IWER emulation. In addition:
    - it renders without post-processing and shadows;
    - the in-headset menus are limited, and settings must be changed on the desktop;
-   - the VR HUD cannot hide elements;
-   - there is no VR controller sensitivity setting and no detected-controller display;
-   - `XRSession` visibility changes are not handled.
+   - there is no VR controller sensitivity setting.
 5. **Music is synthesised live.** There are no recorded masters, stems or DAW projects. Whether it meets the "commercial soundtrack" bar is the owner's call. The analysis acceptance corpus is synthetic, too.
 6. **Content packs are build-time only.** There is no runtime import. New block surfaces, SFX timbre presets and impact profiles still need code in `src/`.
-7. **Save export is incomplete.** It omits replays and Music Room files, and every origin and browser profile has its own save (`Play.cmd` uses its own Chrome profile).
+7. **Save export leaves out Music Room files.** Settings, progress, stats, high scores and replays are exported; the player's own audio files are not. Every origin and browser profile has its own save (`Play.cmd` uses its own Chrome profile).
 8. **Spatial audio is limited.** Only creature footsteps are positioned in 3D.
 9. **Some features have no automated test:** fullscreen, GPU device-loss recovery, dynamic resolution, controller rumble and VR haptics, the mapping wizard UI, camera settings.
 10. **Block themes have gaps.** Blocks are opaque (translucency is shader-simulated), and there are no per-theme spawn animations or theme particles.
 11. **Some schema fields are unused:**
-    - `controller.highRatePolling` is neither read nor shown;
     - the manifest's `recommendedQuality` is unused;
     - hidden spawn rows are configurable only in `RuleConfig`, not by the player.
 12. **External audio analysis is experimental.** It is a developer-tools feature, and it depends on the browser's screen-share prompt including audio.

@@ -193,6 +193,7 @@ export const GRAPHICS_TAB: TabDef = {
     { kind: 'choice', section: 'graphics', key: 'shadows', label: 'Shadow quality', options: [{ value: 'off', label: 'Off' }, { value: 'low', label: 'Low' }, { value: 'medium', label: 'Medium' }, { value: 'high', label: 'High' }] },
     { kind: 'toggle', section: 'graphics', key: 'ambientOcclusion', label: 'Ambient occlusion', description: 'Screen-space contact shadows (GTAO).', when: (s) => s.graphics.postProcessing },
     { kind: 'toggle', section: 'graphics', key: 'depthOfField', label: 'Depth of field', description: 'Softly blurs the distant world. The playfield always stays sharp.', when: (s) => s.graphics.postProcessing },
+    { kind: 'slider', section: 'graphics', key: 'motionBlur', label: 'Motion blur', description: 'Blurs the world behind the playfield as the camera and creatures move. Never applied to the playfield, and off while reduced motion is on.', min: 0, max: 1, step: 0.05, format: (v) => (v === 0 ? 'Off' : percent(v)), when: (s) => s.graphics.postProcessing },
     { kind: 'toggle', section: 'graphics', key: 'screenSpaceEffects', label: 'Screen-space effects', description: 'Shockwave distortion and light streaks on big clears.' },
     { kind: 'group', label: 'World' },
     { kind: 'slider', section: 'graphics', key: 'particleDensity', label: 'Particle density', min: 0, max: 2, step: 0.05, format: percent },

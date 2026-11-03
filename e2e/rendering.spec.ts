@@ -11,6 +11,10 @@ test.describe('renderer backends', () => {
     const stats = await canvasStats(page);
     expect(stats.stdDev).toBeGreaterThan(8);
     expect(stats.colorful).toBeGreaterThan(0.002);
+    // Depth-based passes and motion vectors also work on WebGL 2.
+    await page.evaluate(() => (window as unknown as { __PRISMFALL__: { updateSection(s: string, p: unknown): void } }).__PRISMFALL__.updateSection('graphics', { motionBlur: 0.8, depthOfField: true }));
+    await page.waitForTimeout(800);
+    expect((await canvasStats(page)).stdDev).toBeGreaterThan(8);
   });
 
   test('renders with the WebGL 2 backend when forced', async ({ page }) => {
@@ -74,7 +78,8 @@ test('post-processing and quality options apply live without errors', async ({ p
     { postProcessing: false },
     { postProcessing: true, antialias: 'fxaa' },
     { antialias: 'smaa', ambientOcclusion: true, depthOfField: true },
-    { antialias: 'msaa', ambientOcclusion: false, depthOfField: false, renderScale: 0.6, upscaler: 'fsr1' },
+    { antialias: 'smaa', motionBlur: 0.8 },
+    { antialias: 'msaa', ambientOcclusion: false, depthOfField: false, motionBlur: 0, renderScale: 0.6, upscaler: 'fsr1' },
     { renderScale: 1.5, shadows: 'high' },
     { preset: 'low' },
     { preset: 'ultra' },

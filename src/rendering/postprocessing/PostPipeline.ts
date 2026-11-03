@@ -1,7 +1,9 @@
 import { RenderPipeline, Vector3, type Camera, type Node, type Scene, type WebGPURenderer } from 'three/webgpu';
 import {
+  convertToTexture,
   emissive,
   float,
+  int,
   length,
   luminance,
   mix,
@@ -15,6 +17,7 @@ import {
   vec2,
   vec3,
   vec4,
+  velocity,
 } from 'three/tsl';
 import { bloom } from 'three/addons/tsl/display/BloomNode.js';
 import { fxaa } from 'three/addons/tsl/display/FXAANode.js';
@@ -22,6 +25,7 @@ import { smaa } from 'three/addons/tsl/display/SMAANode.js';
 import { fsr1 } from 'three/addons/tsl/display/FSR1Node.js';
 import { ao } from 'three/addons/tsl/display/GTAONode.js';
 import { dof } from 'three/addons/tsl/display/DepthOfFieldNode.js';
+import { motionBlur } from 'three/addons/tsl/display/MotionBlur.js';
 import { frameUniforms } from '../shaders/uniforms';
 
 export interface PostSettings {
@@ -32,6 +36,8 @@ export interface PostSettings {
   bloom: number;
   ambientOcclusion: boolean;
   depthOfField: boolean;
+  /** Background motion blur strength (0 = off). The playfield is never blurred. */
+  motionBlur: number;
   screenEffects: number;
 }
 
@@ -63,6 +69,7 @@ export class PostPipeline {
     vignette: uniform(DEFAULT_GRADE.vignette),
     focusDistance: uniform(30),
     screenEffects: uniform(1),
+    motionBlur: uniform(0),
   };
   /** Effective MSAA sample count (0 when a depth-based pass makes MSAA unsuitable). */
   samples = 0;
@@ -78,8 +85,10 @@ export class PostPipeline {
     const msaa = settings.antialias === 'msaa' && !depthPasses ? 4 : 0;
     const aa = settings.antialias === 'msaa' && depthPasses ? 'smaa' : settings.antialias;
     const upscale = settings.renderScale < 0.999 && settings.upscaler === 'fsr1';
-    const key = JSON.stringify([settings.enabled, msaa, aa, upscale, settings.ambientOcclusion, settings.depthOfField]);
+    const blur = settings.motionBlur > 0;
+    const key = JSON.stringify([settings.enabled, msaa, aa, upscale, settings.ambientOcclusion, settings.depthOfField, blur]);
     this.u.bloomStrength.value = settings.enabled ? settings.bloom : 0;
+    this.u.motionBlur.value = settings.motionBlur;
     this.u.screenEffects.value = settings.screenEffects;
     if (key !== this.structureKey || !this.pipeline) {
       this.structureKey = key;
@@ -128,7 +137,9 @@ export class PostPipeline {
     this.samples = msaa;
     const scenePass = pass(this.scene, this.camera, { samples: msaa });
     this.scenePass = scenePass;
-    scenePass.setMRT(mrt({ output, emissive }));
+    const blur = settings.enabled && settings.motionBlur > 0;
+    // Motion vectors are only rendered when motion blur is on.
+    scenePass.setMRT(blur ? mrt({ output, emissive, velocity }) : mrt({ output, emissive }));
     const pipeline = new RenderPipeline(this.renderer);
     const color = scenePass.getTextureNode('output');
 
@@ -153,6 +164,19 @@ export class PostPipeline {
     bloomPass.threshold = this.u.bloomThreshold;
     bloomPass.radius = this.u.bloomRadius;
     let combined: Node<'vec4'> = vec4(lit.add(bloomPass.rgb), 1);
+
+    if (blur) {
+      // Only the world well behind the playfield blurs: motion vectors fade in with depth beyond
+      // the board (the focus distance), so blocks, the frame and the HUD pods stay crisp.
+      const behind = smoothstep(this.u.focusDistance.add(4), this.u.focusDistance.add(14), scenePass.getViewZNode().negate());
+      const raw = scenePass.getTextureNode('velocity').xy.mul(this.u.motionBlur.mul(behind));
+      // Clamp the smear to 1.5% of the screen: very large vectors (sky, camera cuts) would otherwise
+      // drag colour from far across the image.
+      const len = length(raw);
+      const motion = raw.mul(float(0.015).div(len.max(0.015)));
+      // motionBlur samples its input at offsets, so the combined image is rendered to a texture first.
+      combined = vec4((motionBlur(convertToTexture(combined), motion, int(12)) as unknown as Node<'vec4'>).rgb, 1);
+    }
 
     if (settings.depthOfField) {
       const dofNode = dof(combined, scenePass.getViewZNode(), this.u.focusDistance, this.u.focusDistance.mul(0.45), float(1.2)) as unknown as Node<'vec4'>;

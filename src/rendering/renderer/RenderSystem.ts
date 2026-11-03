@@ -245,6 +245,8 @@ export class RenderSystem implements GameView {
       bloom: g.bloom * (s.accessibility.flashReduction ? 0.6 : 1),
       ambientOcclusion: g.ambientOcclusion,
       depthOfField: g.depthOfField,
+      // Reduced motion turns motion blur off entirely.
+      motionBlur: reducedMotion(s) ? 0 : g.motionBlur,
       screenEffects: s.accessibility.screenEffects,
     });
     this.lights.setShadowQuality(g.shadows);

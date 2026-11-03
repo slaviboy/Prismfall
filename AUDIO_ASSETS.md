@@ -22,7 +22,7 @@ An honest account of where Prismfall's soundtrack and sound design come from, ho
 |---|---|
 | `pad`, `strings` | Detuned oscillators through a low-pass filter whose cutoff breathes with a slow LFO, with long envelopes. |
 | `choir` | Detuned sawtooth pair through three band-pass formant filters ("ah"). |
-| `pluck`, `lead`, `bass` | Oscillators with a filter envelope; `lead` adds a delayed vibrato. The `glide` option that some tracks set is not read by the synthesizer. |
+| `pluck`, `lead`, `bass` | Oscillators with a filter envelope; `lead` adds a delayed vibrato and, with `glide`, slides between the notes of a phrase. |
 | `sub` | Sine oscillator. |
 | `bell`, `epiano`, `mallet` | Two-operator FM (carrier/modulator ratio and index). |
 | `kick` | Sine with a fast downward pitch sweep. |
@@ -146,7 +146,7 @@ These parts exist so that recorded or professionally produced music can replace 
 
 1. measures the main mix's integrated loudness with ffmpeg's `loudnorm` analysis;
 2. applies one gain to the main mix and every stem, which brings the main mix to about −16 LUFS and keeps the stems' balance against it;
-3. limits peaks with `alimiter` (limit 0.84, about −1.5 dBFS);
+3. limits peaks with `alimiter` (limit 0.84, about −1.5 dBFS) on a 4× oversampled signal, which approximates a true-peak ceiling;
 4. encodes Ogg Opus at 160 kbps VBR to `content/stages/<id>/music/<track>.ogg` and `<track>-<stem>.ogg`;
 5. writes `<track>.track.json` with the resolved stem paths.
 
@@ -155,10 +155,10 @@ These parts exist so that recorded or professionally produced music can replace 
 Limitations to know before relying on this path:
 
 - `assets/audio/music/` does not exist yet, so the encoder currently exits with "No masters in assets/audio/music yet".
-- The script's header comment speaks of a −1.5 dBTP true-peak limit. `alimiter` limits sample peaks, so inter-sample peaks can exceed that.
+- The limiter runs at 4× the sample rate to catch most inter-sample peaks; Opus encoding can still overshoot slightly, so this is close to, not guaranteed, −1.5 dBTP.
 - File tracks have no stinger instrument, so clears and level-ups get no musical answer from the music, though the sound effects still play.
 - The tonal layer of the sound effects is transposed to the composition's key. With a file track it falls back to C.
-- `assets/audio/README.md` describes `sfx/<stage-id>/` and `ambience/<stage-id>/` folders for recorded effects and ambience. No code reads them, and the manifest's `sfx.overrides` map is validated but not used when the sound bank is built.
+- `assets/audio/README.md` describes `sfx/<stage-id>/` and `ambience/<stage-id>/` folders for recorded effects and ambience. No code reads those folders. Recorded effects instead go in the stage folder and are named in the manifest's `sfx.overrides` map, which replaces the generated sound for each listed id.
 
 Players can also add their own music files in the Music Room. These are stored in the browser (IndexedDB), analysed for tempo, offset and sections, and played as file tracks. Nothing from this path is shipped.
 
