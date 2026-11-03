@@ -17,6 +17,8 @@ const schema = z.object({
   pistons: z.array(z.object({ match: z.string(), axis: z.enum(['x', 'y', 'z']), distance: z.number(), beats: z.number().default(4), stagger: z.number().default(0.5) })).default([]),
   animationSpeed: z.number().default(1),
   castShadow: z.boolean().default(false),
+  /** Only keep top-level objects whose names match (reuse part of another kit). */
+  include: z.string().optional(),
   /** Drop each top-level object onto the stage ground (terrain layers must come first). */
   snapToGround: z.boolean().default(false),
   /** How far snapped objects sink below the lowest ground point under them. */
@@ -39,11 +41,17 @@ export const gltfSceneComponent: ComponentFactory<Params> = {
   async create(ctx, p) {
     const gltf = await ctx.assets.loadGLTF(p.src);
     const root = new Group();
-    const scene = gltf.scene;
+    // A clone per use: cached GLTFs are shared between stages (geometry stays shared, materials and
+    // visibility are per stage).
+    const scene = gltf.scene.clone(true);
     root.add(scene);
     root.position.set(...p.position);
     root.rotation.set(...p.rotation);
     root.scale.setScalar(p.scale);
+    if (p.include) {
+      const re = new RegExp(p.include, 'i');
+      for (const child of [...scene.children]) if (!re.test(child.name)) child.visible = false;
+    }
     const u = { emissive: floatUniform(1), music: floatUniform(0), presence: floatUniform(1) };
     const remapper = createRemapper(p.materials, { time: ctx.uniforms.time, presence: u.presence, music: u.music, emissive: u.emissive }, p.vertexAO);
     const remap = (m: Material, hasAO: boolean): Material => remapper.remap(m, hasAO);

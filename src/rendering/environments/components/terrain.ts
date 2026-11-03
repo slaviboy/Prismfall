@@ -11,6 +11,7 @@ import {
   mrt,
   mx_cell_noise_float,
   mx_noise_float,
+  mx_worley_noise_vec2,
   normalWorldGeometry,
   normalize,
   positionLocal,
@@ -72,6 +73,8 @@ const schema = z.object({
   glow: z.object({ color: zColor.default('#ff9a4a'), strength: z.number().min(0).default(0) }).prefault({}),
   /** Heat shimmer on distant terrain (0 = off). */
   heatHaze: z.number().min(0).max(1).default(0),
+  /** Underwater caustics: drifting cells of focused sunlight on the ground (strength 0 = off). */
+  caustics: z.object({ strength: z.number().min(0).default(0), scale: z.number().positive().default(0.12), speed: z.number().default(0.35), color: zColor.default('#9ff6ff') }).prefault({}),
 });
 
 type Params = z.infer<typeof schema>;
@@ -187,7 +190,20 @@ export const terrainComponent: ComponentFactory<Params> = {
     const twinkle = sin(time.mul(2.2).add(seed.mul(60)).add(cameraPosition.x.mul(0.8))).mul(0.5).add(0.5);
     const glint = step(0.985, seed).mul(twinkle.pow(4)).mul(smoothstep(60, 8, camDist)).mul(flat).mul(u.sparkle);
     const crest = smoothstep(0.55, 1, h01).mul(u.glow).mul(float(0.6).add(u.music.mul(0.8)));
-    const emissive = colorUniform(p.colors.sparkle).mul(glint.mul(1.6)).add(colorUniform(p.glow.color).mul(crest)).mul(u.presence);
+    let emissive = colorUniform(p.colors.sparkle).mul(glint.mul(1.6)).add(colorUniform(p.glow.color).mul(crest));
+    if (p.caustics.strength > 0) {
+      // Domain-warped Worley borders at two scales, multiplied: wavy, broken threads of focused light
+      // rather than a regular cell network.
+      const ct = time.mul(p.caustics.speed);
+      const s1 = p.caustics.scale;
+      const warp = vec3(mx_noise_float(vec3(wp.x.mul(s1 * 0.45), wp.z.mul(s1 * 0.45), ct.mul(0.5))), mx_noise_float(vec3(wp.z.mul(s1 * 0.45), wp.x.mul(s1 * 0.45), ct.mul(0.5).add(7))), 0).mul(1.1);
+      const c1 = mx_worley_noise_vec2(vec3(wp.x.mul(s1), wp.z.mul(s1), ct).add(warp));
+      const c2 = mx_worley_noise_vec2(vec3(wp.x.mul(s1 * 1.9).add(3.1), wp.z.mul(s1 * 1.9), ct.mul(1.4)).sub(warp.mul(0.7)));
+      const lines = smoothstep(0.09, 0, c1.y.sub(c1.x)).mul(smoothstep(0.22, 0.02, c2.y.sub(c2.x)).mul(0.8).add(0.2)).mul(mx_noise_float(vec3(wp.x.mul(0.02), wp.z.mul(0.02), ct.mul(0.2))).mul(0.5).add(0.6));
+      const fade = smoothstep(220, 30, camDist).mul(normalWorldGeometry.y.clamp(0, 1));
+      emissive = emissive.add(colorUniform(p.caustics.color).mul(lines.mul(fade).mul(p.caustics.strength).mul(float(1).add(u.music.mul(0.5)))));
+    }
+    emissive = emissive.mul(u.presence);
 
     const material = new MeshStandardNodeMaterial();
     material.colorNode = vec4(albedo, 1);
