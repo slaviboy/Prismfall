@@ -4,6 +4,7 @@
  *
  * Usage: npm run content:thumbnails -- [--stages a,b] [--settle 4]
  * Requires a test build (npm run build:test); the preview server is started if needed.
+ * --port and --dist capture a private test build instead (as in stage-shots.ts).
  */
 import { chromium } from '@playwright/test';
 import { execSync, spawn, type ChildProcess } from 'node:child_process';
@@ -18,19 +19,22 @@ const opt = (name: string, def: string): string => {
 };
 const only = opt('stages', '').split(',').filter(Boolean);
 const settleS = Number(opt('settle', '4'));
+const port = opt('port', '4174');
+const dist = opt('dist', 'dist-test');
+const BASE = `http://localhost:${port}/`;
 
 async function ensureServer(): Promise<ChildProcess | null> {
   try {
-    if ((await fetch('http://localhost:4174/')).ok) return null;
+    if ((await fetch(BASE)).ok) return null;
   } catch {
     /* not running */
   }
-  if (!existsSync(join(ROOT, 'dist-test/index.html'))) execSync('npm run build:test', { cwd: ROOT, stdio: 'inherit' });
-  const server = spawn(process.execPath, [join(ROOT, 'node_modules/vite/bin/vite.js'), 'preview', '--mode', 'test', '--outDir', 'dist-test'], { cwd: ROOT, stdio: 'ignore' });
+  if (!existsSync(join(ROOT, dist, 'index.html'))) execSync(`npx vite build --mode test --outDir ${dist}`, { cwd: ROOT, stdio: 'inherit' });
+  const server = spawn(process.execPath, [join(ROOT, 'node_modules/vite/bin/vite.js'), 'preview', '--mode', 'test', '--outDir', dist, '--port', port, '--strictPort'], { cwd: ROOT, stdio: 'ignore' });
   for (let i = 0; i < 60; i++) {
     await new Promise((r) => setTimeout(r, 500));
     try {
-      if ((await fetch('http://localhost:4174/')).ok) return server;
+      if ((await fetch(BASE)).ok) return server;
     } catch {
       /* starting */
     }
@@ -46,7 +50,7 @@ const browser = await chromium.launch({
 });
 try {
   const page = await browser.newPage({ viewport: { width: 960, height: 540 } });
-  await page.goto('http://localhost:4174/');
+  await page.goto(BASE);
   await page.getByTestId('boot-start').click();
   await page.getByTestId('main-menu').waitFor();
   type Hooks = { __PRISMFALL__: { shell: { stageManager: { stages(): { id: string; dir: string }[]; show(id: string, o: unknown): Promise<boolean> } } } };
