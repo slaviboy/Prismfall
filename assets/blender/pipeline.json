@@ -72,6 +72,24 @@
           "to": "content/stages/ancient-garden/models"
         }
       ]
+    },
+    {
+      "script": "spire_kit.py",
+      "outputs": [
+        {
+          "from": "assets/blender/exports/spire",
+          "to": "content/stages/wardens-spire/models"
+        }
+      ]
+    },
+    {
+      "script": "red_horizon_kit.py",
+      "outputs": [
+        {
+          "from": "assets/blender/exports/red_horizon",
+          "to": "content/stages/red-horizon/models"
+        }
+      ]
     }
   ]
 }

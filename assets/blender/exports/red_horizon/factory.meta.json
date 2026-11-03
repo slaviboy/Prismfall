@@ -1,0 +1,42 @@
+{
+  "generator": "assets/blender/scripts/red_horizon_kit.py",
+  "objects": [
+    "factory_hall",
+    "factory_chimneys",
+    "factory_fan_housing",
+    "factory_fan_rotor",
+    "arm_base",
+    "arm_turret",
+    "arm_upper",
+    "arm_fore",
+    "arm_wrist",
+    "crane_bridge",
+    "crane_trolley",
+    "crane_hook"
+  ],
+  "triangles": {
+    "factory_hall": 6796,
+    "factory_chimneys": 1996,
+    "factory_fan_housing": 286,
+    "factory_fan_rotor": 116,
+    "arm_base": 128,
+    "arm_turret": 72,
+    "arm_upper": 92,
+    "arm_fore": 56,
+    "arm_wrist": 52,
+    "crane_bridge": 60,
+    "crane_trolley": 52,
+    "crane_hook": 48
+  },
+  "materials": [
+    "rhConcrete",
+    "rhConcreteDark",
+    "rhHot",
+    "rhInterior",
+    "rhPaint",
+    "rhRust",
+    "rhSteel",
+    "rhWarning"
+  ],
+  "license": "Original work for Prismfall"
+}

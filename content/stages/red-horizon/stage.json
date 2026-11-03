@@ -1,0 +1,1667 @@
+{
+  "schemaVersion": 1,
+  "id": "red-horizon",
+  "name": "Red Horizon",
+  "description": "An abandoned freight yard at the edge of a fallen city, under a sky choked with smoke. Machines patrol the ruins with searching red optics, walking refineries stalk the skyline, drones sweep the ground with their lights, the factory keeps building, and far off the city burns.",
+  "order": 69,
+  "tags": [
+    "machines",
+    "ruins",
+    "dusk",
+    "industrial",
+    "photographic"
+  ],
+  "intensity": 0.7,
+  "recommendedQuality": "high",
+  "module": "stage.ts",
+  "requires": {
+    "sdk": "^1.2.0"
+  },
+  "palette": {
+    "accent": "#ff3a1e",
+    "secondary": "#8a8e96",
+    "highlight": "#ffd2b8",
+    "fog": "#3a1c14",
+    "plate": "#070505"
+  },
+  "fog": {
+    "color": "#3a1c14",
+    "density": 0.0006
+  },
+  "backdrop": {
+    "top": "#120a08",
+    "bottom": "#0a0605",
+    "glow": "#ff5a24"
+  },
+  "lighting": {
+    "key": {
+      "color": "#ffe6d6",
+      "intensity": 2.1,
+      "azimuth": -30,
+      "elevation": 42
+    },
+    "rim": {
+      "color": "#ff6a3c",
+      "intensity": 1.4
+    },
+    "ambient": {
+      "sky": "#6c5a58",
+      "ground": "#1a1010",
+      "intensity": 0.8
+    },
+    "accents": [
+      {
+        "color": "#ff8a5a",
+        "intensity": 6,
+        "x": 9,
+        "y": -6,
+        "z": 6
+      },
+      {
+        "color": "#c8c8d4",
+        "intensity": 5,
+        "x": -9,
+        "y": 8,
+        "z": 6
+      }
+    ],
+    "beatResponse": 0
+  },
+  "grade": {
+    "exposure": 1,
+    "saturation": 1,
+    "contrast": 1.08,
+    "tint": [
+      1.02,
+      0.99,
+      0.98
+    ],
+    "vignette": 0.42,
+    "bloomThreshold": 0.82,
+    "bloomRadius": 0.35,
+    "toneMapping": "agx",
+    "envIntensity": 0.55
+  },
+  "camera": {
+    "pitch": 1,
+    "yaw": 0,
+    "sway": 0.2,
+    "targetY": 0
+  },
+  "blocks": {
+    "geometry": "chamfer",
+    "material": "machinedGunmetal",
+    "palette": {
+      "I": "#1fa4d6",
+      "O": "#f0b82a",
+      "T": "#9a4ad8",
+      "S": "#46b83c",
+      "Z": "#e0281e",
+      "J": "#3058e8",
+      "L": "#f0701e"
+    }
+  },
+  "environment": {
+    "layers": [
+      {
+        "id": "sky",
+        "type": "redHorizonSky",
+        "params": {
+          "panorama": {
+            "src": "textures/freight_station_band.webp",
+            "elevation": [
+              -32,
+              40
+            ],
+            "offset": 0.585,
+            "fade": 8,
+            "detail": {
+              "src": "textures/freight_station_detail.webp",
+              "uRange": [
+                0.3906,
+                0.7795
+              ]
+            }
+          },
+          "occlude": 240,
+          "fires": [
+            [
+              -34,
+              3,
+              0.3
+            ],
+            [
+              -26,
+              2,
+              0.22
+            ],
+            [
+              28,
+              2.5,
+              0.25
+            ],
+            [
+              38,
+              3.5,
+              0.28
+            ]
+          ]
+        }
+      },
+      {
+        "id": "ground",
+        "type": "redHorizonGround",
+        "params": {
+          "tracks": [
+            {
+              "from": [
+                -10,
+                27
+              ],
+              "to": [
+                -27,
+                -110
+              ]
+            },
+            {
+              "from": [
+                12,
+                27
+              ],
+              "to": [
+                31,
+                -110
+              ]
+            },
+            {
+              "from": [
+                -110,
+                -62
+              ],
+              "to": [
+                110,
+                -44
+              ]
+            }
+          ],
+          "craters": [
+            [
+              -18,
+              4,
+              4.5
+            ],
+            [
+              20,
+              -4,
+              5
+            ],
+            [
+              -40,
+              -40,
+              7
+            ],
+            [
+              45,
+              -45,
+              6
+            ],
+            [
+              -6,
+              -22,
+              3.5
+            ]
+          ],
+          "puddles": 0.25
+        }
+      },
+      {
+        "id": "ruins",
+        "type": "redHorizonScenery",
+        "params": {
+          "src": "models/ruins.glb",
+          "place": [
+            {
+              "mesh": "tower_e",
+              "at": [
+                -360,
+                -760
+              ],
+              "yaw": 12
+            },
+            {
+              "mesh": "tower_c",
+              "at": [
+                330,
+                -790
+              ],
+              "yaw": -20
+            },
+            {
+              "mesh": "tower_b",
+              "at": [
+                -300,
+                -640
+              ],
+              "yaw": 40
+            },
+            {
+              "mesh": "tower_a",
+              "at": [
+                300,
+                -330
+              ],
+              "yaw": 20
+            },
+            {
+              "mesh": "tower_c",
+              "at": [
+                440,
+                -430
+              ],
+              "yaw": 110
+            },
+            {
+              "mesh": "tower_d",
+              "at": [
+                270,
+                -250
+              ],
+              "yaw": -15
+            },
+            {
+              "mesh": "tower_e",
+              "at": [
+                560,
+                -700
+              ],
+              "yaw": 70
+            },
+            {
+              "mesh": "tower_b",
+              "at": [
+                -330,
+                -560
+              ],
+              "yaw": -30
+            },
+            {
+              "mesh": "tower_a",
+              "at": [
+                -480,
+                -520
+              ],
+              "yaw": 80
+            },
+            {
+              "mesh": "tower_d",
+              "at": [
+                -230,
+                -330
+              ],
+              "yaw": 25
+            },
+            {
+              "mesh": "tower_d",
+              "at": [
+                -420,
+                -260
+              ],
+              "yaw": 60
+            },
+            {
+              "mesh": "highway_pier",
+              "at": [
+                60,
+                -110
+              ],
+              "yaw": -26.6
+            },
+            {
+              "mesh": "highway_pier",
+              "at": [
+                88.6,
+                -95.7
+              ],
+              "yaw": -26.6
+            },
+            {
+              "mesh": "highway_pier",
+              "at": [
+                117.2,
+                -81.4
+              ],
+              "yaw": -26.6
+            },
+            {
+              "mesh": "highway_pier",
+              "at": [
+                145.8,
+                -67.1
+              ],
+              "yaw": -26.6
+            },
+            {
+              "mesh": "highway_span",
+              "at": [
+                74.3,
+                -102.9
+              ],
+              "yaw": -26.6
+            },
+            {
+              "mesh": "highway_span",
+              "at": [
+                131.5,
+                -74.3
+              ],
+              "yaw": -26.6
+            },
+            {
+              "mesh": "highway_broken",
+              "at": [
+                117.2,
+                -81.4
+              ],
+              "yaw": -26.6
+            },
+            {
+              "mesh": "mast",
+              "at": [
+                112,
+                -140
+              ],
+              "yaw": 15
+            },
+            {
+              "mesh": "shell_b",
+              "at": [
+                150,
+                -180
+              ],
+              "yaw": -10
+            },
+            {
+              "mesh": "wreck_car",
+              "at": [
+                18,
+                2
+              ],
+              "yaw": 70,
+              "tilt": [
+                0,
+                4
+              ]
+            },
+            {
+              "mesh": "wreck_van",
+              "at": [
+                27,
+                -9
+              ],
+              "yaw": 150,
+              "tilt": [
+                3,
+                0
+              ]
+            },
+            {
+              "mesh": "wreck_bus",
+              "at": [
+                46,
+                -32
+              ],
+              "yaw": 35
+            },
+            {
+              "mesh": "wreck_car",
+              "at": [
+                -18,
+                -1
+              ],
+              "yaw": -40,
+              "tilt": [
+                -3,
+                2
+              ]
+            },
+            {
+              "mesh": "wreck_car",
+              "at": [
+                -40,
+                -46
+              ],
+              "yaw": 100
+            },
+            {
+              "mesh": "debris_a",
+              "at": [
+                15,
+                -6
+              ],
+              "yaw": 0,
+              "scale": 0.75
+            },
+            {
+              "mesh": "debris_b",
+              "at": [
+                32,
+                -24
+              ],
+              "yaw": 50,
+              "scale": 0.75
+            },
+            {
+              "mesh": "debris_c",
+              "at": [
+                -26,
+                -24
+              ],
+              "yaw": 10,
+              "scale": 0.75
+            },
+            {
+              "mesh": "debris_a",
+              "at": [
+                58,
+                -60
+              ],
+              "yaw": 120,
+              "scale": 0.75
+            },
+            {
+              "mesh": "debris_c",
+              "at": [
+                -70,
+                -110
+              ],
+              "yaw": 70,
+              "scale": 0.75
+            },
+            {
+              "mesh": "debris_b",
+              "at": [
+                -14,
+                4
+              ],
+              "yaw": 200,
+              "scale": 0.75
+            },
+            {
+              "mesh": "shell_a",
+              "at": [
+                -150,
+                -240
+              ],
+              "yaw": 20
+            },
+            {
+              "mesh": "shell_b",
+              "at": [
+                -95,
+                -190
+              ],
+              "yaw": -35
+            },
+            {
+              "mesh": "wreck_car",
+              "at": [
+                -14.5,
+                12
+              ],
+              "yaw": 118,
+              "tilt": [
+                2,
+                -3
+              ]
+            },
+            {
+              "mesh": "wreck_car",
+              "at": [
+                10.5,
+                16.5
+              ],
+              "yaw": -24,
+              "tilt": [
+                -2,
+                3
+              ]
+            },
+            {
+              "mesh": "debris_b",
+              "at": [
+                -8,
+                22
+              ],
+              "yaw": 30,
+              "scale": 0.4
+            },
+            {
+              "mesh": "debris_b",
+              "at": [
+                8,
+                21
+              ],
+              "yaw": 140,
+              "scale": 0.35
+            },
+            {
+              "mesh": "debris_a",
+              "at": [
+                -18,
+                4
+              ],
+              "yaw": 75,
+              "scale": 0.45
+            },
+            {
+              "mesh": "debris_a",
+              "at": [
+                20,
+                -4
+              ],
+              "yaw": 10,
+              "scale": 0.5
+            },
+            {
+              "mesh": "debris_b",
+              "at": [
+                -15,
+                10
+              ],
+              "yaw": 220,
+              "scale": 0.3
+            },
+            {
+              "mesh": "debris_b",
+              "at": [
+                16,
+                9
+              ],
+              "yaw": 300,
+              "scale": 0.3
+            },
+            {
+              "mesh": "debris_b",
+              "at": [
+                -15.7,
+                7.8
+              ],
+              "yaw": 238,
+              "scale": 0.29
+            },
+            {
+              "mesh": "debris_b",
+              "at": [
+                5.1,
+                21.4
+              ],
+              "yaw": 57,
+              "scale": 0.23
+            },
+            {
+              "mesh": "debris_b",
+              "at": [
+                -11.4,
+                15.8
+              ],
+              "yaw": 293,
+              "scale": 0.21
+            },
+            {
+              "mesh": "debris_b",
+              "at": [
+                11.4,
+                14.9
+              ],
+              "yaw": 199,
+              "scale": 0.2
+            },
+            {
+              "mesh": "debris_a",
+              "at": [
+                -7.5,
+                20.5
+              ],
+              "yaw": 64,
+              "scale": 0.2
+            },
+            {
+              "mesh": "debris_b",
+              "at": [
+                5.8,
+                23.4
+              ],
+              "yaw": 84,
+              "scale": 0.3
+            },
+            {
+              "mesh": "debris_b",
+              "at": [
+                -16.5,
+                1.8
+              ],
+              "yaw": 93,
+              "scale": 0.31
+            },
+            {
+              "mesh": "debris_a",
+              "at": [
+                19.3,
+                3.5
+              ],
+              "yaw": 152,
+              "scale": 0.18
+            },
+            {
+              "mesh": "debris_a",
+              "at": [
+                -17.1,
+                2.9
+              ],
+              "yaw": 33,
+              "scale": 0.23
+            },
+            {
+              "mesh": "debris_a",
+              "at": [
+                14.4,
+                11.6
+              ],
+              "yaw": 33,
+              "scale": 0.22
+            },
+            {
+              "mesh": "debris_a",
+              "at": [
+                -12.8,
+                13.7
+              ],
+              "yaw": 94,
+              "scale": 0.25
+            },
+            {
+              "mesh": "debris_b",
+              "at": [
+                6.1,
+                22.0
+              ],
+              "yaw": 183,
+              "scale": 0.3
+            },
+            {
+              "mesh": "debris_a",
+              "at": [
+                -12.7,
+                4.7
+              ],
+              "yaw": 192,
+              "scale": 0.26
+            },
+            {
+              "mesh": "debris_b",
+              "at": [
+                4.5,
+                21.3
+              ],
+              "yaw": 319,
+              "scale": 0.31
+            }
+          ]
+        }
+      },
+      {
+        "id": "smoke",
+        "type": "redHorizonSmoke",
+        "params": {
+          "wind": [
+            1.6,
+            -0.4
+          ],
+          "sources": [
+            {
+              "at": [
+                302,
+                62,
+                -332
+              ],
+              "rate": 1.18,
+              "size": [
+                8.0,
+                36.0
+              ],
+              "rise": 5,
+              "life": 42,
+              "heat": 0.5,
+              "dark": 0.7
+            },
+            {
+              "at": [
+                -330,
+                84,
+                -560
+              ],
+              "rate": 1.01,
+              "size": [
+                11.2,
+                42.0
+              ],
+              "rise": 5,
+              "life": 46,
+              "heat": 0.4,
+              "dark": 0.75
+            },
+            {
+              "at": [
+                300,
+                10,
+                -700
+              ],
+              "rate": 1.01,
+              "size": [
+                16.0,
+                54.0
+              ],
+              "rise": 6,
+              "life": 50,
+              "heat": 0.6,
+              "dark": 0.7
+            },
+            {
+              "at": [
+                -280,
+                8,
+                -620
+              ],
+              "rate": 0.84,
+              "size": [
+                14.4,
+                48.0
+              ],
+              "rise": 6,
+              "life": 50,
+              "heat": 0.6,
+              "dark": 0.65
+            },
+            {
+              "at": [
+                -95,
+                3,
+                -190
+              ],
+              "rate": 1.51,
+              "size": [
+                4.0,
+                19.2
+              ],
+              "rise": 3.5,
+              "life": 30,
+              "heat": 0.9,
+              "dark": 0.6
+            },
+            {
+              "at": [
+                46,
+                1,
+                -32
+              ],
+              "rate": 1.85,
+              "size": [
+                1.6,
+                8.4
+              ],
+              "rise": 2.4,
+              "life": 20,
+              "heat": 0.9,
+              "dark": 0.65,
+              "spread": 1
+            },
+            {
+              "at": [
+                -24,
+                0.5,
+                -22
+              ],
+              "rate": 1.18,
+              "size": [
+                1.2,
+                6.0
+              ],
+              "rise": 2,
+              "life": 18,
+              "heat": 0.8,
+              "dark": 0.55,
+              "spread": 1
+            },
+            {
+              "at": [
+                -60,
+                0,
+                -70
+              ],
+              "rate": 0.2,
+              "size": [
+                19.2,
+                42.0
+              ],
+              "rise": 0.35,
+              "life": 70,
+              "heat": 0,
+              "dark": 0.12,
+              "spread": 30
+            },
+            {
+              "at": [
+                70,
+                0,
+                -80
+              ],
+              "rate": 0.2,
+              "size": [
+                19.2,
+                42.0
+              ],
+              "rise": 0.35,
+              "life": 70,
+              "heat": 0,
+              "dark": 0.12,
+              "spread": 30
+            },
+            {
+              "at": [
+                -150,
+                0,
+                -180
+              ],
+              "rate": 0.17,
+              "size": [
+                24.0,
+                54.0
+              ],
+              "rise": 0.4,
+              "life": 80,
+              "heat": 0,
+              "dark": 0.15,
+              "spread": 40
+            },
+            {
+              "at": [
+                160,
+                0,
+                -200
+              ],
+              "rate": 0.17,
+              "size": [
+                24.0,
+                54.0
+              ],
+              "rise": 0.4,
+              "life": 80,
+              "heat": 0,
+              "dark": 0.15,
+              "spread": 40
+            },
+            {
+              "at": [
+                -14.5,
+                1.2,
+                12
+              ],
+              "rate": 0.98,
+              "size": [
+                1.0,
+                5.0
+              ],
+              "rise": 1.8,
+              "life": 14,
+              "heat": 0.95,
+              "dark": 0.65,
+              "spread": 0.8
+            },
+            {
+              "at": [
+                10.5,
+                1.2,
+                16.5
+              ],
+              "rate": 0.84,
+              "size": [
+                0.9,
+                4.5
+              ],
+              "rise": 1.7,
+              "life": 13,
+              "heat": 0.95,
+              "dark": 0.65,
+              "spread": 0.8
+            }
+          ],
+          "capacity": 1800
+        }
+      },
+      {
+        "id": "fires",
+        "type": "redHorizonFires",
+        "params": {
+          "fires": [
+            {
+              "at": [
+                46,
+                0.6,
+                -32
+              ],
+              "size": 2.6,
+              "light": 160,
+              "range": 45,
+              "color": "#ff8a44"
+            },
+            {
+              "at": [
+                -24,
+                0.3,
+                -22
+              ],
+              "size": 1.6,
+              "light": 60,
+              "range": 30,
+              "color": "#ff8a44"
+            },
+            {
+              "at": [
+                -95,
+                3.5,
+                -190
+              ],
+              "size": 5,
+              "light": 700,
+              "range": 80,
+              "color": "#ff8a44"
+            },
+            {
+              "at": [
+                298,
+                40,
+                -328
+              ],
+              "size": 7,
+              "pool": 0,
+              "color": "#ff8a44"
+            },
+            {
+              "at": [
+                18,
+                0.25,
+                2
+              ],
+              "size": 1.1,
+              "light": 0,
+              "pool": 0.6,
+              "color": "#ff8a44"
+            },
+            {
+              "at": [
+                -330,
+                70,
+                -560
+              ],
+              "size": 9,
+              "pool": 0,
+              "color": "#ff8a44"
+            },
+            {
+              "at": [
+                -14.5,
+                0.25,
+                12
+              ],
+              "size": 1.7,
+              "light": 55,
+              "range": 24,
+              "pool": 0.3,
+              "color": "#ff9a5a"
+            },
+            {
+              "at": [
+                10.5,
+                0.25,
+                16.5
+              ],
+              "size": 1.4,
+              "light": 48,
+              "range": 22,
+              "pool": 0.3,
+              "color": "#ff9a5a"
+            }
+          ],
+          "bloom": 0.04
+        }
+      },
+      {
+        "id": "factory",
+        "type": "redHorizonFactory",
+        "params": {
+          "at": [
+            -165,
+            -255.4
+          ],
+          "yaw": 30
+        }
+      },
+      {
+        "id": "machines",
+        "type": "redHorizonSentinels",
+        "params": {
+          "patrols": [
+            {
+              "path": [
+                [
+                  -6.5,
+                  19
+                ],
+                [
+                  -9,
+                  15
+                ],
+                [
+                  -11.5,
+                  11
+                ]
+              ],
+              "members": 2,
+              "gap": 3.4,
+              "lateral": 1.6,
+              "speed": 0.78,
+              "start": 0.2,
+              "stops": 0.5,
+              "scale": 1.15
+            },
+            {
+              "path": [
+                [
+                  19,
+                  -9
+                ],
+                [
+                  33,
+                  -14
+                ],
+                [
+                  46,
+                  -10
+                ]
+              ],
+              "members": 2,
+              "gap": 3.0,
+              "lateral": 2.0,
+              "speed": 0.95,
+              "start": 0.6,
+              "scale": 1.08
+            },
+            {
+              "path": [
+                [
+                  -27,
+                  -20
+                ],
+                [
+                  -36,
+                  -32
+                ],
+                [
+                  -44,
+                  -46
+                ]
+              ],
+              "members": 2,
+              "gap": 3.6,
+              "lateral": 1.8,
+              "speed": 0.85,
+              "start": 0.1,
+              "scale": 1.05
+            },
+            {
+              "path": [
+                [
+                  60,
+                  -70
+                ],
+                [
+                  92,
+                  -58
+                ]
+              ],
+              "members": 3,
+              "gap": 3.2,
+              "lateral": 2.2,
+              "speed": 0.9,
+              "start": 0.2,
+              "scale": 1.0
+            },
+            {
+              "path": [
+                [
+                  -40,
+                  -52
+                ],
+                [
+                  -62,
+                  -46
+                ]
+              ],
+              "members": 2,
+              "gap": 4.0,
+              "lateral": 2.4,
+              "speed": 0.8,
+              "start": 0.45,
+              "scale": 1.0
+            },
+            {
+              "path": [
+                [
+                  12,
+                  9
+                ],
+                [
+                  17,
+                  1
+                ],
+                [
+                  21,
+                  -7
+                ]
+              ],
+              "members": 1,
+              "speed": 0.75,
+              "start": 0.55,
+              "stops": 0.8,
+              "scale": 1.1
+            }
+          ],
+          "sentries": [
+            {
+              "at": [
+                -24,
+                -14
+              ],
+              "facing": 160,
+              "scale": 1.1
+            },
+            {
+              "at": [
+                38,
+                -30
+              ],
+              "facing": 200,
+              "scale": 1.05
+            }
+          ],
+          "columns": [
+            {
+              "from": [
+                -280,
+                -300
+              ],
+              "to": [
+                -140,
+                -345
+              ],
+              "members": 7,
+              "files": 1,
+              "spacing": 7.5,
+              "speed": 1.05
+            },
+            {
+              "from": [
+                320,
+                -250
+              ],
+              "to": [
+                185,
+                -295
+              ],
+              "members": 6,
+              "files": 1,
+              "spacing": 8.5,
+              "speed": 1.1
+            }
+          ],
+          "beams": 0.3,
+          "assembly": {
+            "from": [
+              -197.9,
+              0.55,
+              -236.4
+            ],
+            "to": [
+              -133.8,
+              0.55,
+              -273.4
+            ],
+            "facing": -150,
+            "units": 7,
+            "speed": 0.45,
+            "boot": 4,
+            "exit": [
+              [
+                -133.8,
+                -273.4
+              ],
+              [
+                -129.8,
+                -266.5
+              ],
+              [
+                -121.8,
+                -252.6
+              ],
+              [
+                -118,
+                -215
+              ],
+              [
+                -125,
+                -170
+              ],
+              [
+                -150,
+                -120
+              ],
+              [
+                -190,
+                -80
+              ]
+            ]
+          }
+        }
+      },
+      {
+        "id": "drones",
+        "type": "redHorizonDrones",
+        "params": {
+          "patrols": [
+            {
+              "points": [
+                [
+                  40,
+                  30,
+                  -60
+                ],
+                [
+                  90,
+                  40,
+                  -110
+                ],
+                [
+                  140,
+                  35,
+                  -80
+                ],
+                [
+                  90,
+                  28,
+                  -40
+                ]
+              ],
+              "count": 2,
+              "speed": 8
+            },
+            {
+              "points": [
+                [
+                  -45,
+                  25,
+                  -70
+                ],
+                [
+                  -100,
+                  40,
+                  -150
+                ],
+                [
+                  -160,
+                  30,
+                  -110
+                ],
+                [
+                  -80,
+                  22,
+                  -40
+                ]
+              ],
+              "count": 2,
+              "speed": 7
+            }
+          ],
+          "scanners": [
+            {
+              "center": [
+                32,
+                -18
+              ],
+              "radius": 12,
+              "altitude": [
+                12,
+                18
+              ]
+            },
+            {
+              "center": [
+                -30,
+                -28
+              ],
+              "radius": 12,
+              "altitude": [
+                13,
+                19
+              ]
+            },
+            {
+              "center": [
+                78,
+                -72
+              ],
+              "radius": 16,
+              "altitude": [
+                16,
+                24
+              ]
+            }
+          ],
+          "searchlight": 0.7
+        },
+        "bind": [
+          {
+            "feature": "mid",
+            "mode": "mul",
+            "target": "search",
+            "amount": 0.15,
+            "attackMs": 600,
+            "releaseMs": 2000,
+            "category": "lighting"
+          }
+        ]
+      },
+      {
+        "id": "walkers",
+        "type": "redHorizonColossus",
+        "params": {
+          "walkers": [
+            {
+              "center": [
+                141,
+                -234
+              ],
+              "radius": [
+                42,
+                26
+              ],
+              "speed": 1.3,
+              "start": 0.1,
+              "scale": 1.25
+            },
+            {
+              "center": [
+                -295,
+                -310
+              ],
+              "radius": [
+                50,
+                30
+              ],
+              "speed": 1.3,
+              "scale": 1.1,
+              "start": 0.6,
+              "clockwise": true
+            }
+          ]
+        }
+      },
+      {
+        "id": "explosions",
+        "type": "redHorizonExplosions",
+        "params": {
+          "interval": 17,
+          "minGap": 6,
+          "salvo": 0.2,
+          "zones": [
+            {
+              "azimuth": [
+                24,
+                44
+              ],
+              "distance": [
+                350,
+                820
+              ],
+              "height": [
+                0,
+                25
+              ],
+              "weight": 1
+            },
+            {
+              "azimuth": [
+                -44,
+                -24
+              ],
+              "distance": [
+                350,
+                820
+              ],
+              "height": [
+                0,
+                25
+              ],
+              "weight": 1
+            }
+          ]
+        },
+        "bind": [
+          {
+            "feature": "sectionIntensity",
+            "mode": "mul",
+            "target": "rate",
+            "amount": 0.35,
+            "attackMs": 4000,
+            "releaseMs": 8000,
+            "category": "environment"
+          }
+        ]
+      },
+      {
+        "id": "sparks",
+        "type": "redHorizonSparks",
+        "params": {
+          "showers": [
+            {
+              "at": [
+                117,
+                10.5,
+                -81.4
+              ]
+            },
+            {
+              "at": [
+                112,
+                20,
+                -140
+              ],
+              "every": [
+                4,
+                10
+              ]
+            },
+            {
+              "at": [
+                -24,
+                1.5,
+                -24
+              ],
+              "every": [
+                5,
+                12
+              ],
+              "count": 14
+            }
+          ],
+          "arcs": [
+            {
+              "from": [
+                112.5,
+                30,
+                -139
+              ],
+              "to": [
+                110.5,
+                26.5,
+                -141.5
+              ]
+            },
+            {
+              "from": [
+                103,
+                12.2,
+                -89
+              ],
+              "to": [
+                106,
+                10.4,
+                -87.5
+              ],
+              "every": [
+                6,
+                16
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": "ash",
+        "type": "particles",
+        "params": {
+          "count": 900,
+          "center": [
+            0,
+            8,
+            -20
+          ],
+          "size": [
+            170,
+            34,
+            100
+          ],
+          "color": "#5a4a46",
+          "colorB": "#2e2624",
+          "minSize": 0.05,
+          "maxSize": 0.16,
+          "velocity": [
+            0.8,
+            -0.35,
+            0.1
+          ],
+          "turbulence": 0.6,
+          "twinkle": 0,
+          "brightness": 0.7,
+          "shape": "soft",
+          "additive": false,
+          "seed": 23,
+          "bloom": 0
+        },
+        "minDetail": "medium"
+      },
+      {
+        "id": "embers",
+        "type": "particles",
+        "params": {
+          "count": 420,
+          "center": [
+            10,
+            2,
+            -40
+          ],
+          "size": [
+            180,
+            18,
+            90
+          ],
+          "color": "#ff5a1e",
+          "colorB": "#ffb050",
+          "minSize": 0.03,
+          "maxSize": 0.08,
+          "velocity": [
+            0.6,
+            1.1,
+            0
+          ],
+          "turbulence": 1.2,
+          "twinkle": 0.6,
+          "brightness": 1.2,
+          "shape": "spark",
+          "additive": true,
+          "seed": 31,
+          "bloom": 0.1
+        },
+        "bind": [
+          {
+            "feature": "treble",
+            "mode": "mul",
+            "target": "brightness",
+            "amount": 0.25,
+            "attackMs": 80,
+            "releaseMs": 600,
+            "category": "particles"
+          }
+        ]
+      }
+    ]
+  },
+  "reactivity": {
+    "profiles": [],
+    "bindings": []
+  },
+  "effects": {
+    "lineClear": {
+      "effect": "redHorizonShear",
+      "params": {}
+    },
+    "landing": {
+      "shape": "spark"
+    },
+    "transition": {
+      "effect": "redHorizonArrival",
+      "params": {}
+    }
+  },
+  "music": {
+    "bpm": 96,
+    "beatsPerBar": 4,
+    "tracks": [
+      {
+        "id": "red-horizon-iron-meridian",
+        "title": "Iron Meridian",
+        "kind": "composition",
+        "src": "music/iron-meridian.ts"
+      },
+      {
+        "id": "red-horizon-ash-protocol",
+        "title": "Ash Protocol",
+        "kind": "composition",
+        "src": "music/ash-protocol.ts",
+        "bpm": 124
+      }
+    ],
+    "defaultTrack": "red-horizon-iron-meridian"
+  },
+  "ambience": {
+    "preset": "foundry",
+    "level": 0.7
+  },
+  "sfx": {
+    "preset": "metal",
+    "material": "metal"
+  },
+  "unlock": {
+    "type": "always"
+  },
+  "thumbnail": "previews/thumb.jpg"
+}

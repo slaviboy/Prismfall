@@ -1,0 +1,44 @@
+{
+  "id": "dark_rock_02",
+  "kind": "texture",
+  "name": "Dark Rock 02",
+  "page": "https://polyhaven.com/a/dark_rock_02",
+  "api": {
+    "info": "https://api.polyhaven.com/info/dark_rock_02",
+    "files": "https://api.polyhaven.com/files/dark_rock_02"
+  },
+  "authors": {
+    "Amal Kumar": "All"
+  },
+  "dimensions": [
+    2000.9167194366455,
+    2000.917911529541
+  ],
+  "licence": "CC0 1.0",
+  "licenceUrl": "https://polyhaven.com/license",
+  "files": [
+    {
+      "path": "dark_rock_02_diff_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/dark_rock_02/dark_rock_02_diff_2k.jpg",
+      "md5": "492ae574844fa49cba63aee89ef226d1",
+      "size": 2441558
+    },
+    {
+      "path": "dark_rock_02_nor_gl_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/dark_rock_02/dark_rock_02_nor_gl_2k.jpg",
+      "md5": "bfde991c327e33704686fb7ede0561a7",
+      "size": 3870014
+    }
+  ],
+  "downloaded": "2026-11-03",
+  "derived": [
+    {
+      "path": "content/stages/wardens-spire/textures/dark_rock_02_diff.webp",
+      "how": "ffmpeg scale 2048x2048 (lanczos), libwebp quality 84"
+    },
+    {
+      "path": "content/stages/wardens-spire/textures/dark_rock_02_normal.webp",
+      "how": "ffmpeg scale 1024x1024 (lanczos), libwebp quality 90"
+    }
+  ]
+}

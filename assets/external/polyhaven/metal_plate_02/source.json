@@ -1,0 +1,46 @@
+{
+  "id": "metal_plate_02",
+  "kind": "texture",
+  "name": "Metal Plate 02",
+  "page": "https://polyhaven.com/a/metal_plate_02",
+  "api": {
+    "info": "https://api.polyhaven.com/info/metal_plate_02",
+    "files": "https://api.polyhaven.com/files/metal_plate_02"
+  },
+  "authors": {
+    "Rob Tuytel": "All"
+  },
+  "licence": "CC0 1.0",
+  "licenceUrl": "https://polyhaven.com/license",
+  "files": [
+    {
+      "path": "metal_plate_02_diff_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/metal_plate_02/metal_plate_02_diff_1k.jpg",
+      "md5": "531b7e067dc537e0b3c7962175e04ffd",
+      "size": 625917
+    },
+    {
+      "path": "metal_plate_02_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/metal_plate_02/metal_plate_02_nor_gl_1k.jpg",
+      "md5": "ce8198004fd9409f592a7f024be0c01e",
+      "size": 183264
+    },
+    {
+      "path": "metal_plate_02_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/metal_plate_02/metal_plate_02_rough_1k.jpg",
+      "md5": "1fa97d5031aa575656a316bfd404ca4d",
+      "size": 911772
+    }
+  ],
+  "downloaded": "2026-11-03",
+  "derived": [
+    {
+      "path": "content/stages/red-horizon/textures/steel_albedo.webp",
+      "how": "1k diffuse JPG re-encoded as WebP quality 88 (factory cladding, walker hull plates)"
+    },
+    {
+      "path": "content/stages/red-horizon/textures/steel_nr.webp",
+      "how": "1k OpenGL normal (R, G) and roughness (B) packed into one WebP, quality 92 (scripts/red_horizon_assets.py)"
+    }
+  ]
+}

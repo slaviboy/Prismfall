@@ -1,0 +1,46 @@
+{
+  "id": "asphalt_02",
+  "kind": "texture",
+  "name": "Asphalt 02",
+  "page": "https://polyhaven.com/a/asphalt_02",
+  "api": {
+    "info": "https://api.polyhaven.com/info/asphalt_02",
+    "files": "https://api.polyhaven.com/files/asphalt_02"
+  },
+  "authors": {
+    "Rob Tuytel": "All"
+  },
+  "licence": "CC0 1.0",
+  "licenceUrl": "https://polyhaven.com/license",
+  "files": [
+    {
+      "path": "asphalt_02_diff_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/asphalt_02/asphalt_02_diff_1k.jpg",
+      "md5": "fa19772d4817754c3efab708c651f5a8",
+      "size": 731707
+    },
+    {
+      "path": "asphalt_02_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/asphalt_02/asphalt_02_nor_gl_1k.jpg",
+      "md5": "338da8de636ea36133170578cac82e8e",
+      "size": 1240122
+    },
+    {
+      "path": "asphalt_02_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/asphalt_02/asphalt_02_rough_1k.jpg",
+      "md5": "ec80a2929797c1b3ffc121c4f665585a",
+      "size": 544032
+    }
+  ],
+  "downloaded": "2026-11-03",
+  "derived": [
+    {
+      "path": "content/stages/red-horizon/textures/asphalt_albedo.webp",
+      "how": "1k diffuse JPG re-encoded as WebP quality 88 (the yard's cracked asphalt in the foreground)"
+    },
+    {
+      "path": "content/stages/red-horizon/textures/asphalt_nr.webp",
+      "how": "1k OpenGL normal (R, G) and roughness (B) packed into one WebP, quality 92 (scripts/red_horizon_assets.py)"
+    }
+  ]
+}

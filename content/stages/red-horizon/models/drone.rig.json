@@ -1,0 +1,121 @@
+{
+  "name": "drone",
+  "generator": "assets/blender/scripts/red_horizon_kit.py",
+  "license": "Original work for Prismfall",
+  "forward": "-z",
+  "bones": [
+    {
+      "name": "body",
+      "id": 0,
+      "parent": -1,
+      "pivot": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "arm0",
+      "id": 1,
+      "parent": 0,
+      "pivot": [
+        0.26,
+        0.02,
+        -0.36
+      ]
+    },
+    {
+      "name": "arm1",
+      "id": 2,
+      "parent": 0,
+      "pivot": [
+        -0.26,
+        0.02,
+        -0.36
+      ]
+    },
+    {
+      "name": "arm2",
+      "id": 3,
+      "parent": 0,
+      "pivot": [
+        0.26,
+        0.02,
+        0.36
+      ]
+    },
+    {
+      "name": "arm3",
+      "id": 4,
+      "parent": 0,
+      "pivot": [
+        -0.26,
+        0.02,
+        0.36
+      ]
+    },
+    {
+      "name": "rotor0",
+      "id": 5,
+      "parent": 1,
+      "pivot": [
+        0.82,
+        0.02,
+        -0.5
+      ]
+    },
+    {
+      "name": "rotor1",
+      "id": 6,
+      "parent": 2,
+      "pivot": [
+        -0.82,
+        0.02,
+        -0.5
+      ]
+    },
+    {
+      "name": "rotor2",
+      "id": 7,
+      "parent": 3,
+      "pivot": [
+        0.82,
+        0.02,
+        0.5
+      ]
+    },
+    {
+      "name": "rotor3",
+      "id": 8,
+      "parent": 4,
+      "pivot": [
+        -0.82,
+        0.02,
+        0.5
+      ]
+    },
+    {
+      "name": "turretYaw",
+      "id": 9,
+      "parent": 0,
+      "pivot": [
+        0,
+        -0.17,
+        -0.5
+      ]
+    },
+    {
+      "name": "turretPitch",
+      "id": 10,
+      "parent": 9,
+      "pivot": [
+        0,
+        -0.27,
+        -0.52
+      ]
+    }
+  ],
+  "pistons": [],
+  "triangles": 3988,
+  "span": 2.1
+}

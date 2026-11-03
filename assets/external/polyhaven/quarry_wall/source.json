@@ -1,0 +1,44 @@
+{
+  "id": "quarry_wall",
+  "kind": "texture",
+  "name": "Quarry Wall",
+  "page": "https://polyhaven.com/a/quarry_wall",
+  "api": {
+    "info": "https://api.polyhaven.com/info/quarry_wall",
+    "files": "https://api.polyhaven.com/files/quarry_wall"
+  },
+  "authors": {
+    "Dimitrios Savva": "All"
+  },
+  "dimensions": [
+    1800.0000715255737,
+    1800.0000715255737
+  ],
+  "licence": "CC0 1.0",
+  "licenceUrl": "https://polyhaven.com/license",
+  "files": [
+    {
+      "path": "quarry_wall_diff_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/quarry_wall/quarry_wall_diff_2k.jpg",
+      "md5": "2aab5b9ae6853f1689921138901ea3f5",
+      "size": 4036486
+    },
+    {
+      "path": "quarry_wall_nor_gl_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/quarry_wall/quarry_wall_nor_gl_2k.jpg",
+      "md5": "e5a8ea5dcc325032387efc9070821d4e",
+      "size": 4235129
+    }
+  ],
+  "downloaded": "2026-11-03",
+  "derived": [
+    {
+      "path": "content/stages/wardens-spire/textures/quarry_wall_diff.webp",
+      "how": "ffmpeg scale 2048x2048 (lanczos), libwebp quality 84"
+    },
+    {
+      "path": "content/stages/wardens-spire/textures/quarry_wall_normal.webp",
+      "how": "ffmpeg scale 1024x1024 (lanczos), libwebp quality 90"
+    }
+  ]
+}

@@ -1,0 +1,389 @@
+{
+  "name": "sentinel",
+  "generator": "assets/blender/scripts/red_horizon_kit.py",
+  "license": "Original work for Prismfall",
+  "forward": "-z",
+  "bones": [
+    {
+      "name": "pelvis",
+      "id": 0,
+      "parent": -1,
+      "pivot": [
+        0,
+        1.28,
+        0
+      ]
+    },
+    {
+      "name": "torso",
+      "id": 1,
+      "parent": 0,
+      "pivot": [
+        0,
+        1.42,
+        0.02
+      ]
+    },
+    {
+      "name": "headA",
+      "id": 2,
+      "parent": 1,
+      "pivot": [
+        0.0,
+        2.2088,
+        -0.02
+      ]
+    },
+    {
+      "name": "headB",
+      "id": 3,
+      "parent": 1,
+      "pivot": [
+        0.0,
+        2.2088,
+        -0.02
+      ]
+    },
+    {
+      "name": "headC",
+      "id": 4,
+      "parent": 1,
+      "pivot": [
+        0.0,
+        2.2088,
+        -0.02
+      ]
+    },
+    {
+      "name": "sensorA",
+      "id": 5,
+      "parent": 2,
+      "pivot": [
+        0.0,
+        2.3918,
+        -0.203
+      ]
+    },
+    {
+      "name": "sensorB",
+      "id": 6,
+      "parent": 3,
+      "pivot": [
+        0.0,
+        2.4162,
+        -0.142
+      ]
+    },
+    {
+      "name": "sensorC",
+      "id": 7,
+      "parent": 4,
+      "pivot": [
+        0.0,
+        2.4528,
+        -0.0932
+      ]
+    },
+    {
+      "name": "thighL",
+      "id": 8,
+      "parent": 0,
+      "pivot": [
+        0.17,
+        1.24,
+        0
+      ]
+    },
+    {
+      "name": "shinL",
+      "id": 9,
+      "parent": 8,
+      "pivot": [
+        0.185,
+        0.7,
+        -0.035
+      ]
+    },
+    {
+      "name": "footL",
+      "id": 10,
+      "parent": 9,
+      "pivot": [
+        0.19,
+        0.13,
+        0.02
+      ]
+    },
+    {
+      "name": "toeL",
+      "id": 11,
+      "parent": 10,
+      "pivot": [
+        0.19,
+        0.045,
+        -0.15
+      ]
+    },
+    {
+      "name": "upperL",
+      "id": 12,
+      "parent": 1,
+      "pivot": [
+        0.34,
+        2.0,
+        0.03
+      ]
+    },
+    {
+      "name": "foreL",
+      "id": 13,
+      "parent": 12,
+      "pivot": [
+        0.37,
+        1.56,
+        0.05
+      ]
+    },
+    {
+      "name": "handL",
+      "id": 14,
+      "parent": 13,
+      "pivot": [
+        0.37,
+        1.15,
+        -0.0
+      ]
+    },
+    {
+      "name": "fingersL",
+      "id": 15,
+      "parent": 14,
+      "pivot": [
+        0.37,
+        1.06,
+        -0.015
+      ]
+    },
+    {
+      "name": "thighR",
+      "id": 16,
+      "parent": 0,
+      "pivot": [
+        -0.17,
+        1.24,
+        0
+      ]
+    },
+    {
+      "name": "shinR",
+      "id": 17,
+      "parent": 16,
+      "pivot": [
+        -0.185,
+        0.7,
+        -0.035
+      ]
+    },
+    {
+      "name": "footR",
+      "id": 18,
+      "parent": 17,
+      "pivot": [
+        -0.19,
+        0.13,
+        0.02
+      ]
+    },
+    {
+      "name": "toeR",
+      "id": 19,
+      "parent": 18,
+      "pivot": [
+        -0.19,
+        0.045,
+        -0.15
+      ]
+    },
+    {
+      "name": "upperR",
+      "id": 20,
+      "parent": 1,
+      "pivot": [
+        -0.34,
+        2.0,
+        0.03
+      ]
+    },
+    {
+      "name": "foreR",
+      "id": 21,
+      "parent": 20,
+      "pivot": [
+        -0.37,
+        1.56,
+        0.05
+      ]
+    },
+    {
+      "name": "handR",
+      "id": 22,
+      "parent": 21,
+      "pivot": [
+        -0.37,
+        1.15,
+        -0.0
+      ]
+    },
+    {
+      "name": "fingersR",
+      "id": 23,
+      "parent": 22,
+      "pivot": [
+        -0.37,
+        1.06,
+        -0.015
+      ]
+    }
+  ],
+  "pistons": [
+    {
+      "name": "elbowL",
+      "boneA": 12,
+      "a": [
+        0.37,
+        1.94,
+        -0.05
+      ],
+      "boneB": 13,
+      "b": [
+        0.37,
+        1.44,
+        -0.04
+      ],
+      "barrel": 100,
+      "rod": 101
+    },
+    {
+      "name": "elbowR",
+      "boneA": 20,
+      "a": [
+        -0.37,
+        1.94,
+        -0.05
+      ],
+      "boneB": 21,
+      "b": [
+        -0.37,
+        1.44,
+        -0.04
+      ],
+      "barrel": 102,
+      "rod": 103
+    },
+    {
+      "name": "kneeL",
+      "boneA": 8,
+      "a": [
+        0.19,
+        1.1,
+        -0.11
+      ],
+      "boneB": 9,
+      "b": [
+        0.19,
+        0.58,
+        -0.115
+      ],
+      "barrel": 104,
+      "rod": 105
+    },
+    {
+      "name": "ankleL",
+      "boneA": 9,
+      "a": [
+        0.19,
+        0.62,
+        0.09
+      ],
+      "boneB": 10,
+      "b": [
+        0.19,
+        0.08,
+        0.09
+      ],
+      "barrel": 106,
+      "rod": 107
+    },
+    {
+      "name": "kneeR",
+      "boneA": 16,
+      "a": [
+        -0.19,
+        1.1,
+        -0.11
+      ],
+      "boneB": 17,
+      "b": [
+        -0.19,
+        0.58,
+        -0.115
+      ],
+      "barrel": 108,
+      "rod": 109
+    },
+    {
+      "name": "ankleR",
+      "boneA": 17,
+      "a": [
+        -0.19,
+        0.62,
+        0.09
+      ],
+      "boneB": 18,
+      "b": [
+        -0.19,
+        0.08,
+        0.09
+      ],
+      "barrel": 110,
+      "rod": 111
+    },
+    {
+      "name": "neckL",
+      "boneA": 1,
+      "a": [
+        0.07,
+        2.1,
+        0.08
+      ],
+      "boneB": 2,
+      "b": [
+        0.0732,
+        2.3308,
+        0.0776
+      ],
+      "barrel": 112,
+      "rod": 113
+    },
+    {
+      "name": "neckR",
+      "boneA": 1,
+      "a": [
+        -0.07,
+        2.1,
+        0.08
+      ],
+      "boneB": 2,
+      "b": [
+        -0.0732,
+        2.3308,
+        0.0776
+      ],
+      "barrel": 114,
+      "rod": 115
+    }
+  ],
+  "triangles": 16468,
+  "height": 2.46,
+  "stride": 0.62
+}

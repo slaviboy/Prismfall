@@ -1,0 +1,384 @@
+{
+  "name": "colossus",
+  "generator": "assets/blender/scripts/red_horizon_kit.py",
+  "license": "Original work for Prismfall",
+  "forward": "-z",
+  "bones": [
+    {
+      "name": "hull",
+      "id": 0,
+      "parent": -1,
+      "pivot": [
+        0,
+        28,
+        0
+      ]
+    },
+    {
+      "name": "gondola",
+      "id": 1,
+      "parent": 0,
+      "pivot": [
+        0,
+        25.5,
+        -15.5
+      ]
+    },
+    {
+      "name": "sensor",
+      "id": 2,
+      "parent": 1,
+      "pivot": [
+        0,
+        22.6,
+        -18.6
+      ]
+    },
+    {
+      "name": "coxa0",
+      "id": 3,
+      "parent": 0,
+      "pivot": [
+        6.6,
+        27.5,
+        -11
+      ]
+    },
+    {
+      "name": "femur0",
+      "id": 4,
+      "parent": 3,
+      "pivot": [
+        8.4,
+        28.2,
+        -11
+      ]
+    },
+    {
+      "name": "tibia0",
+      "id": 5,
+      "parent": 4,
+      "pivot": [
+        16.5,
+        39.0,
+        -11
+      ]
+    },
+    {
+      "name": "foot0",
+      "id": 6,
+      "parent": 5,
+      "pivot": [
+        21.0,
+        2.2,
+        -11
+      ]
+    },
+    {
+      "name": "coxa1",
+      "id": 7,
+      "parent": 0,
+      "pivot": [
+        -6.6,
+        27.5,
+        -11
+      ]
+    },
+    {
+      "name": "femur1",
+      "id": 8,
+      "parent": 7,
+      "pivot": [
+        -8.4,
+        28.2,
+        -11
+      ]
+    },
+    {
+      "name": "tibia1",
+      "id": 9,
+      "parent": 8,
+      "pivot": [
+        -16.5,
+        39.0,
+        -11
+      ]
+    },
+    {
+      "name": "foot1",
+      "id": 10,
+      "parent": 9,
+      "pivot": [
+        -21.0,
+        2.2,
+        -11
+      ]
+    },
+    {
+      "name": "coxa2",
+      "id": 11,
+      "parent": 0,
+      "pivot": [
+        6.6,
+        27.5,
+        0
+      ]
+    },
+    {
+      "name": "femur2",
+      "id": 12,
+      "parent": 11,
+      "pivot": [
+        8.4,
+        28.2,
+        0
+      ]
+    },
+    {
+      "name": "tibia2",
+      "id": 13,
+      "parent": 12,
+      "pivot": [
+        16.5,
+        39.0,
+        0
+      ]
+    },
+    {
+      "name": "foot2",
+      "id": 14,
+      "parent": 13,
+      "pivot": [
+        21.0,
+        2.2,
+        0
+      ]
+    },
+    {
+      "name": "coxa3",
+      "id": 15,
+      "parent": 0,
+      "pivot": [
+        -6.6,
+        27.5,
+        0
+      ]
+    },
+    {
+      "name": "femur3",
+      "id": 16,
+      "parent": 15,
+      "pivot": [
+        -8.4,
+        28.2,
+        0
+      ]
+    },
+    {
+      "name": "tibia3",
+      "id": 17,
+      "parent": 16,
+      "pivot": [
+        -16.5,
+        39.0,
+        0
+      ]
+    },
+    {
+      "name": "foot3",
+      "id": 18,
+      "parent": 17,
+      "pivot": [
+        -21.0,
+        2.2,
+        0
+      ]
+    },
+    {
+      "name": "coxa4",
+      "id": 19,
+      "parent": 0,
+      "pivot": [
+        6.6,
+        27.5,
+        11
+      ]
+    },
+    {
+      "name": "femur4",
+      "id": 20,
+      "parent": 19,
+      "pivot": [
+        8.4,
+        28.2,
+        11
+      ]
+    },
+    {
+      "name": "tibia4",
+      "id": 21,
+      "parent": 20,
+      "pivot": [
+        16.5,
+        39.0,
+        11
+      ]
+    },
+    {
+      "name": "foot4",
+      "id": 22,
+      "parent": 21,
+      "pivot": [
+        21.0,
+        2.2,
+        11
+      ]
+    },
+    {
+      "name": "coxa5",
+      "id": 23,
+      "parent": 0,
+      "pivot": [
+        -6.6,
+        27.5,
+        11
+      ]
+    },
+    {
+      "name": "femur5",
+      "id": 24,
+      "parent": 23,
+      "pivot": [
+        -8.4,
+        28.2,
+        11
+      ]
+    },
+    {
+      "name": "tibia5",
+      "id": 25,
+      "parent": 24,
+      "pivot": [
+        -16.5,
+        39.0,
+        11
+      ]
+    },
+    {
+      "name": "foot5",
+      "id": 26,
+      "parent": 25,
+      "pivot": [
+        -21.0,
+        2.2,
+        11
+      ]
+    }
+  ],
+  "pistons": [
+    {
+      "name": "ram0",
+      "boneA": 4,
+      "a": [
+        9.6,
+        26.6,
+        -11
+      ],
+      "boneB": 5,
+      "b": [
+        17.2,
+        33.0,
+        -11
+      ],
+      "barrel": 100,
+      "rod": 101
+    },
+    {
+      "name": "ram1",
+      "boneA": 8,
+      "a": [
+        -9.6,
+        26.6,
+        -11
+      ],
+      "boneB": 9,
+      "b": [
+        -17.2,
+        33.0,
+        -11
+      ],
+      "barrel": 102,
+      "rod": 103
+    },
+    {
+      "name": "ram2",
+      "boneA": 12,
+      "a": [
+        9.6,
+        26.6,
+        0
+      ],
+      "boneB": 13,
+      "b": [
+        17.2,
+        33.0,
+        0
+      ],
+      "barrel": 104,
+      "rod": 105
+    },
+    {
+      "name": "ram3",
+      "boneA": 16,
+      "a": [
+        -9.6,
+        26.6,
+        0
+      ],
+      "boneB": 17,
+      "b": [
+        -17.2,
+        33.0,
+        0
+      ],
+      "barrel": 106,
+      "rod": 107
+    },
+    {
+      "name": "ram4",
+      "boneA": 20,
+      "a": [
+        9.6,
+        26.6,
+        11
+      ],
+      "boneB": 21,
+      "b": [
+        17.2,
+        33.0,
+        11
+      ],
+      "barrel": 108,
+      "rod": 109
+    },
+    {
+      "name": "ram5",
+      "boneA": 24,
+      "a": [
+        -9.6,
+        26.6,
+        11
+      ],
+      "boneB": 25,
+      "b": [
+        -17.2,
+        33.0,
+        11
+      ],
+      "barrel": 110,
+      "rod": 111
+    }
+  ],
+  "triangles": 19788,
+  "height": 46.0
+}

@@ -26,3 +26,29 @@ export function onWorldSound(l: (s: WorldSound) => void): () => void {
   listeners.add(l);
   return () => listeners.delete(l);
 }
+
+/**
+ * A sustained world voice (a hum, a drone) that a component keeps alive by setting it every frame
+ * or so; it fades out on its own shortly after it stops being set (world hidden, game paused).
+ * `hz` is its pitch, `brightness` (0..1) opens its tone, `level` (0..1) its loudness, `pan` -1..1.
+ */
+export interface WorldDrone {
+  readonly id: string;
+  readonly level: number;
+  readonly hz: number;
+  readonly brightness: number;
+  readonly pan: number;
+}
+
+const droneListeners = new Set<(d: WorldDrone) => void>();
+
+export function setWorldDrone(id: string, level: number, hz: number, brightness = 0.5, pan = 0): void {
+  if (droneListeners.size === 0) return;
+  const d = { id, level, hz, brightness, pan };
+  droneListeners.forEach((l) => l(d));
+}
+
+export function onWorldDrone(l: (d: WorldDrone) => void): () => void {
+  droneListeners.add(l);
+  return () => droneListeners.delete(l);
+}

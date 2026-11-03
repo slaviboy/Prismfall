@@ -1,0 +1,319 @@
+{
+  "files": [
+    {
+      "path": "stage.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "SDK module: registers the sky, scenery, smoke, fires, explosions, sparks, factory, sentinels, drones and colossi, the line-clear effect and the entrance"
+    },
+    {
+      "path": "shared.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "shared world state: haze model, backdrop colour, local lights, reflection environment, PBR material, triplanar textures"
+    },
+    {
+      "path": "rig.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "rigid-segment rigs: merged machine geometry, bone-matrix texture, GPU skinning, CPU pose solver with pistons, two-bone IK"
+    },
+    {
+      "path": "sensor.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "the reusable optical-sensor controller (scan, hold, focus, track, turn)"
+    },
+    {
+      "path": "sensor.test.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "tests for the sensor controller and rig helpers"
+    },
+    {
+      "path": "optics.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "lens glints and fog-scattered beams with ground spots"
+    },
+    {
+      "path": "metal.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "machine shading by material id"
+    },
+    {
+      "path": "sentinels.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "humanoid machines: patrols, sentries, columns, the factory line; gait, IK, hydraulics, sensors"
+    },
+    {
+      "path": "drones.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "recon drones: patrol loops and searchlight scanners"
+    },
+    {
+      "path": "colossus.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "hexapod walking refineries: wave gait, leg IK, gondola sensor, stacks"
+    },
+    {
+      "path": "scenery.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "ruined city placement and photographed PBR scenery materials"
+    },
+    {
+      "path": "factory.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "assembly factory: welding arms, gantry crane, fans, chimneys, interior light"
+    },
+    {
+      "path": "atmosphere.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "smoke pool, fires, explosions, sparks and electrical arcs"
+    },
+    {
+      "path": "ground.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "the scorched foreground yard: photographed asphalt and burnt ground, craters, puddles reflecting the sky and fires, rail tracks"
+    },
+    {
+      "path": "sky.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "graded photographic sky with drifting smoke, horizon fires, explosion glow and land occlusion"
+    },
+    {
+      "path": "effects.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "line-clear effect and entrance transition"
+    },
+    {
+      "path": "music/iron-meridian.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "Iron Meridian composition"
+    },
+    {
+      "path": "music/ash-protocol.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "Ash Protocol composition"
+    },
+    {
+      "path": "models/sentinel.glb",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "assets/blender/scripts/red_horizon_kit.py",
+      "purpose": "humanoid machine"
+    },
+    {
+      "path": "models/sentinel_lod.glb",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "assets/blender/scripts/red_horizon_kit.py",
+      "purpose": "humanoid machine, light model"
+    },
+    {
+      "path": "models/drone.glb",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "assets/blender/scripts/red_horizon_kit.py",
+      "purpose": "recon drone"
+    },
+    {
+      "path": "models/colossus.glb",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "assets/blender/scripts/red_horizon_kit.py",
+      "purpose": "hexapod walking refinery"
+    },
+    {
+      "path": "models/ruins.glb",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "assets/blender/scripts/red_horizon_kit.py",
+      "purpose": "ruined city kit"
+    },
+    {
+      "path": "models/factory.glb",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "assets/blender/scripts/red_horizon_kit.py",
+      "purpose": "assembly factory kit"
+    },
+    {
+      "path": "models/sentinel.rig.json",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "assets/blender/scripts/red_horizon_kit.py",
+      "purpose": "rig sidecar"
+    },
+    {
+      "path": "models/drone.rig.json",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "assets/blender/scripts/red_horizon_kit.py",
+      "purpose": "rig sidecar"
+    },
+    {
+      "path": "models/colossus.rig.json",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "assets/blender/scripts/red_horizon_kit.py",
+      "purpose": "rig sidecar"
+    },
+    {
+      "path": "textures/freight_station_band.webp",
+      "license": "CC0 1.0",
+      "author": "Sergej Majboroda (Poly Haven)",
+      "source": "https://polyhaven.com/a/freight_station",
+      "purpose": "panorama band, smoke-and-fire grade with land mask (assets/external/polyhaven/freight_station/source.json)"
+    },
+    {
+      "path": "textures/freight_station_detail.webp",
+      "license": "CC0 1.0",
+      "author": "Sergej Majboroda (Poly Haven)",
+      "source": "https://polyhaven.com/a/freight_station",
+      "purpose": "panorama detail crop from the 16k HDR, same grade"
+    },
+    {
+      "path": "textures/red_horizon_env.webp",
+      "license": "CC0 1.0",
+      "author": "Sergej Majboroda (Poly Haven)",
+      "source": "https://polyhaven.com/a/freight_station",
+      "purpose": "reflection environment"
+    },
+    {
+      "path": "textures/concrete_albedo.webp",
+      "license": "CC0 1.0",
+      "author": "Rob Tuytel (Poly Haven)",
+      "source": "https://polyhaven.com/a/concrete_layers_02",
+      "purpose": "diffuse"
+    },
+    {
+      "path": "textures/concrete_nr.webp",
+      "license": "CC0 1.0",
+      "author": "Rob Tuytel (Poly Haven)",
+      "source": "https://polyhaven.com/a/concrete_layers_02",
+      "purpose": "normal and roughness, packed"
+    },
+    {
+      "path": "textures/rust_albedo.webp",
+      "license": "CC0 1.0",
+      "author": "Amal Kumar (Poly Haven)",
+      "source": "https://polyhaven.com/a/rusty_metal_04",
+      "purpose": "diffuse"
+    },
+    {
+      "path": "textures/rust_nr.webp",
+      "license": "CC0 1.0",
+      "author": "Amal Kumar (Poly Haven)",
+      "source": "https://polyhaven.com/a/rusty_metal_04",
+      "purpose": "normal and roughness, packed"
+    },
+    {
+      "path": "textures/steel_albedo.webp",
+      "license": "CC0 1.0",
+      "author": "Rob Tuytel (Poly Haven)",
+      "source": "https://polyhaven.com/a/metal_plate_02",
+      "purpose": "diffuse"
+    },
+    {
+      "path": "textures/steel_nr.webp",
+      "license": "CC0 1.0",
+      "author": "Rob Tuytel (Poly Haven)",
+      "source": "https://polyhaven.com/a/metal_plate_02",
+      "purpose": "normal and roughness, packed"
+    },
+    {
+      "path": "textures/armour_albedo.webp",
+      "license": "CC0 1.0",
+      "author": "Rob Tuytel (Poly Haven)",
+      "source": "https://polyhaven.com/a/blue_metal_plate",
+      "purpose": "diffuse"
+    },
+    {
+      "path": "textures/armour_nr.webp",
+      "license": "CC0 1.0",
+      "author": "Rob Tuytel (Poly Haven)",
+      "source": "https://polyhaven.com/a/blue_metal_plate",
+      "purpose": "normal and roughness, packed"
+    },
+    {
+      "path": "textures/asphalt_albedo.webp",
+      "license": "CC0 1.0",
+      "author": "Rob Tuytel (Poly Haven)",
+      "source": "https://polyhaven.com/a/asphalt_02",
+      "purpose": "foreground yard asphalt, diffuse"
+    },
+    {
+      "path": "textures/asphalt_nr.webp",
+      "license": "CC0 1.0",
+      "author": "Rob Tuytel (Poly Haven)",
+      "source": "https://polyhaven.com/a/asphalt_02",
+      "purpose": "normal and roughness, packed"
+    },
+    {
+      "path": "textures/burnt_albedo.webp",
+      "license": "CC0 1.0",
+      "author": "Rob Tuytel (Poly Haven)",
+      "source": "https://polyhaven.com/a/burned_ground_01",
+      "purpose": "scorched ground, diffuse"
+    },
+    {
+      "path": "textures/burnt_nr.webp",
+      "license": "CC0 1.0",
+      "author": "Rob Tuytel (Poly Haven)",
+      "source": "https://polyhaven.com/a/burned_ground_01",
+      "purpose": "normal and roughness, packed"
+    },
+    {
+      "path": "previews/thumb.jpg",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "generated by scripts/thumbnails.ts",
+      "purpose": "world artwork"
+    },
+    {
+      "path": "models/ruins.meta.json",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "assets/blender/scripts/red_horizon_kit.py",
+      "purpose": "kit metadata"
+    },
+    {
+      "path": "models/factory.meta.json",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "assets/blender/scripts/red_horizon_kit.py",
+      "purpose": "kit metadata"
+    }
+  ]
+}

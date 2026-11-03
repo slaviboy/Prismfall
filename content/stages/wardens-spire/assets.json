@@ -1,0 +1,30 @@
+{
+  "files": [
+    { "path": "stage.ts", "license": "Original work for Prismfall", "author": "Prismfall", "source": "authored", "purpose": "SDK module: registers the land, rocks, citadel, Warden, storm, ash and the wardenRend line clear" },
+    { "path": "shared.ts", "license": "Original work for Prismfall", "author": "Prismfall", "source": "authored", "purpose": "shared Warden/beam/lightning/lava uniforms, the world's light model, triplanar texturing, the clear-zone mask" },
+    { "path": "noise.ts", "license": "Original work for Prismfall", "author": "Prismfall", "source": "authored", "purpose": "tileable 3D Perlin-Worley noise for the clouds, the beam's smoke and the lava crust" },
+    { "path": "controller.ts", "license": "Original work for Prismfall", "author": "Prismfall", "source": "authored", "purpose": "the Warden's state machine (scan, search, focus, rapid, gaze, return, awaken) with procedural timing" },
+    { "path": "controller.test.ts", "license": "Original work for Prismfall", "author": "Prismfall", "source": "authored", "purpose": "unit tests of the controller" },
+    { "path": "gaze.ts", "license": "Original work for Prismfall", "author": "Prismfall", "source": "authored", "purpose": "beam directions and the rules that keep the beam away from the viewer and the clear zone" },
+    { "path": "land.ts", "license": "Original work for Prismfall", "author": "Prismfall", "source": "authored", "purpose": "heightfield land (lava-flow shelves, crags, cooled-crust plates and cracks), carved lava channels and ravine, plateau, ruins and fallen bridge, wind-sheared smoke and embers from the burning ruins" },
+    { "path": "rocks.ts", "license": "Original work for Prismfall", "author": "Prismfall", "source": "authored", "purpose": "photoscanned rocks (content/shared/scans) strewn as dark basalt, and columnar basalt outcrops" },
+    { "path": "citadel.ts", "license": "Original work for Prismfall", "author": "Prismfall", "source": "authored", "purpose": "the citadel's materials and the cloud collar around the spire" },
+    { "path": "warden.ts", "license": "Original work for Prismfall", "author": "Prismfall", "source": "authored", "purpose": "the Warden: cage, molten core, flames, sparks, the in-scattered beam, the controller wiring and the Warden's hum" },
+    { "path": "storm.ts", "license": "Original work for Prismfall", "author": "Prismfall", "source": "authored", "purpose": "raymarched storm deck and lightning (flash-reduction aware)" },
+    { "path": "ash.ts", "license": "Original work for Prismfall", "author": "Prismfall", "source": "authored", "purpose": "ash and embers in the air, lit by the beam" },
+    { "path": "effects.ts", "license": "Original work for Prismfall", "author": "Prismfall", "source": "authored", "purpose": "wardenRend line clear" },
+    { "path": "music/sleepless-watch.ts", "license": "Original work for Prismfall", "author": "Prismfall", "source": "authored", "purpose": "The Sleepless Watch composition" },
+    { "path": "music/cinder-road.ts", "license": "Original work for Prismfall", "author": "Prismfall", "source": "authored", "purpose": "Cinder Road composition" },
+    { "path": "models/citadel.glb", "license": "Original work for Prismfall", "author": "Prismfall", "source": "assets/blender/scripts/spire_kit.py", "purpose": "the citadel" },
+    { "path": "models/citadel_lod1.glb", "license": "Original work for Prismfall", "author": "Prismfall", "source": "assets/blender/scripts/spire_kit.py", "purpose": "the citadel, low detail" },
+    { "path": "models/warden.glb", "license": "Original work for Prismfall", "author": "Prismfall", "source": "assets/blender/scripts/spire_kit.py", "purpose": "the Warden's ring cage, collar and shutters" },
+    { "path": "models/ruins.glb", "license": "Original work for Prismfall", "author": "Prismfall", "source": "assets/blender/scripts/spire_kit.py", "purpose": "ruins and the fallen bridge" },
+    { "path": "textures/toposcope_sunset_band.webp", "license": "CC0 1.0", "author": "Dario Barresi (Poly Haven)", "source": "https://polyhaven.com/a/toposcope_sunset", "purpose": "panorama band, storm-dusk grade (assets/external/polyhaven/toposcope_sunset/source.json)" },
+    { "path": "textures/toposcope_sunset_detail.webp", "license": "CC0 1.0", "author": "Dario Barresi (Poly Haven)", "source": "https://polyhaven.com/a/toposcope_sunset", "purpose": "panorama detail crop from the 16k HDR, same grade" },
+    { "path": "textures/dark_rock_02_diff.webp", "license": "CC0 1.0", "author": "Amal Kumar (Poly Haven)", "source": "https://polyhaven.com/a/dark_rock_02", "purpose": "basalt albedo (land, citadel, cage, ruins)" },
+    { "path": "textures/dark_rock_02_normal.webp", "license": "CC0 1.0", "author": "Amal Kumar (Poly Haven)", "source": "https://polyhaven.com/a/dark_rock_02", "purpose": "basalt normal map (land)" },
+    { "path": "textures/quarry_wall_diff.webp", "license": "CC0 1.0", "author": "Dimitrios Savva (Poly Haven)", "source": "https://polyhaven.com/a/quarry_wall", "purpose": "ashen stone variation (land)" },
+    { "path": "textures/quarry_wall_normal.webp", "license": "CC0 1.0", "author": "Dimitrios Savva (Poly Haven)", "source": "https://polyhaven.com/a/quarry_wall", "purpose": "normal map (land, rocky slopes)" },
+    { "path": "previews/thumb.jpg", "license": "Original work for Prismfall", "author": "Prismfall", "source": "generated by scripts/thumbnails.ts", "purpose": "world artwork" }
+  ]
+}

@@ -102,6 +102,12 @@ export interface EnvironmentContext {
 
 export interface WorldSounds {
   emit(sound: 'footstep', x: number, y: number, z: number, gain?: number): void;
+  /**
+   * Keeps a sustained world voice (a hum or drone) sounding: call it every frame or so with its
+   * loudness (0..1), pitch (Hz), brightness (0..1) and stereo pan; it fades out by itself soon
+   * after the calls stop. Optional: a host without it simply stays silent.
+   */
+  drone?(id: string, level: number, hz: number, brightness?: number, pan?: number): void;
 }
 
 export interface StagePalette {

@@ -287,6 +287,56 @@ export class AudioSystem {
     this.sfx.playAt(id, x, y, z, { gain });
   }
 
+  /**
+   * Sustained world voices (environment hums and drones), one per id, on the ambience bus: two
+   * detuned oscillators through a low-pass plus a sub an octave down. Each update eases towards
+   * its values and schedules a fade-out, so a voice that stops being updated falls silent.
+   */
+  private readonly drones = new Map<string, { osc: OscillatorNode[]; filter: BiquadFilterNode; gain: GainNode; pan: StereoPannerNode; last: number }>();
+  setWorldDrone(d: { readonly id: string; readonly level: number; readonly hz: number; readonly brightness: number; readonly pan: number }): void {
+    const ctx = this.engine.ctx;
+    if (!ctx || !this.engine.ready) return;
+    const now = ctx.currentTime;
+    let v = this.drones.get(d.id);
+    if (v && now - v.last < 0.06) return;
+    if (!v) {
+      if (this.drones.size >= 4) return;
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.Q.value = 0.8;
+      const gain = ctx.createGain();
+      gain.gain.value = 0;
+      const pan = ctx.createStereoPanner();
+      const mk = (type: OscillatorType, mul: number, level: number) => {
+        const o = ctx.createOscillator();
+        o.type = type;
+        o.frequency.value = d.hz * mul;
+        const g = ctx.createGain();
+        g.gain.value = level;
+        o.connect(g).connect(filter);
+        o.start();
+        return o;
+      };
+      const osc = [mk('sawtooth', 1, 0.32), mk('sawtooth', 1.0045, 0.26), mk('sine', 0.5, 0.7), mk('triangle', 2.003, 0.08)];
+      filter.connect(gain).connect(pan).connect(this.engine.ambience);
+      v = { osc, filter, gain, pan, last: now };
+      this.drones.set(d.id, v);
+    }
+    v.last = now;
+    const level = Math.max(0, Math.min(1, d.level)) * 0.22;
+    const hz = Math.max(16, Math.min(2000, d.hz));
+    const muls = [1, 1.0045, 0.5, 2.003];
+    v.osc.forEach((o, i) => o.frequency.setTargetAtTime(hz * muls[i]!, now, 0.35));
+    v.filter.frequency.setTargetAtTime(90 + Math.max(0, Math.min(1, d.brightness)) * 1600, now, 0.3);
+    v.pan.pan.setTargetAtTime(Math.max(-1, Math.min(1, d.pan)), now, 0.3);
+    const g = v.gain.gain as AudioParam & { cancelAndHoldAtTime?: (t: number) => AudioParam };
+    if (g.cancelAndHoldAtTime) g.cancelAndHoldAtTime(now);
+    else g.cancelScheduledValues(now);
+    v.gain.gain.setTargetAtTime(level, now, 0.4);
+    // Falls silent on its own if no update follows.
+    v.gain.gain.setTargetAtTime(0, now + 0.5, 0.6);
+  }
+
   play(id: SfxId, options?: Parameters<SfxBank['play']>[1]): void {
     this.sfx.play(id, options);
   }
@@ -428,6 +478,7 @@ export class AudioSystem {
     this.director.dispose();
     this.analysis.teardown();
     this.ambience.stop();
+    for (const v of this.drones.values()) v.osc.forEach((o) => o.stop());
     void this.engine.close();
   }
 }

@@ -55,7 +55,9 @@ assets/blender/
 | `flora_kit.py` | `assets/blender/exports/flora` | `content/shared/flora` |
 | `ice_kit.py` | `assets/blender/exports/ice` | `content/stages/frozen-kingdom/models` |
 | `japan_kit.py` | `assets/blender/exports/japan` | `content/stages/ancient-garden/models` |
+| `spire_kit.py` | `assets/blender/exports/spire` | `content/stages/wardens-spire/models` |
 | `pyramids.py` | `assets/blender/exports/pyramids` | `content/stages/moving-sands/models` |
+| `red_horizon_kit.py` (with `red_horizon_machines.py`, `red_horizon_world.py`) | `assets/blender/exports/red_horizon` | `content/stages/red-horizon/models` |
 
 ## 4. What each script generates
 
@@ -68,6 +70,7 @@ assets/blender/
 | `foundry_kit.py` | Ember Foundry hall behind the playfield (156 objects): floor slabs, back wall and vents, arches, columns, beams, gears (`gear_*`), pistons (`piston_rod_*`), crucible and pour, pipe runs, catwalk, chains. | `foundry/foundry.glb`, `foundry.meta.json`, `source/environments/ember_foundry.blend`, `previews/ember_foundry.png` | `darkMetal`, `steel`, `brass`, `hotMetal`, `furnaceGlow`, `molten` |
 | `ice_kit.py` | Frozen Kingdom `citadel`, `crystal_arch`, `rune_a`, `rune_b`, `rune_c`. | `ice/ice.glb`, `ice.meta.json`, `source/environments/frozen_kingdom.blend`, `previews/frozen_kingdom.png` | `iceWall`, `iceDeep`, `iceGlow`, `snowCap` |
 | `japan_kit.py` | Ancient Garden `pagoda` (five tiers), `shrine_hall`, `gate`, `bridge`, `gate_far`. | `japan/japan.glb`, `japan.meta.json`, `source/environments/ancient_garden.blend`, `previews/ancient_garden.png` | `lacquer`, `woodDark`, `roofTile`, `plaster`, `gold`, `lanternPaper` |
+| `spire_kit.py` | The Warden's Spire: the citadel (`citadel_base`, `citadel_towers`, `citadel_spire`, `citadel_crown`) and a low-detail copy, the Warden's cage (`cage_ring_a`/`b`/`c`, `cage_collar`, `cage_shutter_0`..`3`, pivoting at the cage centre) and the ruins (`ruin_tower_a`, `ruin_tower_b`, `ruin_wall_a`, `ruin_wall_b`, `ruin_bridge`, `ruin_spire`, `ruin_gate`). No textures or vertex colours; the game's TSL materials light them. | `spire/citadel.glb`, `citadel_lod1.glb`, `warden.glb`, `ruins.glb`, `spire.meta.json`, `source/environments/wardens_spire.blend`, `previews/wardens_spire.png`, `wardens_spire_crown.png` | `spireStone`, `spireMetal`, `spireGlow`, `wardenStone`, `wardenMetal`, `ruinStone`, `ruinGlow` |
 | `pyramids.py` | Moving Sands `pyramid_great`, `pyramid_medium`, `pyramid_small` (stepped core masonry built course by course), `temple_ruin`, `column_drums` and `rubble_pile`. Each top-level node is an empty at the base centre, with the mesh as the child `<name>_mesh`. The only kit with image textures: a script-synthesised limestone atlas (base colour, normal, roughness) multiplied by `COLOR_0`. Details are in `assets/ASSET_CATALOG.md`. | `pyramids/pyramids.glb`, `pyramids.meta.json`, `source/environments/pyramids.blend`, `source/textures/pyramids_{color,normal,roughness}.webp`, `previews/pyramids_{overview,corner,medium,small,ruins,game}.png` | `pyramidStone` (use preset `keep` to show the textures), `pyramidSand` |
 
 Models are shared between stages by absolute path. Northern Lights reuses `crystal_arch`, `rune_a` and `rune_c` from the ice kit, and The Abyss reuses `colonnade`, `gateway`, `monolith_0` and `monolith_1` from the desert kit, both through the `gltfScene` `include` filter. The flora kit and the creatures are used by most stages.

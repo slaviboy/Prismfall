@@ -1,0 +1,298 @@
+{
+  "schemaVersion": 1,
+  "id": "wardens-spire",
+  "name": "The Warden's Spire",
+  "description": "A black citadel rises out of a burning land into the storm. At its summit the Warden, a molten fire held in a cage of turning stone rings, searches the plains with its light, while lava runs in the ravines and lightning walks the far horizon.",
+  "order": 68,
+  "tags": [
+    "volcanic",
+    "storm",
+    "dark-fantasy",
+    "photographic"
+  ],
+  "intensity": 0.6,
+  "recommendedQuality": "high",
+  "module": "stage.ts",
+  "requires": {
+    "sdk": "^1.2.0"
+  },
+  "palette": {
+    "accent": "#ff5a22",
+    "secondary": "#8a2a1a",
+    "highlight": "#ffcf9a",
+    "fog": "#2a1411",
+    "plate": "#070404"
+  },
+  "fog": {
+    "color": "#2e1410",
+    "density": 0.0006
+  },
+  "backdrop": {
+    "top": "#120808",
+    "bottom": "#050303",
+    "glow": "#ff4a1a"
+  },
+  "lighting": {
+    "key": {
+      "color": "#ffb08a",
+      "intensity": 0.9,
+      "azimuth": 25,
+      "elevation": 34
+    },
+    "rim": {
+      "color": "#ff6a3a",
+      "intensity": 1.0
+    },
+    "ambient": {
+      "sky": "#2c1e1e",
+      "ground": "#3a1408",
+      "intensity": 0.45
+    },
+    "accents": [
+      {
+        "color": "#ff7a3a",
+        "intensity": 5,
+        "x": 9,
+        "y": -6,
+        "z": 6
+      },
+      {
+        "color": "#c4acbc",
+        "intensity": 3,
+        "x": -9,
+        "y": 8,
+        "z": 6
+      }
+    ],
+    "beatResponse": 0.0
+  },
+  "grade": {
+    "exposure": 1.05,
+    "saturation": 1.02,
+    "contrast": 1.08,
+    "tint": [
+      1.03,
+      0.98,
+      0.95
+    ],
+    "vignette": 0.42,
+    "bloomThreshold": 0.72,
+    "bloomRadius": 0.42,
+    "toneMapping": "neutral",
+    "envIntensity": 0.35
+  },
+  "camera": {
+    "pitch": 1,
+    "yaw": 0,
+    "sway": 0.15,
+    "targetY": 0
+  },
+  "blocks": {
+    "geometry": "chamfer",
+    "material": "wardenBasalt",
+    "palette": {
+      "I": "#36b6d6",
+      "O": "#e8b830",
+      "T": "#a050d0",
+      "S": "#4cb848",
+      "Z": "#e0402e",
+      "J": "#3a6ee0",
+      "L": "#ec7a2a"
+    }
+  },
+  "environment": {
+    "layers": [
+      {
+        "id": "sky",
+        "type": "sky",
+        "params": {
+          "top": "#070404",
+          "mid": "#0e0706",
+          "midHeight": 0.3,
+          "horizon": "#2a0f0a",
+          "bottom": "#050303",
+          "horizonGlow": 0.0,
+          "horizonWidth": 0.1,
+          "stars": 0,
+          "panorama": {
+            "src": "textures/toposcope_sunset_band.webp",
+            "elevation": [
+              -10,
+              24
+            ],
+            "offset": 0.45,
+            "exposure": 0.85,
+            "fade": 10,
+            "detail": {
+              "src": "textures/toposcope_sunset_detail.webp",
+              "uRange": [
+                0.2778,
+                0.6222
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": "land",
+        "type": "wardenSpireLand",
+        "params": {
+          "rivers": [
+            { "points": [[50, 120], [43, 200], [36, 290], [30, 410], [27, 560], [26, 700], [27, 850], [29, 980], [30, 1050]], "width": [46, 22], "bank": 12, "depth": 6 },
+            { "points": [[-56, 140], [-47, 220], [-40, 320], [-34, 460], [-31, 620], [-33, 800], [-38, 980], [-43, 1160], [-41, 1400], [-36, 1650]], "width": [40, 18], "bank": 10, "depth": 5, "canyon": [0.16, 0.48], "canyonDepth": 32, "canyonWidth": 40 },
+            { "points": [[-31, 620], [-26, 760], [-23.5, 940], [-24, 1120], [-27, 1330]], "width": [14, 9], "bank": 7, "depth": 4 },
+            { "points": [[29, 980], [34, 1060], [39, 1200], [44, 1420], [48, 1650]], "width": [16, 10], "bank": 8, "depth": 4 }
+          ],
+          "bridge": { "river": 1, "at": 0.3, "scale": 1.4 },
+          "ruins": [
+            { "piece": "ruin_tower_a", "at": [-27, 380], "yaw": 20, "burning": true },
+            { "piece": "ruin_wall_a", "at": [-46, 270], "yaw": 70 },
+            { "piece": "ruin_gate", "at": [-50, 560], "yaw": -30, "scale": 1.2 },
+            { "piece": "ruin_spire", "at": [-37, 780], "yaw": 10, "scale": 1.3 },
+            { "piece": "ruin_tower_b", "at": [40, 340], "yaw": -15, "burning": true },
+            { "piece": "ruin_wall_b", "at": [47, 480], "yaw": 40, "scale": 1.2 },
+            { "piece": "ruin_tower_a", "at": [24.5, 640], "yaw": 70, "scale": 1.3 },
+            { "piece": "ruin_wall_a", "at": [34, 800], "yaw": -50, "scale": 1.5 },
+            { "piece": "ruin_spire", "at": [-30, 1250], "yaw": 40, "scale": 1.8, "burning": true },
+            { "piece": "ruin_gate", "at": [41, 1150], "yaw": 15, "scale": 1.6 }
+          ],
+          "mountains": [
+            [-80, -38, 140, 1250],
+            [46, 85, 110, 1350]
+          ]
+        }
+      },
+      {
+        "id": "rocks",
+        "type": "wardenSpireRocks",
+        "params": {
+          "columns": [
+            { "at": [-37, 70], "radius": 11, "count": 60, "height": [1.2, 4.5], "width": [0.9, 1.4], "dir": 90 },
+            { "at": [39, 76], "radius": 12, "count": 60, "height": [1.2, 4.0], "width": [0.9, 1.4], "dir": -90 },
+            { "at": [-30, 300], "radius": 26, "count": 90, "height": [3, 11], "dir": 40 },
+            { "at": [-50, 200], "radius": 18, "count": 60, "height": [2, 7], "dir": 120 },
+            { "at": [34, 520], "radius": 30, "count": 90, "height": [4, 13], "dir": -30 },
+            { "at": [26, 330], "radius": 16, "count": 50, "height": [2, 7], "dir": -60 }
+          ]
+        }
+      },
+      {
+        "id": "citadel",
+        "type": "wardenSpireCitadel",
+        "params": {}
+      },
+      {
+        "id": "warden",
+        "type": "wardenSpireWarden",
+        "params": {
+          "sweeps": [
+            [[24, 2000], [40, 1800]],
+            [[38, 950], [42, 2100]],
+            [[26, 1750], [36, 1000]],
+            [[23, 1500], [41, 1300]],
+            [[25, 900], [40, 950]]
+          ],
+          "targets": [
+            [25, 900],
+            [28, 920],
+            [33, 900],
+            [38, 950],
+            [26, 700],
+            [27, 850],
+            [33, 820],
+            [41, 1150],
+            [30, 1500],
+            [24, 1800],
+            [36, 1700],
+            [44, 1420],
+            [23, 1300],
+            [39, 1900]
+          ]
+        }
+      },
+      {
+        "id": "storm",
+        "type": "wardenSpireStorm",
+        "params": {}
+      },
+      {
+        "id": "ash",
+        "type": "wardenSpireAsh",
+        "params": {
+          "kind": "ash",
+          "count": 1800
+        }
+      },
+      {
+        "id": "embers",
+        "type": "wardenSpireAsh",
+        "params": {
+          "kind": "embers",
+          "count": 700,
+          "azimuth": [24, 58],
+          "distance": [80, 600],
+          "height": [-70, 60],
+          "size": [0.18, 0.45],
+          "rise": 1.6,
+          "brightness": 1.1,
+          "seed": 9
+        }
+      }
+    ]
+  },
+  "reactivity": {
+    "profiles": [],
+    "bindings": []
+  },
+  "effects": {
+    "lineClear": {
+      "effect": "wardenRend",
+      "params": {}
+    },
+    "landing": {
+      "shape": "shard"
+    },
+    "transition": {
+      "effect": "embers",
+      "params": {
+        "colors": [
+          "#ff5a22",
+          "#ffb070",
+          "#5a1a10"
+        ]
+      }
+    }
+  },
+  "music": {
+    "bpm": 70,
+    "beatsPerBar": 4,
+    "tracks": [
+      {
+        "id": "wardens-spire-sleepless-watch",
+        "title": "The Sleepless Watch",
+        "kind": "composition",
+        "src": "music/sleepless-watch.ts"
+      },
+      {
+        "id": "wardens-spire-cinder-road",
+        "title": "Cinder Road",
+        "kind": "composition",
+        "src": "music/cinder-road.ts",
+        "bpm": 96
+      }
+    ],
+    "defaultTrack": "wardens-spire-sleepless-watch"
+  },
+  "ambience": {
+    "preset": "volcanic",
+    "level": 0.8
+  },
+  "sfx": {
+    "preset": "stone",
+    "material": "obsidian"
+  },
+  "unlock": {
+    "type": "always"
+  },
+  "thumbnail": "previews/thumb.jpg"
+}

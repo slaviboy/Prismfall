@@ -1,0 +1,46 @@
+{
+  "id": "burned_ground_01",
+  "kind": "texture",
+  "name": "Burned Ground 01",
+  "page": "https://polyhaven.com/a/burned_ground_01",
+  "api": {
+    "info": "https://api.polyhaven.com/info/burned_ground_01",
+    "files": "https://api.polyhaven.com/files/burned_ground_01"
+  },
+  "authors": {
+    "Rob Tuytel": "All"
+  },
+  "licence": "CC0 1.0",
+  "licenceUrl": "https://polyhaven.com/license",
+  "files": [
+    {
+      "path": "burned_ground_01_diff_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/burned_ground_01/burned_ground_01_diff_1k.jpg",
+      "md5": "dade07575754ec311051ff7be8c10af6",
+      "size": 1033112
+    },
+    {
+      "path": "burned_ground_01_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/burned_ground_01/burned_ground_01_nor_gl_1k.jpg",
+      "md5": "00ae59e7246e32e0a4e73de49a20f829",
+      "size": 366727
+    },
+    {
+      "path": "burned_ground_01_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/burned_ground_01/burned_ground_01_rough_1k.jpg",
+      "md5": "e1cc30718a442cd254932da13a0930f1",
+      "size": 319073
+    }
+  ],
+  "downloaded": "2026-11-03",
+  "derived": [
+    {
+      "path": "content/stages/red-horizon/textures/burnt_albedo.webp",
+      "how": "1k diffuse JPG re-encoded as WebP quality 88 (scorched earth and ash patches in the foreground)"
+    },
+    {
+      "path": "content/stages/red-horizon/textures/burnt_nr.webp",
+      "how": "1k OpenGL normal (R, G) and roughness (B) packed into one WebP, quality 92 (scripts/red_horizon_assets.py)"
+    }
+  ]
+}

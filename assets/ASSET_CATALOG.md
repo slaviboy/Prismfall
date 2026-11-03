@@ -686,7 +686,7 @@ In game, use the material preset `keep` for `pyramidStone` to show the textures.
 | Modifications | Diffuse to WebP quality 88; normal X and Y with roughness packed into one WebP quality 92 (`scripts/red_horizon_assets.py textures`) |
 | Final format | `content/stages/red-horizon/textures/rust_albedo.webp`, `rust_nr.webp` |
 | Animation | None |
-| Used by | Red Horizon rebar, wrecks, the lattice mast and rusted cladding |
+| Used by | Red Horizon rebar, wrecks, the yard's rails, the lattice mast and rusted cladding |
 
 ### Metal Plate 02 (Poly Haven texture)
 

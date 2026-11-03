@@ -1,0 +1,48 @@
+{
+  "generator": "assets/blender/scripts/spire_kit.py",
+  "unit": "1 m",
+  "wardenHeight": 395.0,
+  "objects": {
+    "citadel": [
+      "citadel_base",
+      "citadel_towers",
+      "citadel_spire",
+      "citadel_crown"
+    ],
+    "warden": [
+      "cage_ring_a",
+      "cage_ring_b",
+      "cage_ring_c",
+      "cage_collar",
+      "cage_shutter_0",
+      "cage_shutter_1",
+      "cage_shutter_2",
+      "cage_shutter_3"
+    ],
+    "ruins": [
+      "ruin_tower_a",
+      "ruin_tower_b",
+      "ruin_wall_a",
+      "ruin_wall_b",
+      "ruin_bridge",
+      "ruin_spire",
+      "ruin_gate"
+    ]
+  },
+  "triangles": {
+    "citadel": 21179,
+    "warden": 16088,
+    "ruins": 7820,
+    "citadel_lod1": 3655
+  },
+  "materials": [
+    "ruinGlow",
+    "ruinStone",
+    "spireGlow",
+    "spireMetal",
+    "spireStone",
+    "wardenMetal",
+    "wardenStone"
+  ],
+  "license": "Original work for Prismfall"
+}

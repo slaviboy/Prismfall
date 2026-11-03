@@ -1,0 +1,46 @@
+{
+  "id": "rusty_metal_04",
+  "kind": "texture",
+  "name": "Rusty Metal 04",
+  "page": "https://polyhaven.com/a/rusty_metal_04",
+  "api": {
+    "info": "https://api.polyhaven.com/info/rusty_metal_04",
+    "files": "https://api.polyhaven.com/files/rusty_metal_04"
+  },
+  "authors": {
+    "Amal Kumar": "All"
+  },
+  "licence": "CC0 1.0",
+  "licenceUrl": "https://polyhaven.com/license",
+  "files": [
+    {
+      "path": "rusty_metal_04_diff_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rusty_metal_04/rusty_metal_04_diff_1k.jpg",
+      "md5": "91832efd8e5896387e2af18a5b49b895",
+      "size": 938338
+    },
+    {
+      "path": "rusty_metal_04_nor_gl_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rusty_metal_04/rusty_metal_04_nor_gl_1k.jpg",
+      "md5": "25f7f28b3546391532a5567b86e65aeb",
+      "size": 896980
+    },
+    {
+      "path": "rusty_metal_04_rough_1k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/rusty_metal_04/rusty_metal_04_rough_1k.jpg",
+      "md5": "177da306d0543cc56c2df6b51e3d5a8b",
+      "size": 686008
+    }
+  ],
+  "downloaded": "2026-11-03",
+  "derived": [
+    {
+      "path": "content/stages/red-horizon/textures/rust_albedo.webp",
+      "how": "1k diffuse JPG re-encoded as WebP quality 88 (wrecks, rusted girders, broken towers)"
+    },
+    {
+      "path": "content/stages/red-horizon/textures/rust_nr.webp",
+      "how": "1k OpenGL normal (R, G) and roughness (B) packed into one WebP, quality 92 (scripts/red_horizon_assets.py)"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 import { Vector3 } from 'three/webgpu';
 import { emitCue, hasCueListeners } from '../audio/cues';
-import { onWorldSound } from '../audio/worldSounds';
+import { onWorldDrone, onWorldSound } from '../audio/worldSounds';
 import { XRManager, type XRHost } from '../xr/XRManager';
 import type { GameAction, GameEvent } from '../game/core/types';
 import type { Engine } from '../game/core/engine';
@@ -162,6 +162,7 @@ export class GameShell {
     this.setupInput();
     this.audio.applySettings(getSettings());
     onWorldSound((s) => this.audio.playWorldSound(s.id, s.x, s.y, s.z, s.gain));
+    onWorldDrone((d) => this.audio.setWorldDrone(d));
     settingsStore.subscribe((state, prev) => {
       if (state.settings.audio !== prev.settings.audio || state.settings.reactivity !== prev.settings.reactivity) this.audio.applySettings(state.settings);
       // Classic block style swaps every world's blocks for glass: the impact sounds follow.

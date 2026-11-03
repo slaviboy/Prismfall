@@ -1,0 +1,38 @@
+{
+  "id": "freight_station",
+  "kind": "hdri",
+  "name": "Freight Station",
+  "page": "https://polyhaven.com/a/freight_station",
+  "api": {
+    "info": "https://api.polyhaven.com/info/freight_station",
+    "files": "https://api.polyhaven.com/files/freight_station"
+  },
+  "authors": {
+    "Sergej Majboroda": "All"
+  },
+  "licence": "CC0 1.0",
+  "licenceUrl": "https://polyhaven.com/license",
+  "files": [
+    {
+      "path": "freight_station_tonemapped.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/HDRIs/extra/Tonemapped%20JPG/freight_station.jpg",
+      "md5": "d2659659db25c76faec99e4f8bcb6477",
+      "size": 4188539
+    }
+  ],
+  "downloaded": "2026-11-03",
+  "derived": [
+    {
+      "path": "content/stages/red-horizon/textures/freight_station_band.webp",
+      "how": "ffmpeg crop=8192:1638:0:1138 (elevations -32..40 deg), unsharp 5:5:0.6, libwebp quality 86; then graded by scripts/red_horizon_assets.py grade 0.3906 0.7795 (smoke-and-fire dusk grade, land mask in alpha, WebP quality 90)"
+    },
+    {
+      "path": "content/stages/red-horizon/textures/freight_station_detail.webp",
+      "how": "16k HDR https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/16k%2B/freight_station_16k.hdr (md5 5e41377dcd32301a98a7b80df1221d5d): crop 6372x3276 (uRange 0.3906..0.7795), tone curve matched to the tonemapped JPG (scripts/panorama_match.py), libwebp quality 90; then graded by scripts/red_horizon_assets.py grade 0.3906 0.7795 (smoke-and-fire dusk grade, land mask in alpha, WebP quality 90)"
+    },
+    {
+      "path": "content/stages/red-horizon/textures/red_horizon_env.webp",
+      "how": "the tonemapped JPG scaled to 1024x512, the same grade, Gaussian blur 1.5 px, WebP quality 88 (scripts/red_horizon_assets.py grade)"
+    }
+  ]
+}
