@@ -1,0 +1,453 @@
+{
+  "schemaVersion": 1,
+  "id": "folded-sky",
+  "name": "Folded Sky",
+  "description": "An origami world of paper mountains and drifting cranes. Built entirely from content through the Prismfall SDK.",
+  "order": 70,
+  "tags": [
+    "paper",
+    "origami",
+    "bright",
+    "content-pack"
+  ],
+  "intensity": 0.55,
+  "recommendedQuality": "high",
+  "module": "stage.ts",
+  "palette": {
+    "accent": "#e85a4a",
+    "secondary": "#4a7ad8",
+    "highlight": "#fff8ee",
+    "fog": "#e8dcc8",
+    "plate": "#14100c"
+  },
+  "fog": {
+    "color": "#e4d6c0",
+    "density": 0.0022
+  },
+  "backdrop": {
+    "top": "#9ac0e0",
+    "bottom": "#e8dcc8",
+    "glow": "#f2c14e"
+  },
+  "lighting": {
+    "key": {
+      "color": "#fff4e0",
+      "intensity": 2.4,
+      "azimuth": -40,
+      "elevation": 40
+    },
+    "rim": {
+      "color": "#f2c14e",
+      "intensity": 1.4
+    },
+    "ambient": {
+      "sky": "#b8d0e8",
+      "ground": "#8a7a64",
+      "intensity": 1.1
+    },
+    "accents": [
+      {
+        "color": "#e85a4a",
+        "intensity": 16,
+        "x": -9,
+        "y": -6,
+        "z": 6
+      },
+      {
+        "color": "#4a7ad8",
+        "intensity": 16,
+        "x": 9,
+        "y": 8,
+        "z": 6
+      }
+    ],
+    "beatResponse": 0.3
+  },
+  "grade": {
+    "saturation": 1.02,
+    "contrast": 1.02,
+    "tint": [
+      1.02,
+      1.0,
+      0.97
+    ],
+    "vignette": 0.3,
+    "bloomThreshold": 0.3,
+    "bloomRadius": 0.4,
+    "toneMapping": "neutral",
+    "envIntensity": 0.4,
+    "exposure": 0.92
+  },
+  "camera": {
+    "pitch": 6,
+    "yaw": 0,
+    "sway": 0.6,
+    "targetY": 0
+  },
+  "blocks": {
+    "geometry": "chamfer",
+    "material": "washiSheet",
+    "palette": {
+      "I": "#4ab0c8",
+      "O": "#f2c14e",
+      "T": "#9a6ac8",
+      "S": "#6ab05a",
+      "Z": "#e85a4a",
+      "J": "#4a7ad8",
+      "L": "#e8904a"
+    }
+  },
+  "environment": {
+    "layers": [
+      {
+        "id": "sky",
+        "type": "sky",
+        "params": {
+          "top": "#7ab0dc",
+          "mid": "#bcd6ec",
+          "midHeight": 0.2,
+          "horizon": "#f4e8d4",
+          "bottom": "#e8dcc8",
+          "horizonGlow": 0.3,
+          "horizonWidth": 0.12,
+          "stars": 0,
+          "disc": {
+            "direction": [
+              0.4,
+              0.3,
+              -1
+            ],
+            "color": "#fff0c8",
+            "size": 3,
+            "halo": 8,
+            "intensity": 0.7
+          }
+        },
+        "bind": []
+      },
+      {
+        "id": "paper-hills",
+        "type": "terrain",
+        "params": {
+          "height": {
+            "base": -15,
+            "seed": 91,
+            "floor": 0.5,
+            "layers": [
+              {
+                "type": "terraces",
+                "amplitude": 26,
+                "scale": 90,
+                "steps": 4,
+                "threshold": 0.45
+              },
+              {
+                "type": "ridged",
+                "amplitude": 120,
+                "scale": 230,
+                "octaves": 2,
+                "sharpness": 1.2,
+                "band": {
+                  "near": 360,
+                  "ramp": 160,
+                  "far": 5000
+                }
+              }
+            ],
+            "clearing": {
+              "center": [
+                0,
+                4
+              ],
+              "radius": 46,
+              "falloff": 40,
+              "depth": 0
+            }
+          },
+          "mesh": {
+            "near": 12,
+            "far": 1100,
+            "rows": 90,
+            "cols": 100,
+            "spread": 1.45
+          },
+          "colors": {
+            "low": "#d8ccb4",
+            "high": "#f6efe2",
+            "rock": "#c8b89c",
+            "snow": "#ffffff",
+            "snowLine": 70,
+            "sparkle": "#ffffff"
+          },
+          "ripples": {
+            "strength": 0.12,
+            "wavelength": 3.5,
+            "direction": 0,
+            "speed": 0,
+            "fadeDistance": 60
+          },
+          "sparkle": 0,
+          "roughness": 0.95,
+          "rockSlope": 0.5
+        },
+        "bind": []
+      },
+      {
+        "id": "lantern-grove",
+        "type": "scatter",
+        "params": {
+          "src": "/content/shared/flora/flora.glb",
+          "count": 30,
+          "seed": 4,
+          "items": [
+            {
+              "mesh": "stone_lantern",
+              "scale": [
+                1.0,
+                1.4
+              ]
+            },
+            {
+              "mesh": "cherry",
+              "weight": 2,
+              "scale": [
+                1.2,
+                1.8
+              ],
+              "tintJitter": 0.1
+            }
+          ],
+          "area": {
+            "kind": "band",
+            "near": 40,
+            "far": 180,
+            "spread": 1.3
+          },
+          "exclude": [
+            {
+              "center": [
+                0,
+                -8
+              ],
+              "radius": 32
+            }
+          ],
+          "clustering": 0.5,
+          "clusterScale": 50,
+          "sway": {
+            "amount": 0.2,
+            "speed": 0.7
+          },
+          "materials": [
+            {
+              "match": "^stone",
+              "preset": "stone",
+              "color": "#e8dfd0",
+              "roughness": 0.95
+            },
+            {
+              "match": "^lanternGlow",
+              "preset": "emissive",
+              "color": "#f4e4c8",
+              "emissive": "#ffb46a",
+              "emissiveIntensity": 0.6,
+              "musicGlow": 0.8
+            },
+            {
+              "match": "^blossom",
+              "preset": "foliage",
+              "color": "#f2a8b8"
+            },
+            {
+              "match": "^bark",
+              "preset": "stone",
+              "color": "#8a6a50"
+            }
+          ]
+        },
+        "bind": []
+      },
+      {
+        "id": "cranes",
+        "type": "paperCranes",
+        "params": {
+          "count": 55,
+          "center": [
+            0,
+            34,
+            -170
+          ],
+          "radius": [
+            200,
+            26,
+            80
+          ],
+          "size": [
+            3,
+            5.5
+          ],
+          "speed": 0.06,
+          "seed": 5
+        },
+        "bind": [
+          {
+            "target": "speed",
+            "feature": "overallEnergy",
+            "amount": 0.4,
+            "attackMs": 400,
+            "releaseMs": 1400
+          }
+        ]
+      },
+      {
+        "id": "near-cranes",
+        "type": "paperCranes",
+        "params": {
+          "count": 14,
+          "center": [
+            0,
+            14,
+            -60
+          ],
+          "radius": [
+            80,
+            8,
+            26
+          ],
+          "size": [
+            1.6,
+            2.4
+          ],
+          "speed": 0.09,
+          "seed": 9
+        },
+        "bind": []
+      },
+      {
+        "id": "paper-scraps",
+        "type": "particles",
+        "params": {
+          "count": 1600,
+          "center": [
+            0,
+            6,
+            -40
+          ],
+          "size": [
+            160,
+            40,
+            80
+          ],
+          "color": "#ffffff",
+          "colorB": "#f2c14e",
+          "minSize": 0.1,
+          "maxSize": 0.24,
+          "velocity": [
+            1.4,
+            -0.6,
+            0.2
+          ],
+          "turbulence": 1.2,
+          "twinkle": 0.1,
+          "brightness": 0.8,
+          "shape": "petal",
+          "spin": 2.2,
+          "additive": false,
+          "seed": 13,
+          "bloom": 0
+        },
+        "bind": [
+          {
+            "target": "speed",
+            "feature": "overallEnergy",
+            "amount": 0.4,
+            "category": "particles",
+            "attackMs": 300,
+            "releaseMs": 1500
+          }
+        ]
+      },
+      {
+        "id": "paper-clouds",
+        "type": "clouds",
+        "params": {
+          "count": 20,
+          "center": [
+            0,
+            60,
+            -300
+          ],
+          "spread": [
+            700,
+            40,
+            200
+          ],
+          "size": [
+            70,
+            140
+          ],
+          "color": "#ffffff",
+          "colorB": "#f4ece0",
+          "opacity": 0.35,
+          "drift": [
+            2.4,
+            0,
+            0
+          ],
+          "additive": false,
+          "seed": 7
+        },
+        "bind": []
+      }
+    ]
+  },
+  "reactivity": {
+    "profiles": [
+      {
+        "name": "flux-turbulence",
+        "layers": [
+          "paper-scraps"
+        ]
+      }
+    ],
+    "bindings": []
+  },
+  "effects": {
+    "lineClear": {
+      "effect": "foldIntoCranes",
+      "params": {}
+    },
+    "landing": {
+      "shape": "petal"
+    },
+    "transition": {
+      "effect": "paperFold",
+      "params": {}
+    }
+  },
+  "music": {
+    "bpm": 136,
+    "beatsPerBar": 4,
+    "tracks": [
+      {
+        "id": "folded-sky-paper-wind",
+        "title": "Paper Wind",
+        "kind": "composition",
+        "src": "music/main.ts"
+      }
+    ],
+    "defaultTrack": "folded-sky-paper-wind"
+  },
+  "ambience": {
+    "preset": "garden",
+    "level": 0.8
+  },
+  "sfx": {
+    "preset": "paper",
+    "material": "paper"
+  },
+  "unlock": {
+    "type": "always"
+  },
+  "thumbnail": "previews/thumb.jpg"
+}
