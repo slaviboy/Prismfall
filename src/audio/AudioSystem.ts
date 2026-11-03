@@ -51,7 +51,7 @@ export interface StageAudio {
   readonly bpm: number;
   readonly beatsPerBar: number;
   readonly composition: Composition | null;
-  readonly file: { readonly url: string; readonly meta: FileTrackMeta } | null;
+  readonly file: { readonly url: string; readonly meta: FileTrackMeta; readonly stems?: readonly { readonly url: string; readonly layer: number; readonly gain: number }[] } | null;
   readonly ambience: string | null;
   readonly ambienceLevel: number;
   readonly sfxPreset: string;
@@ -192,13 +192,18 @@ export class AudioSystem {
     if (stage.composition) {
       this.director.play(new CompositionPlayer(ctx, stage.composition, this.engine.musicPre), { fade });
     } else if (stage.file) {
-      let buffer = this.fileCache.get(stage.file.url);
-      if (!buffer) {
-        const res = await fetch(stage.file.url);
-        buffer = await ctx.decodeAudioData(await res.arrayBuffer());
-        this.fileCache.set(stage.file.url, buffer);
-      }
-      this.director.play(new FileTrackPlayer(ctx, buffer, stage.file.meta, this.engine.musicPre, stage.id), { fade });
+      const decode = async (url: string): Promise<AudioBuffer> => {
+        let buffer = this.fileCache.get(url);
+        if (!buffer) {
+          const res = await fetch(url);
+          buffer = await ctx.decodeAudioData(await res.arrayBuffer());
+          this.fileCache.set(url, buffer);
+        }
+        return buffer;
+      };
+      const [main, ...stemBuffers] = await Promise.all([decode(stage.file.url), ...(stage.file.stems ?? []).map((s) => decode(s.url))]);
+      const stems = (stage.file.stems ?? []).map((s, i) => ({ buffer: stemBuffers[i]!, layer: s.layer, gain: s.gain }));
+      this.director.play(new FileTrackPlayer(ctx, main!, stage.file.meta, this.engine.musicPre, stage.id, stems), { fade });
     } else {
       this.director.stop(fade);
     }

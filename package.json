@@ -23,7 +23,8 @@
     "perf": "node scripts/perf.ts",
     "assets:blender": "node scripts/build-blender-assets.ts",
     "content:thumbnails": "node scripts/thumbnails.ts",
-    "content:shots": "node scripts/stage-shots.ts"
+    "content:shots": "node scripts/stage-shots.ts",
+    "audio:encode": "node scripts/encode-audio.ts"
   },
   "dependencies": {
     "@fontsource-variable/atkinson-hyperlegible-next": "5.3.0",

@@ -39,3 +39,51 @@ describe('FileTrackPlayer beat clock', () => {
     expect(p.beatAt(11)).toBeCloseTo(2);
   });
 });
+
+describe('FileTrackPlayer stems', () => {
+  /** Records every source start and gain target so sync and layering can be checked. */
+  function recordingContext(): { ctx: BaseAudioContext; starts: { at: number; offset: number }[]; targets: number[] } {
+    const starts: { at: number; offset: number }[] = [];
+    const targets: number[] = [];
+    const makeParam = () => ({ value: 0, cancelScheduledValues() {}, setValueAtTime() {}, linearRampToValueAtTime() {}, setTargetAtTime(v: number) { targets.push(v); } });
+    const ctx = {
+      currentTime: 0,
+      createGain: () => {
+        const g = { gain: makeParam(), connect: () => g, disconnect() {} };
+        return g;
+      },
+      createBufferSource: () => {
+        const s = { buffer: null, loop: false, loopStart: 0, loopEnd: 0, connect: () => s, start: (at: number, offset: number) => starts.push({ at, offset }), stop() {} };
+        return s;
+      },
+    } as unknown as BaseAudioContext;
+    return { ctx, starts, targets };
+  }
+
+  it('starts every stem on the same instant and file position as the main mix', () => {
+    const { ctx, starts } = recordingContext();
+    const stems = [0.3, 0.6, 0.85].map((layer) => ({ buffer: buffer(20), layer, gain: 1 }));
+    const p = new FileTrackPlayer(ctx, buffer(20), { title: 't', bpm: 120, offset: 0.4 }, destination, 'x', stems);
+    p.start(3);
+    expect(starts).toHaveLength(4);
+    for (const s of starts) expect(s).toEqual({ at: 3, offset: 0.4 });
+    p.pause(5);
+    p.resume(6);
+    const resumed = starts.slice(4);
+    expect(resumed).toHaveLength(4);
+    expect(new Set(resumed.map((s) => `${s.at}:${s.offset}`)).size).toBe(1);
+  });
+
+  it('fades stems in by intensity threshold', async () => {
+    const { stemLevel } = await import('./tracks');
+    expect(stemLevel(0.6, 0.3)).toBe(0);
+    expect(stemLevel(0.6, 0.6)).toBeCloseTo(0.5);
+    expect(stemLevel(0.6, 0.8)).toBe(1);
+    const { ctx, targets } = recordingContext();
+    const p = new FileTrackPlayer(ctx, buffer(20), { title: 't', bpm: 120 }, destination, 'x', [{ buffer: buffer(20), layer: 0.7, gain: 0.8 }]);
+    p.setIntensity(0.2);
+    p.setIntensity(0.95);
+    expect(targets[0]).toBe(0);
+    expect(targets[1]).toBeCloseTo(0.8);
+  });
+});

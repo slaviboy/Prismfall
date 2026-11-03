@@ -327,6 +327,24 @@ export interface FileTrackMeta {
   readonly offset?: number;
   readonly loop?: { readonly startBar: number; readonly endBar: number };
   readonly sections?: readonly { readonly name: string; readonly kind: SectionKind; readonly startBar: number; readonly intensity: number }[];
+  /**
+   * Adaptive stems played in sync with the main file (same length and timing reference). Each
+   * fades in once the music intensity reaches its `layer` threshold (percussion, melody, ...).
+   */
+  readonly stems?: readonly { readonly src: string; readonly layer: number; readonly gain?: number; readonly name?: string }[];
+}
+
+/** A decoded stem ready to play alongside a file track. */
+export interface StemBuffer {
+  readonly buffer: AudioBuffer;
+  readonly layer: number;
+  readonly gain: number;
+}
+
+/** Stem level for an intensity: off below its threshold, full a little above it. */
+export function stemLevel(layer: number, intensity: number): number {
+  const t = Math.max(0, Math.min(1, (intensity - layer + 0.08) / 0.16));
+  return t * t * (3 - 2 * t);
 }
 
 /** Plays a decoded audio file with beat metadata (for the player's own music). */
@@ -338,6 +356,9 @@ export class FileTrackPlayer implements TrackPlayer {
   readonly beatsPerBar: number;
   onNote = null;
   private source: AudioBufferSourceNode | null = null;
+  private stemSources: AudioBufferSourceNode[] = [];
+  private readonly stemGains: GainNode[];
+  private intensity = 0.5;
   private origin = 0;
   private started = false;
   paused = false;
@@ -354,6 +375,7 @@ export class FileTrackPlayer implements TrackPlayer {
     readonly meta: FileTrackMeta,
     destination: AudioNode,
     id: string,
+    private readonly stems: readonly StemBuffer[] = [],
   ) {
     this.id = id;
     this.title = meta.title;
@@ -368,19 +390,43 @@ export class FileTrackPlayer implements TrackPlayer {
     this.output = ctx.createGain();
     this.output.gain.value = 0;
     this.output.connect(destination);
+    this.stemGains = stems.map((s) => {
+      const g = ctx.createGain();
+      g.gain.value = s.gain * stemLevel(s.layer, this.intensity);
+      g.connect(this.output);
+      return g;
+    });
   }
 
-  private startSource(at: number, fileTime: number): void {
+  private makeSource(buffer: AudioBuffer, dest: AudioNode, at: number, fileTime: number): AudioBufferSourceNode {
     const src = this.ctx.createBufferSource();
-    src.buffer = this.buffer;
+    src.buffer = buffer;
     // Loop on the musical region so the beat clock below stays aligned after every repeat
     // (looping the whole file from 0 would skip the lead-in before the first downbeat).
     src.loop = this.loopEndS > this.loopStartS;
     src.loopStart = this.offset + this.loopStartS;
     src.loopEnd = this.offset + this.loopEndS;
-    src.connect(this.output);
+    src.connect(dest);
     src.start(at, fileTime);
-    this.source = src;
+    return src;
+  }
+
+  private startSource(at: number, fileTime: number): void {
+    // Every stem starts on the same audio-clock instant at the same file position: sample-locked.
+    this.source = this.makeSource(this.buffer, this.output, at, fileTime);
+    this.stemSources = this.stems.map((s, i) => this.makeSource(s.buffer, this.stemGains[i]!, at, fileTime));
+  }
+
+  private stopSources(at: number): void {
+    for (const s of [this.source, ...this.stemSources]) {
+      try {
+        s?.stop(at);
+      } catch {
+        /* not started */
+      }
+    }
+    this.source = null;
+    this.stemSources = [];
   }
 
   start(atTime: number): void {
@@ -428,8 +474,10 @@ export class FileTrackPlayer implements TrackPlayer {
     return next ? { kind: next.kind, beat: next.startBar * this.beatsPerBar } : null;
   }
 
-  setIntensity(): void {
-    /* fixed recording */
+  setIntensity(x: number): void {
+    this.intensity = x;
+    const t = this.ctx.currentTime;
+    this.stems.forEach((s, i) => this.stemGains[i]?.gain.setTargetAtTime(s.gain * stemLevel(s.layer, x), t, 0.6));
   }
 
   stinger(): void {
@@ -445,7 +493,7 @@ export class FileTrackPlayer implements TrackPlayer {
 
   stop(at: number): void {
     this.fadeTo(0, at, 0.05);
-    this.source?.stop(at + 0.1);
+    this.stopSources(at + 0.1);
     this.started = false;
   }
 
@@ -454,8 +502,7 @@ export class FileTrackPlayer implements TrackPlayer {
     this.pausedAt = this.beatAt(now);
     this.paused = true;
     this.fadeTo(0, now, 0.2);
-    this.source.stop(now + 0.25);
-    this.source = null;
+    this.stopSources(now + 0.25);
   }
 
   resume(now: number): void {
@@ -468,11 +515,8 @@ export class FileTrackPlayer implements TrackPlayer {
   }
 
   dispose(): void {
-    try {
-      this.source?.stop();
-    } catch {
-      /* not started */
-    }
+    this.stopSources(0);
+    this.stemGains.forEach((g) => g.disconnect());
     this.output.disconnect();
   }
 }

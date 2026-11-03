@@ -242,11 +242,17 @@ export class GameShell {
   }
 
   /** A stage's audio-file track with its beat metadata (track.json). */
-  private fileTrack(info: StageInfo, src: string, metaPath: string | undefined, title: string): { url: string; meta: FileTrackMeta } | null {
+  private fileTrack(info: StageInfo, src: string, metaPath: string | undefined, title: string): { url: string; meta: FileTrackMeta; stems: { url: string; layer: number; gain: number }[] } | null {
     const url = resolveAsset(info.dir, src);
     const raw = metaPath ? (readTrackMeta(info, metaPath) as Partial<FileTrackMeta> | undefined) : undefined;
     if (!url) return null;
-    return { url, meta: { title, bpm: raw?.bpm ?? info.manifest?.music.bpm ?? 120, beatsPerBar: raw?.beatsPerBar ?? 4, offset: raw?.offset ?? 0, loop: raw?.loop, sections: raw?.sections } };
+    // Stems resolve relative to the stage folder; missing files are skipped (logged) rather than fatal.
+    const stems = (raw?.stems ?? []).flatMap((s) => {
+      const stemUrl = resolveAsset(info.dir, s.src);
+      if (!stemUrl) console.warn(`[audio] stem ${s.src} not found in ${info.id}`);
+      return stemUrl ? [{ url: stemUrl, layer: s.layer, gain: s.gain ?? 1 }] : [];
+    });
+    return { url, meta: { title, bpm: raw?.bpm ?? info.manifest?.music.bpm ?? 120, beatsPerBar: raw?.beatsPerBar ?? 4, offset: raw?.offset ?? 0, loop: raw?.loop, sections: raw?.sections, stems: raw?.stems }, stems };
   }
 
   /** Every playable track: music of unlocked worlds, then the player's own files. */
