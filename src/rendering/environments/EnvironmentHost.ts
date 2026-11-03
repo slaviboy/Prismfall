@@ -65,15 +65,18 @@ export class EnvironmentHost {
       sounds: { emit: emitWorldSound },
     };
     const env = await StageEnvironment.build(manifest, ctx, (f) => onProgress?.(f * 0.85));
-    // Warm up: render one frame through the real pipeline (same MRT targets as play) with the
-    // environment present but invisible, so its shaders compile before it is ever shown.
+    // Compile its shaders in the background before it is ever shown (the group stays at
+    // near-zero presence; precompile ignores visibility).
     env.setPresence(0.0001);
     this.render.worldRoot.add(env.group);
     try {
-      this.render.warmUpFrame();
-      await new Promise((r) => requestAnimationFrame(() => r(null)));
+      await this.render.precompile(env.group);
+      if (this.render.currentSettings?.graphics.blockStyle !== 'classic') {
+        const preset = resolveBlockPreset(manifest.blocks.material, manifest.blocks.overrides as Partial<BlockMaterialPreset>);
+        await this.render.board.preparePreset(preset, (root) => this.render.precompile(root));
+      }
     } catch (err) {
-      console.warn('[env] shader warm-up failed (will compile on first use)', err);
+      console.warn('[env] shader precompile failed (will compile on first use)', err);
     }
     if (!this.active.some((a) => a.env === env)) {
       env.group.removeFromParent();

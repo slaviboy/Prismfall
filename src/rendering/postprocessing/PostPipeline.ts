@@ -1,4 +1,4 @@
-import { RenderPipeline, Vector3, type Camera, type Node, type Scene, type WebGPURenderer } from 'three/webgpu';
+import { RenderPipeline, Vector3, type Camera, type Node, type Object3D, type Scene, type WebGPURenderer } from 'three/webgpu';
 import {
   convertToTexture,
   emissive,
@@ -211,7 +211,25 @@ export class PostPipeline {
   }
 
   render(): void {
+    // A precompile in progress restores its own render state between slices; start clean.
+    this.renderer.setRenderTarget(null);
+    this.renderer.setMRT(null);
     this.pipeline?.render();
+  }
+
+  /**
+   * Compiles `root`'s materials for the scene pass (same target and MRT as play) without blocking:
+   * three's compileAsync captures that state synchronously and then works in slices between frames.
+   */
+  async precompile(root: Object3D): Promise<void> {
+    const pass = this.scenePass;
+    if (!pass) return;
+    this.renderer.setRenderTarget(pass.renderTarget);
+    this.renderer.setMRT(pass.getMRT());
+    const done = this.renderer.compileAsync(root, this.camera, this.scene);
+    this.renderer.setRenderTarget(null);
+    this.renderer.setMRT(null);
+    await done;
   }
 
   dispose(): void {

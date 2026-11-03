@@ -1,5 +1,4 @@
-import type {
-  BufferGeometry} from 'three/webgpu';
+import type { BufferGeometry, Object3D } from 'three/webgpu';
 import {
   BoxGeometry,
   Color,
@@ -60,6 +59,25 @@ class InstanceSet {
     this.mesh.receiveShadow = true;
   }
 
+  private prepared: BlockMaterialHandle | null = null;
+
+  /** Builds and compiles the material for `preset` ahead of `setPreset`, so the switch doesn't stall. */
+  async prepare(preset: BlockMaterialPreset, precompile: (root: Object3D) => Promise<void>): Promise<void> {
+    if (preset.surface === this.handle.surface || this.prepared?.surface === preset.surface) return;
+    this.prepared?.material.dispose();
+    const next = createBlockMaterial(this.buffer, preset);
+    this.prepared = next;
+    const probe = this.mesh.clone();
+    probe.material = next.material;
+    probe.count = 1;
+    this.mesh.parent?.add(probe);
+    try {
+      await precompile(probe);
+    } finally {
+      probe.removeFromParent();
+    }
+  }
+
   write(i: number, rgb: Color, glyph: number, ao: number, dropRows: number, dropTime: number, lockTime: number): void {
     const o = i * BLOCK_STRIDE;
     const d = this.data;
@@ -80,7 +98,10 @@ class InstanceSet {
       return;
     }
     const old = this.handle;
-    const next = createBlockMaterial(this.buffer, preset);
+    const ready = this.prepared?.surface === preset.surface ? this.prepared : null;
+    this.prepared = null;
+    if (ready) ready.apply(preset);
+    const next = ready ?? createBlockMaterial(this.buffer, preset);
     next.glowScale.value = old.glowScale.value;
     next.glyphs.value = old.glyphs.value;
     next.intensity.value = old.intensity.value;
@@ -214,6 +235,11 @@ export class BoardView {
 
   setPreset(preset: BlockMaterialPreset): void {
     for (const set of [this.settled, this.active, this.pods]) set.setPreset(preset);
+  }
+
+  /** Compiles the block materials for an upcoming preset in the background. */
+  async preparePreset(preset: BlockMaterialPreset, precompile: (root: Object3D) => Promise<void>): Promise<void> {
+    for (const set of [this.settled, this.active, this.pods]) await set.prepare(preset, precompile);
   }
 
   setGhostOpacity(opacity: number): void {

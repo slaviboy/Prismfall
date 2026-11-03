@@ -1,4 +1,4 @@
-import { ACESFilmicToneMapping, AgXToneMapping, Group, NeutralToneMapping, PMREMGenerator, Scene, SRGBColorSpace, Vector3, WebGPURenderer } from 'three/webgpu';
+import { ACESFilmicToneMapping, AgXToneMapping, Group, NeutralToneMapping, PMREMGenerator, Scene, type Object3D, SRGBColorSpace, Vector3, WebGPURenderer } from 'three/webgpu';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import type { Settings } from '../../settings/schema';
 import { reducedMotion } from '../../settings/store';
@@ -409,6 +409,27 @@ export class RenderSystem implements GameView {
    */
   warmUpFrame(): void {
     this.post.render();
+  }
+
+  /** Compiles every material under `root` without blocking frames, whatever its visibility or culling. */
+  async precompile(root: Object3D): Promise<void> {
+    const shown: Object3D[] = [];
+    const culled: Object3D[] = [];
+    root.traverse((o) => {
+      if (!o.visible) {
+        o.visible = true;
+        shown.push(o);
+      }
+      if (o.frustumCulled) {
+        o.frustumCulled = false;
+        culled.push(o);
+      }
+    });
+    // The objects are gathered synchronously inside the call, so the flags can go back at once.
+    const done = this.post.precompile(root);
+    for (const o of shown) o.visible = false;
+    for (const o of culled) o.frustumCulled = true;
+    await done;
   }
 
   get currentSettings(): Settings | null {
