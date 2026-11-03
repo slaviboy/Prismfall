@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "future-nights",
   "name": "Future Nights",
-  "description": "A rain-soaked city of the future after midnight. Towers glow, holograms flicker, and rivers of light flow between the skyscrapers.",
+  "description": "Shanghai after midnight, across the Huangpu: the towers of Lujiazui blaze over the river, traffic streams along the far bank and aircraft blink overhead.",
   "order": 60,
   "tags": [
     "city",
@@ -20,8 +20,8 @@
     "plate": "#06030c"
   },
   "fog": {
-    "color": "#140c28",
-    "density": 0.0036
+    "color": "#3a3450",
+    "density": 0.0008
   },
   "backdrop": {
     "top": "#06040e",
@@ -102,67 +102,45 @@
         "id": "sky",
         "type": "sky",
         "params": {
-          "top": "#04030a",
-          "mid": "#140a2a",
-          "midHeight": 0.2,
-          "horizon": "#5a1a5a",
-          "bottom": "#0a0614",
-          "horizonGlow": 0.55,
-          "horizonWidth": 0.14,
-          "stars": 0.05
-        },
-        "bind": [
-          {
-            "target": "glow",
-            "feature": "bass",
-            "amount": 0.25,
-            "attackMs": 60,
-            "releaseMs": 700
+          "top": "#3a3650",
+          "mid": "#6e6884",
+          "midHeight": 0.35,
+          "horizon": "#9b95ad",
+          "bottom": "#141020",
+          "horizonGlow": 0,
+          "stars": 0,
+          "panorama": {
+            "src": "textures/shanghai_bund_band.webp",
+            "elevation": [
+              -5.9,
+              40
+            ],
+            "offset": 0.545,
+            "exposure": 0.7,
+            "fade": 8,
+            "occlude": 1500,
+            "detail": {
+              "src": "textures/shanghai_bund_detail.webp",
+              "uRange": [
+                0.3506,
+                0.7395
+              ]
+            }
           }
-        ]
-      },
-      {
-        "id": "streets",
-        "type": "terrain",
-        "params": {
-          "height": {
-            "base": -15,
-            "seed": 81,
-            "layers": []
-          },
-          "mesh": {
-            "near": 12,
-            "far": 900,
-            "rows": 60,
-            "cols": 60,
-            "spread": 1.45
-          },
-          "colors": {
-            "low": "#0c0a14",
-            "high": "#141020",
-            "rock": "#100c18",
-            "sparkle": "#ff9af0"
-          },
-          "ripples": {
-            "strength": 0.0
-          },
-          "sparkle": 0.6,
-          "roughness": 0.25,
-          "rockSlope": 0.9
         },
         "bind": []
       },
       {
-        "id": "wet-street",
+        "id": "river",
         "type": "water",
         "params": {
           "y": -14.95,
-          "deep": "#05040a",
-          "shallow": "#1a1030",
-          "skyTop": "#1a0a30",
-          "skyHorizon": "#3a1a4a",
+          "deep": "#3d384b",
+          "shallow": "#5d556c",
+          "skyTop": "#5a5470",
+          "skyHorizon": "#8a849c",
           "glow": "#2ff6ff",
-          "rippleColor": "#3a2050",
+          "rippleColor": "#6a6080",
           "glowStrength": 0,
           "amplitude": 0.0,
           "wavelength": 3,
@@ -172,181 +150,261 @@
             0.9,
             -0.3
           ],
-          "size": 1400,
+          "size": 6000,
           "reflection": {
-            "strength": 0.75,
+            "strength": 0.8,
             "resolution": 0.5,
-            "distortion": 0.0035,
-            "tint": "#d8d0e8"
+            "distortion": 0.013,
+            "tint": "#c4bcd4"
           },
-          "chop": 0.03,
-          "chopScale": 2.0,
+          "chop": 0.2,
+          "chopScale": 0.9,
           "moonColor": "#000000"
         },
-        "bind": [
-          {
-            "target": "glow",
-            "feature": "beatPulse",
-            "amount": 0.4,
-            "attackMs": 20,
-            "releaseMs": 400
-          }
-        ]
+        "bind": []
       },
       {
-        "id": "skyline",
-        "type": "city",
+        "id": "river-edge",
+        "type": "matte",
         "params": {
-          "count": 560,
-          "near": 120,
-          "far": 680,
-          "spread": 1.35,
-          "grid": 26,
-          "street": 7,
-          "height": [
-            16,
-            150
+          "center": [
+            0,
+            30
           ],
-          "width": [
-            9,
-            19
-          ],
-          "skyline": 0.95,
-          "ground": -15,
-          "exclude": [
+          "radius": 1480,
+          "y": [
+            -16,
+            1
+          ]
+        },
+        "bind": []
+      },
+      {
+        "id": "traffic",
+        "type": "traffic",
+        "params": {
+          "roads": [
             {
-              "center": [
-                0,
-                -20
+              "radius": 1420,
+              "from": -62,
+              "to": 62,
+              "elevation": -0.5,
+              "lanes": 2,
+              "speed": [
+                11,
+                17
               ],
-              "radius": 100
+              "gap": [
+                20,
+                120
+              ],
+              "brightness": 70,
+              "trail": 0.25
             }
           ],
-          "facade": "#0b0d18",
-          "windows": [
-            "#ffe4b8",
-            "#ffd28e",
-            "#fff2dc",
-            "#cfe4ff"
+          "platoon": [
+            2,
+            6
           ],
-          "neon": [
-            "#ff2fd0",
-            "#2ff6ff",
-            "#ffe02f",
-            "#7a5cff"
-          ],
-          "windowDensity": 0.2,
-          "floorHeight": 3.4,
-          "neonShare": 0.1,
-          "billboards": 10,
-          "seed": 9,
-          "windowBrightness": 0.55,
-          "windowWidth": 1.5
-        },
-        "bind": [
-          {
-            "target": "neon",
-            "feature": "sectionIntensity",
-            "amount": 0.4,
-            "category": "lighting",
-            "attackMs": 300,
-            "releaseMs": 1200
+          "reflections": {
+            "strength": 0
           },
-          {
-            "target": "windows",
-            "feature": "bass",
-            "amount": 0.15,
-            "category": "lighting",
-            "attackMs": 60,
-            "releaseMs": 600
-          }
-        ]
+          "seed": 3
+        },
+        "bind": []
       },
       {
-        "id": "traffic-west",
-        "type": "particles",
+        "id": "aircraft",
+        "type": "aircraft",
         "params": {
-          "count": 900,
-          "center": [
-            0,
-            -6,
-            -105
+          "routes": [
+            {
+              "from": [
+                31,
+                18,
+                1400
+              ],
+              "to": [
+                25,
+                10.5,
+                1150
+              ],
+              "duration": 110,
+              "period": 170,
+              "landing": true,
+              "offset": 20
+            },
+            {
+              "from": [
+                -66,
+                15,
+                1300
+              ],
+              "to": [
+                -26,
+                17,
+                1400
+              ],
+              "duration": 95,
+              "period": 150,
+              "landing": false,
+              "offset": 80
+            }
           ],
-          "size": [
-            600,
-            4,
-            40
-          ],
-          "color": "#ff3a4a",
-          "colorB": "#ff8a3a",
-          "minSize": 0.25,
-          "maxSize": 0.55,
-          "velocity": [
-            -38,
-            0,
-            0
-          ],
-          "turbulence": 0.05,
-          "twinkle": 0.1,
-          "brightness": 1.6,
-          "shape": "streak",
-          "angle": 90,
-          "seed": 101,
-          "bloom": 0.7
+          "wingspan": 12,
+          "length": 12,
+          "skyline": {
+            "uRange": [
+              0.3506,
+              0.7395
+            ],
+            "offset": 0.545,
+            "elevations": [
+              8.12,
+              8.12,
+              7.96,
+              4.38,
+              4.07,
+              10.36,
+              11.89,
+              12.29,
+              13.5,
+              13.5,
+              13.5,
+              11.89,
+              11.32,
+              11.32,
+              11.32,
+              11.37,
+              11.37,
+              11.37,
+              11.32,
+              10.69,
+              10.31,
+              10.31,
+              10.07,
+              9.98,
+              8.27,
+              8.34,
+              8.34,
+              8.34,
+              8.18,
+              14.22,
+              14.22,
+              14.22,
+              14.22,
+              14.09,
+              1.92,
+              1.7,
+              4.2,
+              4.51,
+              4.51,
+              4.51,
+              4.07,
+              4.05,
+              6.12,
+              6.45,
+              6.45,
+              6.45,
+              6.38,
+              6.09,
+              6.05,
+              3.04,
+              3.04,
+              4.56,
+              4.56,
+              4.56,
+              4.47,
+              2.51,
+              2.51,
+              4.34,
+              4.34,
+              4.34,
+              3.98,
+              2.4,
+              3.37,
+              3.37,
+              3.37,
+              3.3,
+              2.14,
+              2.14,
+              2.05,
+              2.62,
+              5.24,
+              5.24,
+              5.57,
+              7.52,
+              7.52,
+              8.05,
+              9.13,
+              9.13,
+              9.13,
+              8.45,
+              8.45,
+              8.45,
+              17.37,
+              21.56,
+              27.56,
+              27.56,
+              27.56,
+              18.22,
+              9.96,
+              9.59,
+              9.5,
+              10.51,
+              10.53,
+              10.53,
+              10.53,
+              10.38,
+              6.4,
+              6.67,
+              12.0,
+              12.42,
+              12.51,
+              12.51,
+              12.51,
+              15.83,
+              15.92,
+              16.03,
+              16.03,
+              16.03,
+              16.03,
+              12.62,
+              21.69,
+              21.72,
+              21.72,
+              21.72,
+              17.06,
+              9.92,
+              9.85,
+              9.76,
+              9.21,
+              18.75,
+              18.75,
+              18.75,
+              9.7,
+              9.65,
+              9.39,
+              8.25,
+              3.3,
+              3.26,
+              3.26,
+              3.26,
+              2.84,
+              2.67,
+              3.35,
+              3.7,
+              3.7,
+              3.7,
+              3.59,
+              2.69,
+              1.74,
+              8.12
+            ]
+          },
+          "seed": 2
         },
-        "bind": [
-          {
-            "target": "speed",
-            "feature": "overallEnergy",
-            "amount": 0.5,
-            "category": "particles",
-            "attackMs": 200,
-            "releaseMs": 1200
-          }
-        ]
-      },
-      {
-        "id": "traffic-east",
-        "type": "particles",
-        "params": {
-          "count": 900,
-          "center": [
-            0,
-            -2,
-            -112
-          ],
-          "size": [
-            600,
-            4,
-            40
-          ],
-          "color": "#ffffff",
-          "colorB": "#8ad8ff",
-          "minSize": 0.25,
-          "maxSize": 0.55,
-          "velocity": [
-            42,
-            0,
-            0
-          ],
-          "turbulence": 0.05,
-          "twinkle": 0.1,
-          "brightness": 1.5,
-          "shape": "streak",
-          "angle": 90,
-          "seed": 103,
-          "bloom": 0.7
-        },
-        "bind": [
-          {
-            "target": "speed",
-            "feature": "overallEnergy",
-            "amount": 0.5,
-            "category": "particles",
-            "attackMs": 200,
-            "releaseMs": 1200
-          }
-        ]
+        "bind": []
       },
       {
         "id": "rain",
@@ -423,84 +481,6 @@
           "bloom": 0.3
         },
         "bind": []
-      },
-      {
-        "id": "street-haze",
-        "type": "clouds",
-        "params": {
-          "count": 20,
-          "center": [
-            0,
-            -12,
-            -90
-          ],
-          "spread": [
-            300,
-            6,
-            60
-          ],
-          "size": [
-            40,
-            90
-          ],
-          "color": "#5a1a6a",
-          "colorB": "#0a4a6a",
-          "opacity": 0.16,
-          "drift": [
-            3,
-            0,
-            0
-          ],
-          "seed": 31
-        },
-        "bind": [
-          {
-            "target": "opacity",
-            "feature": "bass",
-            "amount": 0.4,
-            "attackMs": 60,
-            "releaseMs": 700
-          }
-        ]
-      },
-      {
-        "id": "neon-haze",
-        "type": "clouds",
-        "params": {
-          "count": 28,
-          "center": [
-            0,
-            10,
-            -260
-          ],
-          "spread": [
-            700,
-            60,
-            240
-          ],
-          "size": [
-            80,
-            180
-          ],
-          "color": "#3a0a4a",
-          "colorB": "#0a2a4a",
-          "opacity": 0.22,
-          "drift": [
-            2,
-            0.2,
-            0
-          ],
-          "seed": 23
-        },
-        "bind": [
-          {
-            "target": "opacity",
-            "feature": "sectionIntensity",
-            "amount": 0.4,
-            "attackMs": 1000,
-            "releaseMs": 2500
-          }
-        ]
       }
     ]
   },

@@ -50,6 +50,7 @@ In use:
 | Folded Sky | Montorfano (Andreas Mischok) | -32..40, the whole surroundings | 16k |
 | Dead Acre | Kloppenheim 04 (Greg Zaal), night-graded | -32..40, the whole surroundings | 16k |
 | Tradewind Cove | Spiaggia di Mondello (Andreas Mischok) | -10..40, a 3D lagoon and sand islands in front | 20k |
+| Future Nights | Shanghai Bund (Greg Zaal) | -5.9..40, a 3D river in front: `occlude` 1500 and a `matte` ring end the water at the far bank and hide the photo's promenade | 16k |
 
 ## Space imagery
 

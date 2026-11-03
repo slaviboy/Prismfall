@@ -15,8 +15,8 @@ Per-world status of what is on screen, judged from in-game screenshots and recor
 | The Abyss | Procedural deep water | Seafloor, light shafts, moon jellyfish, silver fish schools | None | Everything | Jellyfish (pulsing bell, canals, oral arms, trailing tentacles) and herring schools (swimming body wave, countershading, silver flash) are anatomical procedural models; no licensed animated sea life found |
 | Luminous Tide | Procedural moonlit sea | Ocean with glitter path, headland silhouettes | None | Everything | Candidate for a real moonlit-sea panorama |
 | Deep Cosmos (`celestial-drift`) | Photo all-sky Milky Way (ESO/S. Brunier) with crisp shader stars | Ringed gas giant, scanned asteroids | Milky Way and its dust lanes, the giant's surface (Cassini's Jupiter maps), moon-rock scans | Ring system (from Saturn's measured radii), stars | None known; the hidden sun swings round the giant with progress, from a thin crescent to a broad lit face |
-| Future Nights | Procedural night city | Instanced towers, reflective wet street, rain | None | Everything | Candidate for a real night-city panorama |
 | Ember Core | Procedural volcanic night | Lava plain, volcano cone, embers | None | Everything | No volcanic panorama found |
+| Future Nights | Photo (Shanghai Bund, 16k): the Lujiazui skyline across the Huangpu at night | A 3D river with planar reflections of the photo, traffic on the far embankment, aircraft, rain | Skyline, embankment, the city's lights | River surface, traffic lamps, aircraft lights, rain | The far-bank traffic is 1.4 km away, so it is a faint stream of red and white points (true to scale, easy to miss). The photo's sky is light-polluted purple, so the key is darker than other night worlds but not near-black |
 | Ember Foundry | Procedural industrial hall | Blender hall kit, molten channel, sparks | None | Everything | No suitable CC0 interior |
 | Folded Sky | Photo (Montorfano, 16k), whole surroundings | Drifting seeds, a starling murmuration (boids: 7 nearest neighbours, falcon dives, escape waves) | Granite summit, forested ridges, lake, cirrus sky | Seeds | The paper theme lives on in its washi blocks and fold-into-cranes line clear |
 | Dead Acre | Photo (Kloppenheim 04, 16k, night-graded), whole surroundings | Shambling figures, ground fog banks, sodium yard lamps on poles, crows | Misty field, tree line, lit farm buildings, fog glow | Figures (anatomical cross-section bodies in coats, jackets and hoods; GPU walk with planted feet, limps, dragged feet, hunches, lolling heads), fog sheets, lamp poles and halos, crows | The figures convince as silhouettes in fog and from the player's viewpoint, but they are procedural, not scanned people: lit up close they read as smooth mannequins (no facial detail, simple hands, cloth without real folds). The fog is stacked sheets, so thin steps can show on light verticals at grazing angles; the photo ground does not receive the lamps' light |
@@ -32,8 +32,8 @@ These looked primitive or gimmicky in game and were taken out:
 - **The Abyss:** tiled caustics, sunken ruins, reef and kelp scatter, rays, turtles, bubbles, the blob whale, and the old dome jellyfish and flat fish swarm.
 - **Luminous Tide:** light pillars and star motes.
 - **Deep Cosmos (Celestial Drift):** the orbit rings, beat pulsars, energy streams, the particle whale, then the procedural spiral galaxy, the blob nebula clouds, the drifting star streaks and the cartoon banded planet.
-- **Future Nights:** the drones and data motes.
 - **Ember Core:** the obsidian spires and fire birds.
+- **Future Nights:** the drones and data motes, then the procedural towers, holographic billboards, neon haze and particle traffic streaks (replaced by the Shanghai Bund photo, a 3D river and lamp-accurate traffic).
 - **Moving Sands:** the mesas, arch, particle camels and the script-built pyramids.
 - **Northern Lights:** the script-built reindeer (they read as four sticks).
 - **Folded Sky:** the paper hills, the paper-crane flocks, the lantern and cherry grove, paper scraps and paper clouds (the world became a real summit under cirrus).
@@ -46,4 +46,4 @@ These cannot be produced to a realistic standard without licensed source materia
 - A rigged, animated realistic dromedary camel, for the Moving Sands caravan.
 - Photogrammetry of pyramids or desert monuments.
 - Rigged realistic marine animals (fish, rays, a whale), for The Abyss.
-- Night panoramas with snowy mountains (Northern Lights), a moonlit sea (Luminous Tide) and a city at night (Future Nights), if CC0 sources are found.
+- Night panoramas with snowy mountains (Northern Lights) and a moonlit sea (Luminous Tide), if CC0 sources are found.

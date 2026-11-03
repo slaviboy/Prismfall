@@ -6,7 +6,8 @@ import { additiveFog } from '../../shaders/uniforms';
 import { colorUniform, floatUniform, seeded, zColor } from './common';
 import { revealMask } from './reveal';
 
-const schema = z.object({
+/** Exported so components that follow the street grid (traffic) can read the same layout. */
+export const citySchema = z.object({
   count: z.number().int().min(1).max(4000).default(600),
   /** Wedge band behind the playfield (distance from the board plane). */
   near: z.number().default(50),
@@ -34,7 +35,52 @@ const schema = z.object({
   seed: z.number().default(9),
 });
 
-type Params = z.infer<typeof schema>;
+type Params = z.infer<typeof citySchema>;
+
+export interface Tower {
+  readonly x: number;
+  readonly z: number;
+  readonly w: number;
+  readonly d: number;
+  readonly h: number;
+  readonly seed: number;
+}
+
+/**
+ * Tower footprints on the street grid: each snaps to a grid point (gx·grid, gz·grid), so the
+ * streets run along the half-grid lines between them. `detail` is the quality scale (0.5 low,
+ * 0.75 medium, 1 otherwise); `rand` continues afterwards (the billboards draw from it).
+ */
+export function placeTowers(p: Params, detail: number, rand: () => number): Tower[] {
+  const target = Math.round(p.count * detail);
+  const towers: Tower[] = [];
+  const used = new Set<string>();
+  for (let attempt = 0; attempt < target * 8 && towers.length < target; attempt++) {
+    const dist = p.near + (p.far - p.near) * Math.pow(rand(), 0.8);
+    const z0 = -dist;
+    const x0 = (rand() * 2 - 1) * (dist * p.spread + 40);
+    // Snap to the street grid so avenues stay open and towers line up.
+    const gx = Math.round(x0 / p.grid);
+    const gz = Math.round(z0 / p.grid);
+    const key = `${gx},${gz}`;
+    if (used.has(key)) continue;
+    const x = gx * p.grid;
+    const zz = gz * p.grid;
+    if (p.exclude.some((e) => Math.hypot(x - e.center[0], zz - e.center[1]) < e.radius)) continue;
+    used.add(key);
+    const far = Math.min(1, dist / p.far);
+    const maxW = Math.min(p.width[1], p.grid - p.street);
+    const w = p.width[0] + (maxW - p.width[0]) * rand();
+    const d = p.width[0] + (maxW - p.width[0]) * rand();
+    const tall = p.height[0] + (p.height[1] - p.height[0]) * Math.pow(rand(), 1.6) * (1 - p.skyline + p.skyline * far * 1.4);
+    const h = Math.max(p.height[0], tall);
+    towers.push({ x, z: zz, w, d, h, seed: rand() });
+  }
+  return towers;
+}
+
+/** Quality scale the city uses for its tower count. */
+export const cityDetail = (detail: 'low' | 'medium' | 'high' | 'ultra'): number => (detail === 'low' ? 0.5 : detail === 'medium' ? 0.75 : 1);
 
 /**
  * A night city: instanced towers on a street grid with procedural lit windows, neon edge strips,
@@ -44,38 +90,14 @@ export const cityComponent: ComponentFactory<Params> = {
   type: 'city',
   version: 1,
   description: 'Instanced night-city skyline with procedural windows, neon strips and holographic billboards.',
-  schema,
+  schema: citySchema,
   create(ctx, p) {
     const rand = seeded(p.seed * 271 + 3);
-    const detail = ctx.quality.detail === 'low' ? 0.5 : ctx.quality.detail === 'medium' ? 0.75 : 1;
-    const target = Math.round(p.count * detail);
-    const matrices: Matrix4[] = [];
-    const dims: number[] = [];
-    const fronts: { x: number; z: number; w: number; d: number; h: number }[] = [];
-    const used = new Set<string>();
-    for (let attempt = 0; attempt < target * 8 && matrices.length < target; attempt++) {
-      const dist = p.near + (p.far - p.near) * Math.pow(rand(), 0.8);
-      const z0 = -dist;
-      const x0 = (rand() * 2 - 1) * (dist * p.spread + 40);
-      // Snap to the street grid so avenues stay open and towers line up.
-      const gx = Math.round(x0 / p.grid);
-      const gz = Math.round(z0 / p.grid);
-      const key = `${gx},${gz}`;
-      if (used.has(key)) continue;
-      const x = gx * p.grid;
-      const zz = gz * p.grid;
-      if (p.exclude.some((e) => Math.hypot(x - e.center[0], zz - e.center[1]) < e.radius)) continue;
-      used.add(key);
-      const far = Math.min(1, dist / p.far);
-      const maxW = Math.min(p.width[1], p.grid - p.street);
-      const w = p.width[0] + (maxW - p.width[0]) * rand();
-      const d = p.width[0] + (maxW - p.width[0]) * rand();
-      const tall = p.height[0] + (p.height[1] - p.height[0]) * Math.pow(rand(), 1.6) * (1 - p.skyline + p.skyline * far * 1.4);
-      const h = Math.max(p.height[0], tall);
-      matrices.push(new Matrix4().compose(new Vector3(x, p.ground, zz), new Quaternion(), new Vector3(w, h, d)));
-      dims.push(w, h, d, rand());
-      fronts.push({ x, z: zz, w, d, h });
-    }
+    const detail = cityDetail(ctx.quality.detail);
+    const towers = placeTowers(p, detail, rand);
+    const matrices = towers.map((t) => new Matrix4().compose(new Vector3(t.x, p.ground, t.z), new Quaternion(), new Vector3(t.w, t.h, t.d)));
+    const dims = towers.flatMap((t) => [t.w, t.h, t.d, t.seed]);
+    const fronts = towers;
     const count = Math.max(1, matrices.length);
     const box = new BoxGeometry(1, 1, 1);
     box.translate(0, 0.5, 0);

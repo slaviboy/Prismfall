@@ -297,6 +297,23 @@ In game, use the material preset `keep` for `pyramidStone` to show the textures.
 | Used by | Moving Sands sky (night desert under the Milky Way) |
 
 
+### Shanghai Bund (Poly Haven HDRI)
+
+| Field | Value |
+|---|---|
+| Asset name | Shanghai Bund |
+| Source URL | https://polyhaven.com/a/shanghai_bund |
+| Author | Greg Zaal |
+| Original download URL | see `assets/external/polyhaven/shanghai_bund/source.json` (tonemapped JPG and 16k HDR, with MD5s) |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | Tonemapped equirectangular JPG, 8192 x 4096, and the 16k HDR (16384 x 8192) |
+| Modifications | Band: cropped to elevations -5.9 to +40 degrees (8192 x 1044; -5.9 keeps the JPG crop height even), unsharp mask 5:5:0.6, WebP quality 86. Detail: the 16k HDR cropped to u 0.3506..0.7395 (6372 x 2089, 45.5 px per degree), tone curve matched to the tonemapped JPG (`scripts/panorama_match.py`), light unsharp mask, WebP quality 90 (`scripts/fetch-panorama.ts`) |
+| Final format | `content/stages/future-nights/textures/shanghai_bund_band.webp` (1.0 MB), `shanghai_bund_detail.webp` (0.75 MB) |
+| Animation | None |
+| Used by | Future Nights sky (`panorama`, offset 0.545: the Lujiazui skyline across the Huangpu, the Oriental Pearl Tower just right of the board, Jin Mao, SWFC and the Shanghai Tower further right). The photo's own promenade and crowd are hidden by the 3D river (`occlude` 1500 plus a `matte` ring). The `aircraft` layer's skyline profile was measured from the detail crop |
+
+
 ### Montorfano (Poly Haven HDRI)
 
 | Field | Value |

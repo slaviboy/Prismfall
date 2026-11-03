@@ -1,4 +1,6 @@
 import { registries } from '../../sdk/registry';
+import { aircraftComponent } from './components/aircraft';
+import { matteComponent } from './components/matte';
 import { auroraComponent } from './components/aurora';
 import { beamsComponent } from './components/beams';
 import { birdFlockComponent } from './components/birdFlock';
@@ -6,6 +8,7 @@ import { cityComponent } from './components/city';
 import { cloudsComponent } from './components/clouds';
 import { conifersComponent } from './components/conifers';
 import { emitterComponent } from './components/emitter';
+import { eruptionComponent } from './components/eruption';
 import { fishSchoolComponent } from './components/fishSchool';
 import { firefliesComponent } from './components/fireflies';
 import { dragonfliesComponent } from './components/dragonflies';
@@ -25,6 +28,7 @@ import { scatterComponent } from './components/scatter';
 import { skyComponent } from './components/sky';
 import { swarmComponent } from './components/swarm';
 import { terrainComponent } from './components/terrain';
+import { trafficComponent } from './components/traffic';
 import { waterComponent } from './components/water';
 import type { ComponentFactory } from '../../sdk/types';
 
@@ -39,6 +43,10 @@ export const BUILTIN_COMPONENTS: readonly ComponentFactory[] = [
   gltfSceneComponent,
   lavaComponent,
   emitterComponent,
+  eruptionComponent,
+  trafficComponent,
+  aircraftComponent,
+  matteComponent,
   cloudsComponent,
   creatureHerdComponent,
   terrainComponent,
