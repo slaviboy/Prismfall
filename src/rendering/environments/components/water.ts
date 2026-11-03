@@ -41,6 +41,10 @@ const schema = z.object({
   moonDirection: zVec3.default([0.3, 0.25, -1]),
   moonColor: zColor.default('#dce8ff'),
   rippleColor: zColor.default('#7ffff0'),
+  /** Fine ripples on top of the swell (0 = off): break the moon glint into a glitter path. */
+  chop: z.number().min(0).default(0),
+  /** Ripple frequency (cycles per world unit). */
+  chopScale: z.number().positive().default(1.4),
   /** Planar mirror reflection of the world (not the playfield), for still lakes. */
   reflection: z
     .object({
@@ -127,8 +131,20 @@ export const waterComponent: ComponentFactory<z.infer<typeof schema>> = {
     material.positionNode = positionLocal.add(vec3(0, vtx.h.mul(atten), 0));
 
     const frag = height(positionWorld.xz);
-    const n = normalize(vec3(frag.dx.negate(), 1, frag.dz.negate()));
     const v = normalize(cameraPosition.sub(positionWorld));
+    let n = normalize(vec3(frag.dx.negate(), 1, frag.dz.negate()));
+    if (p.chop > 0) {
+      // Slope of two drifting noise octaves (finite differences), fading out with distance so
+      // the far sea doesn't alias.
+      const e = 0.05;
+      const q = positionWorld.xz.mul(p.chopScale);
+      const field = (o: Node<'vec2'>) => mx_noise_float(vec3(q.add(o), t.mul(0.35))).add(mx_noise_float(vec3(q.mul(2.3).add(o.mul(2.3)).add(5.1), t.mul(0.5))).mul(0.5));
+      const h0 = field(vec2(0, 0));
+      const gx = field(vec2(e, 0)).sub(h0).div(e);
+      const gz = field(vec2(0, e)).sub(h0).div(e);
+      const fade = exp(positionWorld.xz.length().mul(-0.006));
+      n = normalize(n.add(vec3(gx.negate(), 0, gz.negate()).mul(p.chop / p.chopScale).mul(fade)));
+    }
     const fresnel = float(1).sub(clamp(dot(n, v), 0, 1)).pow(5).mul(0.7).add(0.03);
     const skyRef = mix(colorUniform(p.skyHorizon), colorUniform(p.skyTop), clamp(n.y.sub(0.8).mul(5), 0, 1));
     const moonDir = normalize(vec3(...p.moonDirection));

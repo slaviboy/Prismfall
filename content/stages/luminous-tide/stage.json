@@ -15,12 +15,12 @@
     "accent": "#3cf2d0",
     "secondary": "#7fb8ff",
     "highlight": "#c9fff4",
-    "fog": "#04121f",
+    "fog": "#142b42",
     "plate": "#020a12"
   },
   "fog": {
-    "color": "#04121f",
-    "density": 0.0032
+    "color": "#142b42",
+    "density": 0.0015
   },
   "backdrop": {
     "top": "#030a1f",
@@ -35,51 +35,51 @@
       "elevation": 42
     },
     "rim": {
-      "color": "#3cf2d0",
-      "intensity": 1.8
+      "color": "#9fe8ff",
+      "intensity": 0.9
     },
     "ambient": {
-      "sky": "#1d3a66",
-      "ground": "#03121c",
-      "intensity": 0.85
+      "sky": "#122746",
+      "ground": "#02080e",
+      "intensity": 0.55
     },
     "accents": [
       {
         "color": "#3cf2d0",
-        "intensity": 26,
+        "intensity": 10,
         "x": -9,
         "y": -7,
         "z": 6
       },
       {
         "color": "#7f8cff",
-        "intensity": 22,
+        "intensity": 8,
         "x": 9,
         "y": 8,
         "z": 6
       }
     ],
-    "beatResponse": 0.35
+    "beatResponse": 0.2
   },
   "grade": {
-    "saturation": 1.12,
-    "contrast": 1.04,
+    "saturation": 1.02,
+    "contrast": 1.12,
     "tint": [
       0.95,
       1.02,
       1.05
     ],
-    "vignette": 0.42,
-    "bloomThreshold": 0.18,
+    "vignette": 0.38,
+    "bloomThreshold": 0.3,
     "bloomRadius": 0.5,
     "toneMapping": "neutral",
     "envIntensity": 0.28,
-    "exposure": 0.86
+    "exposure": 1.0
   },
   "camera": {
-    "pitch": 5,
+    "pitch": 2,
     "yaw": 0,
-    "sway": 0.8,
+    "sway": 0.4,
     "targetY": 0
   },
   "blocks": {
@@ -92,27 +92,119 @@
         "id": "sky",
         "type": "sky",
         "params": {
-          "top": "#030a1f",
-          "horizon": "#12355a",
+          "top": "#01030a",
+          "horizon": "#1c3a56",
           "bottom": "#01040a",
-          "horizonGlow": 0.9,
-          "horizonWidth": 0.14,
-          "stars": 0.6,
-          "nebula": 0.22,
+          "horizonGlow": 0.6,
+          "horizonWidth": 0.1,
+          "stars": 1.0,
+          "nebula": 0,
           "nebulaA": "#0f3a5a",
           "nebulaB": "#2a2a7a",
           "nebulaScale": 1.8,
           "disc": {
             "direction": [
               0.55,
-              0.2,
+              0.17,
               -1
             ],
-            "color": "#e4ecff",
-            "size": 1.3,
-            "halo": 10,
-            "intensity": 1
+            "color": "#eef2ff",
+            "size": 1.0,
+            "halo": 2.2,
+            "intensity": 0.65
+          },
+          "milkyWay": {
+            "strength": 0.45,
+            "pole": [
+              -0.5,
+              0.45,
+              0.74
+            ],
+            "width": 0.15,
+            "color": "#7a8cb0"
           }
+        },
+        "bind": []
+      },
+      {
+        "id": "headlands",
+        "type": "ridges",
+        "params": {
+          "span": [
+            -95,
+            -28
+          ],
+          "hazeColor": "#06141f",
+          "rimColor": "#a8c8ff",
+          "layers": [
+            {
+              "distance": 620,
+              "height": 26,
+              "base": -13,
+              "scale": 0.7,
+              "roughness": 0.35,
+              "seed": 5,
+              "rock": "#01030a",
+              "snow": "#0a1420",
+              "snowAmount": 0.0,
+              "haze": 0.35,
+              "rim": 0.05
+            },
+            {
+              "distance": 430,
+              "height": 12,
+              "base": -13,
+              "scale": 1.2,
+              "roughness": 0.25,
+              "seed": 9,
+              "rock": "#01030a",
+              "snow": "#060c14",
+              "snowAmount": 0.0,
+              "haze": 0.1,
+              "rim": 0.0
+            }
+          ]
+        },
+        "bind": []
+      },
+      {
+        "id": "headlands-east",
+        "type": "ridges",
+        "params": {
+          "span": [
+            48,
+            95
+          ],
+          "hazeColor": "#06141f",
+          "rimColor": "#a8c8ff",
+          "layers": [
+            {
+              "distance": 620,
+              "height": 26,
+              "base": -13,
+              "scale": 0.7,
+              "roughness": 0.35,
+              "seed": 5,
+              "rock": "#01030a",
+              "snow": "#0a1420",
+              "snowAmount": 0.0,
+              "haze": 0.35,
+              "rim": 0.05
+            },
+            {
+              "distance": 430,
+              "height": 12,
+              "base": -13,
+              "scale": 1.2,
+              "roughness": 0.25,
+              "seed": 9,
+              "rock": "#01030a",
+              "snow": "#060c14",
+              "snowAmount": 0.0,
+              "haze": 0.1,
+              "rim": 0.0
+            }
+          ]
         },
         "bind": []
       },
@@ -121,20 +213,25 @@
         "type": "water",
         "params": {
           "y": -13,
-          "deep": "#01040a",
-          "shallow": "#04172a",
-          "skyTop": "#071430",
-          "skyHorizon": "#123150",
+          "deep": "#010309",
+          "shallow": "#061a2c",
+          "skyTop": "#0c1e3a",
+          "skyHorizon": "#24486a",
           "glow": "#2bd9c0",
-          "glowStrength": 0.28,
+          "glowStrength": 0.12,
           "amplitude": 0.3,
-          "wavelength": 26,
-          "speed": 0.42,
+          "wavelength": 20,
+          "speed": 0.38,
           "moonDirection": [
             0.55,
-            0.2,
+            0.17,
             -1
-          ]
+          ],
+          "moonColor": "#f2f5ff",
+          "rippleColor": "#1f6f68",
+          "chop": 0.16,
+          "chopScale": 1.0,
+          "size": 2600
         },
         "bind": []
       },
@@ -142,7 +239,7 @@
         "id": "plankton",
         "type": "particles",
         "params": {
-          "count": 6000,
+          "count": 2200,
           "center": [
             0,
             -5,
@@ -156,15 +253,15 @@
           "color": "#3cf2d0",
           "colorB": "#7fb8ff",
           "minSize": 0.05,
-          "maxSize": 0.18,
+          "maxSize": 0.12,
           "velocity": [
             0.3,
             0.22,
             0.1
           ],
           "turbulence": 0.7,
-          "twinkle": 0.7,
-          "brightness": 1.5,
+          "twinkle": 0.5,
+          "brightness": 0.6,
           "shape": "soft",
           "seed": 4
         },
@@ -178,66 +275,6 @@
             "releaseMs": 500
           }
         ]
-      },
-      {
-        "id": "horizon-motes",
-        "type": "particles",
-        "params": {
-          "count": 1500,
-          "center": [
-            0,
-            12,
-            -170
-          ],
-          "size": [
-            420,
-            60,
-            160
-          ],
-          "color": "#bfe9ff",
-          "minSize": 0.25,
-          "maxSize": 0.7,
-          "velocity": [
-            0.5,
-            0,
-            0
-          ],
-          "turbulence": 0.2,
-          "twinkle": 1,
-          "brightness": 1.1,
-          "shape": "star",
-          "seed": 9
-        },
-        "bind": [
-          {
-            "target": "brightness",
-            "feature": "highMid",
-            "amount": 0.7,
-            "category": "particles",
-            "attackMs": 20,
-            "releaseMs": 300
-          }
-        ],
-        "minDetail": "medium"
-      },
-      {
-        "id": "pillars",
-        "type": "beams",
-        "params": {
-          "count": 7,
-          "radius": 120,
-          "y": -13,
-          "z": -150,
-          "arc": 150,
-          "height": 170,
-          "width": 1.6,
-          "color": "#7fffe9",
-          "base": 0.18,
-          "pulse": 1.1,
-          "sequence": 4,
-          "seed": 2
-        },
-        "bind": []
       },
       {
         "id": "sea-haze",
@@ -258,9 +295,9 @@
             70,
             150
           ],
-          "color": "#0d3b52",
-          "colorB": "#16306a",
-          "opacity": 0.22,
+          "color": "#0a2a3c",
+          "colorB": "#101f44",
+          "opacity": 0.12,
           "drift": [
             0.8,
             0,
@@ -274,7 +311,6 @@
   },
   "reactivity": {
     "profiles": [
-      "bass-breath",
       {
         "name": "treble-sparkle",
         "layers": [
@@ -285,18 +321,6 @@
         "name": "flux-turbulence",
         "layers": [
           "plankton"
-        ]
-      },
-      {
-        "name": "beat-lights",
-        "layers": [
-          "ocean"
-        ]
-      },
-      {
-        "name": "section-swell",
-        "layers": [
-          "pillars"
         ]
       }
     ],
