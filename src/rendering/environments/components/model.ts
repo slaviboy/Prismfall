@@ -22,6 +22,8 @@ const schema = z.object({
         scale: z.number().positive().default(1),
         /** Sit on the terrain (position y becomes an offset from the ground). */
         snapToGround: z.boolean().default(true),
+        /** Slow tumble around a random axis, degrees per second (floating rocks, debris). */
+        spin: z.number().default(0),
       }),
     )
     .min(1),
@@ -97,6 +99,7 @@ export const modelComponent: ComponentFactory<Params> = {
     const remapper = createRemapper(p.materials, { time: ctx.uniforms.time, presence, music: floatUniform(0), emissive: floatUniform(1) }, false);
     const fading: Material[] = [];
     const mixers: AnimationMixer[] = [];
+    const spinners: { obj: Object3D; axis: Vector3; speed: number }[] = [];
     const particleSets: SurfaceParticles[] = [];
     const rand = seeded(p.particles.seed * 6151);
     const clip: AnimationClip | undefined = p.animation ? (gltf.animations.find((a) => a.name === p.animation?.clip) ?? gltf.animations[0]) : undefined;
@@ -121,6 +124,10 @@ export const modelComponent: ComponentFactory<Params> = {
       root.position.set(x, inst.snapToGround ? ctx.ground.height(x, zPos) + y : y, zPos);
       root.rotation.y = (inst.yaw * Math.PI) / 180;
       root.scale.setScalar(inst.scale);
+      if (inst.spin !== 0) {
+        root.rotation.set(rand() * Math.PI * 2, root.rotation.y, rand() * Math.PI * 2);
+        spinners.push({ obj: root, axis: new Vector3(rand() - 0.5, rand() - 0.5, rand() - 0.5).normalize(), speed: (inst.spin * Math.PI) / 180 });
+      }
       scene.traverse((o) => {
         if (!(o instanceof Mesh)) return;
         const convert = (m: Material): Material => {
@@ -184,6 +191,7 @@ export const modelComponent: ComponentFactory<Params> = {
       object: group,
       update(frame) {
         for (const m of mixers) m.update(frame.dt);
+        for (const s of spinners) s.obj.rotateOnAxis(s.axis, s.speed * frame.dt);
         burst = Math.max(0, burst - frame.dt / 6);
         let dissolve = 0;
         if (p.render === 'dissolve') dissolve = Math.max(cycleDissolve(frame.time, p.dissolve.period), burst > 0 ? Math.min(1, burst * 3) : 0);

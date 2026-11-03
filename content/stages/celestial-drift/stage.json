@@ -42,7 +42,7 @@
     "ambient": {
       "sky": "#2a1a5a",
       "ground": "#05030f",
-      "intensity": 0.8
+      "intensity": 0.35
     },
     "accents": [
       {
@@ -197,54 +197,216 @@
       },
       {
         "id": "asteroids",
-        "type": "scatter",
+        "type": "model",
         "params": {
-          "src": "/content/shared/flora/flora.glb",
-          "count": 40,
-          "seed": 12,
-          "items": [
+          "src": "/content/shared/scans/moon_rock_01.glb",
+          "instances": [
             {
-              "mesh": "asteroid",
-              "weight": 3,
-              "scale": [
-                0.6,
-                2.4
+              "position": [
+                296.1,
+                81.7,
+                -198.0
               ],
-              "tintJitter": 0.15
+              "yaw": 30,
+              "scale": 168.8,
+              "snapToGround": false,
+              "spin": -0.92
             },
             {
-              "mesh": "rock_a",
-              "weight": 1,
-              "scale": [
-                0.5,
-                1.6
+              "position": [
+                -244.0,
+                -37.4,
+                -292.8
               ],
-              "tintJitter": 0.15
-            }
-          ],
-          "area": {
-            "kind": "volume",
-            "center": [
-              0,
-              10,
-              -160
-            ],
-            "size": [
-              420,
-              120,
-              140
-            ]
-          },
-          "spin": 0.08,
-          "sway": {
-            "amount": 0.0
-          },
-          "materials": [
+              "yaw": 160,
+              "scale": 113.2,
+              "snapToGround": false,
+              "spin": -0.54
+            },
             {
-              "match": "^rock",
-              "preset": "stone",
-              "color": "#9a8e86",
-              "roughness": 0.75
+              "position": [
+                -273.4,
+                50.7,
+                -414.1
+              ],
+              "yaw": 152,
+              "scale": 156.9,
+              "snapToGround": false,
+              "spin": 2.81
+            },
+            {
+              "position": [
+                -292.0,
+                63.1,
+                -333.8
+              ],
+              "yaw": 212,
+              "scale": 178.7,
+              "snapToGround": false,
+              "spin": 1.45
+            },
+            {
+              "position": [
+                -90.6,
+                59.2,
+                -187.0
+              ],
+              "yaw": 133,
+              "scale": 165.8,
+              "snapToGround": false,
+              "spin": 1.93
+            },
+            {
+              "position": [
+                208.5,
+                -36.7,
+                -342.4
+              ],
+              "yaw": 41,
+              "scale": 94.8,
+              "snapToGround": false,
+              "spin": -5.53
+            },
+            {
+              "position": [
+                216.9,
+                -29.5,
+                -250.3
+              ],
+              "yaw": 196,
+              "scale": 217.8,
+              "snapToGround": false,
+              "spin": 1.11
+            },
+            {
+              "position": [
+                -219.6,
+                95.8,
+                -193.1
+              ],
+              "yaw": 20,
+              "scale": 142.4,
+              "snapToGround": false,
+              "spin": -5.72
+            }
+          ]
+        },
+        "bind": []
+      },
+      {
+        "id": "asteroids-b",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/scans/moon_rock_03.glb",
+          "instances": [
+            {
+              "position": [
+                123.6,
+                95.5,
+                -225.7
+              ],
+              "yaw": 290,
+              "scale": 183.9,
+              "snapToGround": false,
+              "spin": 0.46
+            },
+            {
+              "position": [
+                164.3,
+                -11.2,
+                -182.8
+              ],
+              "yaw": 351,
+              "scale": 115.2,
+              "snapToGround": false,
+              "spin": -3.68
+            },
+            {
+              "position": [
+                297.3,
+                -33.3,
+                -195.9
+              ],
+              "yaw": 37,
+              "scale": 133.5,
+              "snapToGround": false,
+              "spin": -3.96
+            },
+            {
+              "position": [
+                206.5,
+                -27.0,
+                -289.5
+              ],
+              "yaw": 152,
+              "scale": 178.1,
+              "snapToGround": false,
+              "spin": -0.66
+            },
+            {
+              "position": [
+                258.9,
+                68.3,
+                -337.7
+              ],
+              "yaw": 322,
+              "scale": 152.5,
+              "snapToGround": false,
+              "spin": -1.05
+            },
+            {
+              "position": [
+                217.7,
+                38.7,
+                -253.7
+              ],
+              "yaw": 86,
+              "scale": 105.4,
+              "snapToGround": false,
+              "spin": -1.08
+            },
+            {
+              "position": [
+                -258.4,
+                37.3,
+                -221.6
+              ],
+              "yaw": 120,
+              "scale": 137.1,
+              "snapToGround": false,
+              "spin": 4.02
+            }
+          ]
+        },
+        "bind": []
+      },
+      {
+        "id": "asteroids-near",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/scans/moon_rock_01.glb",
+          "instances": [
+            {
+              "position": [
+                -110,
+                40,
+                -90
+              ],
+              "yaw": 40,
+              "scale": 48,
+              "snapToGround": false,
+              "spin": 3
+            },
+            {
+              "position": [
+                150,
+                -35,
+                -120
+              ],
+              "yaw": 200,
+              "scale": 60,
+              "snapToGround": false,
+              "spin": -2.5
             }
           ]
         },
