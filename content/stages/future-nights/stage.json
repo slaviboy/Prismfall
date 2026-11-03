@@ -1,0 +1,634 @@
+{
+  "schemaVersion": 1,
+  "id": "future-nights",
+  "name": "Future Nights",
+  "description": "A rain-soaked city of the future after midnight. Towers glow, holograms flicker, and rivers of light flow between the skyscrapers.",
+  "order": 60,
+  "tags": [
+    "city",
+    "neon",
+    "rain",
+    "night"
+  ],
+  "intensity": 0.65,
+  "recommendedQuality": "high",
+  "palette": {
+    "accent": "#ff2fd0",
+    "secondary": "#2ff6ff",
+    "highlight": "#ffe0ff",
+    "fog": "#120a24",
+    "plate": "#06030c"
+  },
+  "fog": {
+    "color": "#140c28",
+    "density": 0.0036
+  },
+  "backdrop": {
+    "top": "#06040e",
+    "bottom": "#14082a",
+    "glow": "#ff2fd0"
+  },
+  "lighting": {
+    "key": {
+      "color": "#c8b8ff",
+      "intensity": 1.6,
+      "azimuth": 25,
+      "elevation": 40
+    },
+    "rim": {
+      "color": "#ff2fd0",
+      "intensity": 2.6
+    },
+    "ambient": {
+      "sky": "#3a2a6a",
+      "ground": "#0a0614",
+      "intensity": 0.9
+    },
+    "accents": [
+      {
+        "color": "#ff2fd0",
+        "intensity": 26,
+        "x": -9,
+        "y": -6,
+        "z": 6
+      },
+      {
+        "color": "#2ff6ff",
+        "intensity": 24,
+        "x": 9,
+        "y": 8,
+        "z": 6
+      }
+    ],
+    "beatResponse": 0.5
+  },
+  "grade": {
+    "saturation": 1.1,
+    "contrast": 1.08,
+    "tint": [
+      1.0,
+      0.96,
+      1.06
+    ],
+    "vignette": 0.48,
+    "bloomThreshold": 0.22,
+    "bloomRadius": 0.55,
+    "toneMapping": "neutral",
+    "envIntensity": 0.4,
+    "exposure": 0.95
+  },
+  "camera": {
+    "pitch": 4,
+    "yaw": 0,
+    "sway": 0.8,
+    "targetY": 0
+  },
+  "blocks": {
+    "geometry": "framed",
+    "material": "neonGlass",
+    "palette": {
+      "I": "#2ff6ff",
+      "O": "#ffe02f",
+      "T": "#b45cff",
+      "S": "#2fff8a",
+      "Z": "#ff2f6a",
+      "J": "#3a6aff",
+      "L": "#ff8a2f"
+    }
+  },
+  "environment": {
+    "layers": [
+      {
+        "id": "sky",
+        "type": "sky",
+        "params": {
+          "top": "#04030a",
+          "mid": "#140a2a",
+          "midHeight": 0.2,
+          "horizon": "#5a1a5a",
+          "bottom": "#0a0614",
+          "horizonGlow": 0.55,
+          "horizonWidth": 0.14,
+          "stars": 0.05
+        },
+        "bind": [
+          {
+            "target": "glow",
+            "feature": "bass",
+            "amount": 0.25,
+            "attackMs": 60,
+            "releaseMs": 700
+          }
+        ]
+      },
+      {
+        "id": "streets",
+        "type": "terrain",
+        "params": {
+          "height": {
+            "base": -15,
+            "seed": 81,
+            "layers": []
+          },
+          "mesh": {
+            "near": 12,
+            "far": 900,
+            "rows": 60,
+            "cols": 60,
+            "spread": 1.45
+          },
+          "colors": {
+            "low": "#0c0a14",
+            "high": "#141020",
+            "rock": "#100c18",
+            "sparkle": "#ff9af0"
+          },
+          "ripples": {
+            "strength": 0.0
+          },
+          "sparkle": 0.6,
+          "roughness": 0.25,
+          "rockSlope": 0.9
+        },
+        "bind": []
+      },
+      {
+        "id": "wet-street",
+        "type": "water",
+        "params": {
+          "y": -14.95,
+          "deep": "#05040a",
+          "shallow": "#1a1030",
+          "skyTop": "#1a0a30",
+          "skyHorizon": "#ff3ad0",
+          "glow": "#2ff6ff",
+          "rippleColor": "#ff6ae0",
+          "glowStrength": 0.18,
+          "amplitude": 0.0,
+          "wavelength": 3,
+          "speed": 0.6,
+          "moonDirection": [
+            0.2,
+            0.9,
+            -0.3
+          ]
+        },
+        "bind": [
+          {
+            "target": "glow",
+            "feature": "beatPulse",
+            "amount": 0.4,
+            "attackMs": 20,
+            "releaseMs": 400
+          }
+        ]
+      },
+      {
+        "id": "skyline",
+        "type": "city",
+        "params": {
+          "count": 560,
+          "near": 120,
+          "far": 680,
+          "spread": 1.35,
+          "grid": 26,
+          "street": 7,
+          "height": [
+            16,
+            150
+          ],
+          "width": [
+            9,
+            19
+          ],
+          "skyline": 0.95,
+          "ground": -15,
+          "exclude": [
+            {
+              "center": [
+                0,
+                -20
+              ],
+              "radius": 100
+            }
+          ],
+          "facade": "#0b0d18",
+          "windows": [
+            "#ffd9a0",
+            "#8ad8ff",
+            "#ff9ad8",
+            "#c8b8ff"
+          ],
+          "neon": [
+            "#ff2fd0",
+            "#2ff6ff",
+            "#ffe02f",
+            "#7a5cff"
+          ],
+          "windowDensity": 0.3,
+          "floorHeight": 2.2,
+          "neonShare": 0.45,
+          "billboards": 40,
+          "seed": 9,
+          "windowBrightness": 0.6,
+          "windowWidth": 1.5
+        },
+        "bind": [
+          {
+            "target": "neon",
+            "feature": "sectionIntensity",
+            "amount": 0.4,
+            "category": "lighting",
+            "attackMs": 300,
+            "releaseMs": 1200
+          },
+          {
+            "target": "windows",
+            "feature": "bass",
+            "amount": 0.15,
+            "category": "lighting",
+            "attackMs": 60,
+            "releaseMs": 600
+          }
+        ]
+      },
+      {
+        "id": "traffic-west",
+        "type": "particles",
+        "params": {
+          "count": 900,
+          "center": [
+            0,
+            -6,
+            -105
+          ],
+          "size": [
+            600,
+            4,
+            40
+          ],
+          "color": "#ff3a4a",
+          "colorB": "#ff8a3a",
+          "minSize": 0.25,
+          "maxSize": 0.55,
+          "velocity": [
+            -38,
+            0,
+            0
+          ],
+          "turbulence": 0.05,
+          "twinkle": 0.1,
+          "brightness": 1.6,
+          "shape": "streak",
+          "angle": 90,
+          "seed": 101,
+          "bloom": 0.7
+        },
+        "bind": [
+          {
+            "target": "speed",
+            "feature": "overallEnergy",
+            "amount": 0.5,
+            "category": "particles",
+            "attackMs": 200,
+            "releaseMs": 1200
+          }
+        ]
+      },
+      {
+        "id": "traffic-east",
+        "type": "particles",
+        "params": {
+          "count": 900,
+          "center": [
+            0,
+            -2,
+            -112
+          ],
+          "size": [
+            600,
+            4,
+            40
+          ],
+          "color": "#ffffff",
+          "colorB": "#8ad8ff",
+          "minSize": 0.25,
+          "maxSize": 0.55,
+          "velocity": [
+            42,
+            0,
+            0
+          ],
+          "turbulence": 0.05,
+          "twinkle": 0.1,
+          "brightness": 1.5,
+          "shape": "streak",
+          "angle": 90,
+          "seed": 103,
+          "bloom": 0.7
+        },
+        "bind": [
+          {
+            "target": "speed",
+            "feature": "overallEnergy",
+            "amount": 0.5,
+            "category": "particles",
+            "attackMs": 200,
+            "releaseMs": 1200
+          }
+        ]
+      },
+      {
+        "id": "drones",
+        "type": "swarm",
+        "params": {
+          "kind": "butterfly",
+          "count": 24,
+          "flocks": 6,
+          "motion": {
+            "kind": "wander",
+            "center": [
+              0,
+              30,
+              -120
+            ],
+            "size": [
+              360,
+              50,
+              120
+            ],
+            "speed": 5
+          },
+          "spread": [
+            4,
+            2,
+            4
+          ],
+          "size": [
+            5,
+            7
+          ],
+          "color": "#2ff6ff",
+          "colorB": "#ff2fd0",
+          "glow": 1.4,
+          "tempo": 1.6,
+          "seed": 5
+        },
+        "bind": [
+          {
+            "target": "glow",
+            "feature": "beatPulse",
+            "amount": 0.6,
+            "category": "lighting",
+            "attackMs": 20,
+            "releaseMs": 400
+          }
+        ]
+      },
+      {
+        "id": "rain",
+        "type": "particles",
+        "params": {
+          "count": 9000,
+          "center": [
+            0,
+            8,
+            -40
+          ],
+          "size": [
+            190,
+            60,
+            110
+          ],
+          "color": "#b8c8ff",
+          "colorB": "#ffb8f0",
+          "minSize": 0.08,
+          "maxSize": 0.18,
+          "velocity": [
+            -1.5,
+            -36,
+            0
+          ],
+          "turbulence": 0.05,
+          "twinkle": 0.0,
+          "brightness": 0.55,
+          "shape": "streak",
+          "angle": -3,
+          "seed": 105,
+          "bloom": 0.2
+        },
+        "bind": [
+          {
+            "target": "density",
+            "feature": "sectionIntensity",
+            "amount": 0.3,
+            "category": "particles",
+            "attackMs": 600,
+            "releaseMs": 2000
+          }
+        ]
+      },
+      {
+        "id": "splashes",
+        "type": "particles",
+        "params": {
+          "count": 1500,
+          "center": [
+            0,
+            -14.6,
+            -40
+          ],
+          "size": [
+            160,
+            0.4,
+            100
+          ],
+          "color": "#d8e0ff",
+          "colorB": "#ffb8f0",
+          "minSize": 0.05,
+          "maxSize": 0.12,
+          "velocity": [
+            0,
+            0,
+            0
+          ],
+          "turbulence": 0.1,
+          "twinkle": 1,
+          "brightness": 0.8,
+          "shape": "soft",
+          "seed": 107,
+          "bloom": 0.3
+        },
+        "bind": []
+      },
+      {
+        "id": "street-haze",
+        "type": "clouds",
+        "params": {
+          "count": 20,
+          "center": [
+            0,
+            -12,
+            -90
+          ],
+          "spread": [
+            300,
+            6,
+            60
+          ],
+          "size": [
+            40,
+            90
+          ],
+          "color": "#5a1a6a",
+          "colorB": "#0a4a6a",
+          "opacity": 0.22,
+          "drift": [
+            3,
+            0,
+            0
+          ],
+          "seed": 31
+        },
+        "bind": [
+          {
+            "target": "opacity",
+            "feature": "bass",
+            "amount": 0.4,
+            "attackMs": 60,
+            "releaseMs": 700
+          }
+        ]
+      },
+      {
+        "id": "neon-haze",
+        "type": "clouds",
+        "params": {
+          "count": 28,
+          "center": [
+            0,
+            10,
+            -260
+          ],
+          "spread": [
+            700,
+            60,
+            240
+          ],
+          "size": [
+            80,
+            180
+          ],
+          "color": "#3a0a4a",
+          "colorB": "#0a2a4a",
+          "opacity": 0.3,
+          "drift": [
+            2,
+            0.2,
+            0
+          ],
+          "seed": 23
+        },
+        "bind": [
+          {
+            "target": "opacity",
+            "feature": "sectionIntensity",
+            "amount": 0.4,
+            "attackMs": 1000,
+            "releaseMs": 2500
+          }
+        ]
+      },
+      {
+        "id": "data-motes",
+        "type": "particles",
+        "params": {
+          "count": 1600,
+          "center": [
+            0,
+            0,
+            -40
+          ],
+          "size": [
+            140,
+            30,
+            80
+          ],
+          "color": "#2ff6ff",
+          "colorB": "#ff2fd0",
+          "minSize": 0.03,
+          "maxSize": 0.08,
+          "velocity": [
+            0.4,
+            0.3,
+            0
+          ],
+          "turbulence": 0.5,
+          "twinkle": 1,
+          "brightness": 1.2,
+          "shape": "spark",
+          "seed": 109,
+          "bloom": 0.6
+        },
+        "bind": []
+      }
+    ]
+  },
+  "reactivity": {
+    "profiles": [
+      {
+        "name": "treble-sparkle",
+        "layers": [
+          "data-motes"
+        ]
+      },
+      {
+        "name": "flux-turbulence",
+        "layers": [
+          "data-motes"
+        ]
+      }
+    ],
+    "bindings": []
+  },
+  "effects": {
+    "lineClear": {
+      "effect": "glitchSlice",
+      "params": {
+        "wave": true
+      }
+    },
+    "landing": {
+      "shape": "square"
+    },
+    "transition": {
+      "effect": "digital",
+      "params": {}
+    }
+  },
+  "music": {
+    "bpm": 118,
+    "beatsPerBar": 4,
+    "tracks": [
+      {
+        "id": "future-nights-afterglow",
+        "title": "Afterglow District",
+        "kind": "composition",
+        "src": "music/main.ts"
+      }
+    ],
+    "defaultTrack": "future-nights-afterglow"
+  },
+  "ambience": {
+    "preset": "neon",
+    "level": 1
+  },
+  "sfx": {
+    "preset": "neon",
+    "material": "neon"
+  },
+  "unlock": {
+    "type": "always"
+  },
+  "thumbnail": "previews/thumb.jpg"
+}
