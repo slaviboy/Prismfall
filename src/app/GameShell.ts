@@ -893,12 +893,17 @@ export class GameShell {
     return this.session?.elapsedMs ?? this.replaySession?.engine.tick ?? 0;
   }
 
+  /** Forces the world progression (0..1) for previews: a world's full evolution at once. */
+  previewProgress: number | null = null;
+
   private goalProgress(engine: Engine | null): number {
+    if (this.previewProgress !== null) return this.previewProgress;
     if (!engine) return 0;
     const goal = engine.rules.goal;
     if (goal.kind === 'lines') return Math.min(1, engine.lines / goal.lines);
     if (goal.kind === 'time') return Math.min(1, engine.tick / goal.ms);
-    return 0;
+    // No goal (Zen, endless Marathon): worlds evolve over the first 60 lines.
+    return Math.min(1, engine.lines / 60);
   }
 
   /** Frame limiter: simulation and input run every rAF; only rendering is capped. */

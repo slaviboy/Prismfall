@@ -1,11 +1,16 @@
-import { BackSide, LinearMipmapLinearFilter, Mesh, MeshBasicNodeMaterial, RepeatWrapping, SphereGeometry, SRGBColorSpace, TextureLoader, Vector3, type Texture } from 'three/webgpu';
+import { BackSide, LinearMipmapLinearFilter, Mesh, MeshBasicNodeMaterial, RepeatWrapping, SphereGeometry, SRGBColorSpace, TextureLoader, Vector3, type Node, type Texture } from 'three/webgpu';
 import {
   abs,
   asin,
   atan,
+  cameraFar,
+  cameraNear,
+  cameraPosition,
+  cameraViewMatrix,
   clamp,
   dot,
   exp,
+  float,
   floor,
   fract,
   max,
@@ -21,6 +26,7 @@ import {
   vec2,
   vec3,
   vec4,
+  viewZToPerspectiveDepth,
 } from 'three/tsl';
 import { z } from 'zod';
 import type { ComponentFactory } from '../../../sdk/types';
@@ -63,7 +69,19 @@ const schema = z.object({
       exposure: z.number().min(0).default(1),
       /** Degrees over which the top of the band fades into the gradient. */
       fade: z.number().positive().default(8),
+      /**
+       * The photo's land hides distant 3D sky effects (aurora, clouds) farther than this many
+       * units: land pixels write depth at this distance. 0 = off.
+       */
+      occlude: z.number().min(0).default(0),
     })
+    .optional(),
+  /**
+   * Night colours the sky blends to as `dusk` (a bindable 0..1) rises, and how dark the panorama
+   * gets; bind dusk to game progress for a day that turns to night as you play.
+   */
+  dusk: z
+    .object({ top: zColor.default('#05070f'), mid: zColor.default('#0b1222'), horizon: zColor.default('#1a2436'), exposure: z.number().min(0).default(0.18) })
     .optional(),
 });
 
@@ -98,6 +116,7 @@ export const skyComponent: ComponentFactory<SkyParams> = {
       nebulaB: colorUniform(p.nebulaB),
       discIntensity: floatUniform(p.disc?.intensity ?? 0),
       presence: floatUniform(1),
+      dusk: floatUniform(0),
     };
     const dir = normalize(positionWorldDirection);
     const y = dir.y;
@@ -109,16 +128,33 @@ export const skyComponent: ComponentFactory<SkyParams> = {
     let color = mix(upper, u.bottom, down);
     const band = exp(abs(y).div(p.horizonWidth).negate()).mul(u.glow);
     color = color.add(u.horizon.mul(band));
+    if (p.dusk) {
+      const night = mix(mix(colorUniform(p.dusk.horizon), colorUniform(p.dusk.mid), smoothstep(0, 0.25, y)), colorUniform(p.dusk.top), smoothstep(0.25, 0.9, y));
+      color = mix(color, night, u.dusk);
+    }
 
+    // Where stars may show: everywhere, except over the panorama's land (only its sky).
+    let starMask: Node<'float'> = float(1);
+    let landDepth: Node<'float'> | null = null;
     if (photo && p.panorama) {
       const pano = p.panorama;
       const deg = 180 / Math.PI;
       const elev = asin(clamp(y, -1, 1)).mul(deg);
       const turn = atan(dir.x, dir.z.negate()).div(Math.PI * 2).add(pano.offset);
       const v = elev.sub(pano.elevation[0]).div(pano.elevation[1] - pano.elevation[0]);
-      const sample = texture(photo, vec2(turn, v)).rgb.mul(pano.exposure);
+      const darken = p.dusk ? mix(float(1), float(p.dusk.exposure), u.dusk) : float(1);
+      const sample = texture(photo, vec2(turn, v)).rgb.mul(pano.exposure).mul(darken);
       const inBand = smoothstep(pano.elevation[1], pano.elevation[1] - pano.fade, elev).mul(step(pano.elevation[0], elev));
       color = mix(color, sample, inBand);
+      // The photo's sky is bluer than its snow and rock; stars appear only there.
+      const raw = texture(photo, vec2(turn, v)).rgb;
+      const skyLike = smoothstep(0.04, 0.12, raw.b.sub(raw.r)).mul(smoothstep(0.25, 0.45, raw.g));
+      starMask = mix(float(1), skyLike, inBand);
+      if (pano.occlude > 0) {
+        const land = step(0.5, inBand.mul(skyLike.oneMinus()));
+        const viewZ = cameraViewMatrix.mul(vec4(cameraPosition.add(dir.mul(pano.occlude)), 1)).z;
+        landDepth = mix(float(1), viewZToPerspectiveDepth(viewZ, cameraNear, cameraFar), land);
+      }
     }
 
     if (p.nebula > 0) {
@@ -140,7 +176,9 @@ export const skyComponent: ComponentFactory<SkyParams> = {
       color = color.add(colorUniform(mw.color).mul(glowMw));
     }
 
-    if (p.stars > 0) {
+    // Worlds with a dusk compile the stars even when they start at zero (bound to progress).
+    const starDensity = p.stars > 0 ? p.stars : p.dusk ? 1 : 0;
+    if (starDensity > 0) {
       // Two layers with a steep brightness distribution (many faint stars, few bright ones),
       // jittered inside their cells so no grid shows; slight colour temperature variation.
       const layer = (density: number, cellsPerRad: number, gain: number, sharp: number) => {
@@ -149,14 +187,15 @@ export const skyComponent: ComponentFactory<SkyParams> = {
         const r = fract(sin(vec3(dot(id, vec3(127.1, 311.7, 74.7)), dot(id, vec3(269.5, 183.3, 246.1)), dot(id, vec3(113.5, 271.9, 124.6)))).mul(43758.5453));
         const local = fract(cells).sub(r.mul(0.6).add(0.2));
         const dd = local.length();
-        const present = step(1 - p.stars * density, r.x);
+        const present = step(1 - starDensity * density, r.x);
         const mag = r.y.pow(sharp);
         const tint = mix(vec3(0.75, 0.85, 1.15), vec3(1.15, 0.95, 0.75), r.z);
         const twinkle = sin(ctx.uniforms.time.mul(r.z.mul(2).add(0.8)).add(r.y.mul(40))).mul(0.12).add(0.88);
         return tint.mul(present.mul(mag).mul(smoothstep(0.16, 0.0, dd)).mul(twinkle).mul(gain));
       };
       const above = smoothstep(-0.02, 0.08, y);
-      const stars = layer(0.22, 420, 1.6, 5).add(layer(0.05, 150, 4.5, 3)).mul(above).mul(u.stars.div(Math.max(0.0001, p.stars)));
+      const gain = p.stars > 0 ? u.stars.div(p.stars) : u.stars;
+      const stars = layer(0.22, 420, 1.6, 5).add(layer(0.05, 150, 4.5, 3)).mul(above).mul(gain).mul(starMask);
       color = color.add(stars);
     }
 
@@ -176,7 +215,8 @@ export const skyComponent: ComponentFactory<SkyParams> = {
     const material = new MeshBasicNodeMaterial();
     material.colorNode = vec4(color.mul(u.presence), 1);
     material.side = BackSide;
-    material.depthWrite = false;
+    material.depthWrite = landDepth !== null;
+    if (landDepth) material.depthNode = landDepth;
     material.fog = false;
     if (!p.bloom) noBloom(material);
     const mesh = new Mesh(new SphereGeometry(900, 64, 32), material);
@@ -184,7 +224,7 @@ export const skyComponent: ComponentFactory<SkyParams> = {
     mesh.frustumCulled = false;
     return {
       object: mesh,
-      reactive: { glow: u.glow, stars: u.stars, nebula: u.nebula, disc: u.discIntensity },
+      reactive: { glow: u.glow, stars: u.stars, nebula: u.nebula, disc: u.discIntensity, dusk: u.dusk },
       setPresence(v) {
         u.presence.value = v;
       },

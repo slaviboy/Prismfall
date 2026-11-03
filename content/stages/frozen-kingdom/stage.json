@@ -119,10 +119,95 @@
             ],
             "offset": 0.7,
             "exposure": 1.0,
-            "fade": 8
+            "fade": 8,
+            "occlude": 500
+          },
+          "dusk": {
+            "top": "#03060d",
+            "mid": "#08142a",
+            "horizon": "#13253a",
+            "exposure": 0.16
+          },
+          "milkyWay": {
+            "strength": 0.0,
+            "pole": [
+              0.6,
+              0.4,
+              0.7
+            ],
+            "width": 0.15,
+            "color": "#7f8ea8"
           }
         },
-        "bind": []
+        "bind": [
+          {
+            "feature": "game.progress",
+            "mode": "add",
+            "attackMs": 9000,
+            "releaseMs": 6000,
+            "target": "dusk",
+            "amount": 0.92
+          },
+          {
+            "feature": "game.progress",
+            "mode": "add",
+            "attackMs": 9000,
+            "releaseMs": 6000,
+            "target": "stars",
+            "amount": 1.0
+          }
+        ]
+      },
+      {
+        "id": "dusk-aurora",
+        "type": "aurora",
+        "params": {
+          "ribbons": 2,
+          "distance": [
+            620,
+            760
+          ],
+          "base": 70,
+          "height": [
+            190,
+            250
+          ],
+          "span": [
+            70,
+            95
+          ],
+          "azimuth": [
+            -36,
+            36
+          ],
+          "rise": 110,
+          "low": "#5dffb0",
+          "high": "#7a50ff",
+          "alt": {
+            "low": "#7affd8",
+            "high": "#a05cff",
+            "share": 0.35
+          },
+          "intensity": 0.0,
+          "speed": 0.9,
+          "seed": 11,
+          "arc": 0.7,
+          "folds": 55,
+          "rays": 0.7,
+          "rayScale": 95,
+          "gaps": 0.6,
+          "edge": 0.04
+        },
+        "bind": [
+          {
+            "feature": "game.progress",
+            "mode": "add",
+            "attackMs": 14000,
+            "releaseMs": 6000,
+            "target": "intensity",
+            "amount": 0.85
+          }
+        ]
       },
       {
         "id": "snowfield",
@@ -188,7 +273,16 @@
             "strength": 0.0
           }
         },
-        "bind": []
+        "bind": [
+          {
+            "feature": "game.progress",
+            "mode": "mul",
+            "attackMs": 9000,
+            "releaseMs": 6000,
+            "target": "light",
+            "amount": -0.86
+          }
+        ]
       },
       {
         "id": "lake",

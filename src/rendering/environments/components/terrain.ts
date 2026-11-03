@@ -152,6 +152,8 @@ export const terrainComponent: ComponentFactory<Params> = {
       sparkle: floatUniform(p.sparkle),
       presence: floatUniform(1),
       music: floatUniform(0),
+      /** Overall light on the ground (bindable: dims it with a darkening sky). */
+      light: floatUniform(1),
     };
     const time = ctx.uniforms.time;
     const tdata = attribute<'vec2'>('terrain', 'vec2');
@@ -221,7 +223,7 @@ export const terrainComponent: ComponentFactory<Params> = {
     emissive = emissive.mul(u.presence);
 
     const material = new MeshStandardNodeMaterial();
-    material.colorNode = vec4(albedo, 1);
+    material.colorNode = vec4(albedo.mul(u.light), 1);
     material.normalNode = transformNormalToView(nWorld);
     material.roughnessNode = mix(float(p.roughness), float(0.6), rockMix.mul(0.4));
     material.metalness = 0;
