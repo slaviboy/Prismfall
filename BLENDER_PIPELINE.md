@@ -55,6 +55,7 @@ assets/blender/
 | `flora_kit.py` | `assets/blender/exports/flora` | `content/shared/flora` |
 | `ice_kit.py` | `assets/blender/exports/ice` | `content/stages/frozen-kingdom/models` |
 | `japan_kit.py` | `assets/blender/exports/japan` | `content/stages/ancient-garden/models` |
+| `pyramids.py` | `assets/blender/exports/pyramids` | `content/stages/moving-sands/models` |
 
 ## 4. What each script generates
 
@@ -67,6 +68,7 @@ assets/blender/
 | `foundry_kit.py` | Ember Foundry hall behind the playfield (156 objects): floor slabs, back wall and vents, arches, columns, beams, gears (`gear_*`), pistons (`piston_rod_*`), crucible and pour, pipe runs, catwalk, chains. | `foundry/foundry.glb`, `foundry.meta.json`, `source/environments/ember_foundry.blend`, `previews/ember_foundry.png` | `darkMetal`, `steel`, `brass`, `hotMetal`, `furnaceGlow`, `molten` |
 | `ice_kit.py` | Frozen Kingdom `citadel`, `crystal_arch`, `rune_a`, `rune_b`, `rune_c`. | `ice/ice.glb`, `ice.meta.json`, `source/environments/frozen_kingdom.blend`, `previews/frozen_kingdom.png` | `iceWall`, `iceDeep`, `iceGlow`, `snowCap` |
 | `japan_kit.py` | Ancient Garden `pagoda` (five tiers), `shrine_hall`, `gate`, `bridge`, `gate_far`. | `japan/japan.glb`, `japan.meta.json`, `source/environments/ancient_garden.blend`, `previews/ancient_garden.png` | `lacquer`, `woodDark`, `roofTile`, `plaster`, `gold`, `lanternPaper` |
+| `pyramids.py` | Moving Sands `pyramid_great`, `pyramid_medium`, `pyramid_small` (stepped core masonry built course by course), `temple_ruin`, `column_drums` and `rubble_pile`. Each top-level node is an empty at the base centre, with the mesh as the child `<name>_mesh`. The only kit with image textures: a script-synthesised limestone atlas (base colour, normal, roughness) multiplied by `COLOR_0`. Details are in `assets/ASSET_CATALOG.md`. | `pyramids/pyramids.glb`, `pyramids.meta.json`, `source/environments/pyramids.blend`, `source/textures/pyramids_{color,normal,roughness}.webp`, `previews/pyramids_{overview,corner,medium,small,ruins,game}.png` | `pyramidStone` (use preset `keep` to show the textures), `pyramidSand` |
 
 Models are shared between stages by absolute path. Northern Lights reuses `crystal_arch`, `rune_a` and `rune_c` from the ice kit, and The Abyss reuses `colonnade`, `gateway`, `monolith_0` and `monolith_1` from the desert kit, both through the `gltfScene` `include` filter. The flora kit and the creatures are used by most stages.
 
@@ -204,7 +206,7 @@ node node_modules/@gltf-transform/cli/bin/cli.js optimize <in.glb> <out.glb> \
 | Flag | Effect | Why |
 |---|---|---|
 | `--compress meshopt` | Reorders vertices, quantises attributes (`KHR_mesh_quantization`) and compresses buffers (`EXT_meshopt_compression`, level `high`). | Small files that decode quickly. |
-| `--texture-compress webp` | Re-encodes textures as WebP. | No current kit uses image textures (the shipped GLBs contain no images), so this has no effect today. |
+| `--texture-compress webp` | Re-encodes textures as WebP. | Only `pyramids.py` uses image textures. Its atlas is exported as WebP and re-encoded here. The other kits contain no images. |
 | `--simplify false` | No mesh decimation. | Keeps authored silhouettes and bevels. |
 | `--instance false` | No `EXT_mesh_gpu_instancing`. | Each object stays its own named node. |
 | `--flatten false` | Keeps the node hierarchy. | Top-level objects are snapped to the ground one by one, and `include` filters by top-level name. |

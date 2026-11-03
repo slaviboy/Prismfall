@@ -38,6 +38,15 @@
       ]
     },
     {
+      "script": "pyramids.py",
+      "outputs": [
+        {
+          "from": "assets/blender/exports/pyramids",
+          "to": "content/stages/moving-sands/models"
+        }
+      ]
+    },
+    {
       "script": "flora_kit.py",
       "outputs": [
         {

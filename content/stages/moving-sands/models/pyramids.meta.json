@@ -1,0 +1,30 @@
+{
+  "generator": "assets/blender/scripts/pyramids.py",
+  "objects": [
+    "pyramid_great",
+    "pyramid_medium",
+    "pyramid_small",
+    "temple_ruin",
+    "column_drums",
+    "rubble_pile"
+  ],
+  "triangles": {
+    "pyramid_great": 56492,
+    "pyramid_medium": 49263,
+    "pyramid_small": 18658,
+    "temple_ruin": 10564,
+    "column_drums": 1580,
+    "rubble_pile": 1858
+  },
+  "placement": "each top-level node is an empty at the object's base centre (z = 0 at ground level), placed at world x/z like desert.glb, with the mesh as its child; the game snaps each top-level node to the dunes",
+  "materials": {
+    "pyramidStone": "textured limestone (base colour x COLOR_0, normal, roughness); use preset 'keep' to show the textures",
+    "pyramidSand": "sand drifts (colour x COLOR_0)"
+  },
+  "textures": {
+    "baseColor": "2048 px",
+    "normal": "1024 px",
+    "roughness": "1024 px"
+  },
+  "license": "Original work for Prismfall"
+}
