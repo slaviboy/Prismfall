@@ -378,6 +378,7 @@ export const CONTROLLER_TAB: TabDef = {
     { kind: 'slider', section: 'controller', key: 'deadzoneOuter', label: 'Stick outer edge', description: 'Where the stick counts as fully pushed.', min: 0.7, max: 1, step: 0.01, format: percent },
     { kind: 'slider', section: 'controller', key: 'stickThreshold', label: 'Stick sensitivity', description: 'How far the stick must be pushed to move a piece. Lower is more sensitive.', min: 0.2, max: 0.95, step: 0.01, format: percent },
     { kind: 'slider', section: 'controller', key: 'triggerThreshold', label: 'Trigger threshold', description: 'How far a trigger must be pulled to count as pressed.', min: 0.05, max: 0.95, step: 0.01, format: percent },
+    { kind: 'toggle', section: 'controller', key: 'highRatePolling', label: 'Precise input timing', description: 'Reads the controller about 250 times a second instead of once per frame, so presses are timed more exactly.' },
     { kind: 'group', label: 'Feedback and buttons' },
     { kind: 'toggle', section: 'controller', key: 'rumble', label: 'Rumble', description: 'Vibration on hard drops, clears and danger, when the controller supports it.' },
     { kind: 'slider', section: 'controller', key: 'rumbleStrength', label: 'Rumble strength', min: 0, max: 1, step: 0.05, format: percent, when: (s) => s.controller.rumble },

@@ -119,11 +119,14 @@ describe('storage', () => {
     const a = await fresh();
     await new SettingsRepository(a).save({ ...defaultSettings(), gameplay: { ...defaultSettings().gameplay, dasMs: 90 } });
     await new HighScoreRepository(a).add(entry('x', 1234), false);
+    await a.put('replays', { id: 'r1', date: '2026-11-03', modeId: 'marathon', variantId: '150', pinned: true, data: 'replay-bytes' });
     const dump = JSON.parse(JSON.stringify(await exportSave(a)));
     const b = await fresh();
     await importSave(b, dump);
     expect((await new SettingsRepository(b).load()).settings.gameplay.dasMs).toBe(90);
     expect((await new HighScoreRepository(b).top('marathon:150', false))[0]?.score).toBe(1234);
+    // Replays travel with the scores that link to them.
+    expect(await b.get<{ data: string }>('replays', 'r1')).toMatchObject({ data: 'replay-bytes' });
   });
 
   it('falls back to web storage without IndexedDB', async () => {

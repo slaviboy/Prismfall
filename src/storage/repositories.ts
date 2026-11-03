@@ -202,6 +202,8 @@ export interface SaveExport {
   readonly progress: unknown;
   readonly lifetimeStats: unknown;
   readonly highscores: unknown[];
+  /** Replays referenced by high scores and recent games (added later; optional on import). */
+  readonly replays?: unknown[];
 }
 
 export async function exportSave(backend: SaveBackend): Promise<SaveExport> {
@@ -212,15 +214,17 @@ export async function exportSave(backend: SaveBackend): Promise<SaveExport> {
     progress: await backend.getKV('progress'),
     lifetimeStats: await backend.getKV('lifetimeStats'),
     highscores: await backend.getAll('highscores'),
+    replays: await backend.getAll('replays'),
   };
 }
 
 export async function importSave(backend: SaveBackend, data: unknown): Promise<void> {
   const parsed = z
-    .object({ app: z.literal('prismfall'), settings: z.unknown().optional(), progress: z.unknown().optional(), lifetimeStats: z.unknown().optional(), highscores: z.array(z.object({ id: z.string() }).passthrough()) })
+    .object({ app: z.literal('prismfall'), settings: z.unknown().optional(), progress: z.unknown().optional(), lifetimeStats: z.unknown().optional(), highscores: z.array(z.object({ id: z.string() }).passthrough()), replays: z.array(z.object({ id: z.string() }).passthrough()).optional() })
     .parse(data);
   if (parsed.settings !== undefined) await backend.putKV('settings', migrateSettings(parsed.settings).settings);
   if (parsed.progress !== undefined) await backend.putKV('progress', progressSchema.parse(parsed.progress));
   if (parsed.lifetimeStats !== undefined) await backend.putKV('lifetimeStats', parsed.lifetimeStats);
   for (const entry of parsed.highscores) await backend.put('highscores', entry as { id: string });
+  for (const replay of parsed.replays ?? []) await backend.put('replays', replay as { id: string });
 }

@@ -49,9 +49,12 @@ const MESSAGES: Record<XRAvailability, string> = {
 
 function VRStatusPanel(): ReactNode {
   const { availability, presenting } = useXR();
+  // Input profile names reported by the runtime, e.g. "oculus-touch-v3" or "htc-vive".
+  const profiles = shell.xr?.controllerProfiles() ?? [];
   return (
     <div className="vr-status" data-testid="vr-status">
       <p className="menu-note">{presenting ? 'VR is running.' : MESSAGES[availability]}</p>
+      {profiles.length > 0 ? <p className="menu-note" data-testid="vr-controllers">Controllers seen: {profiles.join(', ')}</p> : null}
       <div className="settings-actions">
         {availability === 'available' && !presenting ? (
           <Button onClick={() => void enterVR()} testId="vr-enter" tone="primary">

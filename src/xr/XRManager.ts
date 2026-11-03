@@ -241,6 +241,11 @@ export class XRManager {
     this.session = session;
     patchDefaultFramebufferLayer(r);
     session.addEventListener('end', () => this.tearDown(), { once: true });
+    // The headset's system menu (or taking it off) hides or blurs the session: pause like a lost window focus.
+    session.addEventListener('visibilitychange', () => {
+      const app = this.host.appState();
+      if (session.visibilityState !== 'visible' && app.running && !app.paused) this.host.pause();
+    });
 
     this.savedEnvironment = rs.scene.environment;
     rs.scene.environment = this.vrEnvironment;
@@ -542,16 +547,16 @@ export class XRManager {
     const playing = app.screen === 'game';
     this.hud.mesh.visible = playing;
     if (playing) {
+      // The desktop HUD's visibility choices (Settings → Interface) apply in the headset too.
+      const ui = getSettings().interface;
       const t = Math.floor(h.timeMs / 1000);
-      this.hud.update(
-        [
-          ['Score', h.score.toLocaleString()],
-          ['Level', String(h.level)],
-          ['Lines', String(h.lines)],
-          ['Time', `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`],
-        ],
-        h.combo > 0 ? `Combo ×${h.combo}` : h.callout,
-      );
+      const rows: [string, string][] = [];
+      if (ui.showScore) rows.push(['Score', h.score.toLocaleString()]);
+      if (ui.showLevel) rows.push(['Level', String(h.level)]);
+      if (ui.showLines) rows.push(['Lines', String(h.lines)]);
+      if (ui.showTime) rows.push(['Time', `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`]);
+      const callout = ui.showCombo && h.combo > 0 ? `Combo ×${h.combo}` : ui.showCallouts ? h.callout : '';
+      this.hud.update(rows, callout);
     }
   }
 
@@ -564,8 +569,12 @@ export class XRManager {
     return true;
   }
 
-  /** Controller families seen in this session. */
+  /** Controller families seen in this session (kept after leaving VR for the settings panel). */
   controllerProfiles(): string[] {
-    return this.input.profiles();
+    const now = this.input.profiles();
+    if (now.length > 0) this.lastProfiles = now;
+    return this.lastProfiles;
   }
+
+  private lastProfiles: string[] = [];
 }

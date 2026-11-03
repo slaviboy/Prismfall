@@ -459,6 +459,7 @@ export class GameShell {
       im.setBindings(s.keyboard, s.gamepad, s.controller.swapConfirmBack);
       im.setXRBindings(s.xr);
       const c = s.controller;
+      im.setHighRatePolling(c.highRatePolling);
       im.setTuning({
         deadzoneInner: c.deadzoneInner,
         deadzoneOuter: c.deadzoneOuter,

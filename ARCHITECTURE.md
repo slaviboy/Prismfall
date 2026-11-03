@@ -95,17 +95,24 @@ React is never inside this loop. The HUD updates on events through a zustand van
 
 ## 7. Milestones
 
-| # | Milestone | Status |
-|---|---|---|
-| 1 | Investigation & planning | done |
-| 2 | Gameplay foundation (playable) | done |
-| 3 | 3D rendering foundation | done |
-| 4 | Effects, environments, Content SDK, first 3 stages | done |
-| 5 | Audio engine + Music Analysis Engine (see AUDIO_ANALYSIS.md) | done |
-| 6 | Complete interface + all modes | done |
-| 7 | Controllers, settings, persistence | done |
-| 8 | Final content (10 stages + Folded Sky scalability test) | planned |
-| 9 | Optimization & verification | planned |
+| # | Milestone | Status | Delivered |
+|---|---|---|---|
+| 1 | Investigation & planning | done | Repository setup, REFERENCE_NOTES.md (reference game not operable, so the notes use genre conventions), this architecture, Blender smoke test |
+| 2 | Gameplay foundation | done | Deterministic engine (SRS, 7-bag, DAS/ARR, lock delay, hold, scoring, modes, replays, AI), settings schema and IndexedDB persistence, input architecture, playable app with menus and HUD |
+| 3 | 3D rendering foundation | done | `WebGPURenderer` with WebGL 2 fallback, TSL block materials, board, camera, light rig, post-processing, rendering e2e tests, perf harness and baseline |
+| 4 | Effects, environments, Content SDK | done | Content SDK and stage manifests, environment components, GPU particles, line-clear feedback, first stages including the Blender-built Ember Foundry, stage memory test |
+| 5 | Audio engine + Music Analysis Engine | done | Bus graph, synthesiser and composition DSL, Music Director, SFX, ambience, analysis engine with acceptance corpus, reactivity profiles, developer dashboard (AUDIO_ANALYSIS.md) |
+| 6 | Complete interface + all modes | done | World select with live previews, Voyage campaign, Music Room, replay viewer, practice options, level-up feedback, gamepad menu navigation |
+| 7 | Controls & customisation | done | Keyboard and controller rebinding with conflict handling, controller tab (tester, mapping wizard, glyphs, rumble), old-save migration test |
+| 8 | Worlds, block themes, creatures, stage audio | done | 13 worlds (12 in Voyage, plus the content-only Folded Sky scalability world), procedural block themes, the living creature system and terrain, material-aware impact sounds, extra mixer buses, sound test, adaptive stems and Opus pipeline, themed transitions |
+| 9 | VR | done | WebXR immersive mode on a dedicated WebGL 2 renderer, VR settings, XR controller input and remapping, spatial menus and HUD, emulated (IWER) e2e tests. Not yet verified on a real headset |
+| 10 | Optimisation & verification | in progress | `Play.cmd` launcher, soak test, experimental shared-audio analysis, performance measurements (PERFORMANCE.md), requirements audit (FEATURES.md) and manual checklist (MANUAL_CHECKS.md) |
+
+### Subsystem docs
+
+- **Project:** [README.md](README.md) (setup, scripts, controls, saves), [FEATURES.md](FEATURES.md) (requirements audit and known limitations), [MANUAL_CHECKS.md](MANUAL_CHECKS.md) (checks only a person can make), [DEPLOYMENT.md](DEPLOYMENT.md) (local play and private access) and [CLAUDE.md](CLAUDE.md) (working rules for AI-assisted changes).
+- **Content and assets:** [CONTENT_GUIDE.md](CONTENT_GUIDE.md) (authoring worlds), [BLENDER_PIPELINE.md](BLENDER_PIPELINE.md), [ASSET_LICENSES.md](ASSET_LICENSES.md) and [AUDIO_ASSETS.md](AUDIO_ASSETS.md).
+- **VR:** [VR_ARCHITECTURE.md](VR_ARCHITECTURE.md), [VR_SETTINGS.md](VR_SETTINGS.md), [VR_TESTING.md](VR_TESTING.md) and [VR_REFERENCE_RESEARCH.md](VR_REFERENCE_RESEARCH.md).
 
 ## 8. Technical risks and mitigations
 
