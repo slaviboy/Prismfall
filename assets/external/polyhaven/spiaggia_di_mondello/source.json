@@ -1,0 +1,38 @@
+{
+  "id": "spiaggia_di_mondello",
+  "kind": "hdri",
+  "name": "Spiaggia di Mondello",
+  "page": "https://polyhaven.com/a/spiaggia_di_mondello",
+  "api": {
+    "info": "https://api.polyhaven.com/info/spiaggia_di_mondello",
+    "files": "https://api.polyhaven.com/files/spiaggia_di_mondello"
+  },
+  "authors": {
+    "Andreas Mischok": "All"
+  },
+  "licence": "CC0 1.0",
+  "licenceUrl": "https://polyhaven.com/license",
+  "files": [
+    {
+      "path": "spiaggia_di_mondello_tonemapped.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/HDRIs/extra/Tonemapped%20JPG/spiaggia_di_mondello.jpg",
+      "md5": "ae13689e3fe92ef57f0e09f220bf97cb",
+      "size": 3907991
+    }
+  ],
+  "downloaded": "2026-11-03",
+  "derived": [
+    {
+      "path": "content/stages/tradewind-cove/textures/spiaggia_di_mondello_band.webp",
+      "how": "ffmpeg crop=8192:1138:0:1138 (elevations -10..40 deg), unsharp 5:5:0.6, libwebp quality 86"
+    },
+    {
+      "path": "content/stages/tradewind-cove/textures/spiaggia_di_mondello_detail.webp",
+      "how": "20k HDR https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/16k%2B/spiaggia_di_mondello_20k.hdr (md5 8f239c03a71cc43eaaffa9b8395f1e39): crop 6333x2778 (uRange 0.0017..0.3183, elevations -10..40 deg), tone curve matched to the tonemapped JPG (scripts/panorama_match.py), libwebp quality 90"
+    },
+    {
+      "path": "content/stages/tradewind-cove/textures/spiaggia_di_mondello_env.webp",
+      "how": "ffmpeg scale=2048:1024:flags=area, gblur sigma 0.8, libwebp quality 86 (full-sphere copy for water reflections and sky light)"
+    }
+  ]
+}

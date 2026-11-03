@@ -107,6 +107,12 @@ Real landscape photographs used as the distant horizon of a world (the `panorama
 | `content/stages/folded-sky/textures/montorfano_band.webp` | Poly Haven HDRI "Montorfano" (https://polyhaven.com/a/montorfano) by Andreas Mischok; tonemapped JPG (8192 x 4096) cropped to elevations -32 to +40 degrees (8192 x 1638), unsharp mask, WebP quality 86 | CC0 1.0 |
 | `content/stages/folded-sky/textures/montorfano_detail.webp` | Poly Haven HDRI "Montorfano" (https://polyhaven.com/a/montorfano) by Andreas Mischok; 16k HDR cropped to the visible directions (5825 x 3276, elevations -32 to +40 degrees), tone curve matched to Poly Haven's tonemapped JPG, light unsharp mask, WebP quality 90 | CC0 1.0 |
 | `content/stages/enchanted-wilderness/textures/misty_pines_detail.webp` | Poly Haven HDRI "Misty Pines" (https://polyhaven.com/a/misty_pines) by Greg Zaal; 20k HDR cropped to the visible directions (6372 x 3276, elevations -32 to +40 degrees), tone curve matched to Poly Haven's tonemapped JPG, light unsharp mask, WebP quality 90 | CC0 1.0 |
+| `content/stages/dead-acre/textures/kloppenheim_04_band.webp` | Poly Haven HDRI "Kloppenheim 04" (https://polyhaven.com/a/kloppenheim_04) by Greg Zaal; tonemapped JPG (8192 x 4096) cropped to elevations -32 to +40 degrees (8192 x 1638), unsharp mask, then a night grade (saturation 0.7, gamma 2.4 in sRGB, slight cool balance; Pillow/numpy), WebP quality 86 | CC0 1.0 |
+| `content/stages/dead-acre/textures/kloppenheim_04_detail.webp` | Poly Haven HDRI "Kloppenheim 04" (https://polyhaven.com/a/kloppenheim_04) by Greg Zaal; 16k HDR cropped to the visible directions (6372 x 3276, elevations -32 to +40 degrees), tone curve matched to Poly Haven's tonemapped JPG, light unsharp mask, then the same night grade as the band, WebP quality 90 | CC0 1.0 |
+| `content/stages/tradewind-cove/textures/spiaggia_di_mondello_band.webp` | Poly Haven HDRI "Spiaggia di Mondello" (https://polyhaven.com/a/spiaggia_di_mondello) by Andreas Mischok; tonemapped JPG (8192 x 4096) cropped to elevations -10 to +40 degrees (8192 x 1138), unsharp mask, WebP quality 86 | CC0 1.0 |
+| `content/stages/tradewind-cove/textures/spiaggia_di_mondello_detail.webp` | Poly Haven HDRI "Spiaggia di Mondello" (https://polyhaven.com/a/spiaggia_di_mondello) by Andreas Mischok; 20k HDR cropped to the visible directions (6333 x 2778, elevations -10 to +40 degrees), tone curve matched to Poly Haven's tonemapped JPG, light unsharp mask, WebP quality 90 | CC0 1.0 |
+| `content/stages/tradewind-cove/textures/spiaggia_di_mondello_env.webp` | Poly Haven HDRI "Spiaggia di Mondello" (https://polyhaven.com/a/spiaggia_di_mondello) by Andreas Mischok; the tonemapped JPG scaled to a 2048 x 1024 full-sphere map with a light blur, WebP quality 86; the lagoon reflects it and the palms and sand take their sky light from it | CC0 1.0 |
+| `content/stages/tradewind-cove/textures/aerial_beach_01_normal.webp` | Poly Haven texture "Aerial Beach 01" (https://polyhaven.com/a/aerial_beach_01) by Rob Tuytel; the 2k OpenGL normal map (2048 x 2048, a 30 m patch of wind-rippled beach sand) converted to WebP quality 90. The source is kept in `assets/external/polyhaven/aerial_beach_01/` | CC0 1.0 |
 
 ### Space imagery (Deep Cosmos)
 
@@ -136,8 +142,10 @@ Screenshots of the game's own rendering. `scripts/thumbnails.ts` (`npm run conte
 | `content/stages/future-nights/previews/thumb.jpg` | render of the game, `scripts/thumbnails.ts` | Original work for Prismfall |
 | `content/stages/luminous-tide/previews/thumb.jpg` | render of the game, `scripts/thumbnails.ts` | Original work for Prismfall |
 | `content/stages/moving-sands/previews/thumb.jpg` | render of the game, `scripts/thumbnails.ts` | Original work for Prismfall |
+| `content/stages/tradewind-cove/previews/thumb.jpg` | render of the game, `scripts/thumbnails.ts` (also recorded in `content/stages/tradewind-cove/assets.json`) | Original work for Prismfall |
 | `content/stages/northern-lights/previews/thumb.jpg` | render of the game, `scripts/thumbnails.ts` | Original work for Prismfall |
 | `content/stages/the-abyss/previews/thumb.jpg` | render of the game, `scripts/thumbnails.ts` | Original work for Prismfall |
+| `content/stages/dead-acre/previews/thumb.jpg` | render of the game, `scripts/thumbnails.ts` (also recorded in `content/stages/dead-acre/assets.json`) | Original work for Prismfall |
 
 ## 7. Music, sound effects and ambience
 
@@ -185,6 +193,10 @@ See `AUDIO_ASSETS.md` for details.
 | `content/stages/northern-lights/music/solar-wind.ts` | "Solar Wind", authored composition | Original work for Prismfall |
 | `content/stages/the-abyss/music/moon-jellies.ts` | "Moon Jellies", authored composition | Original work for Prismfall |
 | `content/stages/the-abyss/music/silver-schools.ts` | "Silver Schools", authored composition | Original work for Prismfall |
+| `content/stages/dead-acre/music/fog-line.ts` | "Fog Line", authored composition | Original work for Prismfall |
+| `content/stages/dead-acre/music/last-lamp.ts` | "Last Lamp", authored composition | Original work for Prismfall |
+| `content/stages/tradewind-cove/music/trade-winds.ts` | "Trade Winds", authored composition (recorded in `assets.json`) | Original work for Prismfall |
+| `content/stages/tradewind-cove/music/spindrift.ts` | "Spindrift", authored composition (recorded in `assets.json`) | Original work for Prismfall |
 
 ## 8. Other content data and code
 
@@ -195,6 +207,8 @@ All hand-authored for Prismfall; licence "Original work for Prismfall".
 | `content/stages/<id>/stage.json` for all 13 stages: `alpine-horizon`, `ancient-garden`, `celestial-drift`, `ember-core`, `ember-foundry`, `enchanted-wilderness`, `folded-sky`, `frozen-kingdom`, `future-nights`, `luminous-tide`, `moving-sands`, `northern-lights`, `the-abyss` | Stage manifests. |
 | `content/stages/folded-sky/stage.ts` | Folded Sky SDK module (paper cranes, fold-into-cranes clear, paper-fold transition). |
 | `content/stages/folded-sky/assets.json` | Folded Sky licence metadata. It is the only stage with an `assets.json`. |
+| `content/stages/dead-acre/stage.json`, `stage.ts`, `figure.ts`, `horde.ts`, `fog.ts`, `lamps.ts`, `crows.ts`, `shared.ts` | Dead Acre manifest and SDK module: the procedural human figures and their GPU walk (no external models), ground fog, sodium lamps and crows. |
+| `content/stages/tradewind-cove/stage.json`, `stage.ts`, `cove.ts`, `palms.ts`, `env.ts`, `assets.json` | Tradewind Cove manifest and SDK module: the procedural coconut palms and their GPU wind, the sand islands and the lagoon shader, and the licence metadata. |
 | `content/shared/reactivity/bass-breath.json`, `beat-lights.json`, `flux-turbulence.json`, `mid-architecture.json`, `section-swell.json`, `transient-strike.json`, `treble-sparkle.json` | Shared reactivity profiles. |
 | `content/campaigns/voyage.json` | The Voyage campaign. |
 

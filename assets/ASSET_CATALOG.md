@@ -313,6 +313,54 @@ In game, use the material preset `keep` for `pyramidStone` to show the textures.
 | Animation | None |
 | Used by | Folded Sky sky (`panorama`, offset 0.82: the forested ridge behind the board, the lake to the right, cirrus overhead) |
 
+### Kloppenheim 04 (Poly Haven HDRI)
+
+| Field | Value |
+|---|---|
+| Asset name | Kloppenheim 04 |
+| Source URL | https://polyhaven.com/a/kloppenheim_04 |
+| Author | Greg Zaal |
+| Original download URL | see `assets/external/polyhaven/kloppenheim_04/source.json` |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | Tonemapped equirectangular JPG, 8192 x 4096; 16k HDR for the detail band |
+| Modifications | Band cropped to elevations -32 to +40 degrees (8192 x 1638), unsharp mask; detail crop of u 0.3755 to 0.7645 from the 16k HDR, tone-matched (6372 x 3276) (`scripts/fetch-panorama.ts`); both then given a night grade (saturation 0.7, gamma 2.4, slight cool balance) so the long-exposure photo reads as a dark, foggy night with glowing lights; WebP quality 86 (band) and 90 (detail) |
+| Final format | `content/stages/dead-acre/textures/kloppenheim_04_band.webp`, `kloppenheim_04_detail.webp` |
+| Animation | None |
+| Used by | Dead Acre sky (`panorama`, offset 0.57: a misty field at night, a tree line and lit farm buildings glowing in the fog); the Dead Acre components also read a small blurred copy of the band at runtime for fog and rim-light colour |
+
+### Spiaggia di Mondello (Poly Haven HDRI)
+
+| Field | Value |
+|---|---|
+| Asset name | Spiaggia di Mondello |
+| Source URL | https://polyhaven.com/a/spiaggia_di_mondello |
+| Author | Andreas Mischok |
+| Original download URL | see `assets/external/polyhaven/spiaggia_di_mondello/source.json` |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | Tonemapped equirectangular JPG, 8192 x 4096; 20k HDR for the detail band |
+| Modifications | Band cropped to elevations -10 to +40 degrees (8192 x 1138), unsharp mask, WebP quality 86; detail crop of u 0.0017 to 0.3183 from the 20k HDR, tone-matched (6333 x 2778, WebP quality 90) (`scripts/fetch-panorama.ts`); a 2048 x 1024 full-sphere copy with a light blur (WebP quality 86) for reflections and sky light |
+| Final format | `content/stages/tradewind-cove/textures/spiaggia_di_mondello_band.webp`, `spiaggia_di_mondello_detail.webp`, `spiaggia_di_mondello_env.webp` |
+| Animation | None |
+| Used by | Tradewind Cove sky (`panorama`, offset 0.125: the open sea horizon of the bay and a cloudless afternoon sky, the sun behind the viewer); the 3D lagoon covers the photo's beach and fades into its sea near the horizon, and reflects the full-sphere copy |
+
+### Aerial Beach 01 (Poly Haven texture)
+
+| Field | Value |
+|---|---|
+| Asset name | Aerial Beach 01 |
+| Source URL | https://polyhaven.com/a/aerial_beach_01 |
+| Author | Rob Tuytel |
+| Original download URL | see `assets/external/polyhaven/aerial_beach_01/source.json` |
+| Licence | CC0 1.0 (https://polyhaven.com/license) |
+| Attribution requirements | None (credited anyway) |
+| Original format | 2k OpenGL normal map JPG (2048 x 2048, a 30 m patch of wind-rippled beach sand) |
+| Modifications | WebP quality 90; only the normal map is used (the sand colour is set in the shader) |
+| Final format | `content/stages/tradewind-cove/textures/aerial_beach_01_normal.webp` |
+| Animation | None |
+| Used by | Tradewind Cove sand islands and the lagoon floor seen through the shallows (tiled at 22 m and 6 m) |
+
 ## Space imagery
 
 ### The Milky Way panorama (ESO)

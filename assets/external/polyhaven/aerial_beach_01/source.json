@@ -1,0 +1,30 @@
+{
+  "id": "aerial_beach_01",
+  "kind": "texture",
+  "name": "Aerial Beach 01",
+  "page": "https://polyhaven.com/a/aerial_beach_01",
+  "api": {
+    "info": "https://api.polyhaven.com/info/aerial_beach_01",
+    "files": "https://api.polyhaven.com/files/aerial_beach_01"
+  },
+  "authors": {
+    "Rob Tuytel": "All"
+  },
+  "licence": "CC0 1.0",
+  "licenceUrl": "https://polyhaven.com/license",
+  "files": [
+    {
+      "path": "aerial_beach_01_nor_gl_2k.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/aerial_beach_01/aerial_beach_01_nor_gl_2k.jpg",
+      "md5": "fdf59672f1e41cd406c2107f6cea538d",
+      "size": 863847
+    }
+  ],
+  "downloaded": "2026-11-03",
+  "derived": [
+    {
+      "path": "content/stages/tradewind-cove/textures/aerial_beach_01_normal.webp",
+      "how": "ffmpeg, libwebp quality 90 (2048x2048 OpenGL normal map, rippled beach sand covering 30 m)"
+    }
+  ]
+}

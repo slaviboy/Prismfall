@@ -1,0 +1,695 @@
+{
+  "schemaVersion": 1,
+  "id": "tradewind-cove",
+  "name": "Tradewind Cove",
+  "description": "A Pacific lagoon in the afternoon trade wind. Coconut palms lean over clear turquoise shallows, the ocean swell breaks white on the outer reef, and frigatebirds hang on the breeze.",
+  "order": 23,
+  "tags": [
+    "ocean",
+    "island",
+    "palms",
+    "photographic"
+  ],
+  "intensity": 0.45,
+  "recommendedQuality": "high",
+  "module": "stage.ts",
+  "requires": {
+    "sdk": "^1.2.0"
+  },
+  "palette": {
+    "accent": "#3fd2c7",
+    "secondary": "#ffcf6a",
+    "highlight": "#f7fbff",
+    "fog": "#b6cadc",
+    "plate": "#061722"
+  },
+  "fog": {
+    "color": "#b6cadc",
+    "density": 0.0005
+  },
+  "backdrop": {
+    "top": "#2a5f9e",
+    "bottom": "#3a8aa0",
+    "glow": "#ffe8c0"
+  },
+  "lighting": {
+    "key": {
+      "color": "#fff1dc",
+      "intensity": 2.4,
+      "azimuth": 35,
+      "elevation": 42
+    },
+    "rim": {
+      "color": "#cfe4ff",
+      "intensity": 0.9
+    },
+    "ambient": {
+      "sky": "#9cc0e8",
+      "ground": "#d8c8a8",
+      "intensity": 0.85
+    },
+    "accents": [
+      {
+        "color": "#7fe6dc",
+        "intensity": 6,
+        "x": -9,
+        "y": -6,
+        "z": 6
+      },
+      {
+        "color": "#ffd9a0",
+        "intensity": 6,
+        "x": 9,
+        "y": 8,
+        "z": 6
+      }
+    ],
+    "beatResponse": 0.15
+  },
+  "grade": {
+    "exposure": 1.0,
+    "saturation": 1.04,
+    "contrast": 1.05,
+    "tint": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "vignette": 0.24,
+    "bloomThreshold": 0.9,
+    "bloomRadius": 0.4,
+    "toneMapping": "neutral",
+    "envIntensity": 0.45
+  },
+  "camera": {
+    "pitch": 2,
+    "yaw": 0,
+    "sway": 0.3,
+    "targetY": 0
+  },
+  "blocks": {
+    "geometry": "soft",
+    "material": "oceanGlass",
+    "palette": {
+      "I": "#22c3d6",
+      "O": "#ffd23f",
+      "T": "#b25ad8",
+      "S": "#4cc45a",
+      "Z": "#ff5252",
+      "J": "#3a6ee8",
+      "L": "#ff963a"
+    },
+    "overrides": {
+      "envIntensity": 0.18,
+      "clearcoat": 0.55,
+      "clearcoatRoughness": 0.18
+    }
+  },
+  "environment": {
+    "layers": [
+      {
+        "id": "sky",
+        "type": "sky",
+        "params": {
+          "top": "#21508e",
+          "mid": "#5f8fc0",
+          "midHeight": 0.5,
+          "horizon": "#93acc6",
+          "bottom": "#3a6f94",
+          "horizonGlow": 0,
+          "horizonWidth": 0.1,
+          "stars": 0,
+          "panorama": {
+            "src": "textures/spiaggia_di_mondello_band.webp",
+            "elevation": [
+              -10,
+              40
+            ],
+            "offset": 0.125,
+            "exposure": 1.0,
+            "fade": 8,
+            "detail": {
+              "src": "textures/spiaggia_di_mondello_detail.webp",
+              "uRange": [
+                0.00165,
+                0.3183
+              ]
+            }
+          }
+        },
+        "bind": []
+      },
+      {
+        "id": "cove",
+        "type": "tradewindCove",
+        "params": {
+          "y": -12,
+          "viewer": [
+            0,
+            30
+          ],
+          "islands": [
+            {
+              "center": [
+                -38,
+                4
+              ],
+              "radius": [
+                20,
+                26
+              ],
+              "angle": 0,
+              "height": 1.8,
+              "beach": 10,
+              "wobble": 0.07,
+              "scrub": 0.5,
+              "seed": 3
+            },
+            {
+              "center": [
+                -88,
+                -47
+              ],
+              "radius": [
+                40,
+                100
+              ],
+              "angle": -22,
+              "height": 1.7,
+              "beach": 13,
+              "wobble": 0.06,
+              "scrub": 0.6,
+              "seed": 2
+            },
+            {
+              "center": [
+                46,
+                8
+              ],
+              "radius": [
+                17,
+                21
+              ],
+              "angle": 0,
+              "height": 1.8,
+              "beach": 10,
+              "wobble": 0.07,
+              "scrub": 0.5,
+              "seed": 7
+            },
+            {
+              "center": [
+                96,
+                -44
+              ],
+              "radius": [
+                42,
+                70
+              ],
+              "angle": 28,
+              "height": 1.6,
+              "beach": 12,
+              "wobble": 0.07,
+              "scrub": 0.6,
+              "seed": 5
+            },
+            {
+              "center": [
+                -205,
+                -310
+              ],
+              "radius": [
+                70,
+                24
+              ],
+              "angle": 8,
+              "height": 1.5,
+              "beach": 8,
+              "wobble": 0.08,
+              "scrub": 0.95,
+              "seed": 9
+            },
+            {
+              "center": [
+                250,
+                -345
+              ],
+              "radius": [
+                52,
+                19
+              ],
+              "angle": -10,
+              "height": 1.4,
+              "beach": 7,
+              "wobble": 0.08,
+              "scrub": 0.9,
+              "seed": 13
+            },
+            {
+              "center": [
+                372,
+                -468
+              ],
+              "radius": [
+                96,
+                24
+              ],
+              "angle": 39,
+              "height": 1.4,
+              "beach": 7,
+              "wobble": 0.08,
+              "scrub": 0.9,
+              "seed": 17
+            }
+          ],
+          "lagoon": {
+            "shallow": 0.9,
+            "deep": 6,
+            "deepAt": 220
+          },
+          "reef": {
+            "distance": 330,
+            "surf": 1,
+            "swell": 0.35
+          },
+          "water": {
+            "absorption": [
+              0.42,
+              0.07,
+              0.045
+            ],
+            "scatter": "#0b4a7c",
+            "foam": "#f4f7f6",
+            "swell": 0.05,
+            "chop": 1,
+            "fade": [
+              700,
+              1700
+            ],
+            "glint": 1
+          },
+          "sand": {
+            "color": "#ddd5c6",
+            "wet": 0.62,
+            "normal": "textures/aerial_beach_01_normal.webp",
+            "tile": 22
+          },
+          "scrub": "#4f6a2c",
+          "environment": {
+            "src": "textures/spiaggia_di_mondello_env.webp",
+            "offset": 0.125,
+            "exposure": 1
+          },
+          "sun": {
+            "azimuth": 171.4,
+            "elevation": 25.2
+          },
+          "sunColor": "#fff4e6",
+          "sunIntensity": 2.4,
+          "skyLight": 1,
+          "wind": {
+            "toward": -120,
+            "strength": 0.6,
+            "gust": 0.7,
+            "gustSpeed": 9,
+            "gustSpacing": 70
+          }
+        },
+        "bind": [
+          {
+            "target": "tide",
+            "feature": "game.progress",
+            "mode": "add",
+            "amount": 0.35,
+            "attackMs": 12000,
+            "releaseMs": 8000
+          },
+          {
+            "target": "chop",
+            "feature": "overallEnergy",
+            "amount": 0.25,
+            "attackMs": 1500,
+            "releaseMs": 4000
+          }
+        ]
+      },
+      {
+        "id": "palms",
+        "type": "coconutPalms",
+        "params": {
+          "palms": [
+            {
+              "at": [
+                -24,
+                8
+              ],
+              "height": 21,
+              "lean": 0.42,
+              "toward": 80,
+              "curve": 0.7,
+              "seed": 11
+            },
+            {
+              "at": [
+                -42,
+                -28
+              ],
+              "height": 16,
+              "lean": 0.25,
+              "toward": 60,
+              "curve": 0.5,
+              "seed": 12
+            },
+            {
+              "at": [
+                35,
+                8
+              ],
+              "height": 23,
+              "lean": 0.55,
+              "toward": -80,
+              "curve": 0.75,
+              "seed": 13
+            },
+            {
+              "at": [
+                52,
+                -40
+              ],
+              "height": 18,
+              "lean": 0.3,
+              "toward": -60,
+              "curve": 0.5,
+              "seed": 14
+            }
+          ],
+          "groves": [
+            {
+              "center": [
+                -40,
+                -2
+              ],
+              "radius": [
+                9,
+                12
+              ],
+              "count": 2,
+              "height": [
+                15,
+                19
+              ],
+              "lean": [
+                0.1,
+                0.3
+              ],
+              "spacing": 7,
+              "seed": 21
+            },
+            {
+              "center": [
+                48,
+                8
+              ],
+              "radius": [
+                7,
+                9
+              ],
+              "count": 2,
+              "height": [
+                15,
+                20
+              ],
+              "lean": [
+                0.1,
+                0.3
+              ],
+              "spacing": 7,
+              "seed": 22
+            },
+            {
+              "center": [
+                -75,
+                -85
+              ],
+              "radius": [
+                14,
+                35
+              ],
+              "count": 6,
+              "height": [
+                13,
+                20
+              ],
+              "lean": [
+                0.08,
+                0.32
+              ],
+              "spacing": 7,
+              "seed": 3
+            },
+            {
+              "center": [
+                82,
+                -64
+              ],
+              "radius": [
+                14,
+                24
+              ],
+              "count": 6,
+              "height": [
+                13,
+                19
+              ],
+              "lean": [
+                0.08,
+                0.3
+              ],
+              "spacing": 7,
+              "seed": 4
+            },
+            {
+              "center": [
+                -205,
+                -310
+              ],
+              "radius": [
+                55,
+                14
+              ],
+              "count": 14,
+              "height": [
+                13,
+                20
+              ],
+              "lean": [
+                0.05,
+                0.3
+              ],
+              "spacing": 6,
+              "seed": 5
+            },
+            {
+              "center": [
+                250,
+                -345
+              ],
+              "radius": [
+                40,
+                11
+              ],
+              "count": 9,
+              "height": [
+                12,
+                18
+              ],
+              "lean": [
+                0.05,
+                0.3
+              ],
+              "spacing": 6,
+              "seed": 6
+            },
+            {
+              "center": [
+                372,
+                -468
+              ],
+              "radius": [
+                82,
+                15
+              ],
+              "count": 28,
+              "height": [
+                13,
+                21
+              ],
+              "lean": [
+                0.05,
+                0.3
+              ],
+              "spacing": 4.5,
+              "seed": 7
+            }
+          ],
+          "waterLevel": -12,
+          "environment": {
+            "src": "textures/spiaggia_di_mondello_env.webp",
+            "offset": 0.125,
+            "exposure": 1
+          },
+          "sun": {
+            "azimuth": 171.4,
+            "elevation": 25.2
+          },
+          "sunColor": "#fff4e6",
+          "sunIntensity": 2.4,
+          "skyLight": 1,
+          "translucency": 0.7,
+          "wind": {
+            "toward": -120,
+            "strength": 0.6,
+            "gust": 0.7,
+            "gustSpeed": 9,
+            "gustSpacing": 70
+          },
+          "eye": [
+            0,
+            1,
+            31
+          ]
+        },
+        "bind": [
+          {
+            "target": "wind",
+            "feature": "game.progress",
+            "mode": "add",
+            "amount": 0.35,
+            "attackMs": 9000,
+            "releaseMs": 6000
+          },
+          {
+            "target": "wind",
+            "feature": "sectionIntensity",
+            "mode": "add",
+            "amount": 0.18,
+            "attackMs": 4000,
+            "releaseMs": 6000
+          }
+        ]
+      },
+      {
+        "id": "frigatebirds",
+        "type": "birdFlock",
+        "params": {
+          "kind": "soaring",
+          "birds": [
+            {
+              "at": {
+                "azimuth": -31,
+                "elevation": 15,
+                "distance": 170
+              },
+              "radius": 16,
+              "speed": 10,
+              "drift": 10,
+              "climb": 4,
+              "start": 0.2,
+              "wingspan": 2.2
+            },
+            {
+              "at": {
+                "azimuth": 33,
+                "elevation": 17,
+                "distance": 240
+              },
+              "radius": 20,
+              "speed": 10.5,
+              "drift": 12,
+              "climb": 5,
+              "clockwise": true,
+              "start": 0.6,
+              "wingspan": 2.2
+            }
+          ],
+          "plumage": "#1d1b1e",
+          "coverts": "#3a302a",
+          "nape": "#242022",
+          "flight": "#141215",
+          "under": "#262325",
+          "underFlight": "#2e2a2a",
+          "sun": {
+            "azimuth": 171.4,
+            "elevation": 25.2
+          },
+          "sunColor": "#fff0da",
+          "sunIntensity": 1.5,
+          "sky": "#9cbfe6",
+          "ground": "#3f8aa0",
+          "ambient": 0.5,
+          "translucency": 0.3,
+          "flapEvery": 60,
+          "hazeColor": "#b6cadc",
+          "visibility": 2600,
+          "seed": 7
+        },
+        "bind": []
+      }
+    ]
+  },
+  "reactivity": {
+    "profiles": [],
+    "bindings": []
+  },
+  "effects": {
+    "lineClear": {
+      "effect": "tideSpray",
+      "params": {}
+    },
+    "landing": {
+      "shape": "soft"
+    },
+    "transition": {
+      "effect": "mist",
+      "params": {
+        "colors": [
+          "#ffffff",
+          "#c8f2ee",
+          "#9fdcec"
+        ]
+      }
+    }
+  },
+  "music": {
+    "bpm": 90,
+    "beatsPerBar": 4,
+    "tracks": [
+      {
+        "id": "tradewind-cove-trade-winds",
+        "title": "Trade Winds",
+        "kind": "composition",
+        "src": "music/trade-winds.ts"
+      },
+      {
+        "id": "tradewind-cove-spindrift",
+        "title": "Spindrift",
+        "kind": "composition",
+        "src": "music/spindrift.ts",
+        "bpm": 112
+      }
+    ],
+    "defaultTrack": "tradewind-cove-trade-winds"
+  },
+  "ambience": {
+    "preset": "ocean",
+    "level": 0.9
+  },
+  "sfx": {
+    "preset": "organic",
+    "material": "pearl"
+  },
+  "unlock": {
+    "type": "always"
+  },
+  "thumbnail": "previews/thumb.jpg"
+}

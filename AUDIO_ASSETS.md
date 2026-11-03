@@ -61,6 +61,7 @@ Read from each `music/*.ts` file. "Swing" delays off-beat sixteenths (0 to 0.5).
 | Northern Lights | Curtains of the Sky | `music/main.ts` | 80 | B major | 0.03 | pad, warm, strings, seq, keys, lead, sparkle, sub, kick, snap, tick, riser, impact |
 | Future Nights | Afterglow District | `music/main.ts` | 118 | F minor | 0.05 | pad, stabs, arp, lead, bass, sub, kick, clap, hat, openhat, perc, riser, impact |
 | Folded Sky | Paper Wind | `music/main.ts` | 136 | E yo scale | 0.12 | pad, koto, pluck, flute, bass, kick, snare, hat, shaker, riser, impact |
+| Tradewind Cove | Trade Winds | `music/trade-winds.ts` | 90 | E major | 0.12 | pad, guitar, uke, marimba, pan, flute, bass, sub, kick, rim, shaker, conga, lowConga, strings, riser, impact |
 
 Added tracks (each world's default track is still the one above):
 
@@ -86,6 +87,9 @@ Added tracks (each world's default track is still the one above):
 | Ember Foundry | Steam Hammer | `music/steam-hammer.ts` | 112 | 5/4 | G Phrygian | Lurching 3+2 machine groove: driven kick, hammer strikes, resonant sequenced bass, tuned clanks, steam |
 | Celestial Drift | Hidden Sun | `music/hidden-sun.ts` | 64 | 4/4 | Bb minor | Vast and slow: heartbeat kick, deep sub, wide drones, sixteenth pulse sequence, star bells, gliding lead |
 | Folded Sky | Seeds on the Wind | `music/seeds-on-the-wind.ts` | 102 | 3/4 | Ab major pentatonic | Airy: kalimba and music-box arpeggios over quartal chords, whistled melody, light drums |
+| Dead Acre | Fog Line (default) | `music/fog-line.ts` | 64 | 4/4 | C# Phrygian | Slow dread: a double-thump heartbeat on a deep sub, a low breathing saw drone, string and choir swells on chords with a flat second against the root, a detuned glass bell, a clock-like tick; the heartbeat thickens and a falling half-step lead sounds at the climax. -20.8 LUFS, peak -3.8 dBFS (`e2e/audio-tracks.spec.ts`) |
+| Dead Acre | Last Lamp | `music/last-lamp.ts` | 96 | 4/4 | F harmonic minor | Driving nocturne: muffled eighth-note bass, a low filtered arpeggio, a cracked bell tolling on downbeats, war-drum toms and choir at the climaxes, a long beatless break with only drone and bell. -20.5 LUFS, peak -5.1 dBFS |
+| Tradewind Cove | Spindrift | `music/spindrift.ts` | 112 | 4/4 | A Mixolydian | Breezy island dance: soft four-on-the-floor, log-drum toms, off-beat chord plucks, marimba hook, whistled lead, kalimba, beatless lagoon break |
 
 The instrument names describe the intended character, but each one is one of the synth kinds above. For example, `oud`, `koto` (Ancient Garden) and `harp` are `pluck` voices; Folded Sky's `koto` is an `epiano` FM voice; `taiko` and `doum` are `tom`; `cello` and `strings` are `strings`; and `brass` (Ember Core) is a `pluck`. The doc comment of the Enchanted Wilderness file says "A minor with Dorian colour"; its `scale` field is `dorian`.
 
@@ -134,6 +138,7 @@ Built-in materials and the stages that use them, with each stage's ambience and 
 | Northern Lights | `aurora` | `crystal` | `aurora` |
 | Future Nights | `neon` | `neon` | `neon` |
 | Folded Sky | `paper` | `paper` | `alpine` (level 0.9) |
+| Tradewind Cove | `pearl` | `organic` | `ocean` (level 0.9) |
 
 The `glass` profile is the fallback, and it is used whenever the "classic" block style is selected.
 

@@ -48,6 +48,8 @@ In use:
 | Ancient Garden | Ninomaru Teien (Greg Zaal) | -32..40, the whole surroundings | 16k |
 | Enchanted Wilderness | Misty Pines (Greg Zaal) | -32..40, the whole surroundings | 16k |
 | Folded Sky | Montorfano (Andreas Mischok) | -32..40, the whole surroundings | 16k |
+| Dead Acre | Kloppenheim 04 (Greg Zaal), night-graded | -32..40, the whole surroundings | 16k |
+| Tradewind Cove | Spiaggia di Mondello (Andreas Mischok) | -10..40, a 3D lagoon and sand islands in front | 20k |
 
 ## Space imagery
 
