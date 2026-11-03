@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "moving-sands",
   "name": "Moving Sands",
-  "description": "A desert night under the Milky Way. Pyramids stand over moonlit dunes, quiver trees and granite boulders catch the moonlight.",
+  "description": "A desert night under the Milky Way: moonlit dunes, granite boulders and quiver trees.",
   "order": 20,
   "tags": [
     "desert",
@@ -204,132 +204,6 @@
             "releaseMs": 700
           }
         ]
-      },
-      {
-        "id": "pyramid-great",
-        "type": "model",
-        "params": {
-          "src": "models/pyramids.glb",
-          "instances": [
-            {
-              "position": [
-                -230,
-                -7,
-                -470
-              ],
-              "yaw": 18
-            }
-          ],
-          "include": "^pyramid_great$",
-          "exposure": 0.42,
-          "tint": "#c9d4ff"
-        },
-        "bind": []
-      },
-      {
-        "id": "pyramid-medium",
-        "type": "model",
-        "params": {
-          "src": "models/pyramids.glb",
-          "instances": [
-            {
-              "position": [
-                210,
-                -5,
-                -365
-              ],
-              "yaw": -14
-            }
-          ],
-          "include": "^pyramid_medium$",
-          "exposure": 0.42,
-          "tint": "#c9d4ff"
-        },
-        "bind": []
-      },
-      {
-        "id": "pyramid-small",
-        "type": "model",
-        "params": {
-          "src": "models/pyramids.glb",
-          "instances": [
-            {
-              "position": [
-                -100,
-                -3,
-                -250
-              ],
-              "yaw": 38
-            }
-          ],
-          "include": "^pyramid_small$",
-          "exposure": 0.42,
-          "tint": "#c9d4ff"
-        },
-        "bind": []
-      },
-      {
-        "id": "temple",
-        "type": "model",
-        "params": {
-          "src": "models/pyramids.glb",
-          "instances": [
-            {
-              "position": [
-                92,
-                -1,
-                -155
-              ],
-              "yaw": -28
-            }
-          ],
-          "include": "^temple_ruin$",
-          "exposure": 0.42,
-          "tint": "#c9d4ff"
-        },
-        "bind": []
-      },
-      {
-        "id": "drums",
-        "type": "model",
-        "params": {
-          "src": "models/pyramids.glb",
-          "instances": [
-            {
-              "position": [
-                64,
-                -0.5,
-                -122
-              ],
-              "yaw": 70
-            }
-          ],
-          "include": "^column_drums$",
-          "exposure": 0.42,
-          "tint": "#c9d4ff"
-        },
-        "bind": []
-      },
-      {
-        "id": "rubble",
-        "type": "model",
-        "params": {
-          "src": "models/pyramids.glb",
-          "instances": [
-            {
-              "position": [
-                -74,
-                -0.5,
-                -132
-              ],
-              "yaw": 10
-            }
-          ],
-          "include": "^rubble_pile$",
-          "exposure": 0.42,
-          "tint": "#c9d4ff"
-        },
-        "bind": []
       },
       {
         "id": "quiver-trees",

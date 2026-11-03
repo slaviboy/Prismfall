@@ -1,0 +1,30 @@
+{
+  "id": "alps_field",
+  "kind": "hdri",
+  "name": "Alps Field",
+  "page": "https://polyhaven.com/a/alps_field",
+  "api": {
+    "info": "https://api.polyhaven.com/info/alps_field",
+    "files": "https://api.polyhaven.com/files/alps_field"
+  },
+  "authors": {
+    "Andreas Mischok": "All"
+  },
+  "licence": "CC0 1.0",
+  "licenceUrl": "https://polyhaven.com/license",
+  "files": [
+    {
+      "path": "alps_field_tonemapped.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/HDRIs/extra/Tonemapped%20JPG/alps_field.jpg",
+      "md5": "6693084c7fd3831ba3c183314fbb6ade",
+      "size": 53871215
+    }
+  ],
+  "downloaded": "2026-11-03",
+  "derived": [
+    {
+      "path": "content/stages/alpine-horizon/textures/alps_field_band.webp",
+      "how": "ffmpeg crop=8192:1638:0:1138 (elevations -32..40 deg), unsharp 5:5:0.6, libwebp quality 86"
+    }
+  ]
+}

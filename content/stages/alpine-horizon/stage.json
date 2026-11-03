@@ -20,8 +20,8 @@
     "plate": "#0a0e14"
   },
   "fog": {
-    "color": "#a6b8cf",
-    "density": 0.0019
+    "color": "#b8c8d8",
+    "density": 0.0008
   },
   "backdrop": {
     "top": "#3a6aa8",
@@ -30,10 +30,10 @@
   },
   "lighting": {
     "key": {
-      "color": "#ffdcae",
-      "intensity": 2.6,
-      "azimuth": -62,
-      "elevation": 26
+      "color": "#fff4e6",
+      "intensity": 2.4,
+      "azimuth": -60,
+      "elevation": 45
     },
     "rim": {
       "color": "#ffc97a",
@@ -47,14 +47,14 @@
     "accents": [
       {
         "color": "#ffc97a",
-        "intensity": 18,
+        "intensity": 10,
         "x": -9,
         "y": -6,
         "z": 6
       },
       {
         "color": "#7ab8ff",
-        "intensity": 16,
+        "intensity": 10,
         "x": 9,
         "y": 8,
         "z": 6
@@ -78,9 +78,9 @@
     "exposure": 0.95
   },
   "camera": {
-    "pitch": 6,
+    "pitch": 2,
     "yaw": 0,
-    "sway": 0.6,
+    "sway": 0.3,
     "targetY": 0
   },
   "blocks": {
@@ -102,637 +102,31 @@
         "id": "sky",
         "type": "sky",
         "params": {
-          "top": "#2f5c9a",
-          "mid": "#8fb0d6",
-          "midHeight": 0.18,
-          "horizon": "#ffd6a6",
-          "bottom": "#2a3a4a",
-          "horizonGlow": 0.4,
+          "top": "#4a72aa",
+          "mid": "#83a4ce",
+          "midHeight": 0.64,
+          "horizon": "#9ab4d0",
+          "bottom": "#5a6a48",
+          "horizonGlow": 0.0,
           "horizonWidth": 0.1,
-          "stars": 0.0,
-          "disc": {
-            "direction": [
-              -0.55,
-              0.14,
-              -1
+          "stars": 0,
+          "panorama": {
+            "src": "textures/alps_field_band.webp",
+            "elevation": [
+              -32,
+              40
             ],
-            "color": "#fff0d0",
-            "size": 2.0,
-            "halo": 8,
-            "intensity": 0.95
+            "offset": 0.765,
+            "exposure": 1.0,
+            "fade": 8
           }
-        },
-        "bind": []
-      },
-      {
-        "id": "valley",
-        "type": "terrain",
-        "params": {
-          "height": {
-            "base": -15,
-            "seed": 31,
-            "floor": 0.6,
-            "layers": [
-              {
-                "type": "fbm",
-                "amplitude": 7,
-                "scale": 70,
-                "octaves": 4
-              },
-              {
-                "type": "ridged",
-                "amplitude": 55,
-                "scale": 150,
-                "octaves": 4,
-                "sharpness": 1.7,
-                "band": {
-                  "near": 170,
-                  "ramp": 110,
-                  "far": 5000
-                }
-              },
-              {
-                "type": "ridged",
-                "amplitude": 150,
-                "scale": 300,
-                "octaves": 5,
-                "sharpness": 2.1,
-                "band": {
-                  "near": 480,
-                  "ramp": 200,
-                  "far": 5000
-                },
-                "offset": [
-                  90,
-                  40
-                ]
-              }
-            ],
-            "clearing": {
-              "center": [
-                -10,
-                -110
-              ],
-              "radius": 40,
-              "falloff": 34,
-              "depth": -2.4
-            }
-          },
-          "mesh": {
-            "near": 12,
-            "far": 1300,
-            "rows": 240,
-            "cols": 240,
-            "spread": 1.45
-          },
-          "colors": {
-            "low": "#5a8a3c",
-            "high": "#a2b65e",
-            "rock": "#6e6a66",
-            "snow": "#ffffff",
-            "snowLine": 80,
-            "sparkle": "#ffffff"
-          },
-          "ripples": {
-            "strength": 0.06,
-            "wavelength": 1.8,
-            "direction": 40,
-            "speed": 0.02,
-            "fadeDistance": 50
-          },
-          "sparkle": 0.15,
-          "roughness": 0.88,
-          "rockSlope": 0.36
-        },
-        "bind": []
-      },
-      {
-        "id": "lake",
-        "type": "water",
-        "params": {
-          "y": -15.9,
-          "deep": "#1e3a50",
-          "shallow": "#5a8aa6",
-          "skyTop": "#4a7ab0",
-          "skyHorizon": "#ffe0b8",
-          "glow": "#ffc97a",
-          "rippleColor": "#fff0d0",
-          "glowStrength": 0.06,
-          "amplitude": 0.0,
-          "wavelength": 9,
-          "speed": 0.25,
-          "moonDirection": [
-            -0.55,
-            0.14,
-            -1
-          ]
-        },
-        "bind": []
-      },
-      {
-        "id": "slope-forest",
-        "type": "scatter",
-        "params": {
-          "src": "/content/shared/flora/flora.glb",
-          "count": 900,
-          "seed": 7,
-          "items": [
-            {
-              "mesh": "pine",
-              "weight": 4,
-              "scale": [
-                0.9,
-                1.7
-              ],
-              "tintJitter": 0.14
-            },
-            {
-              "mesh": "pine_snow",
-              "weight": 1,
-              "scale": [
-                0.9,
-                1.6
-              ],
-              "tintJitter": 0.1
-            }
-          ],
-          "area": {
-            "kind": "band",
-            "near": 70,
-            "far": 480,
-            "spread": 1.4
-          },
-          "exclude": [
-            {
-              "center": [
-                0,
-                -10
-              ],
-              "radius": 34
-            },
-            {
-              "center": [
-                -10,
-                -110
-              ],
-              "radius": 46
-            }
-          ],
-          "clustering": 0.5,
-          "clusterScale": 90,
-          "sway": {
-            "amount": 0.15,
-            "speed": 0.7
-          },
-          "materials": [
-            {
-              "match": "^needles",
-              "preset": "foliage",
-              "color": "#2c4a30"
-            },
-            {
-              "match": "^snow",
-              "preset": "stone",
-              "color": "#f4f8ff",
-              "roughness": 0.65
-            },
-            {
-              "match": "^bark",
-              "preset": "stone",
-              "color": "#3e2e24"
-            }
-          ]
-        },
-        "bind": [
-          {
-            "target": "sway",
-            "feature": "overallEnergy",
-            "amount": 0.35,
-            "attackMs": 500,
-            "releaseMs": 1500
-          }
-        ]
-      },
-      {
-        "id": "meadow-rocks",
-        "type": "scatter",
-        "params": {
-          "src": "/content/shared/flora/flora.glb",
-          "count": 40,
-          "seed": 9,
-          "items": [
-            {
-              "mesh": "rock_a",
-              "weight": 2,
-              "scale": [
-                0.5,
-                1.4
-              ]
-            },
-            {
-              "mesh": "rock_b",
-              "weight": 1,
-              "scale": [
-                0.4,
-                1.0
-              ]
-            },
-            {
-              "mesh": "crystal_cluster",
-              "weight": 0.6,
-              "scale": [
-                0.5,
-                1.0
-              ]
-            }
-          ],
-          "area": {
-            "kind": "band",
-            "near": 26,
-            "far": 120,
-            "spread": 1.4
-          },
-          "exclude": [
-            {
-              "center": [
-                0,
-                -10
-              ],
-              "radius": 30
-            },
-            {
-              "center": [
-                -10,
-                -110
-              ],
-              "radius": 42
-            }
-          ],
-          "clustering": 0.4,
-          "clusterScale": 40,
-          "alignToSlope": true,
-          "sway": {
-            "amount": 0.0
-          },
-          "materials": [
-            {
-              "match": "^rock",
-              "preset": "stone",
-              "color": "#8a8580",
-              "roughness": 0.8
-            },
-            {
-              "match": "^crystal",
-              "preset": "ice",
-              "color": "#bfe0ff",
-              "emissive": "#7ab8ff",
-              "emissiveIntensity": 0.2,
-              "musicGlow": 1
-            }
-          ]
-        },
-        "bind": [
-          {
-            "target": "emissive",
-            "feature": "highMid",
-            "amount": 0.5,
-            "category": "lighting",
-            "attackMs": 40,
-            "releaseMs": 600
-          }
-        ]
-      },
-      {
-        "id": "waterfall",
-        "type": "particles",
-        "params": {
-          "count": 4200,
-          "center": [
-            118,
-            6,
-            -215
-          ],
-          "size": [
-            9,
-            70,
-            4
-          ],
-          "color": "#f2fbff",
-          "colorB": "#bfe4ff",
-          "minSize": 0.3,
-          "maxSize": 0.8,
-          "velocity": [
-            0,
-            -14,
-            0
-          ],
-          "turbulence": 0.3,
-          "twinkle": 0.2,
-          "brightness": 1.1,
-          "shape": "streak",
-          "seed": 51,
-          "bloom": 0.3
-        },
-        "bind": [
-          {
-            "target": "speed",
-            "feature": "overallEnergy",
-            "amount": 0.3,
-            "category": "particles",
-            "attackMs": 300,
-            "releaseMs": 1200
-          }
-        ]
-      },
-      {
-        "id": "falls-mist",
-        "type": "clouds",
-        "params": {
-          "count": 12,
-          "center": [
-            118,
-            -14,
-            -212
-          ],
-          "spread": [
-            36,
-            8,
-            18
-          ],
-          "size": [
-            18,
-            34
-          ],
-          "color": "#ffffff",
-          "colorB": "#d8ecff",
-          "opacity": 0.35,
-          "drift": [
-            0.4,
-            0.3,
-            0
-          ],
-          "additive": false,
-          "seed": 4
-        },
-        "bind": []
-      },
-      {
-        "id": "eagles",
-        "type": "swarm",
-        "params": {
-          "kind": "eagle",
-          "count": 3,
-          "flocks": 3,
-          "motion": {
-            "kind": "orbit",
-            "center": [
-              -30,
-              55,
-              -190
-            ],
-            "radius": [
-              90,
-              10,
-              60
-            ],
-            "speed": 7
-          },
-          "spread": [
-            2,
-            1,
-            2
-          ],
-          "size": [
-            3.2,
-            4.0
-          ],
-          "color": "#4a3a2e",
-          "colorB": "#6a5a4a",
-          "tempo": 1,
-          "seed": 3
-        },
-        "bind": []
-      },
-      {
-        "id": "birds",
-        "type": "swarm",
-        "params": {
-          "kind": "bird",
-          "count": 22,
-          "flocks": 1,
-          "motion": {
-            "kind": "cross",
-            "from": [
-              -240,
-              30,
-              -150
-            ],
-            "to": [
-              240,
-              40,
-              -180
-            ],
-            "speed": 11,
-            "rest": 25
-          },
-          "spread": [
-            12,
-            3,
-            6
-          ],
-          "size": [
-            2.2,
-            3.0
-          ],
-          "color": "#2a2a30",
-          "colorB": "#3a3a44",
-          "tempo": 1,
-          "seed": 6
-        },
-        "bind": []
-      },
-      {
-        "id": "chamois",
-        "type": "creatureHerd",
-        "params": {
-          "model": "/content/shared/creatures/deer.glb",
-          "rig": "/content/shared/creatures/deer.rig.json",
-          "representation": "particles",
-          "groups": [
-            {
-              "path": {
-                "kind": "line",
-                "from": [
-                  -120,
-                  0,
-                  -46
-                ],
-                "to": [
-                  130,
-                  0,
-                  -56
-                ]
-              },
-              "members": 3,
-              "formation": "herd",
-              "spacing": 4,
-              "speed": 0.9,
-              "scale": 2.2,
-              "start": 0.3,
-              "rest": 18,
-              "fade": 14,
-              "stopEvery": 22,
-              "stopFor": 8
-            }
-          ],
-          "particles": {
-            "perCreature": 2200,
-            "size": 0.07,
-            "color": "#fff0cf",
-            "colorB": "#ffc97a",
-            "brightness": 1.0,
-            "jitter": 0.025,
-            "bloom": 0.4,
-            "scatter": 6,
-            "wind": [
-              0.8,
-              0.4,
-              0.2
-            ],
-            "lodDistance": 80
-          },
-          "dust": {
-            "enabled": true,
-            "color": "#d8c8a8",
-            "amount": 0.6,
-            "size": 0.45
-          },
-          "seed": 9
-        },
-        "bind": []
-      },
-      {
-        "id": "peak-clouds",
-        "type": "clouds",
-        "params": {
-          "count": 22,
-          "center": [
-            40,
-            70,
-            -420
-          ],
-          "spread": [
-            800,
-            50,
-            200
-          ],
-          "size": [
-            90,
-            200
-          ],
-          "color": "#ffffff",
-          "colorB": "#e6d6c8",
-          "opacity": 0.36,
-          "drift": [
-            2.4,
-            0,
-            0.2
-          ],
-          "additive": false,
-          "seed": 13
-        },
-        "bind": [
-          {
-            "target": "opacity",
-            "feature": "sectionIntensity",
-            "amount": 0.25,
-            "attackMs": 1200,
-            "releaseMs": 3000
-          }
-        ]
-      },
-      {
-        "id": "valley-haze",
-        "type": "clouds",
-        "params": {
-          "count": 18,
-          "center": [
-            0,
-            -6,
-            -260
-          ],
-          "spread": [
-            700,
-            14,
-            200
-          ],
-          "size": [
-            70,
-            140
-          ],
-          "color": "#d6e2ee",
-          "colorB": "#bccce0",
-          "opacity": 0.2,
-          "drift": [
-            1.2,
-            0,
-            0.2
-          ],
-          "additive": false,
-          "seed": 17
-        },
-        "bind": []
-      },
-      {
-        "id": "pollen",
-        "type": "particles",
-        "params": {
-          "count": 2200,
-          "center": [
-            0,
-            -2,
-            -40
-          ],
-          "size": [
-            150,
-            30,
-            90
-          ],
-          "color": "#fff2c0",
-          "colorB": "#ffd88a",
-          "minSize": 0.03,
-          "maxSize": 0.08,
-          "velocity": [
-            0.6,
-            0.2,
-            0.1
-          ],
-          "turbulence": 0.8,
-          "twinkle": 0.7,
-          "brightness": 0.9,
-          "shape": "soft",
-          "seed": 55,
-          "bloom": 0.4
         },
         "bind": []
       }
     ]
   },
   "reactivity": {
-    "profiles": [
-      {
-        "name": "treble-sparkle",
-        "layers": [
-          "pollen"
-        ]
-      },
-      {
-        "name": "flux-turbulence",
-        "layers": [
-          "pollen"
-        ]
-      }
-    ],
+    "profiles": [],
     "bindings": []
   },
   "effects": {
