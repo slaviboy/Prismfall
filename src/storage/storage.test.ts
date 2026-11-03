@@ -33,7 +33,9 @@ describe('settings schema', () => {
     expect(old.settings.camera.fov).toBe(50);
     const v2 = migrateSettings({ version: 2, graphics: { depthOfField: true } });
     expect(v2.settings.graphics.depthOfField).toBe(false);
-    const chosen = migrateSettings({ version: 3, camera: { shake: true, movementIntensity: 0.4 } });
+    const v3 = migrateSettings({ version: 3, setup: { music: 'stage:frozen-kingdom:frozen-kingdom-glass-meridian' } });
+    expect(v3.settings.setup.music).toBe('stage');
+    const chosen = migrateSettings({ version: 4, camera: { shake: true, movementIntensity: 0.4 } });
     expect(chosen.settings.camera.shake).toBe(true);
     expect(chosen.settings.camera.movementIntensity).toBe(0.4);
   });

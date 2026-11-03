@@ -326,6 +326,16 @@ export class GameShell {
     return true;
   }
 
+  /** A short note naming the music at the start of a game, so the player always knows what plays. */
+  private announceTrack(stageId: string): void {
+    const m = getStage(stageId)?.manifest;
+    const own = m?.music.tracks.find((t) => t.id === m.music.defaultTrack) ?? m?.music.tracks[0];
+    const override = this.currentTrackId;
+    void (override ? this.catalog().then((c) => c.find((t) => t.id === override)?.title) : Promise.resolve(own?.title)).then((title) => {
+      if (title) toast(`Now playing: ${title}`, 'info', 3500);
+    });
+  }
+
   /** Free play: the world's music, a shuffled track or the chosen track (Music Room). */
   private async applyFreePlayMusic(): Promise<void> {
     const choice = getSettings().setup.music;
@@ -561,6 +571,7 @@ export class GameShell {
     if (stageInfo?.available && this.audio.stageId !== options.stageId) await this.loadStageAudio(stageInfo);
     if (options.modeId === 'voyage') await this.playTrack(null);
     else await this.applyFreePlayMusic();
+    this.announceTrack(options.stageId);
     const s = getSettings();
     const mode = getMode(options.modeId);
     const config: SessionConfig = {
