@@ -16,3 +16,6 @@ Thumbs.db
 .env
 .env.*
 .claude/*.lock
+
+# Reference screenshots and screen recordings of other games: local study material only, never committed
+reference-capture/
