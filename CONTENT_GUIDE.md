@@ -2,7 +2,7 @@
 
 How to add a world (a stage) to Prismfall without touching engine code. Folded Sky (`content/stages/folded-sky/`) was added this way as a scalability test: every file it needs lives in its own folder, and no file under `src/` was changed for it. This guide uses it as the worked example from start to finish.
 
-For the richest data-only example, read `content/stages/moving-sands/stage.json`: procedural dunes (`terrain`), Blender ruins snapped to the dunes (`gltfScene`), a camel caravan built from a Blender model and rig (`creatureHerd`), a themed line clear (`sandSpiral`) and a themed entrance (`sand`). Moving Sands has no `scatter` layer; for instanced props see Frozen Kingdom, Enchanted Wilderness or Folded Sky itself.
+For the richest data-only example, read `content/stages/moving-sands/stage.json`: procedural dunes (`terrain`), Blender ruins snapped to the dunes (`gltfScene`), a camel caravan built from a Blender model and rig (`creatureHerd`), a themed line clear (`sandSpiral`) and a themed entrance (`sand`). Moving Sands has no `scatter` layer; for instanced props see Frozen Kingdom, Enchanted Wilderness or Folded Sky itself. Its far background is the one part that is not data-only: the stage module (`content/stages/moving-sands/stage.ts`) registers `sandsNightSky` (a generated night sky: airglow, a Milky Way with dust lanes, coloured twinkling stars, the slow turn of the sky) and `sandsFarDunes` (receding ridgelines of a generated dune sea, scanned kopjes and spindrift), with the dune geometry in plain TypeScript in `duneField.ts`.
 
 Related documents: `BLENDER_PIPELINE.md` (models), `AUDIO_ASSETS.md` (music and sound), `ASSET_LICENSES.md` (origin and licence of every shipped file).
 
