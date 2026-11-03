@@ -12,7 +12,7 @@ Per-world status of what is on screen, judged from in-game screenshots and recor
 | Ancient Garden | Photo (Ninomaru Teien, 16k), whole surroundings | None | Garden, fences, rock garden | Drifting petals | None known |
 | Enchanted Wilderness | Photo (Misty Pines, 16k), whole surroundings | None | Forest, fog, ferns | None | None known |
 | Northern Lights | Procedural night sky | Mirror lake, dark ridge silhouettes, spruce silhouettes, reindeer silhouettes | None | Everything | Candidate for a real night panorama with snow and mountains (none found on Poly Haven) |
-| The Abyss | Procedural deep water | Seafloor, light shafts, whale, jellyfish, fish | None | Everything | The jellyfish and fish are being rebuilt as realistic procedural creatures; no licensed animated sea life found |
+| The Abyss | Procedural deep water | Seafloor, light shafts, moon jellyfish, silver fish schools | None | Everything | Jellyfish (pulsing bell, canals, oral arms, trailing tentacles) and herring schools (swimming body wave, countershading, silver flash) are anatomical procedural models; no licensed animated sea life found |
 | Luminous Tide | Procedural moonlit sea | Ocean with glitter path, headland silhouettes | None | Everything | Candidate for a real moonlit-sea panorama |
 | Celestial Drift | Procedural space | Gas giant, galaxy, nebula | Scanned moon-rock asteroids | Planet, galaxy | The planet and galaxy are procedural |
 | Future Nights | Procedural night city | Instanced towers, reflective wet street, rain | None | Everything | Candidate for a real night-city panorama |
@@ -27,7 +27,7 @@ These looked primitive or gimmicky in game and were taken out:
 - **Ring and column effects:** the column of light that crawled across the board on clears, and the generic accent ring on QUADs and level-ups.
 - **Northern Lights:** ice arches, glowing crystals, birds of light, light streams and motes.
 - **Frozen Kingdom:** the citadel pieces, icebergs and mist sprites.
-- **The Abyss:** tiled caustics, sunken ruins, reef and kelp scatter, rays, turtles and bubbles.
+- **The Abyss:** tiled caustics, sunken ruins, reef and kelp scatter, rays, turtles, bubbles, the blob whale, and the old dome jellyfish and flat fish swarm.
 - **Luminous Tide:** light pillars and star motes.
 - **Celestial Drift:** the orbit rings, beat pulsars, energy streams and the particle whale.
 - **Future Nights:** the drones and data motes.

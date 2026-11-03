@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "the-abyss",
   "name": "The Abyss",
-  "description": "Deep beneath the waves, light falls in shafts over kelp forests and sunken ruins. Schools turn as one, jellyfish glow, and a great whale passes in the blue.",
+  "description": "Deep beneath the waves, light falls in shafts over the seafloor. Moon jellies pulse and drift, and silver schools turn as one in the blue.",
   "order": 40,
   "tags": [
     "ocean",
@@ -245,37 +245,51 @@
       },
       {
         "id": "fish-schools",
-        "type": "swarm",
+        "type": "fishSchool",
         "params": {
-          "kind": "fish",
-          "count": 260,
-          "flocks": 1,
-          "motion": {
-            "kind": "wander",
-            "center": [
-              0,
-              2,
-              -70
-            ],
-            "size": [
-              200,
-              24,
-              80
-            ],
-            "speed": 6
-          },
-          "spread": [
-            14,
-            4,
-            9
+          "count": 300,
+          "schools": [
+            {
+              "center": [
+                -58,
+                4,
+                -56
+              ],
+              "radius": [
+                20,
+                3,
+                12
+              ],
+              "speed": 5.5,
+              "share": 1.1,
+              "start": 0.1
+            },
+            {
+              "center": [
+                66,
+                -2,
+                -86
+              ],
+              "radius": [
+                24,
+                4,
+                14
+              ],
+              "speed": 5,
+              "share": 1,
+              "clockwise": true,
+              "start": 0.6
+            }
           ],
-          "size": [
-            4,
-            6
+          "shape": [
+            22,
+            6,
+            12
           ],
-          "color": "#7a9ab0",
-          "colorB": "#40607a",
-          "tempo": 1,
+          "length": [
+            2.0,
+            2.8
+          ],
           "seed": 3
         },
         "bind": [
@@ -290,39 +304,31 @@
       },
       {
         "id": "jellyfish",
-        "type": "swarm",
+        "type": "jellyfish",
         "params": {
-          "kind": "jellyfish",
           "count": 4,
-          "flocks": 4,
-          "motion": {
-            "kind": "wander",
+          "size": [
+            4,
+            6.5
+          ],
+          "area": {
             "center": [
               0,
-              8,
-              -95
+              9,
+              -38
             ],
             "size": [
-              560,
-              44,
-              170
+              72,
+              20,
+              26
             ],
-            "speed": 1.4
+            "clearance": 0.42,
+            "viewZ": 33
           },
-          "spread": [
-            1,
-            1,
-            1
-          ],
-          "size": [
-            3,
-            4.5
-          ],
-          "color": "#9fdcff",
-          "colorB": "#cdb8ff",
-          "glow": 0.35,
-          "tempo": 1,
-          "seed": 8
+          "tentacles": 30,
+          "tentacleLength": 2.2,
+          "pulseRate": 0.75,
+          "seed": 7
         },
         "bind": [
           {
@@ -334,50 +340,6 @@
             "releaseMs": 800
           }
         ]
-      },
-      {
-        "id": "whale",
-        "type": "creatureHerd",
-        "params": {
-          "model": "/content/shared/creatures/whale.glb",
-          "rig": "/content/shared/creatures/whale.rig.json",
-          "representation": "mesh",
-          "groups": [
-            {
-              "path": {
-                "kind": "line",
-                "from": [
-                  -230,
-                  26,
-                  -115
-                ],
-                "to": [
-                  230,
-                  34,
-                  -130
-                ]
-              },
-              "members": 1,
-              "speed": 1.2,
-              "scale": 4.0,
-              "start": 0.35,
-              "rest": 30,
-              "fade": 40,
-              "followGround": false
-            }
-          ],
-          "mesh": {
-            "color": "#3a5466",
-            "roughness": 0.65,
-            "rim": "#7ff4ff",
-            "rimStrength": 0.12
-          },
-          "dust": {
-            "enabled": false
-          },
-          "seed": 12
-        },
-        "bind": []
       },
       {
         "id": "marine-snow",
