@@ -309,6 +309,10 @@
     },
     "landing": {
       "shape": "bubble"
+    },
+    "transition": {
+      "effect": "mist",
+      "params": {}
     }
   },
   "music": {

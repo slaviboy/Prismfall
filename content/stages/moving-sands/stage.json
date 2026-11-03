@@ -578,6 +578,10 @@
     },
     "landing": {
       "shape": "soft"
+    },
+    "transition": {
+      "effect": "sand",
+      "params": {}
     }
   },
   "music": {

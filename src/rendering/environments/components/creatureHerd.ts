@@ -40,6 +40,8 @@ import { createRigNodes, forwardYaw, rigSchema, vec4At, type CreatureRig } from 
 import { GroupMotion, PathTrack, crossingFade, pathSchema, type PathPoint } from '../../creatures/paths';
 import { bakeCreatureGeometry, creatureBufferGeometry, sampleSurface } from '../../creatures/surface';
 import { colorUniform, floatUniform, seeded, zColor, zVec3 } from './common';
+import { revealMask } from './reveal';
+import { additiveFog } from '../../shaders/uniforms';
 
 const groupSchema = z.object({
   path: pathSchema,
@@ -262,12 +264,12 @@ export const creatureHerdComponent: ComponentFactory<Params> = {
       const material = new SpriteNodeMaterial();
       material.positionNode = world;
       material.scaleNode = size;
-      material.colorNode = vec4(light, p.particles.additive ? 1 : shape.mul(u.presence));
+      material.colorNode = p.particles.additive ? vec4(additiveFog(light), 1) : vec4(light, shape.mul(u.presence));
       material.transparent = true;
       material.depthWrite = false;
       material.blending = p.particles.additive ? AdditiveBlending : NormalBlending;
-      material.fog = true;
-      material.mrtNode = mrt({ emissive: vec4(light.mul(p.particles.bloom), 1) });
+      material.fog = !p.particles.additive;
+      material.mrtNode = p.particles.additive ? mrt({ emissive: vec4(light.mul(p.particles.bloom), 1) }) : mrt({ emissive: vec4(tint.mul(u.brightness).mul(p.particles.bloom), shape.mul(u.presence)) });
       const sprite = new Sprite(material);
       sprite.count = total;
       sprite.frustumCulled = false;
@@ -297,7 +299,7 @@ export const creatureHerdComponent: ComponentFactory<Params> = {
       })();
       // Dissolve in and out with a stable per-point pattern (no transparency sorting).
       const fade = vec4At(stB, instanceIndex).z;
-      material.opacityNode = step(hash(rest.mul(97.3)), fade.mul(1.02).mul(u.presence));
+      material.opacityNode = step(hash(rest.mul(97.3)), fade.mul(1.02)).mul(revealMask(u.presence));
       material.alphaTest = 0.5;
       const rimGlow = colorUniform(p.mesh.rim).mul(p.mesh.rimStrength).mul(u.presence);
       material.emissiveNode = rimGlow.mul(float(0.3).add(u.music.mul(0.4)));

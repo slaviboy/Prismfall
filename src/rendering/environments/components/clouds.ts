@@ -1,7 +1,8 @@
 import { AdditiveBlending, InstancedBufferAttribute, NormalBlending, Sprite, SpriteNodeMaterial, type Node } from 'three/webgpu';
-import { cos, dot, float, fract, instancedBufferAttribute, length, mix, mrt, sin, smoothstep, uv, vec2, vec3, vec4 } from 'three/tsl';
+import { cos, float, instancedBufferAttribute, length, mix, mrt, mx_noise_float, sin, smoothstep, uv, vec2, vec3, vec4 } from 'three/tsl';
 import { z } from 'zod';
 import type { ComponentFactory } from '../../../sdk/types';
+import { additiveFog } from '../../shaders/uniforms';
 import { colorUniform, floatUniform, seeded, zColor, zVec3 } from './common';
 
 const schema = z.object({
@@ -41,18 +42,22 @@ export const cloudsComponent: ComponentFactory<z.infer<typeof schema>> = {
     const q = uv().sub(0.5);
     // Two octaves of cheap rotating hash-noise give a cloudy, non-repeating silhouette.
     const rot = (k: number) => vec2(q.x.mul(cos(a.w.mul(k))).sub(q.y.mul(sin(a.w.mul(k)))), q.x.mul(sin(a.w.mul(k))).add(q.y.mul(cos(a.w.mul(k)))));
-    const n = (v: Node<'vec2'>, s: number) => fract(sin(dot(v.mul(s).floor(), vec2(12.9898, 78.233))).mul(43758.5453));
-    const blob = smoothstep(0.5, 0.05, length(q)).mul(float(0.7).add(n(rot(7).add(a.w), 6).mul(0.15)).add(sin(rot(3).x.mul(9).add(t.mul(0.05))).mul(0.15)));
+    // Smooth noise (no blocky hash cells) so billboard edges never read as rectangles.
+    const n = (v: Node<'vec2'>, s: number) => mx_noise_float(vec3(v.mul(s), a.w.mul(13.7))).mul(0.5).add(0.5);
+    const blob = smoothstep(0.5, 0.05, length(q)).pow(1.4).mul(float(0.65).add(n(rot(7), 3.2).mul(0.3)).add(sin(rot(3).x.mul(9).add(t.mul(0.05))).mul(0.1)));
     const tint = mix(colorUniform(p.color), colorUniform(p.colorB), a.w);
     const alpha = blob.mul(u.opacity).mul(u.presence);
     const material = new SpriteNodeMaterial();
     material.positionNode = pos;
     material.scaleNode = size;
-    material.colorNode = p.additive ? vec4(tint.mul(alpha), 1) : vec4(tint, alpha);
+    material.colorNode = p.additive ? vec4(additiveFog(tint.mul(alpha)), 1) : vec4(tint, alpha);
     material.transparent = true;
     material.depthWrite = false;
     material.blending = p.additive ? AdditiveBlending : NormalBlending;
-    material.mrtNode = mrt({ emissive: vec4(tint.mul(alpha).mul(0.15), 1) });
+    material.fog = !p.additive;
+    // Normal-blended sprites write bloom with their own alpha so each quad blends into the bloom buffer
+    // instead of overwriting it (which shows as rectangles over bright skies).
+    material.mrtNode = p.additive ? mrt({ emissive: vec4(tint.mul(alpha).mul(0.15), 1) }) : mrt({ emissive: vec4(tint.mul(0.15), alpha) });
     const sprite = new Sprite(material);
     sprite.count = count;
     sprite.frustumCulled = false;

@@ -18,6 +18,7 @@ import {
 } from 'three/tsl';
 import { z } from 'zod';
 import type { ComponentFactory } from '../../../sdk/types';
+import { additiveFog } from '../../shaders/uniforms';
 import { colorUniform, floatUniform, scaledCount, seeded, zColor, zVec3 } from './common';
 
 const SHAPES = { soft: 0, star: 1, spark: 2, snow: 3, bubble: 4, streak: 5 } as const;
@@ -116,12 +117,12 @@ export const particlesComponent: ComponentFactory<ParticleFieldParams> = {
     const material = new SpriteNodeMaterial();
     material.positionNode = pos;
     material.scaleNode = p.shape === 'streak' ? vec2(size.mul(0.35), size.mul(3)) : size;
-    material.colorNode = vec4(light, p.additive ? 1 : shapeMask.mul(u.presence));
+    material.colorNode = p.additive ? vec4(additiveFog(light), 1) : vec4(light, shapeMask.mul(u.presence));
     material.transparent = true;
     material.depthWrite = false;
     material.blending = p.additive ? AdditiveBlending : NormalBlending;
-    material.fog = true;
-    material.mrtNode = mrt({ emissive: vec4(light.mul(p.bloom), 1) });
+    material.fog = !p.additive;
+    material.mrtNode = p.additive ? mrt({ emissive: vec4(light.mul(p.bloom), 1) }) : mrt({ emissive: vec4(tint.mul(twinkle).mul(u.brightness).mul(p.bloom), shapeMask.mul(u.presence)) });
     const sprite = new Sprite(material);
     sprite.count = count;
     sprite.frustumCulled = false;

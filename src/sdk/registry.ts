@@ -1,4 +1,4 @@
-import type { ComponentFactory, LineClearEffect, Registry, SdkRegistries } from './types';
+import type { ComponentFactory, LineClearEffect, Registry, SdkRegistries, TransitionEffect } from './types';
 
 /** Simple keyed registry; later registrations of the same key replace earlier ones (stage overrides). */
 export class KeyedRegistry<T extends { readonly id?: string; readonly type?: string }> implements Registry<T> {
@@ -33,4 +33,5 @@ export class KeyedRegistry<T extends { readonly id?: string; readonly type?: str
 export const registries: SdkRegistries = {
   components: new KeyedRegistry<ComponentFactory>('components'),
   lineClearEffects: new KeyedRegistry<LineClearEffect>('lineClearEffects'),
+  transitions: new KeyedRegistry<TransitionEffect>('transitions'),
 };

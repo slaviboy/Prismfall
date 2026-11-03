@@ -308,6 +308,10 @@
     },
     "landing": {
       "shape": "star"
+    },
+    "transition": {
+      "effect": "stars",
+      "params": {}
     }
   },
   "music": {

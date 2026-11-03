@@ -396,6 +396,10 @@
     },
     "landing": {
       "shape": "spark"
+    },
+    "transition": {
+      "effect": "embers",
+      "params": {}
     }
   },
   "music": {

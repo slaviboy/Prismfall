@@ -150,6 +150,25 @@ export interface EffectContext {
   readonly reducedMotion: boolean;
 }
 
+/** What a themed stage transition can use while the worlds crossfade. */
+export interface TransitionContext {
+  readonly bursts: BurstSystem;
+  readonly palette: StagePalette;
+  /** Crossfade length in seconds. */
+  readonly duration: number;
+  /** Audio-clock-independent effect time (frame uniforms). */
+  readonly time: number;
+  readonly intensityScale: number;
+  readonly reducedMotion: boolean;
+}
+
+/** The incoming world's entrance (sand sweep, frost, stars...). */
+export interface TransitionEffect {
+  readonly id: string;
+  readonly description: string;
+  play(ctx: TransitionContext, params: Readonly<Record<string, unknown>>): void;
+}
+
 /** A custom stage module (content/stages/<id>/stage.ts) registers its own pieces through the SDK. */
 export interface StageModule {
   readonly sdkVersion: string;
@@ -159,6 +178,7 @@ export interface StageModule {
 export interface SdkRegistries {
   readonly components: Registry<ComponentFactory>;
   readonly lineClearEffects: Registry<LineClearEffect>;
+  readonly transitions: Registry<TransitionEffect>;
 }
 
 export interface Registry<T extends { readonly id?: string; readonly type?: string }> {

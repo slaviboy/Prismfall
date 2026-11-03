@@ -27,6 +27,7 @@ import { z } from 'zod';
 import type { ComponentFactory } from '../../../sdk/types';
 import { createHeightfield, heightNormal, heightfieldSchema } from '../terrain/heightfield';
 import { colorUniform, floatUniform, zColor } from './common';
+import { revealMask } from './reveal';
 
 const schema = z.object({
   height: heightfieldSchema.prefault({}),
@@ -196,8 +197,8 @@ export const terrainComponent: ComponentFactory<Params> = {
     material.emissiveNode = emissive;
     material.mrtNode = mrt({ emissive: vec4(emissive.mul(0.6), 1) });
     material.fog = true;
-    // Stage crossfades dissolve the ground grain by grain instead of fading an opaque surface to black.
-    material.opacityNode = step(mx_cell_noise_float(floor(wp.mul(2.5))), u.presence.mul(1.001));
+    // Stage crossfades reveal the ground outward from the playfield instead of fading it to black.
+    material.opacityNode = revealMask(u.presence);
     material.alphaTest = 0.5;
     if (p.heatHaze > 0) {
       // Heat shimmer: distant ground wavers slightly, strongest low on the horizon.

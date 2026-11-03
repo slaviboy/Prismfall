@@ -1,5 +1,5 @@
-import type { NodeMaterial, Vector3 } from 'three/webgpu';
-import { mrt, uniform, vec4 } from 'three/tsl';
+import type { Node, NodeMaterial, Vector3 } from 'three/webgpu';
+import { cameraPosition, exp, length, mrt, positionWorld, uniform, vec4 } from 'three/tsl';
 
 const _floatU = (v: number) => uniform(v);
 /** Colour uniforms use vec3 (linear RGB) — composes cleanly in TSL. */
@@ -33,7 +33,19 @@ export const frameUniforms = {
   effectsIntensity: uniform(1),
   flashLimit: uniform(1),
   reactivity: uniform(1),
+  /** Current scene fog density (FogExp2), for materials that fog themselves. */
+  fogDensity: uniform(0),
 };
+
+/**
+ * Fog for additive materials. Built-in fog mixes towards the fog colour, which on an additive quad
+ * adds that colour across the whole quad (visible rectangles under bright fog). Additive light
+ * should instead fade with distance: multiply by the fog transmittance and set `material.fog = false`.
+ */
+export function additiveFog<T extends Node<'vec3'>>(color: T): T {
+  const d = length(positionWorld.sub(cameraPosition)).mul(frameUniforms.fogDensity);
+  return color.mul(exp(d.mul(d).negate())) as unknown as T;
+}
 
 export type FrameUniforms = typeof frameUniforms;
 

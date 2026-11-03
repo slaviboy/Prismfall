@@ -2,6 +2,7 @@ import { AdditiveBlending, DoubleSide, InstancedBufferAttribute, InstancedMesh, 
 import { exp, float, fract, instancedBufferAttribute, mrt, vec4 } from 'three/tsl';
 import { z } from 'zod';
 import type { ComponentFactory } from '../../../sdk/types';
+import { additiveFog } from '../../shaders/uniforms';
 import { colorUniform, floatUniform, zColor } from './common';
 
 const schema = z.object({
@@ -38,10 +39,11 @@ export const ringsComponent: ComponentFactory<z.infer<typeof schema>> = {
     const tint = colorUniform(p.color);
     const color = tint.mul(float(p.base).add(pulse)).mul(fade).mul(u.intensity).mul(u.presence);
     const material = new MeshBasicNodeMaterial();
-    material.colorNode = vec4(color, 1);
+    material.colorNode = vec4(additiveFog(color), 1);
     material.transparent = true;
     material.depthWrite = false;
     material.blending = AdditiveBlending;
+    material.fog = false;
     material.side = DoubleSide;
     material.mrtNode = mrt({ emissive: vec4(color.mul(0.9), 1) });
     const mesh = new InstancedMesh(geometry, material, p.count);

@@ -19,7 +19,7 @@ import {
   vec3,
   vec4,
 } from 'three/tsl';
-import { frameUniforms } from '../shaders/uniforms';
+import { additiveFog, frameUniforms } from '../shaders/uniforms';
 
 /** Particle look; encoded as a float in the buffer. */
 export const PARTICLE_SHAPES = { soft: 0, spark: 1, shard: 2, petal: 3, bubble: 4, square: 5, ring: 6, star: 7 } as const;
@@ -120,10 +120,11 @@ export class BurstSystem {
     const material = new SpriteNodeMaterial();
     material.positionNode = pos;
     material.scaleNode = size;
-    material.colorNode = vec4(color, 1);
+    material.colorNode = vec4(additiveFog(color), 1);
     material.transparent = true;
     material.depthWrite = false;
     material.blending = AdditiveBlending;
+    material.fog = false;
     material.mrtNode = mrt({ emissive: vec4(color.mul(0.8), 1) });
     this.sprite = new Sprite(material);
     this.sprite.count = capacity;

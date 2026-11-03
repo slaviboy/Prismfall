@@ -226,11 +226,15 @@ function bassVoice(ctx: BaseAudioContext, out: AudioNode, s: InstrumentSpec, mid
 
 /** Two-operator FM: bells (inharmonic ratio), e-piano (ratio 1), mallets (ratio 4, short). */
 function fmVoice(ctx: BaseAudioContext, out: AudioNode, midi: number, t: number, level: number, ratio: number, index: number, decay: number, attack: number, hold = 0): number {
-  const f = midiToFrequency(midi);
+  // Keep carrier and modulator under Nyquist: very high notes fold the ratio down an octave at a time.
+  const nyquist = ctx.sampleRate * 0.45;
+  const f = Math.min(midiToFrequency(midi), nyquist * 0.5);
+  let fm = f * ratio;
+  while (fm > nyquist) fm *= 0.5;
   const carrier = ctx.createOscillator();
   carrier.frequency.value = f;
   const mod = ctx.createOscillator();
-  mod.frequency.value = f * ratio;
+  mod.frequency.value = fm;
   const modGain = ctx.createGain();
   modGain.gain.setValueAtTime(f * index, t);
   modGain.gain.setTargetAtTime(f * index * 0.15, t + attack, decay / 5);

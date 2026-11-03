@@ -130,6 +130,8 @@ export const stageManifestSchema = z.object({
     .object({
       lineClear: z.object({ effect: z.string(), params: z.record(z.string(), z.unknown()).default({}) }).default({ effect: 'prismBurst', params: {} }),
       landing: z.object({ shape: z.string().default('soft'), color: color.optional() }).prefault({}),
+      /** How this world makes its entrance (a registered transition effect). */
+      transition: z.object({ effect: z.string().default('warp'), params: z.record(z.string(), z.unknown()).default({}) }).prefault({}),
     })
     .prefault({}),
   music: z.object({ bpm: z.number().min(30).max(300), beatsPerBar: z.number().int().default(4), tracks: z.array(trackSchema).default([]), defaultTrack: z.string().optional() }),

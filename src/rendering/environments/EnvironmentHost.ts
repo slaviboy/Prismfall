@@ -126,7 +126,7 @@ export class EnvironmentHost {
     this.current = env;
     this.applyLook(env.manifest, seconds > 0.001);
     void blockGeometry;
-    if (seconds > 0.6) this.render.feedback.stageTransition(env.manifest.palette.accent);
+    if (seconds > 0.6) this.render.feedback.stageTransition(env.manifest.palette, env.manifest.effects.transition, seconds);
   }
 
   private applyLook(m: StageManifest, smooth: boolean): void {
@@ -188,6 +188,7 @@ export class EnvironmentHost {
       this.fog.color.copy(this.fogFrom.color).lerp(this.fogTo.color, this.fogBlend);
       this.fog.density = MathUtils.lerp(this.fogFrom.density, this.fogTo.density, this.fogBlend);
     }
+    frameUniforms.fogDensity.value = this.fog.density;
     const stagePresence = this.current?.presence ?? 0;
     this.render.backdrop.group.visible = stagePresence < 0.999;
   }

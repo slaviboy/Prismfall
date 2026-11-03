@@ -2,6 +2,7 @@ import { AdditiveBlending, CylinderGeometry, DoubleSide, InstancedBufferAttribut
 import { abs, clamp, dot, exp, float, fract, instancedBufferAttribute, mrt, normalView, positionGeometry, positionViewDirection, smoothstep, vec4 } from 'three/tsl';
 import { z } from 'zod';
 import type { ComponentFactory } from '../../../sdk/types';
+import { additiveFog } from '../../shaders/uniforms';
 import { colorUniform, floatUniform, seeded, zColor, zVec3 } from './common';
 
 const schema = z.object({
@@ -49,10 +50,11 @@ export const beamsComponent: ComponentFactory<z.infer<typeof schema>> = {
     const edge = float(1).sub(abs(dot(normalView, positionViewDirection))).pow(0.5).oneMinus().add(0.15);
     const color = colorUniform(p.color).mul(float(p.base).add(flash)).mul(vertical).mul(clamp(edge, 0, 1)).mul(u.intensity).mul(u.presence);
     const material = new MeshBasicNodeMaterial();
-    material.colorNode = vec4(color, 1);
+    material.colorNode = vec4(additiveFog(color), 1);
     material.transparent = true;
     material.depthWrite = false;
     material.blending = AdditiveBlending;
+    material.fog = false;
     material.side = DoubleSide;
     material.mrtNode = mrt({ emissive: vec4(color.mul(0.7), 1) });
     const mesh = new InstancedMesh(geometry, material, p.count);

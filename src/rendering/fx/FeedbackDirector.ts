@@ -60,6 +60,7 @@ export class FeedbackDirector {
     material.transparent = true;
     material.depthWrite = false;
     material.blending = AdditiveBlending;
+    material.fog = false;
     this.ghosts = new InstancedMesh(geometry, material, GHOST_CAP);
     this.ghosts.frustumCulled = false;
     this.ghosts.renderOrder = 3;
@@ -245,16 +246,13 @@ export class FeedbackDirector {
   }
 
   /** Warp streaks rushing past the camera while one world gives way to the next. */
-  stageTransition(accentHex: string): void {
+  /** The incoming world's themed entrance (registered transition effect, warp by default). */
+  stageTransition(palette: StagePalette, transition: { effect: string; params: Readonly<Record<string, unknown>> }, duration: number): void {
     const now = frameUniforms.time.value;
-    const c = this.hex(accentHex, 2.5);
-    const n = this.bursts.budget(500 * this.settings.intensity * (this.settings.reducedMotion ? 0.3 : 1));
-    for (let i = 0; i < n; i++) {
-      const a = Math.random() * Math.PI * 2;
-      const r = 6 + Math.random() * 30;
-      this.bursts.emit({ x: Math.cos(a) * r, y: Math.sin(a) * r * 0.6, z: -60 - Math.random() * 80, vx: 0, vy: 0, vz: 70 + Math.random() * 60, r: c[0], g: c[1], b: c[2], size: 0.3 + Math.random() * 0.5, life: 1.2 + Math.random() * 0.6, delay: Math.random() * 0.8, drag: 0.1, shape: 'spark' }, now);
-    }
-    this.shockwave(this.hex(accentHex), 50, now + 0.3, 1.6);
+    const effect = registries.transitions.get(transition.effect) ?? registries.transitions.get('warp');
+    effect?.play({ bursts: this.bursts, palette, duration, time: now, intensityScale: this.settings.intensity, reducedMotion: this.settings.reducedMotion }, transition.params);
+    // Themed entrances carry the moment themselves; the generic warp keeps its accent shockwave.
+    if (!effect || effect.id === 'warp') this.shockwave(this.hex(palette.accent), 50, now + 0.3, 1.6);
     frameUniforms.clearPulse.value = Math.min(1.6, frameUniforms.clearPulse.value + 0.6 * frameUniforms.flashLimit.value);
     this.bursts.flush();
   }

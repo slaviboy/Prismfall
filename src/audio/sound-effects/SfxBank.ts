@@ -187,10 +187,10 @@ const RECIPES: Record<SfxId, Recipe> = {
     playNote(c, o, { kind: 'impact' }, 36, 0, 1, 0.45);
     [0, 4, 7, 12, 16, 19, 24].forEach((n, i) => playNote(c, o, s.tone, r + 36 + n, i * 0.07, 0.25, 0.48));
     [0, 7, 12, 16].forEach((n) => playNote(c, o, s.chord, r + 24 + n, 0.5, 1.4, 0.45));
-    playNote(c, o, s.shimmer, r + 60, 0.55, 1, 0.3);
+    playNote(c, o, s.shimmer, r + 48, 0.55, 1, 0.3);
   }),
   unlock: tone(2, 0, (c, o, s, r) => {
-    [12, 16, 19, 24, 28].forEach((n, i) => playNote(c, o, s.shimmer, r + 36 + n, i * 0.05, 0.4, 0.32));
+    [12, 16, 19, 24, 28].forEach((n, i) => playNote(c, o, s.shimmer, r + 24 + n, i * 0.05, 0.4, 0.32));
     [0, 7, 12].forEach((n) => playNote(c, o, s.chord, r + 24 + n, 0.2, 0.8, 0.32));
   }),
   danger: tone(0.9, 0, (c, o, _s, r) => {

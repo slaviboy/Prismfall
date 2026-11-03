@@ -30,6 +30,7 @@ import { describeEvents } from './feedback';
 import { choosePlacement } from '../game/ai/bot';
 import { registerBuiltinComponents } from '../rendering/environments/builtins';
 import { registerBuiltinEffects } from '../rendering/fx/lineClearEffects';
+import { registerBuiltinTransitions } from '../rendering/fx/transitions';
 import { StageManager } from '../stages/StageManager';
 import { availableStages, getStage } from '../stages/registry';
 import { isStageUnlocked } from '../stages/progression';
@@ -138,6 +139,7 @@ export class GameShell {
     });
     registerBuiltinComponents();
     registerBuiltinEffects();
+    registerBuiltinTransitions();
     this.view = await this.createView(canvas);
     this.setupStages();
     window.addEventListener('resize', this.handleResize);

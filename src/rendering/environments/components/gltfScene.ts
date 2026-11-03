@@ -4,6 +4,7 @@ import { attribute, float, mix, mrt, sin, vec4 } from 'three/tsl';
 import { z } from 'zod';
 import type { ComponentFactory } from '../../../sdk/types';
 import { colorUniform, floatUniform, zColor, zVec3 } from './common';
+import { revealMask } from './reveal';
 
 const materialRule = z.object({
   /** Regex tested against the Blender material name. */
@@ -77,6 +78,8 @@ export const gltfSceneComponent: ComponentFactory<Params> = {
       }
       const ao = hasAO && p.vertexAO ? mix(float(0.35), float(1), attribute<'vec4'>('color', 'vec4').r) : float(1);
       mat.colorNode = vec4(colorUniform(baseColor).mul(ao), 1);
+      mat.opacityNode = revealMask(u.presence);
+      mat.alphaTest = 0.5;
       if (rule.emissive) {
         const flicker = rule.preset === 'hot' ? sin(ctx.uniforms.time.mul(2.3)).mul(0.08).add(0.92) : float(1);
         const glow = colorUniform(rule.emissive)
