@@ -1,0 +1,30 @@
+{
+  "id": "ninomaru_teien",
+  "kind": "hdri",
+  "name": "Ninomaru Teien",
+  "page": "https://polyhaven.com/a/ninomaru_teien",
+  "api": {
+    "info": "https://api.polyhaven.com/info/ninomaru_teien",
+    "files": "https://api.polyhaven.com/files/ninomaru_teien"
+  },
+  "authors": {
+    "Greg Zaal": "All"
+  },
+  "licence": "CC0 1.0",
+  "licenceUrl": "https://polyhaven.com/license",
+  "files": [
+    {
+      "path": "ninomaru_teien_tonemapped.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/HDRIs/extra/Tonemapped%20JPG/ninomaru_teien.jpg",
+      "md5": "96d36b48fca4486a99c6afeb13a89f13",
+      "size": 10919648
+    }
+  ],
+  "downloaded": "2026-11-03",
+  "derived": [
+    {
+      "path": "content/stages/ancient-garden/textures/ninomaru_teien_band.webp",
+      "how": "ffmpeg crop=8192:1638:0:1138 (elevations -32..40 deg), unsharp 5:5:0.6, libwebp quality 86"
+    }
+  ]
+}

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "ancient-garden",
   "name": "Ancient Garden",
-  "description": "A temple garden at dusk. Blossoms drift over a still pond, lanterns rise into the evening, and cranes cross the hills.",
+  "description": "A Japanese garden in late spring: bamboo fences, a rock garden and stone stairs under maples, petals drifting in the sun.",
   "order": 25,
   "tags": [
     "garden",
@@ -20,8 +20,8 @@
     "plate": "#120a0c"
   },
   "fog": {
-    "color": "#c09aac",
-    "density": 0.0026
+    "color": "#c0c4c8",
+    "density": 0.0008
   },
   "backdrop": {
     "top": "#2a2550",
@@ -30,10 +30,10 @@
   },
   "lighting": {
     "key": {
-      "color": "#ffd8b0",
-      "intensity": 2.2,
-      "azimuth": -50,
-      "elevation": 26
+      "color": "#fff1dc",
+      "intensity": 2.3,
+      "azimuth": 0,
+      "elevation": 50
     },
     "rim": {
       "color": "#ffb1c8",
@@ -47,14 +47,14 @@
     "accents": [
       {
         "color": "#ffb36b",
-        "intensity": 22,
+        "intensity": 10,
         "x": -9,
         "y": -6,
         "z": 6
       },
       {
         "color": "#ff8fb4",
-        "intensity": 18,
+        "intensity": 10,
         "x": 9,
         "y": 8,
         "z": 6
@@ -78,9 +78,9 @@
     "exposure": 0.94
   },
   "camera": {
-    "pitch": 6,
+    "pitch": 2,
     "yaw": 0,
-    "sway": 0.6,
+    "sway": 0.3,
     "targetY": 0
   },
   "blocks": {
@@ -102,527 +102,24 @@
         "id": "sky",
         "type": "sky",
         "params": {
-          "top": "#1c2246",
-          "mid": "#8a76a6",
-          "midHeight": 0.16,
-          "horizon": "#f2b48a",
-          "bottom": "#3a2430",
-          "horizonGlow": 0.35,
-          "horizonWidth": 0.11,
-          "stars": 0.2,
-          "starSize": 0.8,
-          "disc": {
-            "direction": [
-              -0.4,
-              0.1,
-              -1
-            ],
-            "color": "#ffe0b8",
-            "size": 2.2,
-            "halo": 6,
-            "intensity": 0.75
-          }
-        },
-        "bind": []
-      },
-      {
-        "id": "hills",
-        "type": "terrain",
-        "params": {
-          "height": {
-            "base": -15,
-            "seed": 23,
-            "layers": [
-              {
-                "type": "fbm",
-                "amplitude": 9,
-                "scale": 85,
-                "octaves": 4
-              },
-              {
-                "type": "fbm",
-                "amplitude": 30,
-                "scale": 160,
-                "octaves": 3,
-                "band": {
-                  "near": 200,
-                  "ramp": 120,
-                  "far": 5000
-                }
-              },
-              {
-                "type": "ridged",
-                "amplitude": 110,
-                "scale": 240,
-                "octaves": 3,
-                "sharpness": 1.5,
-                "band": {
-                  "near": 430,
-                  "ramp": 160,
-                  "far": 5000
-                }
-              }
-            ],
-            "clearing": {
-              "center": [
-                24,
-                -72
-              ],
-              "radius": 30,
-              "falloff": 24,
-              "depth": -2.2
-            },
-            "floor": 1.2
-          },
-          "mesh": {
-            "near": 12,
-            "far": 1100,
-            "rows": 220,
-            "cols": 230,
-            "spread": 1.45
-          },
-          "colors": {
-            "low": "#4a6a3a",
-            "high": "#8aa05a",
-            "rock": "#6a5a50",
-            "sparkle": "#ffe8d0"
-          },
-          "ripples": {
-            "strength": 0.08,
-            "wavelength": 1.6,
-            "direction": 30,
-            "speed": 0.02,
-            "fadeDistance": 60
-          },
-          "sparkle": 0.0,
-          "roughness": 0.9,
-          "rockSlope": 0.5
-        },
-        "bind": []
-      },
-      {
-        "id": "pond",
-        "type": "water",
-        "params": {
-          "y": -15.85,
-          "deep": "#2a3050",
-          "shallow": "#6a6a9a",
-          "skyTop": "#5a4a7a",
-          "skyHorizon": "#f2b48a",
-          "glow": "#ffb1c8",
-          "glowStrength": 0.06,
-          "amplitude": 0.0,
-          "wavelength": 6,
-          "speed": 0.3,
-          "moonDirection": [
-            -0.4,
-            0.1,
-            -1
-          ],
-          "rippleColor": "#ffb1c8"
-        },
-        "bind": [
-          {
-            "target": "glow",
-            "feature": "bass",
-            "amount": 0.2,
-            "attackMs": 80,
-            "releaseMs": 900
-          }
-        ]
-      },
-      {
-        "id": "temple",
-        "type": "gltfScene",
-        "params": {
-          "src": "models/japan.glb",
-          "snapToGround": true,
-          "sink": 0.4,
-          "vertexAO": true,
-          "materials": [
-            {
-              "match": "^lacquer",
-              "preset": "stone",
-              "color": "#b8321c",
-              "roughness": 0.45
-            },
-            {
-              "match": "^woodDark",
-              "preset": "stone",
-              "color": "#3a2618",
-              "roughness": 0.7
-            },
-            {
-              "match": "^roofTile",
-              "preset": "stone",
-              "color": "#2a2c34",
-              "roughness": 0.55
-            },
-            {
-              "match": "^plaster",
-              "preset": "stone",
-              "color": "#e6dccb",
-              "roughness": 0.85
-            },
-            {
-              "match": "^gold",
-              "preset": "metal",
-              "color": "#d8a84a",
-              "roughness": 0.35
-            },
-            {
-              "match": "^lanternPaper",
-              "preset": "emissive",
-              "color": "#3a2010",
-              "emissive": "#ffb46a",
-              "emissiveIntensity": 1.0,
-              "musicGlow": 0.7
-            }
-          ],
-          "snapRules": [
-            {
-              "match": "^bridge",
-              "mode": "fixed",
-              "y": -16.2,
-              "sink": 0
-            }
-          ]
-        },
-        "bind": [
-          {
-            "target": "emissive",
-            "feature": "sectionIntensity",
-            "amount": 0.5,
-            "category": "lighting",
-            "attackMs": 400,
-            "releaseMs": 1600
-          }
-        ]
-      },
-      {
-        "id": "cherry-grove",
-        "type": "scatter",
-        "params": {
-          "src": "/content/shared/flora/flora.glb",
-          "count": 90,
-          "seed": 4,
-          "items": [
-            {
-              "mesh": "cherry",
-              "scale": [
-                1.3,
-                2.1
-              ],
-              "tintJitter": 0.14
-            }
-          ],
-          "area": {
-            "kind": "band",
-            "near": 40,
-            "far": 240,
-            "spread": 1.3
-          },
-          "exclude": [
-            {
-              "center": [
-                0,
-                -8
-              ],
-              "radius": 30
-            },
-            {
-              "center": [
-                24,
-                -72
-              ],
-              "radius": 30
-            },
-            {
-              "center": [
-                -62,
-                -150
-              ],
-              "radius": 24
-            },
-            {
-              "center": [
-                78,
-                -135
-              ],
-              "radius": 20
-            },
-            {
-              "center": [
-                62,
-                -150
-              ],
-              "radius": 22
-            },
-            {
-              "center": [
-                -78,
-                -135
-              ],
-              "radius": 20
-            }
-          ],
-          "clustering": 0.55,
-          "clusterScale": 50,
-          "sway": {
-            "amount": 0.35,
-            "speed": 0.8
-          },
-          "materials": [
-            {
-              "match": "^blossom",
-              "preset": "foliage",
-              "color": "#ffb8cf",
-              "emissive": "#ff9ec0",
-              "emissiveIntensity": 0.08,
-              "musicGlow": 1
-            },
-            {
-              "match": "^bark",
-              "preset": "stone",
-              "color": "#3a2a26"
-            }
-          ]
-        },
-        "bind": [
-          {
-            "target": "sway",
-            "feature": "overallEnergy",
-            "amount": 0.4,
-            "attackMs": 400,
-            "releaseMs": 1500
-          }
-        ]
-      },
-      {
-        "id": "black-pines",
-        "type": "scatter",
-        "params": {
-          "src": "/content/shared/flora/flora.glb",
-          "count": 160,
-          "seed": 6,
-          "items": [
-            {
-              "mesh": "pine",
-              "scale": [
-                0.9,
-                1.6
-              ],
-              "tintJitter": 0.1
-            }
-          ],
-          "area": {
-            "kind": "band",
-            "near": 160,
-            "far": 420,
-            "spread": 1.35
-          },
-          "exclude": [
-            {
-              "center": [
-                62,
-                -150
-              ],
-              "radius": 26
-            },
-            {
-              "center": [
-                -78,
-                -135
-              ],
-              "radius": 22
-            }
-          ],
-          "clustering": 0.6,
-          "clusterScale": 70,
-          "sway": {
-            "amount": 0.12,
-            "speed": 0.6
-          },
-          "materials": [
-            {
-              "match": "^needles",
-              "preset": "foliage",
-              "color": "#2a3f2c"
-            },
-            {
-              "match": "^bark",
-              "preset": "stone",
-              "color": "#3a2c26"
-            }
-          ]
-        },
-        "bind": []
-      },
-      {
-        "id": "pond-stones",
-        "type": "scatter",
-        "params": {
-          "src": "/content/shared/flora/flora.glb",
-          "count": 26,
-          "seed": 8,
-          "items": [
-            {
-              "mesh": "rock_a",
-              "weight": 2,
-              "scale": [
-                0.4,
-                0.9
-              ]
-            },
-            {
-              "mesh": "rock_b",
-              "weight": 1,
-              "scale": [
-                0.3,
-                0.6
-              ]
-            },
-            {
-              "mesh": "stone_lantern",
-              "weight": 1.2,
-              "scale": [
-                0.9,
-                1.2
-              ],
-              "tintJitter": 0.05
-            }
-          ],
-          "area": {
-            "kind": "ring",
-            "center": [
-              24,
-              -72
-            ],
-            "radius": [
-              27,
+          "top": "#7d9ac0",
+          "mid": "#95a084",
+          "midHeight": 0.64,
+          "horizon": "#95a084",
+          "bottom": "#3a4030",
+          "horizonGlow": 0.0,
+          "horizonWidth": 0.1,
+          "stars": 0,
+          "panorama": {
+            "src": "textures/ninomaru_teien_band.webp",
+            "elevation": [
+              -32,
               40
-            ]
-          },
-          "exclude": [
-            {
-              "center": [
-                0,
-                -8
-              ],
-              "radius": 26
-            }
-          ],
-          "clustering": 0,
-          "alignToSlope": false,
-          "sway": {
-            "amount": 0.0
-          },
-          "materials": [
-            {
-              "match": "^rock",
-              "preset": "stone",
-              "color": "#7a7068",
-              "roughness": 0.8
-            },
-            {
-              "match": "^stone",
-              "preset": "stone",
-              "color": "#9a948a",
-              "roughness": 0.85
-            },
-            {
-              "match": "^lanternGlow",
-              "preset": "emissive",
-              "color": "#3a2010",
-              "emissive": "#ffb46a",
-              "emissiveIntensity": 1.1,
-              "musicGlow": 0.8
-            }
-          ]
-        },
-        "bind": [
-          {
-            "target": "emissive",
-            "feature": "bass",
-            "amount": 0.4,
-            "category": "lighting",
-            "attackMs": 60,
-            "releaseMs": 700
+            ],
+            "offset": 0.62,
+            "exposure": 1.0,
+            "fade": 8
           }
-        ]
-      },
-      {
-        "id": "koi",
-        "type": "swarm",
-        "params": {
-          "kind": "koi",
-          "count": 16,
-          "flocks": 3,
-          "motion": {
-            "kind": "orbit",
-            "center": [
-              24,
-              -16.15,
-              -72
-            ],
-            "radius": [
-              13,
-              0.05,
-              9
-            ],
-            "speed": 1.4
-          },
-          "spread": [
-            4,
-            0.05,
-            3
-          ],
-          "size": [
-            2.2,
-            3.0
-          ],
-          "color": "#ff7a2a",
-          "colorB": "#ffb04a",
-          "tempo": 1,
-          "seed": 3
-        },
-        "bind": []
-      },
-      {
-        "id": "cranes",
-        "type": "swarm",
-        "params": {
-          "kind": "bird",
-          "count": 9,
-          "flocks": 1,
-          "motion": {
-            "kind": "cross",
-            "from": [
-              -260,
-              40,
-              -220
-            ],
-            "to": [
-              260,
-              55,
-              -260
-            ],
-            "speed": 9,
-            "rest": 30
-          },
-          "spread": [
-            14,
-            3,
-            8
-          ],
-          "size": [
-            7,
-            9
-          ],
-          "color": "#f4f0ea",
-          "colorB": "#d8d2ca",
-          "tempo": 0.4,
-          "seed": 5
         },
         "bind": []
       },
@@ -630,7 +127,7 @@
         "id": "petals",
         "type": "particles",
         "params": {
-          "count": 3200,
+          "count": 700,
           "center": [
             0,
             4,
@@ -652,7 +149,7 @@
           ],
           "turbulence": 1.2,
           "twinkle": 0.15,
-          "brightness": 0.85,
+          "brightness": 0.8,
           "shape": "petal",
           "spin": 1.6,
           "additive": false,
@@ -677,80 +174,6 @@
             "releaseMs": 2000
           }
         ]
-      },
-      {
-        "id": "sky-lanterns",
-        "type": "particles",
-        "params": {
-          "count": 160,
-          "center": [
-            0,
-            18,
-            -150
-          ],
-          "size": [
-            360,
-            60,
-            180
-          ],
-          "color": "#ffb46a",
-          "colorB": "#ff8a4a",
-          "minSize": 0.5,
-          "maxSize": 1.0,
-          "velocity": [
-            0.2,
-            0.6,
-            0
-          ],
-          "turbulence": 0.6,
-          "twinkle": 0.3,
-          "brightness": 1.4,
-          "shape": "soft",
-          "seed": 33,
-          "bloom": 0.6
-        },
-        "bind": [
-          {
-            "target": "brightness",
-            "feature": "bass",
-            "amount": 0.35,
-            "category": "lighting",
-            "attackMs": 80,
-            "releaseMs": 800
-          }
-        ]
-      },
-      {
-        "id": "valley-mist",
-        "type": "clouds",
-        "params": {
-          "count": 24,
-          "center": [
-            0,
-            -8,
-            -220
-          ],
-          "spread": [
-            600,
-            16,
-            220
-          ],
-          "size": [
-            60,
-            130
-          ],
-          "color": "#e6c0cc",
-          "colorB": "#b89ab0",
-          "opacity": 0.22,
-          "drift": [
-            2,
-            0,
-            0.3
-          ],
-          "additive": false,
-          "seed": 9
-        },
-        "bind": []
       }
     ]
   },

@@ -98,6 +98,8 @@ Real landscape photographs used as the distant horizon of a world (the `panorama
 | `content/stages/frozen-kingdom/textures/lago_disola_band.webp` | Poly Haven HDRI "Lago d'Isola" (https://polyhaven.com/a/lago_disola) by Andreas Mischok; tonemapped JPG (8192 x 4096) cropped to elevations -6 to +40 degrees (8192 x 1048), WebP quality 86 | CC0 1.0 |
 | `content/stages/moving-sands/textures/rogland_clear_night_band.webp` | Poly Haven HDRI "Rogland Clear Night" (https://polyhaven.com/a/rogland_clear_night) by Greg Zaal; tonemapped JPG (8192 x 4096) cropped to elevations -6 to +40 degrees (8192 x 1047), unsharp mask, WebP quality 86 | CC0 1.0 |
 | `content/stages/alpine-horizon/textures/alps_field_band.webp` | Poly Haven HDRI "Alps Field" (https://polyhaven.com/a/alps_field) by Andreas Mischok; tonemapped JPG (8192 x 4096) cropped to elevations -32 to +40 degrees (8192 x 1638), unsharp mask, WebP quality 86 | CC0 1.0 |
+| `content/stages/ancient-garden/textures/ninomaru_teien_band.webp` | Poly Haven HDRI "Ninomaru Teien" (https://polyhaven.com/a/ninomaru_teien) by Greg Zaal; tonemapped JPG (8192 x 4096) cropped to elevations -32 to +40 degrees (8192 x 1638), unsharp mask, WebP quality 86 | CC0 1.0 |
+| `content/stages/enchanted-wilderness/textures/misty_pines_band.webp` | Poly Haven HDRI "Misty Pines" (https://polyhaven.com/a/misty_pines) by Greg Zaal; tonemapped JPG (8192 x 4096) cropped to elevations -32 to +40 degrees (8192 x 1638), unsharp mask, WebP quality 86 | CC0 1.0 |
 
 ## 6. Stage thumbnails
 
