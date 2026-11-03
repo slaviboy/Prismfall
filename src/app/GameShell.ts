@@ -50,6 +50,9 @@ import { resolveMaterialAudio, type MaterialAudioInput } from '../audio/sound-ef
 import type { StageManifest } from '../stages/schema';
 
 /** A playable track: a world's own music or one of the player's files. */
+/** How long the stack's game-over collapse plays before the results screen. */
+const GAME_OVER_COLLAPSE_MS = 2600;
+
 export interface CatalogTrack {
   /** "stage:<stageId>:<trackId>" or "user:<id>". */
   readonly id: string;
@@ -130,6 +133,8 @@ export class GameShell {
   private readonly voyagePreloaded = new Set<string>();
   private voyageTimer: ReturnType<typeof setTimeout> | null = null;
   private finishing = false;
+  /** Game over: the results wait (frame time, ms) while the stack collapses; 0 = not waiting. */
+  private resultsAt = 0;
   private rafId = 0;
   private lastFrame = 0;
   private saveTimer: ReturnType<typeof setTimeout> | null = null;
@@ -632,6 +637,7 @@ export class GameShell {
     session.heldAtStart = () => this.heldGameActions();
     this.session = session;
     this.finishing = false;
+    this.resultsAt = 0;
     const linesGoal = session.engine.rules.goal.kind === 'lines' ? session.engine.rules.goal.lines : null;
     const timeLimit = session.engine.rules.goal.kind === 'time' ? session.engine.rules.goal.ms : null;
     hudStore.setState({
@@ -1120,10 +1126,15 @@ export class GameShell {
     this.frameListeners.forEach((l) => l(now, dt));
     if (session && session.status === 'finished' && !this.finishing) {
       const outcome = session.engine.phase === 'complete' ? 'complete' : 'gameOver';
-      void this.finishSession(outcome, true).then(() => {
-        this.input.setContext('menu');
-        navigate('results', true);
-      });
+      // On a game over the stack collapses first; the results follow once it has fallen.
+      if (outcome === 'gameOver' && this.resultsAt === 0) this.resultsAt = t + GAME_OVER_COLLAPSE_MS;
+      if (outcome !== 'gameOver' || t >= this.resultsAt) {
+        this.resultsAt = 0;
+        void this.finishSession(outcome, true).then(() => {
+          this.input.setContext('menu');
+          navigate('results', true);
+        });
+      }
     }
   };
 

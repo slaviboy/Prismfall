@@ -17,6 +17,7 @@ import type { GameEvent } from '../../game/core/types';
 import { PIECE_TYPES, pieceCells, pieceTypeFromCell, type PieceType } from '../../game/pieces/pieces';
 import { GARBAGE_COLOR, type PiecePalette } from '../../config/palette';
 import { BLOCK_STRIDE, createBlockMaterial, type BlockMaterialHandle } from '../materials/blockMaterial';
+import { frameUniforms } from '../shaders/uniforms';
 import { createDimMaterial, createFrameMaterial, createGhostDepthMaterial, createGhostMaterial, createPlateMaterial } from '../materials/boardMaterials';
 import type { BlockMaterialPreset } from '../materials/blockPresets';
 import { createRoundedBlock } from './blockGeometry';
@@ -172,6 +173,9 @@ export class BoardView {
   private lastSync = 0;
   private podsKey = '';
   private engineRef: Engine | null = null;
+  /** Frame time the game-over collapse began; -1000 while the stack stands. */
+  private collapseAt = -1000;
+  private collapseSpin = 1;
 
   private readonly m = new Matrix4();
   private readonly v = new Vector3();
@@ -244,6 +248,11 @@ export class BoardView {
     for (const set of [this.settled, this.active, this.pods]) await set.prepare(preset, precompile);
   }
 
+  /** Reduced motion keeps the game-over collapse calmer (less tumbling). */
+  setReducedMotion(reduced: boolean): void {
+    this.collapseSpin = reduced ? 0.3 : 1;
+  }
+
   setGhostOpacity(opacity: number): void {
     this.ghost.opacity.value = opacity;
   }
@@ -314,6 +323,7 @@ export class BoardView {
   sync(engine: Engine | null, events: readonly GameEvent[], nowSec: number): void {
     if (engine !== this.engineRef) {
       this.engineRef = engine;
+      this.collapseAt = -1000;
       this.lockTimes.fill(-1000);
       this.dropRows.fill(0);
       this.dropTimes.fill(-1000);
@@ -332,6 +342,15 @@ export class BoardView {
     this.levelSurge *= Math.exp(-dt / 0.45);
     this.frame.glow.value = 1 + this.levelSurge * 1.8;
     for (const e of events) this.handleEvent(engine, e, nowSec);
+    // Game over: the settled stack collapses (block material); the piece that failed is hidden.
+    if (engine.isOver && this.collapseAt < 0) this.collapseAt = frameUniforms.time.value;
+    this.settled.handle.collapseAt.value = this.collapseAt;
+    this.settled.handle.collapseSpin.value = this.collapseSpin;
+    this.active.mesh.visible = !engine.isOver;
+    if (engine.isOver) {
+      this.ghostMesh.count = 0;
+      this.ghostDepthMesh.count = 0;
+    }
     if (engine.board.version !== this.boardVersion) {
       this.boardVersion = engine.board.version;
       this.rebuildSettled(engine);

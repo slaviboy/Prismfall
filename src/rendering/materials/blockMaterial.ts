@@ -1,8 +1,9 @@
-import { MeshPhysicalNodeMaterial, Vector3, type InstancedInterleavedBuffer } from 'three/webgpu';
+import { MeshPhysicalNodeMaterial, Vector3, type InstancedInterleavedBuffer, type Node } from 'three/webgpu';
 import {
   abs,
   clamp,
   cos,
+  cross,
   dot,
   exp,
   float,
@@ -15,14 +16,18 @@ import {
   min,
   mix,
   mod,
+  normalLocal,
   normalView,
+  normalize,
   positionGeometry,
   positionLocal,
   round,
   positionViewDirection,
   sin,
   smoothstep,
+  sqrt,
   step,
+  transformNormalToView,
   uniform,
   vec3,
   vec4,
@@ -50,6 +55,10 @@ export interface BlockMaterialHandle {
   readonly glowScale: FloatUniform;
   /** Surface kind baked into this material (a different surface needs a new material). */
   readonly surface: BlockSurface;
+  /** Game-over collapse start (frame time, s); -1000 = standing. */
+  readonly collapseAt: FloatUniform;
+  /** Spin of the collapsing blocks (1 normal, lower with reduced motion). */
+  readonly collapseSpin: FloatUniform;
   apply(preset: BlockMaterialPreset): void;
 }
 
@@ -79,6 +88,8 @@ export function createBlockMaterial(buffer: InstancedInterleavedBuffer, preset: 
   const glyphs = uniform(0);
   const dropDuration = uniform(0.12);
   const glowScale = uniform(0.6);
+  const collapseAt = uniform(-1000);
+  const collapseSpin = uniform(1);
   const t = frameUniforms.time;
 
   // Per-cell shading uses the raw geometry position: on an InstancedMesh, positionLocal already
@@ -108,6 +119,38 @@ export function createBlockMaterial(buffer: InstancedInterleavedBuffer, preset: 
   const sinceLock = t.sub(a1.w);
   const squash = exp(max(sinceLock, 0).mul(-7)).mul(step(0, sinceLock)).mul(cos(sinceLock.mul(28))).mul(u.wobble.mul(0.09));
   const lifted = positionLocal.add(vec3(0, a1.y.mul(dropRemain), 0)).add(positionGeometry.mul(vec3(squash, squash.negate(), squash)));
+
+  // Game-over collapse: each block breaks loose (bottom rows first, slightly staggered), tumbles
+  // about its own axis, falls with a sideways spread, bounces once on the well floor and shrinks away.
+  // The exact instance translation (cell centres sit on half units, so rounding would merge columns).
+  const cellCentre = positionLocal.sub(positionGeometry);
+  const hash = (k: Parameters<typeof dot>[1]) => fract(sin(dot(cellCentre, k)).mul(43758.5453));
+  const r1 = hash(vec3(127.1, 311.7, 74.7));
+  const r2 = hash(vec3(269.5, 183.3, 246.1));
+  const r3 = hash(vec3(113.5, 271.9, 124.6));
+  const collapsing = step(-500, collapseAt);
+  const release = collapseAt.add(cellCentre.y.add(10).mul(0.028)).add(r1.mul(0.16));
+  const ct = max(t.sub(release), 0).mul(collapsing);
+  const gravity = 24;
+  const floorY = -9.55;
+  const vx = r2.sub(0.5).mul(4.2).add(cellCentre.x.mul(0.22));
+  const vy = r3.mul(2.6);
+  const vz = r1.sub(0.5).mul(3.4);
+  const tHit = vy.add(sqrt(vy.mul(vy).add(max(cellCentre.y.sub(floorY), 0).mul(2 * gravity)))).div(gravity);
+  const before = step(ct, tHit);
+  const after = max(ct.sub(tHit), 0);
+  const bounce = vy.negate().add(tHit.mul(gravity)).mul(0.32);
+  const fallY = cellCentre.y.add(vy.mul(ct)).sub(ct.mul(ct).mul(gravity / 2));
+  const bounceY = max(float(floorY).add(bounce.mul(after)).sub(after.mul(after).mul(gravity / 2)), floorY);
+  const travel = mix(min(ct, tHit).add(after.mul(0.35)), ct, before);
+  const offset = vec3(vx.mul(travel), mix(bounceY, fallY, before).sub(cellCentre.y), vz.mul(travel));
+  const axis = normalize(vec3(r1, r2, r3).mul(2).sub(1).add(vec3(0.001, 0.002, 0.003)));
+  const angle = ct.mul(float(2.2).add(r2.mul(4.5))).mul(collapseSpin);
+  const ca = cos(angle);
+  const sa = sin(angle);
+  const spin = (v: Node<'vec3'>) => v.mul(ca).add(cross(axis, v).mul(sa)).add(axis.mul(dot(axis, v).mul(ca.oneMinus())));
+  const shrink = float(1).sub(smoothstep(1.25, 2.1, ct));
+  const collapsed = cellCentre.add(spin(positionGeometry).mul(shrink)).add(offset);
 
   // Lock flash and spawn materialize pulse.
   const flash = exp(max(t.sub(a1.w), 0).mul(-10)).mul(step(0, t.sub(a1.w))).mul(frameUniforms.flashLimit);
@@ -159,7 +202,8 @@ export function createBlockMaterial(buffer: InstancedInterleavedBuffer, preset: 
     .mul(glowScale);
 
   const material = new MeshPhysicalNodeMaterial();
-  material.positionNode = lifted;
+  material.positionNode = mix(lifted, collapsed, collapsing);
+  material.normalNode = transformNormalToView(mix(normalLocal, spin(normalLocal), collapsing));
   material.colorNode = vec4(albedo, 1);
   if (surf.roughness) material.roughnessNode = surf.roughness;
   material.emissiveNode = glow;
@@ -175,6 +219,8 @@ export function createBlockMaterial(buffer: InstancedInterleavedBuffer, preset: 
     dropDuration,
     glowScale,
     surface: preset.surface,
+    collapseAt,
+    collapseSpin,
     apply(next: BlockMaterialPreset): void {
       material.roughness = next.roughness;
       material.metalness = next.metalness;

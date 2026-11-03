@@ -269,6 +269,7 @@ export class RenderSystem implements GameView {
       screenEffects: s.accessibility.screenEffects,
     });
     this.lights.setShadowQuality(g.shadows);
+    this.board.setReducedMotion(reducedMotion(s));
     this.applyBlockStyle();
     this.feedback.settings = { intensity: s.gameplay.effectsIntensity, reducedMotion: reducedMotion(s), screenEffects: s.accessibility.screenEffects * (s.graphics.screenSpaceEffects ? 1 : 0.4) };
     this.bursts.density = Math.max(0.05, g.particleDensity);

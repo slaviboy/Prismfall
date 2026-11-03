@@ -208,9 +208,12 @@ export class FeedbackDirector {
           this.onStageEvent?.({ kind: 'levelUp', level: e.level });
           break;
         case 'boardReset':
-        case 'gameOver':
           if (engine) this.dissolveStack(engine, nowSec);
-          if (e.type === 'gameOver') this.onStageEvent?.({ kind: 'gameOver' });
+          break;
+        case 'gameOver':
+          // The stack itself collapses (block material); dust rises where the blocks hit the floor.
+          if (engine) this.collapseDust(engine, nowSec);
+          this.onStageEvent?.({ kind: 'gameOver' });
           break;
         default:
           break;
@@ -238,6 +241,20 @@ export class FeedbackDirector {
         const p = cellToWorld(x, y);
         this.puff(p.x, p.y, 0.4, 2, color.map((c) => c * 1.6) as [number, number, number], now + y * 0.02, { speed: 3, size: 0.3, up: 0.5, life: 1.1, shape: 'star' });
       }
+    }
+  }
+
+  /** Dust kicked up along the well floor as the collapsing stack lands, column by column. */
+  private collapseDust(engine: Engine, now: number): void {
+    const b = engine.board;
+    for (let x = 0; x < b.width; x++) {
+      let height = 0;
+      for (let y = 0; y < Math.min(b.height, 22); y++) if (b.get(x, y) !== 0) height = y + 1;
+      if (height === 0) continue;
+      const p = cellToWorld(x, 0);
+      const land = now + 0.25 + Math.min(0.9, Math.sqrt(height) * 0.12);
+      const color = this.cellColor(b.get(x, 0) || 8).map((c) => c * 0.5 + 0.25) as [number, number, number];
+      this.puff(p.x, p.y - 0.4, 0.3, Math.min(6, 2 + Math.floor(height / 4)), color, land, { speed: 2.2, size: 0.45, up: 0.6, life: 1.4, shape: 'soft' });
     }
   }
 

@@ -9,10 +9,17 @@ test('boots to the title screen and opens the main menu', async ({ page }) => {
 });
 
 test('menus are navigable with the keyboard alone', async ({ page }) => {
-  await openMenu(page);
+  // Start with Enter, not a click: a pointer left over the menu would hover-focus an item.
+  await page.goto('./');
+  await expect(page.getByTestId('boot-screen')).toBeVisible();
+  await page.keyboard.press('Enter');
+  await expect(page.getByTestId('main-menu')).toBeVisible();
   await expect(page.getByTestId('menu-play')).toBeFocused();
   await page.keyboard.press('ArrowDown');
+  await expect(page.getByTestId('menu-creator')).toBeFocused();
+  await page.keyboard.press('ArrowDown');
   await expect(page.getByTestId('menu-music')).toBeFocused();
+  await page.keyboard.press('ArrowUp');
   await page.keyboard.press('ArrowUp');
   await page.keyboard.press('Enter');
   await expect(page.getByTestId('mode-select')).toBeVisible();
