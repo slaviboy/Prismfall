@@ -47,14 +47,14 @@
     "accents": [
       {
         "color": "#b57cff",
-        "intensity": 34,
+        "intensity": 10,
         "x": -9,
         "y": 6,
         "z": 6
       },
       {
         "color": "#5ca8ff",
-        "intensity": 30,
+        "intensity": 10,
         "x": 9,
         "y": -7,
         "z": 6
@@ -63,15 +63,15 @@
     "beatResponse": 0.45
   },
   "grade": {
-    "saturation": 1.15,
-    "contrast": 1.06,
+    "saturation": 1.05,
+    "contrast": 1.1,
     "tint": [
       1.02,
       0.98,
       1.06
     ],
     "vignette": 0.45,
-    "bloomThreshold": 0.16,
+    "bloomThreshold": 0.26,
     "bloomRadius": 0.55,
     "toneMapping": "neutral",
     "envIntensity": 0.25
@@ -79,7 +79,7 @@
   "camera": {
     "pitch": 2,
     "yaw": -4,
-    "sway": 1.1,
+    "sway": 0.4,
     "targetY": 0
   },
   "blocks": {
@@ -101,16 +101,16 @@
         "id": "sky",
         "type": "sky",
         "params": {
-          "top": "#04021a",
-          "horizon": "#0c0630",
+          "top": "#020210",
+          "horizon": "#06041a",
           "bottom": "#020010",
           "horizonGlow": 0.25,
           "horizonWidth": 0.3,
           "stars": 1,
-          "starSize": 0.8,
-          "nebula": 1.1,
-          "nebulaA": "#5a1a9a",
-          "nebulaB": "#1a6ab4",
+          "starSize": 1.0,
+          "nebula": 0.45,
+          "nebulaA": "#2c2050",
+          "nebulaB": "#142c52",
           "nebulaScale": 1.6,
           "nebulaDrift": 0.006
         },
@@ -138,18 +138,18 @@
             1.15,
             -0.3
           ],
-          "radius": 240,
+          "radius": 200,
           "arms": 3,
           "twist": 3.4,
           "thickness": 0.05,
-          "core": "#fff0d8",
-          "arm": "#8ab0ff",
-          "dust": "#ff86c4",
-          "brightness": 0.75,
+          "core": "#fff2dc",
+          "arm": "#c4d2ff",
+          "dust": "#f2dcd4",
+          "brightness": 0.32,
           "spin": 0.006,
           "size": [
-            2.6,
-            6.5
+            2.0,
+            4.6
           ],
           "seed": 6
         },
@@ -174,22 +174,22 @@
             -560
           ],
           "radius": 120,
-          "colorA": "#c78a5e",
-          "colorB": "#4a2e7a",
-          "bands": 11,
-          "atmosphere": "#9fb8ff",
-          "atmosphereStrength": 0.7,
+          "colorA": "#dcc7a2",
+          "colorB": "#a38563",
+          "bands": 15,
+          "atmosphere": "#d6e4ff",
+          "atmosphereStrength": 0.35,
           "lightDirection": [
-            1,
-            0.35,
-            0.5
+            0.95,
+            0.3,
+            -1.0
           ],
           "rotationSpeed": 0.012,
           "tilt": 0.42,
           "ring": {
             "inner": 155,
-            "outer": 260,
-            "color": "#d9c4ff",
+            "outer": 265,
+            "color": "#e6d8be",
             "opacity": 0.5
           }
         },
@@ -200,7 +200,7 @@
         "type": "scatter",
         "params": {
           "src": "/content/shared/flora/flora.glb",
-          "count": 90,
+          "count": 40,
           "seed": 12,
           "items": [
             {
@@ -251,193 +251,6 @@
         "bind": []
       },
       {
-        "id": "star-whale",
-        "type": "creatureHerd",
-        "params": {
-          "model": "/content/shared/creatures/whale.glb",
-          "rig": "/content/shared/creatures/whale.rig.json",
-          "representation": "particles",
-          "groups": [
-            {
-              "path": {
-                "kind": "loop",
-                "center": [
-                  20,
-                  22,
-                  -170
-                ],
-                "radius": [
-                  150,
-                  60
-                ],
-                "clockwise": false
-              },
-              "members": 1,
-              "speed": 1.2,
-              "scale": 2.4,
-              "start": 0.3,
-              "fade": 30,
-              "followGround": false
-            },
-            {
-              "path": {
-                "kind": "loop",
-                "center": [
-                  -60,
-                  48,
-                  -260
-                ],
-                "radius": [
-                  120,
-                  50
-                ],
-                "clockwise": true
-              },
-              "members": 2,
-              "formation": "herd",
-              "spacing": 12,
-              "speed": 1.0,
-              "scale": 1.6,
-              "start": 0.7,
-              "fade": 30,
-              "followGround": false
-            }
-          ],
-          "particles": {
-            "perCreature": 5000,
-            "size": 0.13,
-            "color": "#bcd2ff",
-            "colorB": "#d68cff",
-            "brightness": 1.1,
-            "jitter": 0.12,
-            "bloom": 0.6,
-            "scatter": 10,
-            "wind": [
-              0.3,
-              0.4,
-              0.2
-            ],
-            "lodDistance": 140
-          },
-          "dust": {
-            "enabled": false
-          },
-          "seed": 11
-        },
-        "bind": [
-          {
-            "target": "brightness",
-            "feature": "bass",
-            "amount": 0.35,
-            "category": "particles",
-            "attackMs": 60,
-            "releaseMs": 700
-          },
-          {
-            "target": "pace",
-            "feature": "sectionIntensity",
-            "amount": 0.3,
-            "attackMs": 1500,
-            "releaseMs": 3000
-          }
-        ]
-      },
-      {
-        "id": "meteors",
-        "type": "particles",
-        "params": {
-          "count": 40,
-          "center": [
-            0,
-            70,
-            -300
-          ],
-          "size": [
-            700,
-            120,
-            200
-          ],
-          "color": "#ffffff",
-          "colorB": "#a8c8ff",
-          "minSize": 0.5,
-          "maxSize": 1.2,
-          "velocity": [
-            -60,
-            -36,
-            0
-          ],
-          "turbulence": 0,
-          "twinkle": 0,
-          "brightness": 2.2,
-          "shape": "streak",
-          "angle": -59,
-          "density": 0.6,
-          "seed": 41,
-          "bloom": 0.8
-        },
-        "bind": [
-          {
-            "target": "density",
-            "feature": "transientIntensity",
-            "amount": 0.4,
-            "category": "particles",
-            "attackMs": 30,
-            "releaseMs": 1200
-          }
-        ]
-      },
-      {
-        "id": "energy-streams",
-        "type": "particles",
-        "params": {
-          "count": 2200,
-          "center": [
-            0,
-            -12,
-            -110
-          ],
-          "size": [
-            360,
-            8,
-            70
-          ],
-          "color": "#5ae0ff",
-          "colorB": "#b46cff",
-          "minSize": 0.06,
-          "maxSize": 0.16,
-          "velocity": [
-            12,
-            0.4,
-            0
-          ],
-          "turbulence": 0.8,
-          "twinkle": 0.4,
-          "brightness": 1.2,
-          "shape": "streak",
-          "angle": 90,
-          "seed": 43,
-          "bloom": 0.6
-        },
-        "bind": [
-          {
-            "target": "speed",
-            "feature": "overallEnergy",
-            "amount": 0.7,
-            "category": "particles",
-            "attackMs": 200,
-            "releaseMs": 1200
-          },
-          {
-            "target": "brightness",
-            "feature": "beatPulse",
-            "amount": 0.5,
-            "category": "particles",
-            "attackMs": 20,
-            "releaseMs": 400
-          }
-        ]
-      },
-      {
         "id": "cosmic-dust",
         "type": "clouds",
         "params": {
@@ -458,7 +271,7 @@
           ],
           "color": "#3a1a6a",
           "colorB": "#123a6a",
-          "opacity": 0.22,
+          "opacity": 0.14,
           "drift": [
             0.8,
             0.3,
@@ -480,7 +293,7 @@
         "id": "near-stars",
         "type": "particles",
         "params": {
-          "count": 5000,
+          "count": 1600,
           "center": [
             0,
             0,
@@ -494,16 +307,16 @@
           "color": "#dfe6ff",
           "colorB": "#c9a8ff",
           "minSize": 0.06,
-          "maxSize": 0.28,
+          "maxSize": 0.16,
           "velocity": [
             0,
             0,
             2.2
           ],
           "turbulence": 0.1,
-          "twinkle": 0.8,
-          "brightness": 1.3,
-          "shape": "star",
+          "twinkle": 0.3,
+          "brightness": 0.5,
+          "shape": "soft",
           "seed": 21
         },
         "bind": [
@@ -544,7 +357,7 @@
           ],
           "color": "#4a1a8a",
           "colorB": "#1a5aa4",
-          "opacity": 0.3,
+          "opacity": 0.2,
           "drift": [
             1.2,
             0.2,
@@ -552,59 +365,6 @@
           ],
           "seed": 13
         },
-        "minDetail": "medium"
-      },
-      {
-        "id": "pulsars",
-        "type": "emitter",
-        "params": {
-          "positions": [
-            [
-              120,
-              60,
-              -300
-            ],
-            [
-              -200,
-              90,
-              -340
-            ],
-            [
-              210,
-              -40,
-              -320
-            ]
-          ],
-          "trigger": "beat",
-          "count": 14,
-          "shape": "star",
-          "color": "#e7d6ff",
-          "colorB": "#9fd0ff",
-          "intensity": 3,
-          "size": 2.4,
-          "speed": 2,
-          "spread": 1,
-          "gravity": 0,
-          "drag": 0.5,
-          "life": 0.9
-        }
-      },
-      {
-        "id": "orbit-rings",
-        "type": "rings",
-        "params": {
-          "count": 10,
-          "radius": 18,
-          "growth": 1.22,
-          "spacing": 18,
-          "startZ": -10,
-          "thickness": 0.04,
-          "color": "#8f6bff",
-          "base": 0.03,
-          "pulse": 0.45,
-          "speed": 3
-        },
-        "bind": [],
         "minDetail": "medium"
       }
     ]
@@ -621,12 +381,6 @@
         "name": "treble-sparkle",
         "layers": [
           "sky"
-        ]
-      },
-      {
-        "name": "section-swell",
-        "layers": [
-          "orbit-rings"
         ]
       }
     ],
