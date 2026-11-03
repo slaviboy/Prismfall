@@ -1,0 +1,903 @@
+{
+  "schemaVersion": 1,
+  "id": "enchanted-wilderness",
+  "name": "Enchanted Wilderness",
+  "description": "An old forest at golden dusk. Giant trees hold the light, mushrooms glow along the moss, fireflies rise, and deer move quietly between the trunks.",
+  "order": 45,
+  "tags": [
+    "forest",
+    "magic",
+    "dusk",
+    "creatures"
+  ],
+  "intensity": 0.48,
+  "recommendedQuality": "high",
+  "palette": {
+    "accent": "#9dff7a",
+    "secondary": "#ffd27a",
+    "highlight": "#f0ffe0",
+    "fog": "#2c4648",
+    "plate": "#060c06"
+  },
+  "fog": {
+    "color": "#2c4648",
+    "density": 0.0044
+  },
+  "backdrop": {
+    "top": "#1e3a3a",
+    "bottom": "#0a140a",
+    "glow": "#ffd27a"
+  },
+  "lighting": {
+    "key": {
+      "color": "#ffd8a0",
+      "intensity": 2.3,
+      "azimuth": -45,
+      "elevation": 30
+    },
+    "rim": {
+      "color": "#9dff7a",
+      "intensity": 1.8
+    },
+    "ambient": {
+      "sky": "#5a7a7a",
+      "ground": "#1a2a14",
+      "intensity": 0.95
+    },
+    "accents": [
+      {
+        "color": "#ffd27a",
+        "intensity": 20,
+        "x": -9,
+        "y": -6,
+        "z": 6
+      },
+      {
+        "color": "#7affb4",
+        "intensity": 18,
+        "x": 9,
+        "y": 8,
+        "z": 6
+      }
+    ],
+    "beatResponse": 0.28
+  },
+  "grade": {
+    "saturation": 1.08,
+    "contrast": 1.05,
+    "tint": [
+      0.99,
+      1.03,
+      0.97
+    ],
+    "vignette": 0.46,
+    "bloomThreshold": 0.22,
+    "bloomRadius": 0.6,
+    "toneMapping": "neutral",
+    "envIntensity": 0.35,
+    "exposure": 0.97
+  },
+  "camera": {
+    "pitch": 5,
+    "yaw": 0,
+    "sway": 0.7,
+    "targetY": 0
+  },
+  "blocks": {
+    "geometry": "faceted",
+    "material": "forestEmerald",
+    "palette": {
+      "I": "#38d8c8",
+      "O": "#e8d24a",
+      "T": "#a86ad8",
+      "S": "#4ae070",
+      "Z": "#e8505a",
+      "J": "#4a6ae0",
+      "L": "#f09040"
+    }
+  },
+  "environment": {
+    "layers": [
+      {
+        "id": "sky",
+        "type": "sky",
+        "params": {
+          "top": "#16304a",
+          "mid": "#4a6a7a",
+          "midHeight": 0.15,
+          "horizon": "#f4c890",
+          "bottom": "#0a140a",
+          "horizonGlow": 0.35,
+          "horizonWidth": 0.12,
+          "stars": 0.15,
+          "disc": {
+            "direction": [
+              -0.5,
+              0.12,
+              -1
+            ],
+            "color": "#ffe6b0",
+            "size": 2.0,
+            "halo": 9,
+            "intensity": 0.8
+          }
+        },
+        "bind": []
+      },
+      {
+        "id": "forest-floor",
+        "type": "terrain",
+        "params": {
+          "height": {
+            "base": -15,
+            "seed": 51,
+            "floor": 0.5,
+            "layers": [
+              {
+                "type": "fbm",
+                "amplitude": 6,
+                "scale": 55,
+                "octaves": 4
+              },
+              {
+                "type": "fbm",
+                "amplitude": 26,
+                "scale": 140,
+                "octaves": 3,
+                "band": {
+                  "near": 180,
+                  "ramp": 120,
+                  "far": 5000
+                }
+              },
+              {
+                "type": "ridged",
+                "amplitude": 70,
+                "scale": 220,
+                "octaves": 3,
+                "sharpness": 1.4,
+                "band": {
+                  "near": 360,
+                  "ramp": 160,
+                  "far": 5000
+                }
+              }
+            ],
+            "clearing": {
+              "center": [
+                -30,
+                -80
+              ],
+              "radius": 20,
+              "falloff": 18,
+              "depth": -2.2
+            }
+          },
+          "mesh": {
+            "near": 12,
+            "far": 900,
+            "rows": 210,
+            "cols": 220,
+            "spread": 1.45
+          },
+          "colors": {
+            "low": "#2c4a24",
+            "high": "#5a7a34",
+            "rock": "#4a4a3a",
+            "sparkle": "#d8ffb0"
+          },
+          "ripples": {
+            "strength": 0.05,
+            "wavelength": 1.4,
+            "direction": 40,
+            "speed": 0.0,
+            "fadeDistance": 40
+          },
+          "sparkle": 0.0,
+          "roughness": 0.92,
+          "rockSlope": 0.45
+        },
+        "bind": []
+      },
+      {
+        "id": "forest-pool",
+        "type": "water",
+        "params": {
+          "y": -15.9,
+          "deep": "#0e2418",
+          "shallow": "#3a6a4a",
+          "skyTop": "#2a4a4a",
+          "skyHorizon": "#f0c880",
+          "glow": "#9dff7a",
+          "rippleColor": "#c8ffb0",
+          "glowStrength": 0.08,
+          "amplitude": 0.0,
+          "wavelength": 8,
+          "speed": 0.2,
+          "moonDirection": [
+            -0.5,
+            0.9,
+            -0.3
+          ]
+        },
+        "bind": [
+          {
+            "target": "glow",
+            "feature": "bass",
+            "amount": 0.25,
+            "attackMs": 80,
+            "releaseMs": 800
+          }
+        ]
+      },
+      {
+        "id": "giant-trees",
+        "type": "scatter",
+        "params": {
+          "src": "/content/shared/flora/flora.glb",
+          "count": 120,
+          "seed": 4,
+          "items": [
+            {
+              "mesh": "giant_tree",
+              "scale": [
+                1.0,
+                1.9
+              ],
+              "tintJitter": 0.16
+            }
+          ],
+          "area": {
+            "kind": "band",
+            "near": 45,
+            "far": 360,
+            "spread": 1.35
+          },
+          "exclude": [
+            {
+              "center": [
+                0,
+                -8
+              ],
+              "radius": 34
+            },
+            {
+              "center": [
+                -30,
+                -80
+              ],
+              "radius": 24
+            }
+          ],
+          "clustering": 0.45,
+          "clusterScale": 70,
+          "sway": {
+            "amount": 0.12,
+            "speed": 0.5
+          },
+          "materials": [
+            {
+              "match": "^leaves",
+              "preset": "foliage",
+              "color": "#3a6a2a"
+            },
+            {
+              "match": "^bark",
+              "preset": "stone",
+              "color": "#3a2c22"
+            }
+          ]
+        },
+        "bind": [
+          {
+            "target": "sway",
+            "feature": "overallEnergy",
+            "amount": 0.3,
+            "attackMs": 500,
+            "releaseMs": 1500
+          }
+        ]
+      },
+      {
+        "id": "understory",
+        "type": "scatter",
+        "params": {
+          "src": "/content/shared/flora/flora.glb",
+          "count": 260,
+          "seed": 6,
+          "items": [
+            {
+              "mesh": "pine",
+              "weight": 2,
+              "scale": [
+                0.6,
+                1.1
+              ],
+              "tintJitter": 0.15
+            },
+            {
+              "mesh": "rock_a",
+              "weight": 1,
+              "scale": [
+                0.5,
+                1.4
+              ],
+              "tintJitter": 0.1
+            },
+            {
+              "mesh": "rock_b",
+              "weight": 1,
+              "scale": [
+                0.4,
+                1.0
+              ]
+            }
+          ],
+          "area": {
+            "kind": "band",
+            "near": 30,
+            "far": 240,
+            "spread": 1.4
+          },
+          "exclude": [
+            {
+              "center": [
+                0,
+                -8
+              ],
+              "radius": 30
+            },
+            {
+              "center": [
+                -30,
+                -80
+              ],
+              "radius": 22
+            }
+          ],
+          "clustering": 0.5,
+          "clusterScale": 50,
+          "alignToSlope": false,
+          "sway": {
+            "amount": 0.1,
+            "speed": 0.6
+          },
+          "materials": [
+            {
+              "match": "^needles",
+              "preset": "foliage",
+              "color": "#2a4a2a"
+            },
+            {
+              "match": "^bark",
+              "preset": "stone",
+              "color": "#3a2c22"
+            },
+            {
+              "match": "^rock",
+              "preset": "stone",
+              "color": "#4e6a3e",
+              "roughness": 0.9
+            }
+          ]
+        },
+        "bind": []
+      },
+      {
+        "id": "glow-mushrooms",
+        "type": "scatter",
+        "params": {
+          "src": "/content/shared/flora/flora.glb",
+          "count": 70,
+          "seed": 8,
+          "items": [
+            {
+              "mesh": "mushroom_glow",
+              "weight": 3,
+              "scale": [
+                0.6,
+                1.6
+              ],
+              "tintJitter": 0.25
+            },
+            {
+              "mesh": "mushroom_red",
+              "weight": 1,
+              "scale": [
+                0.5,
+                1.2
+              ]
+            }
+          ],
+          "area": {
+            "kind": "band",
+            "near": 30,
+            "far": 140,
+            "spread": 1.4
+          },
+          "exclude": [
+            {
+              "center": [
+                0,
+                -8
+              ],
+              "radius": 26
+            }
+          ],
+          "clustering": 0.75,
+          "clusterScale": 22,
+          "sway": {
+            "amount": 0.0
+          },
+          "materials": [
+            {
+              "match": "^glow",
+              "preset": "emissive",
+              "color": "#1a3a2a",
+              "emissive": "#6affc8",
+              "emissiveIntensity": 0.6,
+              "musicGlow": 1
+            },
+            {
+              "match": "^capRed",
+              "preset": "stone",
+              "color": "#b8302a",
+              "roughness": 0.6
+            },
+            {
+              "match": "^stem",
+              "preset": "stone",
+              "color": "#e8e0cc",
+              "roughness": 0.7
+            },
+            {
+              "match": "^snow",
+              "preset": "stone",
+              "color": "#f4f0e8"
+            }
+          ]
+        },
+        "bind": [
+          {
+            "target": "emissive",
+            "feature": "bass",
+            "amount": 0.6,
+            "category": "lighting",
+            "attackMs": 60,
+            "releaseMs": 700
+          }
+        ]
+      },
+      {
+        "id": "sun-rays",
+        "type": "beams",
+        "params": {
+          "count": 10,
+          "radius": 110,
+          "y": -15,
+          "z": -90,
+          "arc": 150,
+          "height": 170,
+          "width": 3.4,
+          "color": "#ffe0a0",
+          "base": 0.045,
+          "pulse": 0.1,
+          "sequence": 10,
+          "tilt": [
+            0,
+            0,
+            -0.38
+          ],
+          "seed": 5
+        },
+        "bind": [
+          {
+            "target": "intensity",
+            "feature": "sectionIntensity",
+            "amount": 0.4,
+            "category": "lighting",
+            "attackMs": 800,
+            "releaseMs": 2500
+          }
+        ]
+      },
+      {
+        "id": "deer",
+        "type": "creatureHerd",
+        "params": {
+          "model": "/content/shared/creatures/deer.glb",
+          "rig": "/content/shared/creatures/deer.rig.json",
+          "representation": "mesh",
+          "groups": [
+            {
+              "path": {
+                "kind": "line",
+                "from": [
+                  -110,
+                  0,
+                  -62
+                ],
+                "to": [
+                  120,
+                  0,
+                  -72
+                ]
+              },
+              "members": 3,
+              "formation": "herd",
+              "spacing": 4,
+              "speed": 0.8,
+              "scale": 2.0,
+              "start": 0.4,
+              "rest": 20,
+              "fade": 14,
+              "stopEvery": 18,
+              "stopFor": 9
+            }
+          ],
+          "mesh": {
+            "color": "#8a5a36",
+            "roughness": 0.85,
+            "rim": "#ffd27a",
+            "rimStrength": 0.12
+          },
+          "dust": {
+            "enabled": false
+          },
+          "seed": 4
+        },
+        "bind": []
+      },
+      {
+        "id": "forest-spirit",
+        "type": "creatureHerd",
+        "params": {
+          "model": "/content/shared/creatures/deer.glb",
+          "rig": "/content/shared/creatures/deer.rig.json",
+          "representation": "particles",
+          "groups": [
+            {
+              "path": {
+                "kind": "line",
+                "from": [
+                  140,
+                  0,
+                  -110
+                ],
+                "to": [
+                  -150,
+                  0,
+                  -100
+                ]
+              },
+              "members": 1,
+              "speed": 0.9,
+              "scale": 2.8,
+              "start": 0.2,
+              "rest": 30,
+              "fade": 16
+            }
+          ],
+          "particles": {
+            "perCreature": 3200,
+            "size": 0.07,
+            "color": "#c8ffb0",
+            "colorB": "#7affd0",
+            "brightness": 1.2,
+            "jitter": 0.04,
+            "bloom": 0.6,
+            "scatter": 8,
+            "wind": [
+              0.4,
+              0.8,
+              0.2
+            ],
+            "lodDistance": 90
+          },
+          "dust": {
+            "enabled": true,
+            "color": "#b8ffa0",
+            "amount": 0.6,
+            "size": 0.4
+          },
+          "seed": 6
+        },
+        "bind": [
+          {
+            "target": "brightness",
+            "feature": "treble",
+            "amount": 0.3,
+            "category": "particles",
+            "attackMs": 40,
+            "releaseMs": 500
+          }
+        ]
+      },
+      {
+        "id": "butterflies",
+        "type": "swarm",
+        "params": {
+          "kind": "butterfly",
+          "count": 30,
+          "flocks": 10,
+          "motion": {
+            "kind": "wander",
+            "center": [
+              0,
+              -6,
+              -45
+            ],
+            "size": [
+              160,
+              10,
+              60
+            ],
+            "speed": 2
+          },
+          "spread": [
+            3,
+            2,
+            3
+          ],
+          "size": [
+            3,
+            4.5
+          ],
+          "color": "#ffb84a",
+          "colorB": "#7ad8ff",
+          "glow": 0.3,
+          "tempo": 1,
+          "seed": 7
+        },
+        "bind": []
+      },
+      {
+        "id": "birds",
+        "type": "swarm",
+        "params": {
+          "kind": "bird",
+          "count": 14,
+          "flocks": 1,
+          "motion": {
+            "kind": "cross",
+            "from": [
+              -220,
+              34,
+              -170
+            ],
+            "to": [
+              230,
+              42,
+              -190
+            ],
+            "speed": 10,
+            "rest": 28
+          },
+          "spread": [
+            10,
+            3,
+            6
+          ],
+          "size": [
+            2.2,
+            3
+          ],
+          "color": "#2a2a26",
+          "colorB": "#3a3a34",
+          "tempo": 1,
+          "seed": 9
+        },
+        "bind": []
+      },
+      {
+        "id": "fireflies",
+        "type": "particles",
+        "params": {
+          "count": 1800,
+          "center": [
+            0,
+            -6,
+            -50
+          ],
+          "size": [
+            170,
+            22,
+            110
+          ],
+          "color": "#d8ff6a",
+          "colorB": "#ffe27a",
+          "minSize": 0.08,
+          "maxSize": 0.2,
+          "velocity": [
+            0.2,
+            0.25,
+            0.1
+          ],
+          "turbulence": 1.6,
+          "twinkle": 1,
+          "brightness": 1.8,
+          "shape": "soft",
+          "seed": 71,
+          "bloom": 0.8
+        },
+        "bind": [
+          {
+            "target": "brightness",
+            "feature": "beatPulse",
+            "amount": 0.5,
+            "category": "particles",
+            "attackMs": 30,
+            "releaseMs": 600
+          }
+        ]
+      },
+      {
+        "id": "pollen",
+        "type": "particles",
+        "params": {
+          "count": 2000,
+          "center": [
+            0,
+            0,
+            -40
+          ],
+          "size": [
+            150,
+            30,
+            90
+          ],
+          "color": "#fff0b0",
+          "colorB": "#e0ffb0",
+          "minSize": 0.03,
+          "maxSize": 0.07,
+          "velocity": [
+            0.4,
+            0.15,
+            0.1
+          ],
+          "turbulence": 0.8,
+          "twinkle": 0.6,
+          "brightness": 0.9,
+          "shape": "soft",
+          "seed": 73,
+          "bloom": 0.4
+        },
+        "bind": []
+      },
+      {
+        "id": "leaves",
+        "type": "particles",
+        "params": {
+          "count": 900,
+          "center": [
+            0,
+            6,
+            -40
+          ],
+          "size": [
+            160,
+            40,
+            90
+          ],
+          "color": "#c8a04a",
+          "colorB": "#8ab040",
+          "minSize": 0.12,
+          "maxSize": 0.26,
+          "velocity": [
+            1.2,
+            -0.9,
+            0.2
+          ],
+          "turbulence": 1.4,
+          "twinkle": 0.1,
+          "brightness": 0.7,
+          "shape": "petal",
+          "spin": 1.8,
+          "additive": false,
+          "seed": 75,
+          "bloom": 0.1
+        },
+        "bind": [
+          {
+            "target": "speed",
+            "feature": "overallEnergy",
+            "amount": 0.4,
+            "category": "particles",
+            "attackMs": 300,
+            "releaseMs": 1500
+          }
+        ]
+      },
+      {
+        "id": "ground-mist",
+        "type": "clouds",
+        "params": {
+          "count": 26,
+          "center": [
+            0,
+            -10,
+            -160
+          ],
+          "spread": [
+            520,
+            10,
+            220
+          ],
+          "size": [
+            50,
+            110
+          ],
+          "color": "#a8c8a0",
+          "colorB": "#80a080",
+          "opacity": 0.24,
+          "drift": [
+            1,
+            0,
+            0.2
+          ],
+          "additive": false,
+          "seed": 21
+        },
+        "bind": []
+      }
+    ]
+  },
+  "reactivity": {
+    "profiles": [
+      {
+        "name": "treble-sparkle",
+        "layers": [
+          "pollen"
+        ]
+      },
+      {
+        "name": "flux-turbulence",
+        "layers": [
+          "fireflies",
+          "pollen"
+        ]
+      }
+    ],
+    "bindings": []
+  },
+  "effects": {
+    "lineClear": {
+      "effect": "bloomSeeds",
+      "params": {
+        "wave": true
+      }
+    },
+    "landing": {
+      "shape": "petal"
+    },
+    "transition": {
+      "effect": "leaves",
+      "params": {}
+    }
+  },
+  "music": {
+    "bpm": 90,
+    "beatsPerBar": 4,
+    "tracks": [
+      {
+        "id": "enchanted-wilderness-fireflies",
+        "title": "Where the Fireflies Gather",
+        "kind": "composition",
+        "src": "music/main.ts"
+      }
+    ],
+    "defaultTrack": "enchanted-wilderness-fireflies"
+  },
+  "ambience": {
+    "preset": "wilderness",
+    "level": 1
+  },
+  "sfx": {
+    "preset": "organic",
+    "material": "organic"
+  },
+  "unlock": {
+    "type": "always"
+  },
+  "thumbnail": "previews/thumb.jpg"
+}
