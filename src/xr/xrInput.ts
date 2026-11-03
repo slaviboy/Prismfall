@@ -17,8 +17,8 @@ export interface XRInputSourceLike {
 /** Analog thresholds with hysteresis so a resting finger never chatters. */
 const PRESS = 0.55;
 const RELEASE = 0.35;
-const STICK_ON = 0.55;
-const STICK_OFF = 0.35;
+/** Release thresholds sit this far below the press threshold (hysteresis). */
+const HYSTERESIS = 0.2;
 
 /**
  * Turns WebXR controllers (xr-standard mapping: Quest Touch, Index, Vive, WMR...) into raw input
@@ -29,6 +29,11 @@ const STICK_OFF = 0.35;
 export class XRControllerInput {
   private readonly held = new Map<string, boolean>();
   private readonly sources = new Map<string, XRInputSourceLike>();
+
+  /** How far a stick (or touchpad) must be pushed to count as a direction (Settings → VR). */
+  stickThreshold = 0.55;
+  /** How far a trigger or grip must be pulled to count as pressed. */
+  triggerThreshold = PRESS;
 
   constructor(private readonly emit: (e: RawInputEvent) => void) {}
 
@@ -47,7 +52,10 @@ export class XRControllerInput {
         if (!b) return;
         const was = this.held.get(`xr:${hand}:${name}`) ?? false;
         const v = Math.max(b.value, b.pressed ? 1 : 0);
-        this.set(`xr:${hand}:${name}`, was ? v > RELEASE : v > PRESS, pad, time);
+        const analogue = name === 'trigger' || name === 'squeeze';
+        const on = analogue ? this.triggerThreshold : PRESS;
+        const off = analogue ? Math.max(0.05, on - HYSTERESIS) : RELEASE;
+        this.set(`xr:${hand}:${name}`, was ? v > off : v > on, pad, time);
       };
       analog(0, 'trigger');
       analog(1, 'squeeze');
@@ -68,7 +76,8 @@ export class XRControllerInput {
       const dir = (name: string, value: number): void => {
         const key = `xr:${hand}:stick-${name}`;
         const was = this.held.get(key) ?? false;
-        this.set(key, padGate && (was ? value > STICK_OFF : value > STICK_ON), pad, time);
+        const on = this.stickThreshold;
+        this.set(key, padGate && (was ? value > Math.max(0.1, on - HYSTERESIS) : value > on), pad, time);
       };
       dir('left', -x);
       dir('right', x);

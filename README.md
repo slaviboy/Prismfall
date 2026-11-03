@@ -22,7 +22,7 @@ Stack: TypeScript, React 19, Vite 8, three.js r187 `WebGPURenderer` (WebGPU with
 3. serves the production build with `vite preview` on http://localhost:4173;
 4. opens Chrome (or Edge) in app mode with its own profile under `%LOCALAPPDATA%\Prismfall\chrome-profile`.
 
-That profile keeps its own saves, separate from your normal browser window. See [Saves and data](#saves-and-data).
+That profile keeps its own saves, separate from your normal browser window. See [Saves and data](#saves-and-data). The server keeps running in a minimised "Prismfall server" window after you close the game; close that window to stop it (the next `Play.cmd` starts it again).
 
 **Develop:**
 
@@ -107,8 +107,8 @@ In play, the mouse wheel zooms the camera. With developer tools enabled (Setting
   - The newest 40 replays are kept, plus every replay attached to a high score.
   - The game asks the browser for persistent storage, so saves are not evicted automatically.
 - **Export and import:** **Settings → Data** can export a JSON save file and import one. Use it to back up a save or move it between origins and profiles. Settings saved by older versions are migrated on import.
-  - The export holds settings, progress, lifetime statistics and high scores.
-  - It does **not** include replays or added music files. A high score imported elsewhere loses its replay link.
+  - The export holds settings, progress, lifetime statistics, high scores and replays.
+  - It does **not** include music files you added in the Music Room.
 - **Reset:** Settings → Data can also erase progress or restore all settings, and has the "Unlock every stage" switch.
 
 ## Project layout

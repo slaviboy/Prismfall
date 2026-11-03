@@ -433,6 +433,9 @@ export const VR_TAB: TabDef = {
     { kind: 'toggle', section: 'vr', key: 'haptics', label: 'Controller vibration', description: 'Pulses on hard drops, locks and clears.' },
     { kind: 'slider', section: 'vr', key: 'hapticStrength', label: 'Vibration strength', min: 0, max: 1, step: 0.05, format: percent, when: (s) => s.vr.haptics },
     { kind: 'toggle', section: 'vr', key: 'showRays', label: 'Pointer rays', description: 'Lines from the controllers for pointing at menus.' },
+    { kind: 'group', label: 'Controller sensitivity' },
+    { kind: 'slider', section: 'vr', key: 'stickThreshold', label: 'Stick sensitivity', description: 'How far a thumbstick (or touchpad) must be pushed to move a piece. Lower is more sensitive.', min: 0.2, max: 0.9, step: 0.01, format: percent },
+    { kind: 'slider', section: 'vr', key: 'triggerThreshold', label: 'Trigger threshold', description: 'How far a trigger or grip must be pulled to count as pressed.', min: 0.1, max: 0.9, step: 0.01, format: percent },
     { kind: 'custom', id: 'vrBindings' },
   ],
 };

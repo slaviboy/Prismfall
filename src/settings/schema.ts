@@ -146,6 +146,9 @@ export const settingsSchema = z.object({
       /** Darkens the world around the playfield for focus (0 = off). */
       dimWorld: n(0, 0.8, 0),
       showRays: b(true),
+      /** Stick push and trigger pull needed to register (lower = more sensitive). */
+      stickThreshold: n(0.2, 0.9, 0.55),
+      triggerThreshold: n(0.1, 0.9, 0.55),
     })
     .prefault({}),
   controller: z

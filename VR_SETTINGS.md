@@ -89,6 +89,13 @@ The menu selection pulse follows both the Controller vibration switch and Vibrat
 - Seated is the default. If the playfield feels too high, too low or too close, adjust Height and Distance rather than moving your chair.
 - If the surroundings are distracting, raise **Dim the world**.
 
+### Controller sensitivity
+
+| Setting | Range | Default | What it does |
+|---|---|---|---|
+| Stick sensitivity | 20–90% | 55% | How far a thumbstick (or a pressed touchpad) must be pushed to count as a direction. Lower is more sensitive. Releasing needs 20 points less, so a direction doesn't chatter at the edge. |
+| Trigger threshold | 10–90% | 55% | How far a trigger or grip must be pulled to count as pressed, with the same 20-point release margin. Face buttons and stick presses are digital and unaffected. |
+
 ## Controller buttons
 
 These defaults work on any controller that follows the WebXR `xr-standard` layout (Quest Touch, Valve Index, HTC Vive, Windows Mixed Reality). On the left controller, the two face buttons are called X and Y. On controllers without a thumbstick, the touchpad acts as a stick only while it is pressed in near an edge; a press in the middle counts as the stick press. Vive wands and Windows Mixed Reality controllers have no A/B/X/Y buttons, which is why Pause also sits on the left stick press.

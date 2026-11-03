@@ -320,8 +320,15 @@ export class XRManager {
     this.changed();
   }
 
+  private applySensitivity(): void {
+    const vr = getSettings().vr;
+    this.input.stickThreshold = vr.stickThreshold;
+    this.input.triggerThreshold = vr.triggerThreshold;
+  }
+
   /** Places the player on the stage ground and the playfield in front of them. */
   applyLayout(): void {
+    this.applySensitivity();
     const rs = this.host.renderSystem();
     if (!rs) return;
     const vr = getSettings().vr;

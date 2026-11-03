@@ -326,7 +326,7 @@ How to read the Evidence column:
 | E. Spatial playfield at real-world scale: seated default and standing; distance, height, scale, tilt, HUD distance and scale; reset | Done | `XRManager.applyLayout`, VR tab ("Reset this tab"), "Recentre view" in the headset panel; `e2e/vr.spec.ts`. There is no sideways board offset |
 | F. All worlds in VR | Done / Manual check | VR renders the same scene graph; tested in emulation |
 | G. Controllers: input profiles, remapping, sticks and touchpads, buttons, triggers, haptics, buffering, no double activation | Done | `xrInput.ts`, `src/ui/vr/VRBindings.tsx`; `xrInput.test.ts`, `e2e/vr.spec.ts` |
-| G. VR controller sensitivity; detected-controller status in settings | Partial | Detected controllers are listed in Settings → VR (`VRControls.tsx`). Stick and trigger thresholds are fixed, with hysteresis; there is no sensitivity setting |
+| G. VR controller sensitivity; detected-controller status in settings | Done | Settings → VR: stick sensitivity and trigger threshold (`XRControllerInput`, `xrInput.test.ts`); detected controllers are listed (`VRControls.tsx`) |
 | H. VR menus with rays and sticks | Partial | The in-headset panel offers Marathon, Zen, Voyage, world choice, recentre and exit, plus pause and results panels. Sprint, Ultra, Practice and the settings, audio, graphics and controller configuration are not available inside the headset; they are on the desktop VR tab |
 | I. VR HUD | Done | Score, level, lines, time and combo or callout panel, following the Interface tab's visibility toggles; next and hold are 3D pods on the board; distance and scale adjustable |
 | J. Same audio engine and analysis; spatial audio | Partial | Shared engine, and the listener follows the headset. Only creature footsteps are positioned; ambience is stereo |
@@ -363,8 +363,7 @@ How to read the Evidence column:
 3. **Reflection quality does nothing.** The `graphics.reflections` setting is passed to environments but read by none, and it is not in the UI. Reflections come only from the environment map and material fresnel; there are no screen-space or planar reflections.
 4. **VR is unverified on hardware.** It has been tested only under IWER emulation. In addition:
    - it renders without post-processing and shadows;
-   - the in-headset menus are limited, and settings must be changed on the desktop;
-   - there is no VR controller sensitivity setting.
+   - the in-headset menus are limited, and settings must be changed on the desktop.
 5. **Music is synthesised live.** There are no recorded masters, stems or DAW projects. Whether it meets the "commercial soundtrack" bar is the owner's call. The analysis acceptance corpus is synthetic, too.
 6. **Content packs are build-time only.** There is no runtime import. New block surfaces, SFX timbre presets and impact profiles still need code in `src/`.
 7. **Save export leaves out Music Room files.** Settings, progress, stats, high scores and replays are exported; the player's own audio files are not. Every origin and browser profile has its own save (`Play.cmd` uses its own Chrome profile).
