@@ -217,7 +217,7 @@
                 "smooth": true,
                 "speed": 0.34,
                 "phase": 0.1,
-                "fade": 0.16,
+                "fade": 0.07,
                 "tilt": false
               }
             },
@@ -250,7 +250,7 @@
                 "smooth": true,
                 "speed": 0.3,
                 "phase": 0.55,
-                "fade": 0.16,
+                "fade": 0.07,
                 "tilt": false
               }
             },
@@ -283,33 +283,52 @@
                 "smooth": true,
                 "speed": 0.36,
                 "phase": 0.3,
-                "fade": 0.16,
+                "fade": 0.07,
                 "tilt": false
               }
             }
           ],
           "particles": {
             "tint": "#353b39",
-            "colorMix": 0.45,
-            "blend": "normal",
+            "colorMix": 0.0,
+            "blend": "additive",
             "jitter": 0.006,
-            "spread": 1.6,
+            "spread": 0.8,
             "wind": [
-              0.5,
-              0.35,
-              0.2
+              0.25,
+              0.4,
+              0.1
             ],
-            "bloom": 0.02,
+            "bloom": 0.1,
             "shading": 0.8,
             "light": [
               0.35,
               1,
               0.6
             ],
-            "count": 6000,
-            "size": 0.06,
-            "brightness": 0.3,
-            "seed": 41
+            "count": 6500,
+            "size": 0.07,
+            "brightness": 0.85,
+            "seed": 41,
+            "style": "glow",
+            "glow": {
+              "color": "#a6ffc8",
+              "textureMix": 0.25,
+              "core": 0.25,
+              "edge": 1.4,
+              "twinkle": 0.4,
+              "sparkle": 0.08,
+              "drift": 0.015,
+              "flow": 0.25,
+              "flowRate": 0.08,
+              "shed": 0.14,
+              "shedLife": 3.2,
+              "shedSpread": 0.9,
+              "breathe": 0.3,
+              "shimmer": 0.35,
+              "size": 1.1,
+              "brightness": 1.0
+            }
           }
         },
         "bind": []
@@ -354,7 +373,7 @@
                 "smooth": true,
                 "speed": 0.32,
                 "phase": 0.72,
-                "fade": 0.16,
+                "fade": 0.07,
                 "tilt": false
               }
             },
@@ -387,7 +406,7 @@
                 "smooth": true,
                 "speed": 0.33,
                 "phase": 0.05,
-                "fade": 0.16,
+                "fade": 0.07,
                 "tilt": false
               }
             },
@@ -420,33 +439,52 @@
                 "smooth": true,
                 "speed": 0.3,
                 "phase": 0.6,
-                "fade": 0.16,
+                "fade": 0.07,
                 "tilt": false
               }
             }
           ],
           "particles": {
             "tint": "#4a5452",
-            "colorMix": 0.18,
-            "blend": "normal",
+            "colorMix": 0.0,
+            "blend": "additive",
             "jitter": 0.006,
-            "spread": 1.6,
+            "spread": 0.8,
             "wind": [
-              0.5,
-              0.35,
-              0.2
+              0.25,
+              0.4,
+              0.1
             ],
-            "bloom": 0.02,
+            "bloom": 0.1,
             "shading": 0.8,
             "light": [
               0.35,
               1,
               0.6
             ],
-            "count": 6000,
-            "size": 0.06,
-            "brightness": 0.6,
-            "seed": 42
+            "count": 6500,
+            "size": 0.07,
+            "brightness": 0.85,
+            "seed": 42,
+            "style": "glow",
+            "glow": {
+              "color": "#a6ffc8",
+              "textureMix": 0.25,
+              "core": 0.25,
+              "edge": 1.4,
+              "twinkle": 0.4,
+              "sparkle": 0.08,
+              "drift": 0.015,
+              "flow": 0.25,
+              "flowRate": 0.08,
+              "shed": 0.14,
+              "shedLife": 3.2,
+              "shedSpread": 0.9,
+              "breathe": 0.3,
+              "shimmer": 0.35,
+              "size": 1.1,
+              "brightness": 1.0
+            }
           }
         },
         "bind": []

@@ -6,6 +6,8 @@
  * Usage: npm run content:thumbnails -- [--stages a,b] [--settle 4] [--backdrops-only]
  * Requires a test build (npm run build:test); the preview server is started if needed.
  * --port and --dist capture a private test build instead (as in stage-shots.ts).
+ * --progress 0.9 shows worlds as they look late in a run (game progress), for worlds that reveal
+ * themselves as you play.
  */
 import { chromium } from '@playwright/test';
 import { execSync, spawn, type ChildProcess } from 'node:child_process';
@@ -20,6 +22,7 @@ const opt = (name: string, def: string): string => {
 };
 const only = opt('stages', '').split(',').filter(Boolean);
 const settleS = Number(opt('settle', '4'));
+const progress = opt('progress', '');
 const backdropsOnly = args.includes('--backdrops-only');
 const port = opt('port', '4174');
 const dist = opt('dist', 'dist-test');
@@ -61,6 +64,7 @@ try {
   for (const s of stages) {
     if (only.length > 0 && !only.includes(s.id)) continue;
     await page.evaluate((id) => (window as unknown as Hooks).__PRISMFALL__.shell.stageManager.show(id, { transition: 0 }), s.id);
+    if (progress) await page.evaluate((v) => ((window as unknown as { __PRISMFALL__: { shell: { previewProgress: number | null } } }).__PRISMFALL__.shell.previewProgress = v), Number(progress));
     await page.waitForTimeout(settleS * 1000);
     const folder = join(ROOT, s.dir.replace(/^\//, ''));
     mkdirSync(join(folder, 'previews'), { recursive: true });

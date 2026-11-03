@@ -661,7 +661,7 @@
           "particles": {
             "count": 8000,
             "size": 0.08,
-            "brightness": 2.6,
+            "brightness": 1.1,
             "shading": 0.85,
             "light": [
               -0.3,
@@ -670,7 +670,7 @@
             ],
             "tint": "#bfe8dc",
             "colorMix": 0.12,
-            "blend": "normal",
+            "blend": "additive",
             "jitter": 0.01,
             "spread": 5,
             "wind": [
@@ -678,8 +678,27 @@
               0.8,
               0
             ],
-            "bloom": 0.05,
-            "seed": 3
+            "bloom": 0.12,
+            "seed": 3,
+            "style": "glow",
+            "glow": {
+              "color": "#7dffd2",
+              "textureMix": 0.3,
+              "core": 0.3,
+              "edge": 1.2,
+              "twinkle": 0.55,
+              "sparkle": 0.1,
+              "drift": 0.04,
+              "flow": 0.4,
+              "flowRate": 0.1,
+              "shed": 0.12,
+              "shedLife": 3,
+              "shedSpread": 1.6,
+              "breathe": 0.3,
+              "shimmer": 0.4,
+              "size": 1.25,
+              "brightness": 1.0
+            }
           }
         },
         "bind": []

@@ -6,6 +6,8 @@ import {
   Box3,
   Float32BufferAttribute,
   Group,
+  IcosahedronGeometry,
+  Mesh,
   MeshStandardMaterial,
   Quaternion,
   QuaternionKeyframeTrack,
@@ -186,5 +188,63 @@ describe('model component', () => {
     // Each instance has its own phase, but the swing never exceeds the amplitude and does move.
     expect(Math.max(...angles)).toBeLessThanOrEqual((30 * Math.PI) / 180 + 1e-6);
     expect(Math.max(...angles) - Math.min(...angles)).toBeGreaterThan(0.1);
+  });
+});
+
+describe('model component glow and reveal', () => {
+  it('passes the glow to the particles, calmer under reduced motion, and adds an overlay for glowEdges', async () => {
+    const make = vi.mocked(createSurfaceParticles);
+    make.mockClear();
+    const ctx = context(creature());
+    await modelComponent.create(
+      { ...ctx, quality: { ...ctx.quality, reducedMotion: true } },
+      modelComponent.schema.parse({ src: 'x.glb', render: 'particles', instances: [{ position: [0, 0, 0] }], particles: { count: 300, style: 'glow', glow: { shed: 0.2, flow: 1, color: '#ff0000' } } }),
+    );
+    const glow = make.mock.calls[0]![1].glow!;
+    expect(glow.shed).toBeCloseTo(0.06, 6);
+    expect(glow.flow).toBeCloseTo(0.3, 6);
+    expect(glow.color[0]).toBeCloseTo(1, 6);
+    make.mockClear();
+    await modelComponent.create(context(creature()), modelComponent.schema.parse({ src: 'x.glb', render: 'particles', instances: [{ position: [0, 0, 0] }], particles: { count: 300, style: 'glowEdges', glow: { overlay: 0.25 } } }));
+    expect(make).toHaveBeenCalledTimes(2);
+    expect(make.mock.calls[0]![1].glow).toBeUndefined();
+    const count = (call: number) => make.mock.calls[call]![0].reduce((n, s) => n + s.count, 0);
+    expect(count(1)).toBeCloseTo(count(0) * 0.25, -1);
+    expect(make.mock.calls[1]![1].glow).toBeDefined();
+  });
+
+  it('sorts the glowEdges overlay with its dots, so it draws on top of them from every side', async () => {
+    // A lopsided blob: a random quarter of its samples has a bounding centre of its own.
+    const g = new IcosahedronGeometry(1, 3);
+    g.scale(3, 1, 0.5);
+    const scene = new Group();
+    scene.add(new Mesh(g, new MeshStandardMaterial()));
+    scene.updateMatrixWorld(true);
+    const blob = { scene, scenes: [scene], animations: [], cameras: [], asset: {}, parser: null as never, userData: {} } as unknown as GLTF;
+    const make = vi.mocked(createSurfaceParticles);
+    make.mockClear();
+    await modelComponent.create(context(blob), modelComponent.schema.parse({ src: 'x.glb', render: 'particles', instances: [{ position: [0, 0, 0] }], particles: { count: 400, style: 'glowEdges', glow: { overlay: 0.2 } } }));
+    const objects = (i: number) => (make.mock.results[i]!.value as ReturnType<typeof createSurfaceParticles>).objects;
+    const [dots] = objects(0);
+    const [overlay] = objects(1);
+    // Transparent objects sort by their geometry's centre (then by id): equal centres, overlay created last.
+    dots!.geometry.computeBoundingSphere();
+    expect(overlay!.geometry.boundingSphere!.center.distanceTo(dots!.geometry.boundingSphere!.center)).toBe(0);
+    expect(overlay!.parent).toBe(dots!.parent);
+    expect(overlay!.id).toBeGreaterThan(dots!.id);
+  });
+
+  it('keeps creatures that arrive with the run hidden until their progress', async () => {
+    const make = vi.mocked(createSurfaceParticles);
+    make.mockClear();
+    const { component } = await build({ src: 'x.glb', render: 'particles', instances: [{ position: [0, 0, 0] }], particles: { count: 100 }, reveal: { from: 0.5, to: 0.6 } });
+    const particles = make.mock.results[0]!.value as ReturnType<typeof createSurfaceParticles>;
+    const at = (time: number, progress: number) => component.update!({ ...frame(time, 0.1), game: { danger: 0, combo: -1, backToBack: 0, level: 1, clearPulse: 0, progress } } as EnvFrame);
+    for (let t = 0; t < 10; t += 0.1) at(t, 0.2);
+    expect(particles.uniforms.presence.value).toBe(0);
+    expect(particles.uniforms.dissolve.value).toBe(1);
+    for (let t = 10; t < 30; t += 0.1) at(t, 0.8);
+    expect(particles.uniforms.presence.value).toBeCloseTo(1, 3);
+    expect(particles.uniforms.dissolve.value).toBeLessThan(0.01);
   });
 });

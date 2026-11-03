@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { Bone, BoxGeometry, Float32BufferAttribute, Group, Matrix4, Mesh, MeshBasicMaterial, Skeleton, SkinnedMesh, Uint16BufferAttribute, Vector3, Vector4 } from 'three/webgpu';
+import { AdditiveBlending, Bone, BoxGeometry, Float32BufferAttribute, Group, Matrix4, Mesh, MeshBasicMaterial, NormalBlending, Skeleton, SkinnedMesh, Uint16BufferAttribute, Vector3, Vector4, type MeshBasicNodeMaterial } from 'three/webgpu';
 import { uniform } from 'three/tsl';
 import { seeded } from '../environments/components/common';
 import { sampleModel } from './meshSampler';
-import { createSurfaceParticles, groupSets, MORPH_TEXTURE_WIDTH, strongestInfluences } from './surfaceParticles';
+import { createSurfaceParticles, DEFAULT_GLOW, groupSets, MORPH_TEXTURE_WIDTH, strongestInfluences } from './surfaceParticles';
 
 const OPTIONS = { size: 0.2, brightness: 1, tint: [1, 1, 1] as const, colorMix: 0, blend: 'additive' as const, jitter: 0.02, spread: 4, wind: [1, 0, 0] as const, bloom: 0.3 };
 
@@ -190,5 +190,26 @@ describe('surface particles', () => {
     expect(disposed).toBe(0);
     second.dispose();
     expect(disposed).toBe(1);
+  });
+});
+
+describe('glowing surface particles', () => {
+  it('draw additive, fog-free points when given glow options, and plain ones otherwise', () => {
+    const mesh = new Mesh(new BoxGeometry(1, 1, 1), new MeshBasicMaterial());
+    const plain = createSurfaceParticles(sampleModel(mesh, 100, seeded(12), null), { ...OPTIONS, blend: 'normal' }, uniform(0));
+    const plainMaterial = plain.objects[0]!.material as MeshBasicNodeMaterial;
+    expect(plainMaterial.blending).toBe(NormalBlending);
+    const glowing = createSurfaceParticles(sampleModel(mesh, 100, seeded(12), null), { ...OPTIONS, blend: 'normal', glow: DEFAULT_GLOW }, uniform(0));
+    const glowMaterial = glowing.objects[0]!.material as MeshBasicNodeMaterial;
+    expect(glowMaterial.blending).toBe(AdditiveBlending);
+    expect(glowMaterial.fog).toBe(false);
+    expect(glowMaterial.depthWrite).toBe(false);
+    expect(glowMaterial).not.toBe(plainMaterial);
+    // The owner drives the wake and the music envelopes through these.
+    glowing.uniforms.velocity.value.set(1, 0, 0);
+    glowing.uniforms.breath.value = 0.5;
+    glowing.uniforms.sparkle.value = 0.5;
+    plain.dispose();
+    glowing.dispose();
   });
 });

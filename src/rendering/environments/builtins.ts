@@ -10,6 +10,7 @@ import { conifersComponent } from './components/conifers';
 import { emitterComponent } from './components/emitter';
 import { eruptionComponent } from './components/eruption';
 import { fishSchoolComponent } from './components/fishSchool';
+import { glowSchoolComponent } from './components/glowSchool';
 import { firefliesComponent } from './components/fireflies';
 import { dragonfliesComponent } from './components/dragonflies';
 import { galaxyComponent } from './components/galaxy';
@@ -61,6 +62,7 @@ export const BUILTIN_COMPONENTS: readonly ComponentFactory[] = [
   particleShapesComponent,
   jellyfishComponent,
   fishSchoolComponent,
+  glowSchoolComponent,
   meteorsComponent,
   birdFlockComponent,
   firefliesComponent,

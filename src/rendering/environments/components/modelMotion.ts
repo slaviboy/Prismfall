@@ -288,3 +288,58 @@ export function buildPath(points: readonly Vector3[], closed: boolean, smooth: b
     },
   };
 }
+
+/** How creatures arrive with the run (see the model component's `reveal`). */
+export interface RevealPlan {
+  /** Game progress (0..1) where they start to assemble. */
+  readonly from: number;
+  /** Progress where they are fully there. */
+  readonly to: number;
+  /** Progress from which a big clear (QUAD, perfect clear) calls them in early. */
+  readonly unlock: number;
+  /** Seconds such a call lasts. */
+  readonly hold: number;
+}
+
+/** Target presence (0..1): a smooth ramp over [from, to] of progress, or 1 while called in. */
+export function revealTarget(plan: RevealPlan, progress: number, time: number, calledUntil: number): number {
+  const span = plan.to - plan.from;
+  const x = span > 1e-6 ? Math.min(1, Math.max(0, (progress - plan.from) / span)) : progress >= plan.from ? 1 : 0;
+  const ramp = x * x * (3 - 2 * x);
+  return time < calledUntil ? 1 : ramp;
+}
+
+/** Eases a reveal level towards its target (frame-rate independent; seconds to ~63%). */
+export function stepReveal(level: number, target: number, dt: number, tau = 2.5): number {
+  return level + (target - level) * (1 - Math.exp(-Math.max(0, dt) / Math.max(1e-3, tau)));
+}
+
+/**
+ * Follows a reveal over a run: call `update` every frame with the clock and game progress, and
+ * `bigClear` on a QUAD or perfect clear (it calls the creatures in once progress passed `unlock`).
+ * `level` (0..1) eases towards the target; without a plan it stays 1.
+ */
+export class RevealTracker {
+  level: number;
+  private calledUntil = -1;
+  private clock = 0;
+  private progress = 0;
+
+  constructor(
+    private readonly plan: RevealPlan | undefined,
+    private readonly tau = 2.5,
+  ) {
+    this.level = plan ? 0 : 1;
+  }
+
+  update(time: number, progress: number, dt: number): number {
+    this.clock = time;
+    this.progress = progress;
+    if (this.plan) this.level = stepReveal(this.level, revealTarget(this.plan, progress, time, this.calledUntil), dt, this.tau);
+    return this.level;
+  }
+
+  bigClear(): void {
+    if (this.plan && this.progress >= this.plan.unlock) this.calledUntil = this.clock + this.plan.hold;
+  }
+}

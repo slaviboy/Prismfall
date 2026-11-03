@@ -632,7 +632,27 @@
             "jitter": 0.0028,
             "bloom": 0,
             "spread": 0.4,
-            "seed": 3
+            "seed": 3,
+            "style": "glowEdges",
+            "glow": {
+              "color": "#ffd2a0",
+              "textureMix": 0.15,
+              "core": 0.08,
+              "edge": 1.6,
+              "twinkle": 0.55,
+              "sparkle": 0.18,
+              "drift": 0.004,
+              "flow": 0.03,
+              "flowRate": 0.15,
+              "shed": 0.22,
+              "shedLife": 1.4,
+              "shedSpread": 0.25,
+              "breathe": 0.25,
+              "shimmer": 0.45,
+              "overlay": 0.35,
+              "size": 1.15,
+              "brightness": 0.85
+            }
           }
         }
       },
@@ -697,7 +717,27 @@
             "jitter": 0.00192,
             "bloom": 0,
             "spread": 0.4,
-            "seed": 13
+            "seed": 13,
+            "style": "glowEdges",
+            "glow": {
+              "color": "#ffd2a0",
+              "textureMix": 0.15,
+              "core": 0.08,
+              "edge": 1.6,
+              "twinkle": 0.55,
+              "sparkle": 0.18,
+              "drift": 0.004,
+              "flow": 0.03,
+              "flowRate": 0.15,
+              "shed": 0.22,
+              "shedLife": 1.4,
+              "shedSpread": 0.25,
+              "breathe": 0.25,
+              "shimmer": 0.45,
+              "overlay": 0.35,
+              "size": 1.15,
+              "brightness": 0.85
+            }
           }
         }
       },
@@ -733,7 +773,27 @@
             "jitter": 0.0015,
             "bloom": 0,
             "spread": 0.4,
-            "seed": 5
+            "seed": 5,
+            "style": "glowEdges",
+            "glow": {
+              "color": "#fff0c4",
+              "textureMix": 0.15,
+              "core": 0.08,
+              "edge": 1.6,
+              "twinkle": 0.55,
+              "sparkle": 0.18,
+              "drift": 0.004,
+              "flow": 0.03,
+              "flowRate": 0.15,
+              "shed": 0.22,
+              "shedLife": 1.4,
+              "shedSpread": 0.25,
+              "breathe": 0.25,
+              "shimmer": 0.45,
+              "overlay": 0.35,
+              "size": 1.15,
+              "brightness": 0.85
+            }
           }
         }
       },
@@ -803,7 +863,27 @@
             "jitter": 0.0004,
             "bloom": 0,
             "spread": 0.4,
-            "seed": 7
+            "seed": 7,
+            "style": "glowEdges",
+            "glow": {
+              "color": "#c4fff0",
+              "textureMix": 0.15,
+              "core": 0.08,
+              "edge": 1.6,
+              "twinkle": 0.55,
+              "sparkle": 0.18,
+              "drift": 0.004,
+              "flow": 0.03,
+              "flowRate": 0.15,
+              "shed": 0.22,
+              "shedLife": 1.4,
+              "shedSpread": 0.25,
+              "breathe": 0.25,
+              "shimmer": 0.45,
+              "overlay": 0.35,
+              "size": 1.15,
+              "brightness": 0.85
+            }
           }
         }
       },
@@ -896,7 +976,27 @@
             "jitter": 0.00032,
             "bloom": 0,
             "spread": 0.4,
-            "seed": 9
+            "seed": 9,
+            "style": "glowEdges",
+            "glow": {
+              "color": "#cfe6ff",
+              "textureMix": 0.15,
+              "core": 0.08,
+              "edge": 1.6,
+              "twinkle": 0.55,
+              "sparkle": 0.18,
+              "drift": 0.004,
+              "flow": 0.03,
+              "flowRate": 0.15,
+              "shed": 0.22,
+              "shedLife": 1.4,
+              "shedSpread": 0.25,
+              "breathe": 0.25,
+              "shimmer": 0.45,
+              "overlay": 0.35,
+              "size": 1.15,
+              "brightness": 0.85
+            }
           }
         }
       },
@@ -990,7 +1090,27 @@
             "jitter": 0.00032,
             "bloom": 0,
             "spread": 0.4,
-            "seed": 11
+            "seed": 11,
+            "style": "glowEdges",
+            "glow": {
+              "color": "#ffe6c8",
+              "textureMix": 0.15,
+              "core": 0.08,
+              "edge": 1.6,
+              "twinkle": 0.55,
+              "sparkle": 0.18,
+              "drift": 0.004,
+              "flow": 0.03,
+              "flowRate": 0.15,
+              "shed": 0.22,
+              "shedLife": 1.4,
+              "shedSpread": 0.25,
+              "breathe": 0.25,
+              "shimmer": 0.45,
+              "overlay": 0.35,
+              "size": 1.15,
+              "brightness": 0.85
+            }
           }
         }
       },

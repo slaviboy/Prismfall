@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { AnimationClip, AnimationMixer, Bone, Group, QuaternionKeyframeTrack, Vector3, VectorKeyframeTrack } from 'three/webgpu';
-import { buildPath, inPlaceClip, pathCycle, pathState, stopWeight, type PathPlan } from './modelMotion';
+import { RevealTracker, buildPath, inPlaceClip, pathCycle, pathState, revealTarget, stopWeight, type PathPlan } from './modelMotion';
 
 /** A root (scaled 0.01 and turned Z-up like many exports) with hips and two legs. */
 function rig(): { root: Group; hips: Bone } {
@@ -146,5 +146,35 @@ describe('path shapes', () => {
     path.sample(3, a, t);
     path.sample(3 + path.length, b, t);
     expect(a.distanceTo(b)).toBeLessThan(1e-6);
+  });
+});
+
+describe('reveal with the run', () => {
+  const plan = { from: 0.4, to: 0.6, unlock: 0.5, hold: 10 };
+
+  it('ramps smoothly over its progress window', () => {
+    expect(revealTarget(plan, 0, 0, -1)).toBe(0);
+    expect(revealTarget(plan, 0.4, 0, -1)).toBe(0);
+    expect(revealTarget(plan, 0.5, 0, -1)).toBeCloseTo(0.5, 6);
+    expect(revealTarget(plan, 0.6, 0, -1)).toBe(1);
+    expect(revealTarget(plan, 1, 0, -1)).toBe(1);
+  });
+
+  it('eases its level, and a big clear calls it in only once unlocked, for `hold` seconds', () => {
+    const r = new RevealTracker(plan, 1);
+    const run = (from: number, to: number, progress: number) => {
+      for (let t = from; t < to; t += 1 / 30) r.update(t, progress, 1 / 30);
+      return r.level;
+    };
+    expect(run(0, 5, 0)).toBe(0);
+    // Below the window and below `unlock`: a big clear does nothing yet.
+    r.bigClear();
+    expect(run(5, 8, 0.35)).toBeCloseTo(0, 3);
+    run(8, 9, 0.52);
+    r.bigClear();
+    expect(run(9, 16, 0.52)).toBeGreaterThan(0.99);
+    // After the hold it settles back to the ramp's own value: 0.52 lies 60% into the window.
+    expect(run(19, 45, 0.52)).toBeCloseTo(0.648, 2);
+    expect(new RevealTracker(undefined).update(0, 0, 1)).toBe(1);
   });
 });

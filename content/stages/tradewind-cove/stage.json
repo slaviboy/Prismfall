@@ -892,7 +892,27 @@
               1,
               -0.4
             ],
-            "seed": 71
+            "seed": 71,
+            "style": "glowEdges",
+            "glow": {
+              "color": "#d2f6ff",
+              "textureMix": 0.1,
+              "core": 0.08,
+              "edge": 1.6,
+              "twinkle": 0.55,
+              "sparkle": 0.2,
+              "drift": 0.02,
+              "flow": 0.3,
+              "flowRate": 0.15,
+              "shed": 0.3,
+              "shedLife": 1.4,
+              "shedSpread": 0.7,
+              "breathe": 0.25,
+              "shimmer": 0.45,
+              "overlay": 0.35,
+              "size": 1.1,
+              "brightness": 0.9
+            }
           }
         },
         "bind": []

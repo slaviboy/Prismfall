@@ -21,30 +21,36 @@ import {
   type Node,
 } from 'three/webgpu';
 import {
+  abs,
   attribute,
+  cameraPosition,
   cameraWorldMatrix,
   cos,
   dot,
   float,
   floor,
+  fract,
   int,
   ivec2,
   length,
+  max,
   mix,
   modelWorldMatrix,
   modelWorldMatrixInverse,
   mrt,
+  mx_noise_vec3,
   normalLocal,
   positionLocal,
   sin,
   smoothstep,
+  step,
   textureLoad,
   uniform,
   varying,
   vec3,
   vec4,
 } from 'three/tsl';
-import { additiveFog, type FloatUniform } from '../shaders/uniforms';
+import { additiveFog, frameUniforms, type FloatUniform } from '../shaders/uniforms';
 import type { SurfaceSampleSet } from './meshSampler';
 
 export interface SurfaceParticleOptions {
@@ -72,7 +78,64 @@ export interface SurfaceParticleOptions {
   readonly light?: readonly [number, number, number];
   /** Saturation of the sampled surface colours: 1 as sampled (default), 0 grey (keeps their lightness). */
   readonly saturation?: number;
+  /** Luminous moving points instead of plain surface dots (see GlowOptions); unset keeps the plain look. */
+  readonly glow?: GlowOptions;
 }
+
+/**
+ * The glowing style: additive points with soft bright cores that twinkle, brighter along the
+ * silhouette (fresnel) than across the body, that drift around their surface point, stream slowly
+ * along the body, and partly shed into a fading wake behind a moving creature. Everything runs in
+ * the vertex shader from time and a per-particle seed (stateless); distances are world units.
+ */
+export interface GlowOptions {
+  /** Linear RGB glow colour. */
+  readonly color: readonly [number, number, number];
+  /** 0 = the glow colour only, 1 = the surface colours sampled from the model (lifted to glow). */
+  readonly textureMix: number;
+  /** Brightness of the body seen face-on, relative to its edges (0..1): lower = stronger outlines. */
+  readonly core: number;
+  /** How strongly edges (grazing to the view) brighten, 0..2. */
+  readonly edge: number;
+  /** Twinkle depth of every point (0..1). */
+  readonly twinkle: number;
+  /** Share of points that now and then flash brightly (0..1). */
+  readonly sparkle: number;
+  /** Radius of each point's slow orbit around its surface point. */
+  readonly drift: number;
+  /** Length of the slow stream of points along the body (against its motion; upwards when still). */
+  readonly flow: number;
+  /** Cycles per second of that stream. */
+  readonly flowRate: number;
+  /** Share of points that leave the body and trail behind as a fading wake (0..1). */
+  readonly shed: number;
+  /** Seconds a shed point lives. */
+  readonly shedLife: number;
+  /** How far a shed point wanders (curl-like noise) over its life; it also rises a little. */
+  readonly shedSpread: number;
+  /** Depth of the slow breathing of the glow with the bass (0..1); see uniforms.breath. */
+  readonly breathe: number;
+  /** How much the treble adds to the sparkle (0..1); see uniforms.sparkle. */
+  readonly shimmer: number;
+}
+
+/** Defaults of the glowing style (cyan, soft body, bright edges, gentle drift and shedding). */
+export const DEFAULT_GLOW: GlowOptions = {
+  color: [0.35, 0.85, 1],
+  textureMix: 0.2,
+  core: 0.35,
+  edge: 1,
+  twinkle: 0.5,
+  sparkle: 0.1,
+  drift: 0.04,
+  flow: 0.25,
+  flowRate: 0.12,
+  shed: 0.12,
+  shedLife: 2.5,
+  shedSpread: 1.2,
+  breathe: 0.3,
+  shimmer: 0.4,
+};
 
 export interface SurfaceParticles {
   readonly objects: Mesh[];
@@ -82,6 +145,12 @@ export interface SurfaceParticles {
     readonly brightness: { value: number };
     readonly size: { value: number };
     readonly presence: { value: number };
+    /** World velocity of the creature (its wake trails against it); zero when it stands still. */
+    readonly velocity: { value: Vector3 };
+    /** Slow bass envelope (0..1) that breathes the glow; set by the owner each frame. */
+    readonly breath: { value: number };
+    /** Treble envelope (0..1) that adds sparkle. */
+    readonly sparkle: { value: number };
   };
   /** Follows the source meshes' morph target influences (call once per frame after animating). */
   update(): void;
@@ -312,6 +381,9 @@ export function createSurfaceParticles(sets: readonly SurfaceSampleSet[], opts: 
     brightness: uniform(opts.brightness),
     size: uniform(opts.size),
     presence: uniform(1),
+    velocity: uniform(new Vector3()),
+    breath: uniform(0),
+    sparkle: uniform(0),
   };
   const seed = attribute<'float'>('pseed', 'float');
   const normal = normalLocal;
@@ -347,6 +419,7 @@ export function createSurfaceParticles(sets: readonly SurfaceSampleSet[], opts: 
   const light = color.mul(shape).mul(twinkle).mul(u.brightness).mul(float(1).sub(d.mul(0.8))).mul(u.presence);
 
   const makeMaterial = (morph: Node<'vec3'> | null): MeshBasicNodeMaterial => {
+    if (opts.glow) return glowMaterial(opts.glow, morph);
     const material = new MeshBasicNodeMaterial();
     const surface = morph ? positionLocal.add(morph) : positionLocal;
     material.positionNode = surface.add(scatter).add(shimmer).add(offset);
@@ -360,6 +433,69 @@ export function createSurfaceParticles(sets: readonly SurfaceSampleSet[], opts: 
       material.blending = NormalBlending;
       material.mrtNode = mrt({ emissive: vec4(color.mul(opts.bloom), shape.mul(u.presence)) });
     }
+    material.transparent = true;
+    material.depthWrite = false;
+    return material;
+  };
+
+  const glowMaterial = (g: GlowOptions, morph: Node<'vec3'> | null): MeshBasicNodeMaterial => {
+    const material = new MeshBasicNodeMaterial();
+    const surface = morph ? positionLocal.add(morph) : positionLocal;
+    const s2 = fract(seed.mul(7.31).add(0.17));
+    const s3 = fract(seed.mul(13.7).add(0.41));
+    const s4 = fract(seed.mul(3.17).add(0.73));
+    const s5 = fract(seed.mul(23.3).add(0.29));
+    const worldUp = vec3(0, 1, 0);
+    const vel = u.velocity;
+    const speed = length(vel);
+    const moving = smoothstep(0.05, 0.4, speed);
+    // Behind the creature (where its wake goes and its body streams to); upwards when it stands.
+    const back = mix(worldUp, vel.negate().div(max(speed, 1e-4)), moving).normalize();
+    const nWorld = modelWorldMatrix.mul(vec4(normalLocal, 0)).xyz.normalize();
+    // Shedding: mostly from trailing surfaces (facing away from the motion); about `shed` of all points.
+    const trailing = mix(float(0.6), smoothstep(-0.25, 0.75, dot(nWorld, back)), moving);
+    const shedOn = step(s4, trailing.mul(g.shed * 1.6));
+    const age = fract(time.div(g.shedLife).add(s3));
+    const lifeT = age.mul(g.shedLife);
+    const curl = mx_noise_vec3(vec3(seed.mul(37.1), lifeT.mul(0.45), s5.mul(11).add(time.mul(0.03))));
+    // A shed point stays where it left the body while the body moves on, wanders and rises a little.
+    const wake = vel.mul(lifeT).negate().add(curl.mul(age.mul(g.shedSpread))).add(worldUp.mul(age.mul(g.shedSpread * 0.3)));
+    // The others orbit their surface point and stream slowly along the body.
+    const orbit = vec3(
+      sin(time.mul(s2.mul(0.8).add(0.5)).add(s3.mul(TAU))),
+      cos(time.mul(s4.mul(0.7).add(0.45)).add(s2.mul(TAU))),
+      sin(time.mul(s5.mul(0.9).add(0.4)).add(s4.mul(TAU))),
+    ).mul(g.drift);
+    const flowPhase = fract(time.mul(g.flowRate).add(s5));
+    const stream = back.mul(flowPhase.sub(0.5).mul(g.flow));
+    const motion = toLocal(mix(orbit.add(stream), wake, shedOn));
+    const quadRadius = radius.mul(mix(float(1), float(1).sub(age.mul(0.55)), shedOn));
+    const quad = right.mul(corner.x).add(up.mul(corner.y)).mul(quadRadius);
+    material.positionNode = surface.add(scatter).add(motion).add(quad);
+    // Light per point (vertex stage): edges brighter than the body, twinkle, rare bright sparkles,
+    // shed points fading out (and in, so a wrapped life never pops).
+    const worldPos = modelWorldMatrix.mul(vec4(surface, 1)).xyz;
+    const view = cameraPosition.sub(worldPos).normalize();
+    const fresnel = float(1).sub(abs(dot(nWorld, view)));
+    const edge = mix(float(g.core), float(1), fresnel.mul(fresnel).mul(g.edge).min(1));
+    const tw = float(1 - g.twinkle * 0.5).add(sin(time.mul(s2.mul(5).add(2)).add(s3.mul(TAU))).mul(g.twinkle * 0.5));
+    const flash = max(sin(time.mul(s4.mul(1.6).add(0.7)).add(s2.mul(40))), 0).pow(18);
+    const spark = step(1 - g.sparkle, s5).mul(flash).mul(u.sparkle.mul(frameUniforms.reactivity).mul(g.shimmer * 2).add(1)).mul(2.5);
+    const shedFade = mix(float(1), float(1).sub(age).pow(1.5).mul(smoothstep(0, 0.06, age)), shedOn);
+    const streamFade = sin(flowPhase.mul(Math.PI)).mul(0.35).add(0.65);
+    const level = varying(edge.mul(tw).mul(streamFade).add(spark).add(shedOn.mul(0.25)).mul(shedFade), 'vGlowLevel');
+    // Colour: the glow colour, optionally mixed with the sampled surface colours (lifted to glow).
+    const own = sampled.mul(2.4).min(vec3(1.5));
+    const base = mix(vec3(...g.color), own, g.textureMix);
+    const breathe = float(1).add(u.breath.mul(frameUniforms.reactivity).sub(0.35).mul(g.breathe));
+    // A soft point with a bright core.
+    const r = length(corner);
+    const pointShape = smoothstep(1, 0, r).pow(2.2).add(smoothstep(0.38, 0, r).mul(1.1));
+    const glowLight = base.mul(level).mul(pointShape).mul(u.brightness).mul(breathe).mul(float(1).sub(d.mul(0.85))).mul(u.presence);
+    material.colorNode = vec4(additiveFog(glowLight), 1);
+    material.blending = AdditiveBlending;
+    material.fog = false;
+    material.mrtNode = mrt({ emissive: vec4(glowLight.mul(opts.bloom), 1) });
     material.transparent = true;
     material.depthWrite = false;
     return material;

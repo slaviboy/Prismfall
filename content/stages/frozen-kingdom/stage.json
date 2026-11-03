@@ -401,7 +401,27 @@
               0.9,
               0.8
             ],
-            "seed": 31
+            "seed": 31,
+            "style": "glowEdges",
+            "glow": {
+              "color": "#d6efff",
+              "textureMix": 0.1,
+              "core": 0.06,
+              "edge": 1.7,
+              "twinkle": 0.5,
+              "sparkle": 0.15,
+              "drift": 0.02,
+              "flow": 0.2,
+              "flowRate": 0.1,
+              "shed": 0.22,
+              "shedLife": 2,
+              "shedSpread": 0.8,
+              "breathe": 0.25,
+              "shimmer": 0.4,
+              "overlay": 0.3,
+              "size": 1.1,
+              "brightness": 0.9
+            }
           }
         },
         "bind": []

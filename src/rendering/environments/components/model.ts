@@ -3,10 +3,10 @@ import { clone as cloneSkinned } from 'three/addons/utils/SkeletonUtils.js';
 import { z } from 'zod';
 import type { ComponentFactory } from '../../../sdk/types';
 import { sampleModel, type SurfaceSampleSet } from '../../particles/meshSampler';
-import { createSurfaceParticles, type SurfaceParticles } from '../../particles/surfaceParticles';
+import { createSurfaceParticles, type GlowOptions, type SurfaceParticleOptions, type SurfaceParticles } from '../../particles/surfaceParticles';
 import { createRemapper, materialRuleSchema } from './materialRemap';
 import { floatUniform, seeded, zColor, zVec3 } from './common';
-import { buildPath, inPlaceClip, orderedStops, pathState, stopWeight, type PathPlan, type PathShape } from './modelMotion';
+import { RevealTracker, buildPath, inPlaceClip, orderedStops, pathState, stopWeight, type PathPlan, type PathShape } from './modelMotion';
 
 const zStop = z.object({
   /** Share of the path (0..1) where the walker halts. */
@@ -106,6 +106,19 @@ const schema = z.object({
     .max(24)
     .default([]),
   /**
+   * Arrival with the run: the creatures assemble from their particles as game progress (0..1)
+   * goes from `from` to `to` (hidden before; in menus progress is 0). Once progress reaches
+   * `unlock`, a QUAD or a perfect clear also calls them in for `hold` seconds. Unset: always there.
+   */
+  reveal: z
+    .object({
+      from: z.number().min(0).max(1).default(0),
+      to: z.number().min(0).max(1).default(0.1),
+      unlock: z.number().min(0).max(2).default(2),
+      hold: z.number().positive().default(24),
+    })
+    .optional(),
+  /**
    * solid: the model alone. surface: the model with particles on its surface. particles: only
    * particles sampled from the model. dissolve: the model breaks into its particles and reforms.
    */
@@ -132,6 +145,44 @@ const schema = z.object({
       light: zVec3.optional(),
       /** Saturation of the model's own colours (1 as sampled, 0 grey), e.g. to mute painted-in mouth colours. */
       saturation: z.number().min(0).max(1).default(1),
+      /**
+       * surface: plain dots coloured by the model. glow: luminous moving points (additive; dark
+       * worlds). glowEdges: the plain dots plus a lighter overlay of glowing edges and shed sparkles
+       * (bright worlds, where pure glow would wash out).
+       */
+      style: z.enum(['surface', 'glow', 'glowEdges']).default('surface'),
+      /** The glowing points (styles glow and glowEdges); distances are world units. */
+      glow: z
+        .object({
+          color: zColor.default('#5ad8ff'),
+          /** 0 = the glow colour only, 1 = the model's own colours lifted to glow. */
+          textureMix: z.number().min(0).max(1).default(0.2),
+          /** Face-on body brightness relative to the edges: lower = stronger outlines. */
+          core: z.number().min(0).max(1).default(0.35),
+          edge: z.number().min(0).max(2).default(1),
+          twinkle: z.number().min(0).max(1).default(0.5),
+          /** Share of points that now and then flash. */
+          sparkle: z.number().min(0).max(1).default(0.1),
+          /** Orbit of each point around its surface point. */
+          drift: z.number().min(0).default(0.04),
+          /** Length and rate of the slow stream of points along the body. */
+          flow: z.number().min(0).default(0.25),
+          flowRate: z.number().min(0).default(0.12),
+          /** Share of points shed into a fading wake behind the moving creature, their life and wander. */
+          shed: z.number().min(0).max(1).default(0.12),
+          shedLife: z.number().positive().default(2.5),
+          shedSpread: z.number().min(0).default(1.2),
+          /** Bass slowly breathes the glow; treble adds sparkle (both 0..1, never on the beat). */
+          breathe: z.number().min(0).max(1).default(0.3),
+          shimmer: z.number().min(0).max(1).default(0.4),
+          /** glowEdges: share of `count` drawn as the glowing overlay. */
+          overlay: z.number().min(0).max(1).default(0.35),
+          /** Size of the glowing points relative to `size`. */
+          size: z.number().positive().default(1),
+          /** Brightness of the glowing points relative to `brightness` (glow), or absolute for the glowEdges overlay. */
+          brightness: z.number().min(0).default(1),
+        })
+        .prefault({}),
       seed: z.number().default(1),
     })
     .prefault({}),
@@ -210,6 +261,10 @@ export const modelComponent: ComponentFactory<Params> = {
       /** Half the body length along the walking direction (world units), for slope tilt. */
       reach: number;
       particles: SurfaceParticles | null;
+      /** The glowing overlay of style glowEdges. */
+      overlay: SurfaceParticles | null;
+      /** World velocity along the path (for the glow wake). */
+      velocity: Vector3;
       materials: Material[];
       walkAction: AnimationAction | null;
       /** Walk clip time base rate for walkers without a stride (seconds of clip per second). */
@@ -233,6 +288,8 @@ export const modelComponent: ComponentFactory<Params> = {
     const flexed: Flexed[] = [];
     const spinners: { obj: Object3D; axis: Vector3; speed: number }[] = [];
     const particleSets: SurfaceParticles[] = [];
+    /** Brightness of a set relative to the layer's (bindable) particle brightness. */
+    const brightnessOf = new Map<SurfaceParticles, number>();
     const rand = seeded(p.particles.seed * 6151);
     const named = (name: string | undefined): AnimationClip | undefined => (name ? gltf.animations.find((a) => a.name === name) : undefined);
     const baseClip: AnimationClip | undefined = p.animation ? (named(p.animation.clip) ?? gltf.animations[0]) : undefined;
@@ -262,6 +319,26 @@ export const modelComponent: ComponentFactory<Params> = {
     const detail = ctx.quality.detail === 'low' ? 0.35 : ctx.quality.detail === 'medium' ? 0.65 : ctx.quality.detail === 'high' ? 1 : 1.3;
     const perInstance = Math.round(p.particles.count * detail * Math.min(1.5, Math.max(0.25, ctx.quality.particles)));
     const flexRules = p.flex.map((f) => ({ ...f, re: new RegExp(f.match, 'i'), axisV: new Vector3(...f.axis).normalize() }));
+    // The glowing style; reduced motion keeps the glow but calms the drift and sheds much less.
+    const g = p.particles.glow;
+    const calm = ctx.quality.reducedMotion ? 0.3 : 1;
+    const glowColor = new Color(g.color).convertSRGBToLinear();
+    const glowOptions: GlowOptions = {
+      color: [glowColor.r, glowColor.g, glowColor.b],
+      textureMix: g.textureMix,
+      core: g.core,
+      edge: g.edge,
+      twinkle: g.twinkle,
+      sparkle: g.sparkle,
+      drift: g.drift * (0.5 + calm * 0.5),
+      flow: g.flow * calm,
+      flowRate: g.flowRate,
+      shed: g.shed * calm,
+      shedLife: g.shedLife,
+      shedSpread: g.shedSpread,
+      breathe: g.breathe,
+      shimmer: g.shimmer,
+    };
     // Every instance reuses the first one's samples (same points, its own meshes and skeleton).
     let template: { sets: SurfaceSampleSet[]; meshes: Mesh[] } | null = null;
     const skip = p.particles.exclude ? new RegExp(p.particles.exclude, 'i') : null;
@@ -348,6 +425,7 @@ export const modelComponent: ComponentFactory<Params> = {
         });
       }
       let instanceParticles: SurfaceParticles | null = null;
+      let instanceOverlay: SurfaceParticles | null = null;
       if (p.render !== 'solid' && perInstance > 0) {
         const meshes = meshesOf(scene);
         let sets: SurfaceSampleSet[];
@@ -360,25 +438,38 @@ export const modelComponent: ComponentFactory<Params> = {
         }
         // Sizes and distances are world units: the particle shader measures them in world space
         // whatever the instance and node scales.
-        instanceParticles = createSurfaceParticles(
-          sets,
-          {
-            size: p.particles.size,
-            brightness: p.particles.brightness,
-            tint: [tint.r, tint.g, tint.b],
-            colorMix: p.particles.colorMix,
-            blend: p.particles.blend,
-            jitter: p.particles.jitter,
-            spread: p.particles.spread,
-            wind: p.particles.wind,
-            bloom: p.particles.bloom,
-            shading: p.particles.shading,
-            light: p.particles.light,
-            saturation: p.particles.saturation,
-          },
-          ctx.uniforms.time,
-        );
+        const options: SurfaceParticleOptions = {
+          size: p.particles.size,
+          brightness: p.particles.brightness,
+          tint: [tint.r, tint.g, tint.b],
+          colorMix: p.particles.colorMix,
+          blend: p.particles.blend,
+          jitter: p.particles.jitter,
+          spread: p.particles.spread,
+          wind: p.particles.wind,
+          bloom: p.particles.bloom,
+          shading: p.particles.shading,
+          light: p.particles.light,
+          saturation: p.particles.saturation,
+        };
+        const glowing = { ...options, size: p.particles.size * p.particles.glow.size, glow: glowOptions };
+        instanceParticles = createSurfaceParticles(sets, p.particles.style === 'glow' ? glowing : options, ctx.uniforms.time);
         particleSets.push(instanceParticles);
+        if (p.particles.style === 'glow') brightnessOf.set(instanceParticles, p.particles.glow.brightness);
+        if (p.particles.style === 'glowEdges' && p.particles.glow.overlay > 0) {
+          instanceOverlay = createSurfaceParticles(subsetSets(sets, p.particles.glow.overlay), glowing, ctx.uniforms.time);
+          particleSets.push(instanceOverlay);
+          brightnessOf.set(instanceOverlay, p.particles.glow.brightness / Math.max(1e-3, p.particles.brightness));
+          // Transparent objects draw back to front by their geometry's centre. The overlay's own centre
+          // sits a little off its dots', so from some sides it drew first and the dots covered it. With
+          // the dots' centre the depths tie and creation order keeps it on top from every side.
+          for (const o of instanceOverlay.objects) {
+            const dots = instanceParticles.objects.find((b) => b.parent === o.parent);
+            if (!dots) continue;
+            if (!dots.geometry.boundingSphere) dots.geometry.computeBoundingSphere();
+            if (dots.geometry.boundingSphere) o.geometry.boundingSphere = dots.geometry.boundingSphere.clone();
+          }
+        }
       }
       if (inst.walk) {
         const wk = inst.walk;
@@ -401,6 +492,8 @@ export const modelComponent: ComponentFactory<Params> = {
           scale: inst.scale,
           reach: 0.5 * (fx * size.x + fz * size.z) * inst.scale * 0.7,
           particles: instanceParticles,
+          overlay: instanceOverlay,
+          velocity: new Vector3(),
           materials: instanceMaterials,
           walkAction,
           walkRate: walkAction?.timeScale ?? 1,
@@ -417,11 +510,20 @@ export const modelComponent: ComponentFactory<Params> = {
     let presenceValue = 1;
     // Bindable particle brightness (dims particle creatures at night, for instance).
     const particleBrightness = floatUniform(p.particles.brightness);
-    const apply = (dissolve: number): void => {
+    // Arrival with the run (reveal): 0 = not here yet (scattered and dark), 1 = whole.
+    const reveal = new RevealTracker(p.reveal);
+    let revealLevel = reveal.level;
+    let breath = 0;
+    let sparkle = 0;
+    const apply = (shared: number): void => {
+      const dissolve = Math.max(shared, 1 - revealLevel);
+      const arrived = presenceValue * smooth(Math.min(1, revealLevel * 4));
       for (const s of particleSets) {
         s.uniforms.dissolve.value = dissolve;
-        s.uniforms.presence.value = presenceValue;
-        s.uniforms.brightness.value = particleBrightness.value;
+        s.uniforms.presence.value = arrived;
+        // Not yet arrived: skip drawing (and skinning) them at all.
+        if (p.reveal) for (const o of s.objects) o.visible = arrived > 1e-3;
+        s.uniforms.brightness.value = particleBrightness.value * (brightnessOf.get(s) ?? 1);
       }
       const solid = p.render === 'dissolve' ? 1 - smooth(Math.min(1, dissolve * 1.4)) : 1;
       for (const m of fading) m.opacity = solid * presenceValue;
@@ -429,6 +531,7 @@ export const modelComponent: ComponentFactory<Params> = {
       for (const w of walkers) {
         const d = Math.max(dissolve, w.apart);
         if (w.particles) w.particles.uniforms.dissolve.value = d;
+        if (w.overlay) w.overlay.uniforms.dissolve.value = d;
         const wSolid = 1 - smooth(Math.min(1, d * 1.4));
         for (const m of w.materials) m.opacity = wSolid * presenceValue;
       }
@@ -461,6 +564,9 @@ export const modelComponent: ComponentFactory<Params> = {
         qHead.setFromAxisAngle(UP, w.heading);
         w.root.quaternion.copy(qYaw).multiply(qPitch).multiply(qRoll).multiply(qHead);
         w.apart = w.fade > 0 ? 1 - smooth(Math.min(1, st.t / w.fade, (1 - st.t) / w.fade)) : 0;
+        w.velocity.copy(tangent).multiplyScalar(w.plan.speed * st.pace);
+        if (w.particles) w.particles.uniforms.velocity.value.copy(w.velocity);
+        if (w.overlay) w.overlay.uniforms.velocity.value.copy(w.velocity);
         // Clips: the walk follows the distance covered (or slows with the pace); a stop's own clip
         // fades in as the walker slows and plays from its start while it stands.
         const stop = st.stop >= 0 ? w.stops[st.stop] : undefined;
@@ -494,7 +600,15 @@ export const modelComponent: ComponentFactory<Params> = {
         walk(frame.time);
         for (const m of mixers) m.update(frame.dt);
         flexAt(frame.time);
-        for (const s of particleSets) s.update();
+        // Music: the bass slowly breathes the glow, the treble adds sparkle (slow envelopes: never on the beat).
+        breath += ((frame.audio.bass ?? 0) - breath) * (1 - Math.exp(-frame.dt / 1.6));
+        sparkle += ((frame.audio.treble ?? 0) - sparkle) * (1 - Math.exp(-frame.dt / 0.5));
+        for (const s of particleSets) {
+          s.update();
+          s.uniforms.breath.value = breath;
+          s.uniforms.sparkle.value = sparkle;
+        }
+        revealLevel = reveal.update(frame.time, frame.game?.progress ?? 0, frame.dt);
         for (const s of spinners) s.obj.rotateOnAxis(s.axis, s.speed * frame.dt);
         burst = Math.max(0, burst - frame.dt / 6);
         let dissolve = 0;
@@ -502,7 +616,9 @@ export const modelComponent: ComponentFactory<Params> = {
         apply(dissolve);
       },
       onGameEvent(e) {
-        if (p.render === 'dissolve' && p.dissolve.onBigClears && e.kind === 'clear' && (e.lines >= 4 || e.perfectClear)) burst = 1;
+        const big = e.kind === 'clear' && (e.lines >= 4 || e.perfectClear);
+        if (p.render === 'dissolve' && p.dissolve.onBigClears && big) burst = 1;
+        if (big) reveal.bigClear();
       },
       setPresence(v) {
         presenceValue = v;
@@ -526,4 +642,26 @@ function hiddenMaterial(m: Material | Material[]): Material | Material[] {
     return x;
   };
   return Array.isArray(m) ? m.map(hide) : hide(m);
+}
+
+/** The first `share` of every sample set (samples are random, so any prefix is an even subset). */
+function subsetSets(sets: readonly SurfaceSampleSet[], share: number): SurfaceSampleSet[] {
+  return sets
+    .map((set) => {
+      const n = Math.max(1, Math.round(set.count * share));
+      const morph = set.morph ? { targets: set.morph.targets, deltas: new Float32Array(set.morph.targets * n * 3) } : null;
+      if (morph && set.morph) for (let t = 0; t < morph.targets; t++) morph.deltas.set(set.morph.deltas.subarray(t * set.count * 3, (t * set.count + n) * 3), t * n * 3);
+      return {
+        mesh: set.mesh,
+        count: n,
+        position: set.position.slice(0, n * 3),
+        normal: set.normal.slice(0, n * 3),
+        color: set.color.slice(0, n * 3),
+        seed: set.seed.slice(0, n),
+        skinIndex: set.skinIndex ? set.skinIndex.slice(0, n * 4) : null,
+        skinWeight: set.skinWeight ? set.skinWeight.slice(0, n * 4) : null,
+        morph,
+      };
+    })
+    .filter((set) => set.count > 0);
 }

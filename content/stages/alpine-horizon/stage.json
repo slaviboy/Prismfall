@@ -348,7 +348,27 @@
               1,
               0.4
             ],
-            "seed": 51
+            "seed": 51,
+            "style": "glowEdges",
+            "glow": {
+              "color": "#fff0d0",
+              "textureMix": 0.1,
+              "core": 0.08,
+              "edge": 1.6,
+              "twinkle": 0.5,
+              "sparkle": 0.15,
+              "drift": 0.02,
+              "flow": 0.3,
+              "flowRate": 0.12,
+              "shed": 0.2,
+              "shedLife": 1.8,
+              "shedSpread": 0.6,
+              "breathe": 0.25,
+              "shimmer": 0.4,
+              "overlay": 0.35,
+              "size": 1.1,
+              "brightness": 0.8
+            }
           }
         },
         "bind": []
