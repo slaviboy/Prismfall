@@ -1,0 +1,20 @@
+{
+  "id": "eso0932a",
+  "kind": "all-sky panorama",
+  "name": "The Milky Way panorama",
+  "page": "https://www.eso.org/public/images/eso0932a/",
+  "credit": "ESO/S. Brunier",
+  "licence": "CC BY 4.0",
+  "licenceUrl": "https://www.eso.org/public/copyright/",
+  "files": [
+    {
+      "path": "eso0932a.tif",
+      "url": "https://cdn.eso.org/images/original/eso0932a.tif",
+      "md5": "4fcb4898c2685548b059594f90026621",
+      "size": 29082084,
+      "width": 6000,
+      "height": 3000,
+      "note": "Galactic coordinates, galactic centre at the image centre. Not committed (git-ignored); download again from the URL."
+    }
+  ]
+}

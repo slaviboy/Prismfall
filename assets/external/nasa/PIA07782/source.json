@@ -1,0 +1,20 @@
+{
+  "id": "PIA07782",
+  "kind": "planetary map",
+  "name": "Cassini Best Maps of Jupiter (cylindrical map)",
+  "page": "https://images.nasa.gov/details/PIA07782",
+  "credit": "NASA/JPL/Space Science Institute",
+  "licence": "Public domain (NASA media usage guidelines: NASA imagery is generally not subject to copyright in the United States)",
+  "licenceUrl": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+  "files": [
+    {
+      "path": "PIA07782.jpg",
+      "url": "https://images-assets.nasa.gov/image/PIA07782/PIA07782~orig.jpg",
+      "md5": "6e2454de3831384f764f92d18cb58bf2",
+      "size": 446531,
+      "width": 3601,
+      "height": 1801
+    },
+    { "path": "metadata.json", "url": "https://images-assets.nasa.gov/image/PIA07782/metadata.json" }
+  ]
+}

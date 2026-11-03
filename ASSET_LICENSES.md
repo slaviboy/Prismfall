@@ -106,6 +106,17 @@ Real landscape photographs used as the distant horizon of a world (the `panorama
 | `content/stages/enchanted-wilderness/textures/misty_pines_band.webp` | Poly Haven HDRI "Misty Pines" (https://polyhaven.com/a/misty_pines) by Greg Zaal; tonemapped JPG (8192 x 4096) cropped to elevations -32 to +40 degrees (8192 x 1638), unsharp mask, WebP quality 86 | CC0 1.0 |
 | `content/stages/enchanted-wilderness/textures/misty_pines_detail.webp` | Poly Haven HDRI "Misty Pines" (https://polyhaven.com/a/misty_pines) by Greg Zaal; 20k HDR cropped to the visible directions (6372 x 3276, elevations -32 to +40 degrees), tone curve matched to Poly Haven's tonemapped JPG, light unsharp mask, WebP quality 90 | CC0 1.0 |
 
+### Space imagery (Deep Cosmos)
+
+Real astronomical imagery behind Deep Cosmos, prepared with `scripts/space_assets.py` (numpy and Pillow). The original downloads and their `source.json` records are in `assets/external/eso/eso0932a/` and `assets/external/nasa/PIA07782/`.
+
+| File | Origin | Licence |
+|---|---|---|
+| `content/stages/celestial-drift/textures/milky_way.webp` | "The Milky Way panorama" (https://www.eso.org/public/images/eso0932a/), credit **ESO/S. Brunier**; the 6000 x 3000 all-sky original with point stars replaced by the smoothed background (the game draws crisp stars instead), turned so the galactic centre sits up and to the right of the board with the band tilted 30 degrees, written as a 6000 x 3000 equirectangular WebP (quality 90) | CC BY 4.0 (attribution: ESO/S. Brunier) |
+| `content/stages/celestial-drift/textures/gas_giant_map.webp` | "Cassini Best Maps of Jupiter", cylindrical map PIA07782 (https://images.nasa.gov/details/PIA07782), credit **NASA/JPL/Space Science Institute**; the 3601 x 1801 map with its flat polar filler rows replaced by a smooth continuation of the last imaged latitudes, resized to 4096 x 2048 (Lanczos), WebP quality 92. Used, with a cooler grade, as the surface of the ringed giant | Public domain (NASA imagery, NASA media usage guidelines) |
+
+The rings of the giant are not an image: their radial profile is generated in code from Saturn's published ring radii (`src/rendering/environments/components/ringProfile.ts`).
+
 ## 6. Stage thumbnails
 
 Screenshots of the game's own rendering. `scripts/thumbnails.ts` (`npm run content:thumbnails`) renders each world in Chrome without UI and saves a 960×540 JPEG.
@@ -177,6 +188,8 @@ These files live in `assets/` and are never bundled. They are listed for complet
 | `assets/blender/previews/ancient_garden.png`, `blocks.png`, `camel.png`, `deer.png`, `ember_foundry.png`, `flora.png`, `frozen_kingdom.png`, `moving_sands.png`, `whale.png` | Cycles preview renders by the generator scripts | Original work for Prismfall |
 | `assets/blender/pipeline.json`, `assets/audio/README.md` | pipeline configuration and documentation | Original work for Prismfall |
 | `assets/external/scans.json`, `assets/ASSET_CATALOG.md` | photoscan pipeline manifest and third-party asset catalog | Original work for Prismfall |
+| `assets/external/eso/eso0932a/source.json` (the 29 MB `eso0932a.tif` is git-ignored and downloaded again from the URL in it) | ESO all-sky panorama download record | CC BY 4.0 (ESO/S. Brunier) |
+| `assets/external/nasa/PIA07782/PIA07782.jpg`, `metadata.json`, `source.json` | NASA Cassini Jupiter map, unmodified, with NASA's metadata and the download record | Public domain (NASA/JPL/Space Science Institute) |
 | `assets/external/polyhaven/<id>/` (`*.gltf`, `*.bin`, `textures/*.jpg`, `source.json`) | Poly Haven downloads for section 5, unmodified, with the download record. Only `source.json` is committed; the rest is git-ignored and downloaded again by the pipeline | CC0 1.0 (Poly Haven) |
 | `assets/blender/exports/scans/<id>.glb`, `<id>.preview.png`, `<id>.report.json` | `import_external.py` output before glTF-Transform: decimated GLB (git-ignored), four-view contact sheet, import report | CC0 1.0 (derived from Poly Haven scans) |
 

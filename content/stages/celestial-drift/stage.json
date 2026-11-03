@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "celestial-drift",
   "name": "Deep Cosmos",
-  "description": "Adrift in deep space among nebulae and a ringed giant. A spiral galaxy turns, asteroids tumble past, and a leviathan made of stars swims through the dark.",
+  "description": "Adrift in deep space under the real Milky Way. A ringed giant waits in shadow, its rim lit by a hidden sun that rises as you play, while lone asteroids tumble in the dark.",
   "order": 30,
   "tags": [
     "space",
@@ -13,68 +13,68 @@
   "intensity": 0.6,
   "recommendedQuality": "high",
   "palette": {
-    "accent": "#b57cff",
-    "secondary": "#5ca8ff",
-    "highlight": "#f1e6ff",
-    "fog": "#06031a",
-    "plate": "#05030f"
+    "accent": "#8fb0e8",
+    "secondary": "#c8a878",
+    "highlight": "#e8eefc",
+    "fog": "#010106",
+    "plate": "#020309"
   },
   "fog": {
-    "color": "#06031a",
-    "density": 0.0008
+    "color": "#010106",
+    "density": 0.0004
   },
   "backdrop": {
-    "top": "#05031a",
-    "bottom": "#010008",
-    "glow": "#2a1260"
+    "top": "#010108",
+    "bottom": "#000003",
+    "glow": "#06081a"
   },
   "lighting": {
     "key": {
-      "color": "#fff1dc",
-      "intensity": 2.6,
-      "azimuth": 45,
-      "elevation": 25
+      "color": "#fff4e6",
+      "intensity": 2.4,
+      "azimuth": 62,
+      "elevation": 22
     },
     "rim": {
-      "color": "#b57cff",
-      "intensity": 2.2
+      "color": "#8fb0e8",
+      "intensity": 1.6
     },
     "ambient": {
-      "sky": "#2a1a5a",
-      "ground": "#05030f",
-      "intensity": 0.35
+      "sky": "#141a2e",
+      "ground": "#030308",
+      "intensity": 0.3
     },
     "accents": [
       {
-        "color": "#b57cff",
-        "intensity": 10,
+        "color": "#8fb0e8",
+        "intensity": 8,
         "x": -9,
         "y": 6,
         "z": 6
       },
       {
-        "color": "#5ca8ff",
-        "intensity": 10,
+        "color": "#c8a878",
+        "intensity": 6,
         "x": 9,
         "y": -7,
         "z": 6
       }
     ],
-    "beatResponse": 0.45
+    "beatResponse": 0.3
   },
   "grade": {
-    "saturation": 1.05,
-    "contrast": 1.1,
+    "saturation": 1.0,
+    "contrast": 1.08,
     "tint": [
-      1.02,
       0.98,
-      1.06
+      1.0,
+      1.04
     ],
-    "vignette": 0.45,
-    "bloomThreshold": 0.26,
-    "bloomRadius": 0.55,
+    "vignette": 0.5,
+    "bloomThreshold": 0.32,
+    "bloomRadius": 0.45,
     "toneMapping": "neutral",
-    "envIntensity": 0.25
+    "envIntensity": 0.2
   },
   "camera": {
     "pitch": 2,
@@ -101,66 +101,32 @@
         "id": "sky",
         "type": "sky",
         "params": {
-          "top": "#020210",
-          "horizon": "#06041a",
-          "bottom": "#020010",
-          "horizonGlow": 0.25,
+          "top": "#000002",
+          "horizon": "#000002",
+          "bottom": "#000002",
+          "horizonGlow": 0,
           "horizonWidth": 0.3,
           "stars": 1,
           "starSize": 1.0,
-          "nebula": 0.45,
-          "nebulaA": "#2c2050",
-          "nebulaB": "#142c52",
-          "nebulaScale": 1.6,
-          "nebulaDrift": 0.006
-        },
-        "bind": [
-          {
-            "target": "nebula",
-            "feature": "lowMid",
-            "amount": 0.35,
-            "attackMs": 200,
-            "releaseMs": 1400
+          "panorama": {
+            "src": "textures/milky_way.webp",
+            "elevation": [
+              -90,
+              90
+            ],
+            "offset": 0.5,
+            "exposure": 0.36,
+            "fade": 0.5,
+            "kind": "space"
           }
-        ]
-      },
-      {
-        "id": "galaxy",
-        "type": "galaxy",
-        "params": {
-          "count": 32000,
-          "position": [
-            360,
-            250,
-            -760
-          ],
-          "tilt": [
-            1.15,
-            -0.3
-          ],
-          "radius": 200,
-          "arms": 3,
-          "twist": 3.4,
-          "thickness": 0.05,
-          "core": "#fff2dc",
-          "arm": "#c4d2ff",
-          "dust": "#f2dcd4",
-          "brightness": 0.32,
-          "spin": 0.006,
-          "size": [
-            2.0,
-            4.6
-          ],
-          "seed": 6
         },
         "bind": [
           {
-            "target": "brightness",
+            "target": "stars",
             "feature": "sectionIntensity",
-            "amount": 0.4,
-            "category": "lighting",
-            "attackMs": 800,
-            "releaseMs": 2500
+            "amount": 0.25,
+            "attackMs": 1500,
+            "releaseMs": 3000
           }
         ]
       },
@@ -169,125 +135,91 @@
         "type": "planet",
         "params": {
           "position": [
-            -300,
-            -150,
-            -560
+            -526.9,
+            -236.2,
+            -877.0
           ],
-          "radius": 120,
-          "colorA": "#dcc7a2",
-          "colorB": "#a38563",
-          "bands": 15,
-          "atmosphere": "#d6e4ff",
-          "atmosphereStrength": 0.35,
+          "radius": 272,
+          "map": "textures/gas_giant_map.webp",
+          "mapSaturation": 0.82,
+          "mapTint": "#eef1ff",
+          "mapExposure": 1.35,
+          "atmosphere": "#b4c6e2",
+          "atmosphereStrength": 0.42,
           "lightDirection": [
-            0.95,
-            0.3,
-            -1.0
+            0.3197,
+            -0.0594,
+            -0.9457
           ],
-          "rotationSpeed": 0.012,
-          "tilt": 0.42,
+          "lightDirectionEnd": [
+            0.8029,
+            0.4215,
+            -0.4215
+          ],
+          "night": 0.02,
+          "rotationSpeed": 0.004,
+          "tilt": -0.38,
+          "incline": 0.2,
           "ring": {
-            "inner": 155,
-            "outer": 265,
-            "color": "#e6d8be",
-            "opacity": 0.5
+            "inner": 337,
+            "outer": 634,
+            "color": "#d6d0c6",
+            "opacity": 0.95,
+            "profile": "saturn",
+            "tilt": 1.5708,
+            "seed": 3
           }
         },
-        "bind": []
+        "bind": [
+          {
+            "target": "phase",
+            "feature": "game.progress",
+            "mode": "add",
+            "amount": 1,
+            "attackMs": 4000,
+            "releaseMs": 4000
+          }
+        ]
       },
       {
         "id": "asteroids",
         "type": "model",
         "params": {
           "src": "/content/shared/scans/moon_rock_01.glb",
+          "exposure": 0.35,
           "instances": [
             {
               "position": [
-                296.1,
-                81.7,
-                -198.0
+                171.9,
+                62.5,
+                -310.1
               ],
               "yaw": 30,
-              "scale": 168.8,
+              "scale": 70,
               "snapToGround": false,
-              "spin": -0.92
+              "spin": 1.4
             },
             {
               "position": [
-                -244.0,
-                -37.4,
-                -292.8
+                281.7,
+                -54.4,
+                -433.7
               ],
               "yaw": 160,
-              "scale": 113.2,
+              "scale": 150,
               "snapToGround": false,
-              "spin": -0.54
+              "spin": -0.8
             },
             {
               "position": [
-                -273.4,
-                50.7,
-                -414.1
-              ],
-              "yaw": 152,
-              "scale": 156.9,
-              "snapToGround": false,
-              "spin": 2.81
-            },
-            {
-              "position": [
-                -292.0,
-                63.1,
-                -333.8
+                -224.7,
+                137.4,
+                -389.2
               ],
               "yaw": 212,
-              "scale": 178.7,
+              "scale": 120,
               "snapToGround": false,
-              "spin": 1.45
-            },
-            {
-              "position": [
-                -90.6,
-                59.2,
-                -187.0
-              ],
-              "yaw": 133,
-              "scale": 165.8,
-              "snapToGround": false,
-              "spin": 1.93
-            },
-            {
-              "position": [
-                208.5,
-                -36.7,
-                -342.4
-              ],
-              "yaw": 41,
-              "scale": 94.8,
-              "snapToGround": false,
-              "spin": -5.53
-            },
-            {
-              "position": [
-                216.9,
-                -29.5,
-                -250.3
-              ],
-              "yaw": 196,
-              "scale": 217.8,
-              "snapToGround": false,
-              "spin": 1.11
-            },
-            {
-              "position": [
-                -219.6,
-                95.8,
-                -193.1
-              ],
-              "yaw": 20,
-              "scale": 142.4,
-              "snapToGround": false,
-              "spin": -5.72
+              "spin": 0.9
             }
           ]
         },
@@ -298,236 +230,44 @@
         "type": "model",
         "params": {
           "src": "/content/shared/scans/moon_rock_03.glb",
+          "exposure": 0.35,
           "instances": [
             {
               "position": [
-                123.6,
-                95.5,
-                -225.7
+                181.3,
+                129.8,
+                -355.9
               ],
               "yaw": 290,
-              "scale": 183.9,
+              "scale": 80,
               "snapToGround": false,
-              "spin": 0.46
+              "spin": -1.1
             },
             {
               "position": [
-                164.3,
-                -11.2,
-                -182.8
-              ],
-              "yaw": 351,
-              "scale": 115.2,
-              "snapToGround": false,
-              "spin": -3.68
-            },
-            {
-              "position": [
-                297.3,
-                -33.3,
-                -195.9
+                179.2,
+                -72.6,
+                -229.4
               ],
               "yaw": 37,
-              "scale": 133.5,
+              "scale": 45,
               "snapToGround": false,
-              "spin": -3.96
+              "spin": 2.0
             },
             {
               "position": [
-                206.5,
-                -27.0,
-                -289.5
-              ],
-              "yaw": 152,
-              "scale": 178.1,
-              "snapToGround": false,
-              "spin": -0.66
-            },
-            {
-              "position": [
-                258.9,
-                68.3,
-                -337.7
-              ],
-              "yaw": 322,
-              "scale": 152.5,
-              "snapToGround": false,
-              "spin": -1.05
-            },
-            {
-              "position": [
-                217.7,
-                38.7,
-                -253.7
+                329.4,
+                22.3,
+                -548.3
               ],
               "yaw": 86,
-              "scale": 105.4,
+              "scale": 210,
               "snapToGround": false,
-              "spin": -1.08
-            },
-            {
-              "position": [
-                -258.4,
-                37.3,
-                -221.6
-              ],
-              "yaw": 120,
-              "scale": 137.1,
-              "snapToGround": false,
-              "spin": 4.02
+              "spin": 0.5
             }
           ]
         },
         "bind": []
-      },
-      {
-        "id": "asteroids-near",
-        "type": "model",
-        "params": {
-          "src": "/content/shared/scans/moon_rock_01.glb",
-          "instances": [
-            {
-              "position": [
-                -110,
-                40,
-                -90
-              ],
-              "yaw": 40,
-              "scale": 48,
-              "snapToGround": false,
-              "spin": 3
-            },
-            {
-              "position": [
-                150,
-                -35,
-                -120
-              ],
-              "yaw": 200,
-              "scale": 60,
-              "snapToGround": false,
-              "spin": -2.5
-            }
-          ]
-        },
-        "bind": []
-      },
-      {
-        "id": "cosmic-dust",
-        "type": "clouds",
-        "params": {
-          "count": 30,
-          "center": [
-            -40,
-            -40,
-            -200
-          ],
-          "spread": [
-            600,
-            80,
-            220
-          ],
-          "size": [
-            80,
-            180
-          ],
-          "color": "#3a1a6a",
-          "colorB": "#123a6a",
-          "opacity": 0.14,
-          "drift": [
-            0.8,
-            0.3,
-            0
-          ],
-          "seed": 19
-        },
-        "bind": [
-          {
-            "target": "opacity",
-            "feature": "sectionIntensity",
-            "amount": 0.4,
-            "attackMs": 1200,
-            "releaseMs": 3000
-          }
-        ]
-      },
-      {
-        "id": "near-stars",
-        "type": "particles",
-        "params": {
-          "count": 1600,
-          "center": [
-            0,
-            0,
-            -60
-          ],
-          "size": [
-            220,
-            140,
-            140
-          ],
-          "color": "#dfe6ff",
-          "colorB": "#c9a8ff",
-          "minSize": 0.06,
-          "maxSize": 0.16,
-          "velocity": [
-            0,
-            0,
-            2.2
-          ],
-          "turbulence": 0.1,
-          "twinkle": 0.3,
-          "brightness": 0.5,
-          "shape": "soft",
-          "seed": 21
-        },
-        "bind": [
-          {
-            "target": "speed",
-            "feature": "bass",
-            "amount": 1.2,
-            "category": "particles",
-            "attackMs": 80,
-            "releaseMs": 900
-          },
-          {
-            "target": "brightness",
-            "feature": "highMid",
-            "amount": 0.7,
-            "category": "particles"
-          }
-        ]
-      },
-      {
-        "id": "nebula-depth",
-        "type": "clouds",
-        "params": {
-          "count": 46,
-          "center": [
-            40,
-            20,
-            -260
-          ],
-          "spread": [
-            700,
-            260,
-            260
-          ],
-          "size": [
-            90,
-            220
-          ],
-          "color": "#4a1a8a",
-          "colorB": "#1a5aa4",
-          "opacity": 0.2,
-          "drift": [
-            1.2,
-            0.2,
-            0
-          ],
-          "seed": 13
-        },
-        "minDetail": "medium"
       }
     ]
   },

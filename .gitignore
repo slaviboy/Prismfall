@@ -26,3 +26,6 @@ assets/blender/exports/scans/*.glb
 
 # Full-resolution HDRIs downloaded to build panorama detail bands (large; URLs and MD5s are in source.json).
 assets/external/polyhaven/*/*.hdr
+
+# ESO's all-sky TIFF (29 MB) behind the Deep Cosmos sky; URL and MD5 are in its source.json.
+assets/external/eso/*/*.tif

@@ -48,6 +48,19 @@ In use:
 | Ancient Garden | Ninomaru Teien (Greg Zaal) | -32..40, the whole surroundings | 16k |
 | Enchanted Wilderness | Misty Pines (Greg Zaal) | -32..40, the whole surroundings | 16k |
 
+## Space imagery
+
+Deep Cosmos is built from real astronomical imagery, prepared offline with `scripts/space_assets.py` (numpy and Pillow, development only):
+
+```sh
+python scripts/space_assets.py sky assets/external/eso/eso0932a/eso0932a.tif content/stages/celestial-drift/textures/milky_way.webp --center 22,14 --roll -30
+python scripts/space_assets.py planet assets/external/nasa/PIA07782/PIA07782.jpg content/stages/celestial-drift/textures/gas_giant_map.webp
+```
+
+- **Sky:** ESO's all-sky Milky Way panorama (CC BY 4.0, ESO/S. Brunier) is only 17 px per degree, which would show stars as soft blobs on screen. The script keeps the photo's diffuse galaxy (glow, dust lanes, star clouds) but replaces the detected point stars with a smoothed background. It then turns the sky so the galactic centre and a tilted band sit where the composition wants them. In game the `sky` component's `panorama` with `kind: "space"` covers the whole sphere and draws crisp procedural stars on top at screen resolution, denser where the photo is bright.
+- **Planet:** Cassini's cylindrical Jupiter map (NASA/JPL/Space Science Institute, public domain) becomes the surface of the `planet` component (`map`, graded cooler with `mapSaturation` and `mapTint`). The script fills the map's flat polar filler. The shader adds polar haze, limb darkening, a warm terminator and an atmosphere halo computed from the light path.
+- **Rings:** generated, not an image: `ringProfile.ts` builds the radial profile from Saturn's published ring radii (C, B and A rings, the Cassini Division, the Encke and Keeler gaps, the F ring) with ringlet noise. The rings shadow the planet, take the planet's shadow, and glow where sunlight passes through them.
+
 ## Photoscanned models
 
 Source: Poly Haven models (CC0), decimated for real time.

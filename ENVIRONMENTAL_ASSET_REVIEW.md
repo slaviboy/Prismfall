@@ -14,7 +14,7 @@ Per-world status of what is on screen, judged from in-game screenshots and recor
 | Northern Lights | Procedural night sky | Mirror lake, dark ridge silhouettes, spruce silhouettes, reindeer silhouettes | None | Everything | Candidate for a real night panorama with snow and mountains (none found on Poly Haven) |
 | The Abyss | Procedural deep water | Seafloor, light shafts, moon jellyfish, silver fish schools | None | Everything | Jellyfish (pulsing bell, canals, oral arms, trailing tentacles) and herring schools (swimming body wave, countershading, silver flash) are anatomical procedural models; no licensed animated sea life found |
 | Luminous Tide | Procedural moonlit sea | Ocean with glitter path, headland silhouettes | None | Everything | Candidate for a real moonlit-sea panorama |
-| Celestial Drift | Procedural space | Gas giant, galaxy, nebula | Scanned moon-rock asteroids | Planet, galaxy | The planet and galaxy are procedural |
+| Deep Cosmos (`celestial-drift`) | Photo all-sky Milky Way (ESO/S. Brunier) with crisp shader stars | Ringed gas giant, scanned asteroids | Milky Way and its dust lanes, the giant's surface (Cassini's Jupiter maps), moon-rock scans | Ring system (from Saturn's measured radii), stars | None known; the hidden sun swings round the giant with progress, from a thin crescent to a broad lit face |
 | Future Nights | Procedural night city | Instanced towers, reflective wet street, rain | None | Everything | Candidate for a real night-city panorama |
 | Ember Core | Procedural volcanic night | Lava plain, volcano cone, embers | None | Everything | No volcanic panorama found |
 | Ember Foundry | Procedural industrial hall | Blender hall kit, molten channel, sparks | None | Everything | No suitable CC0 interior |
@@ -29,7 +29,7 @@ These looked primitive or gimmicky in game and were taken out:
 - **Frozen Kingdom:** the citadel pieces, icebergs and mist sprites.
 - **The Abyss:** tiled caustics, sunken ruins, reef and kelp scatter, rays, turtles, bubbles, the blob whale, and the old dome jellyfish and flat fish swarm.
 - **Luminous Tide:** light pillars and star motes.
-- **Celestial Drift:** the orbit rings, beat pulsars, energy streams and the particle whale.
+- **Deep Cosmos (Celestial Drift):** the orbit rings, beat pulsars, energy streams, the particle whale, then the procedural spiral galaxy, the blob nebula clouds, the drifting star streaks and the cartoon banded planet.
 - **Future Nights:** the drones and data motes.
 - **Ember Core:** the obsidian spires and fire birds.
 - **Moving Sands:** the mesas, arch, particle camels and the script-built pyramids.

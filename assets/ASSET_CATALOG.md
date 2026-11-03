@@ -296,3 +296,37 @@ In game, use the material preset `keep` for `pyramidStone` to show the textures.
 | Animation | None |
 | Used by | Moving Sands sky (night desert under the Milky Way) |
 
+
+## Space imagery
+
+### The Milky Way panorama (ESO)
+
+| Field | Value |
+|---|---|
+| Asset name | The Milky Way panorama (eso0932a) |
+| Source URL | https://www.eso.org/public/images/eso0932a/ |
+| Author | Serge Brunier (credit: ESO/S. Brunier) |
+| Original download URL | https://cdn.eso.org/images/original/eso0932a.tif (see `assets/external/eso/eso0932a/source.json`) |
+| Licence | CC BY 4.0 (https://www.eso.org/public/copyright/) |
+| Attribution requirements | Credit "ESO/S. Brunier" (in ASSET_LICENSES.md and the credits) |
+| Original format | All-sky equirectangular TIFF in galactic coordinates, 6000 x 3000 |
+| Modifications | Point stars replaced by a smoothed star-free background where detected (grey opening plus blur, about 21% of pixels), small black point; re-projected so the galactic centre is at azimuth 22 / elevation 14 degrees from the board with the band rolled -30 degrees; board direction at u = 0.5 (`scripts/space_assets.py sky`) |
+| Final format | `content/stages/celestial-drift/textures/milky_way.webp` (6000 x 3000, WebP quality 90) |
+| Animation | None |
+| Used by | Deep Cosmos sky (`panorama` with `kind: "space"`); the sky component draws crisp stars over it at screen resolution, denser where the galaxy is bright |
+
+### Cassini Best Maps of Jupiter (NASA PIA07782)
+
+| Field | Value |
+|---|---|
+| Asset name | Cassini Best Maps of Jupiter, cylindrical map |
+| Source URL | https://images.nasa.gov/details/PIA07782 |
+| Author | NASA/JPL/Space Science Institute |
+| Original download URL | https://images-assets.nasa.gov/image/PIA07782/PIA07782~orig.jpg |
+| Licence | Public domain (NASA media usage guidelines) |
+| Attribution requirements | None required; credited |
+| Original format | Cylindrical map JPG, 3601 x 1801, flat filler beyond about 88 N and 81 S |
+| Modifications | Polar filler rows replaced by a continuation of the last imaged rows converging to one colour at each pole; resized to 4096 x 2048 (`scripts/space_assets.py planet`) |
+| Final format | `content/stages/celestial-drift/textures/gas_giant_map.webp` (WebP quality 92) |
+| Animation | The planet turns slowly; the sun direction moves with game progress |
+| Used by | Deep Cosmos ringed giant (`planet` component with `map`, graded cooler: saturation 0.82, tint #eef1ff) |

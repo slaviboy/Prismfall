@@ -309,7 +309,8 @@ export function CreditsScreen(): ReactNode {
   return (
     <MenuScreen title="Credits" onBack={() => goBack()} testId="credits-screen" footer={<ControlHints hints={hints} />}>
       <div className="prose">
-        <p>{BRAND.title} is a personal project. Every stage, piece of music, sound effect, 3D model and line of code is original to this project.</p>
+        <p>{BRAND.title} is a personal project. The music, sound effects, block designs, procedural worlds and code are original to this project.</p>
+        <p>Real-world imagery: landscape panoramas and photoscanned rocks and trees from Poly Haven (CC0; by Andreas Mischok, Greg Zaal, Dario Barresi, James Ray Cock, Rico Cilliers and Jenelle van Heerden). Deep Cosmos: the Milky Way from &ldquo;The Milky Way panorama&rdquo;, ESO/S. Brunier (CC BY 4.0); the giant planet&rsquo;s surface from Cassini&rsquo;s maps of Jupiter, NASA/JPL/Space Science Institute.</p>
         <p>Built with three.js (MIT), React (MIT), Zustand (MIT), Zod (MIT) and idb (ISC). Interface type is Unbounded and Atkinson Hyperlegible Next, both under the SIL Open Font License 1.1.</p>
         <p>The complete asset and licence record lives in ASSET_LICENSES.md in the project folder.</p>
       </div>
