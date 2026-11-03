@@ -41,6 +41,27 @@ test.describe('world select', () => {
     await page.keyboard.press('Enter');
     await expect(page.getByTestId('stage-select')).toBeVisible();
     expect(await hooks<string>(page, 'h.getSettings().setup.stageId')).toBe('luminous-tide');
+    // The developer switch is only offered in developer mode.
+    await expect(page.getByTestId('world-unlock-all')).toHaveCount(0);
+  });
+
+  test('developer mode unlocks every world, with a switch on the world list', async ({ page }) => {
+    await openMenu(page);
+    await page.getByTestId('menu-settings').click();
+    await page.getByRole('tab', { name: 'Data', exact: true }).click();
+    await page.getByTestId('setting-developer').click();
+    expect(await hooks<boolean>(page, 'h.getSettings().setup.unlockAll')).toBe(true);
+    await page.keyboard.press('Escape');
+    await page.getByTestId('menu-play').click();
+    await page.getByTestId('mode-marathon').click();
+    await page.getByTestId('setup-world').click();
+    const toggle = page.getByTestId('world-unlock-all');
+    await expect(toggle).toHaveAttribute('aria-checked', 'true');
+    await expect(page.locator('.world-card.is-locked')).toHaveCount(0);
+    await toggle.click();
+    await expect(page.locator('.world-card.is-locked').first()).toBeVisible();
+    await toggle.click();
+    await expect(page.locator('.world-card.is-locked')).toHaveCount(0);
   });
 
   test('backing out restores the selected world; music previews can be turned off', async ({ page }) => {

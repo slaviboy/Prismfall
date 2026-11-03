@@ -120,6 +120,7 @@ export const settingsSchema = z.object({
       effectsIntensity: n(0, 1.5, 1),
       resumeCountdown: b(true),
       lockIndicator: b(true),
+      mouseControl: b(false),
     })
     .prefault({}),
   keyboard: bindingsSchema(DEFAULT_KEYBOARD),

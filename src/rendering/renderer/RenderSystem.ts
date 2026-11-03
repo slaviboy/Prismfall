@@ -1,9 +1,9 @@
-import { ACESFilmicToneMapping, AgXToneMapping, Group, NeutralToneMapping, PMREMGenerator, Scene, type Object3D, SRGBColorSpace, Vector3, WebGPURenderer } from 'three/webgpu';
+import { ACESFilmicToneMapping, AgXToneMapping, Group, Matrix4, NeutralToneMapping, PMREMGenerator, Scene, type Object3D, SRGBColorSpace, Vector3, WebGPURenderer } from 'three/webgpu';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import type { Settings } from '../../settings/schema';
 import { reducedMotion } from '../../settings/store';
 import { DEFAULT_PALETTE, paletteFor, type PiecePalette } from '../../config/palette';
-import { BoardView } from '../board/BoardView';
+import { BOARD_W, BoardView } from '../board/BoardView';
 import { CameraRig } from '../camera/CameraRig';
 import { DefaultBackdrop } from '../environments/DefaultBackdrop';
 import { LightRig } from '../lighting/LightRig';
@@ -107,6 +107,8 @@ export class RenderSystem implements GameView {
   private dpr = 1;
   private rect: BoardRect | null = null;
   private readonly v = new Vector3();
+  private readonly rayB = new Vector3();
+  private readonly boardInverse = new Matrix4();
   private settings: Settings | null = null;
   /** Set when the GPU device was lost; the shell rebuilds the renderer. */
   onLost: ((reason: string) => void) | null = null;
@@ -308,6 +310,22 @@ export class RenderSystem implements GameView {
 
   boardRect(): BoardRect | null {
     return this.rect;
+  }
+
+  /** Fractional board column under a viewport point (0 = left wall, 10 = right wall), or null. */
+  boardColumnAt(clientX: number, clientY: number): number | null {
+    const r = this.canvas.getBoundingClientRect();
+    if (r.width === 0 || r.height === 0) return null;
+    const nx = ((clientX - r.left) / r.width) * 2 - 1;
+    const ny = 1 - ((clientY - r.top) / r.height) * 2;
+    // Two points on the pixel's ray, in board space; intersect with the board plane z = 0.
+    const cam = this.cameraRig.camera;
+    this.boardInverse.copy(this.boardRoot.matrixWorld).invert();
+    const a = this.v.set(nx, ny, 0.5).unproject(cam).applyMatrix4(this.boardInverse);
+    const b = this.rayB.set(nx, ny, 0.9).unproject(cam).applyMatrix4(this.boardInverse);
+    const dz = b.z - a.z;
+    if (Math.abs(dz) < 1e-9) return null;
+    return a.x + (b.x - a.x) * (-a.z / dz) + BOARD_W / 2;
   }
 
   render(frame: ViewFrame): void {

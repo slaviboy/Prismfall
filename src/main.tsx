@@ -21,7 +21,10 @@ async function boot(): Promise<void> {
     appStore.setState({ fatalError: err instanceof Error ? err.message : String(err) });
   }
   // ?devtools turns on developer mode with the audio analysis dashboard; F9 toggles the dashboard.
-  if (new URLSearchParams(location.search).has('devtools')) updateSection('developer', { enabled: true, audioDashboard: true });
+  if (new URLSearchParams(location.search).has('devtools')) {
+    updateSection('developer', { enabled: true, audioDashboard: true });
+    updateSection('setup', { unlockAll: true });
+  }
   window.addEventListener('keydown', (e) => {
     if (e.code !== 'F9' || !getSettings().developer.enabled) return;
     e.preventDefault();

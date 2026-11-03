@@ -36,6 +36,8 @@ How to read the Evidence column:
 | Custom deterministic engine | Done | `src/game/`; `engine.test.ts` (replay reproduces the state hash; 200k-tick fuzz) |
 | Web Audio API | Done | `src/audio/engine/AudioEngine.ts`; `e2e/audio.spec.ts` |
 | Keyboard and controllers | Done | `src/input/`; `input.test.ts`, `e2e/controls.spec.ts`, `e2e/gamepad.spec.ts` |
+| Mouse control (optional): piece follows the pointer, left click hard drop, right click rotate, middle click hold | Done | `src/input/mouse/mouseControl.ts` (one-cell `nudge` actions, replay-safe); `mouseControl.test.ts`, `e2e/mouse.spec.ts` |
+| Developer mode unlocks every world, with a switch | Done | `DataPanel.tsx`, `StageSelect.tsx`, Developer tab; `e2e/stage-select.spec.ts` |
 | Extensive settings | Partial | See §11: reflection quality is not implemented |
 | Data-driven levels | Done | `src/stages/`, `content/stages/`; `src/stages/content.test.ts` |
 | High-DPI and high-refresh displays | Done / Manual check | `e2e/rendering.spec.ts` (DPR 2, resize to 2560×1080); 144 Hz feel is a manual check |

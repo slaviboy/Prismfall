@@ -10,6 +10,9 @@ export const GAME_ACTIONS = [
   'rotateCCW',
   'rotate180',
   'hold',
+  // One-cell shifts without auto shift (mouse control). Appended so replay action indices stay stable.
+  'nudgeLeft',
+  'nudgeRight',
 ] as const;
 export type GameAction = (typeof GAME_ACTIONS)[number];
 

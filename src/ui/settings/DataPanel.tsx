@@ -59,9 +59,12 @@ export function DataPanel(): ReactNode {
       />
       <ToggleRow
         label="Developer tools"
-        description="Adds the Developer tab: audio analysis dashboard and detailed performance data."
+        description="Adds the Developer tab (unlock all worlds, audio analysis dashboard, performance data). Turning it on unlocks every world."
         value={developer}
-        onChange={(v) => updateSection('developer', { enabled: v })}
+        onChange={(v) => {
+          updateSection('developer', { enabled: v });
+          if (v) updateSection('setup', { unlockAll: true });
+        }}
         testId="setting-developer"
       />
       <div className="data-actions">

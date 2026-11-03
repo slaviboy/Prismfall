@@ -54,6 +54,7 @@ export const GAMEPLAY_TAB: TabDef = {
     { kind: 'toggle', section: 'gameplay', key: 'bufferInitialActions', label: 'Buffer rotate and hold', description: 'Rotate or hold pressed between pieces applies the moment the next piece appears.' },
     { kind: 'toggle', section: 'gameplay', key: 'bufferHardDrop', label: 'Buffer hard drop', description: 'A hard drop pressed between pieces drops the next piece immediately.' },
     { kind: 'toggle', section: 'gameplay', key: 'rotation180', label: '180° rotation', description: 'Enables the rotate 180° control.' },
+    { kind: 'toggle', section: 'gameplay', key: 'mouseControl', label: 'Mouse control', description: 'Move the mouse and the piece and its ghost follow it. Left click hard drops, right click rotates, middle click holds. Keyboard and controller still work.' },
     { kind: 'group', label: 'Playfield' },
     { kind: 'toggle', section: 'gameplay', key: 'showNext', label: 'Show next pieces' },
     { kind: 'slider', section: 'gameplay', key: 'nextCount', label: 'Next pieces shown', min: 1, max: 6, step: 1, when: (s) => s.gameplay.showNext },
@@ -352,6 +353,7 @@ export const DEVELOPER_TAB: TabDef = {
   label: 'Developer',
   inGame: true,
   rows: [
+    { kind: 'toggle', section: 'setup', key: 'unlockAll', label: 'Unlock all worlds', description: 'Every world and Voyage area is playable for testing. Completion records are unaffected.' },
     { kind: 'toggle', section: 'developer', key: 'audioDashboard', label: 'Audio analysis dashboard', description: 'Spectrum, band meters, onsets, tempo, beat phase and the stage\u2019s live reactivity bindings, with tuning sliders. F9 toggles it.' },
     { kind: 'toggle', section: 'graphics', key: 'showPerfOverlay', label: 'Performance overlay', description: 'Frame rate, frame time, GPU time and renderer details.' },
     { kind: 'custom', id: 'contentReport' },

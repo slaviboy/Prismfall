@@ -57,6 +57,11 @@ export class GameRunner {
     this.engine.start();
   }
 
+  /** Inputs queued since the last update (the engine state does not reflect them yet). */
+  get hasPendingInputs(): boolean {
+    return this.queue.length > 0;
+  }
+
   enqueue(action: GameAction, down: boolean, time: number): void {
     if (this.paused || this.origin === null) return;
     this.queue.push({ action, down, time });

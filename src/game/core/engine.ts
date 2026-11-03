@@ -211,6 +211,12 @@ export class Engine {
         }
         break;
       }
+      case 'nudgeLeft':
+      case 'nudgeRight': {
+        const d: -1 | 1 = action === 'nudgeLeft' ? -1 : 1;
+        if (this.active && !this.shift(d, false)) this.emit({ type: 'shiftBlocked', tick: this.tick, dir: d });
+        break;
+      }
       case 'softDrop':
         this.softHeld = true;
         if (this.active && this.handling.softDropFactor === Infinity) this.sonicDrop(true);

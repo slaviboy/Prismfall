@@ -103,6 +103,22 @@ describe('movement and collision boundaries', () => {
     expect(minX(e)).toBe(0);
   });
 
+  it('nudges move exactly one cell, even with DAS and ARR at 0', () => {
+    const e = engine({}, 1, { ...DEFAULT_HANDLING, dasMs: 0, arrMs: 0 });
+    const x0 = e.active!.x;
+    tap(e, 'nudgeRight');
+    tap(e, 'nudgeRight');
+    expect(e.active!.x).toBe(x0 + 2);
+    tap(e, 'nudgeLeft');
+    e.advanceTo(300);
+    expect(e.active!.x).toBe(x0 + 1);
+    for (let i = 0; i < 12; i++) tap(e, 'nudgeLeft');
+    collect(e);
+    tap(e, 'nudgeLeft');
+    expect(minX(e)).toBe(0);
+    expect(collect(e).some((ev) => ev.type === 'shiftBlocked')).toBe(true);
+  });
+
   it('last pressed direction wins and releasing it falls back to the other', () => {
     const e = engine({}, 1, { ...DEFAULT_HANDLING, dasMs: 50, arrMs: 10 });
     const x0 = e.active!.x;

@@ -7,7 +7,7 @@ import { isStageUnlocked, unlockHint } from '../../stages/progression';
 import { availableStages, discoverStages, getStage, resolveAsset, type StageInfo } from '../../stages/registry';
 import type { StageManifest } from '../../stages/schema';
 import { getSettings, updateSection, useSettings } from '../../settings/store';
-import { MenuList } from '../components/controls';
+import { MenuList, ToggleRow } from '../components/controls';
 import { formatScore } from '../format';
 import { useConfirmBackLabels } from '../hints';
 import { ControlHints, MenuScreen } from './MenuScreen';
@@ -65,6 +65,7 @@ function WorldDetails(props: { info: StageInfo | undefined; locked: boolean }): 
 export function StageSelectScreen(): ReactNode {
   const selected = useSettings((s) => s.setup.stageId);
   const unlockAll = useSettings((s) => s.setup.unlockAll);
+  const developer = useSettings((s) => s.developer.enabled);
   const progress = useProgress((s) => s.progress);
   const stages = orderedStages();
   const [focusId, setFocusId] = useState(selected);
@@ -101,6 +102,15 @@ export function StageSelectScreen(): ReactNode {
       }
     >
       <MenuList className="world-list">
+        {developer ? (
+          <ToggleRow
+            label="Unlock all worlds"
+            description="Developer mode: test any world."
+            value={unlockAll}
+            onChange={(v) => updateSection('setup', { unlockAll: v })}
+            testId="world-unlock-all"
+          />
+        ) : null}
         {stages.map((info) => {
           const m = info.manifest;
           if (!m) return null;

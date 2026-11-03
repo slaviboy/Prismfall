@@ -93,7 +93,9 @@ Menu navigation also uses fixed controls:
 
 Button names and glyphs follow the detected controller family (PlayStation, Xbox, generic), and you can override them per controller. Settings → Controller has a live button tester, a mapping wizard for non-standard pads, rumble test, dead zones and thresholds. It can also "Use only this controller" or ignore a pad, which helps when Steam Input or DS4Windows creates a duplicate.
 
-In play, the mouse wheel zooms the camera. With developer tools enabled (Settings → Data), F9 toggles the audio analysis dashboard.
+In play, the mouse wheel zooms the camera. With developer tools enabled (Settings → Data), F9 toggles the audio analysis dashboard, and every world is unlocked (a switch on the world list and in the Developer tab turns this off again).
+
+**Mouse control** (Settings → Gameplay, off by default): move the mouse and the piece, with its ghost, follows the pointer across the board. Left click hard drops, right click rotates clockwise and middle click holds. The keyboard and controllers keep working; the mouse steers again as soon as it moves or clicks.
 
 ## Saves and data
 

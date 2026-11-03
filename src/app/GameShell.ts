@@ -7,6 +7,7 @@ import type { Engine } from '../game/core/engine';
 import { GAME_ACTIONS } from '../game/core/types';
 import { getMode, highScoreKey, type ModeId } from '../game/modes/modes';
 import { InputManager } from '../input/inputManager';
+import { MouseControl } from '../input/mouse/mouseControl';
 import type { ActionEvent } from '../input/types';
 import type { InputAction } from '../settings/schema';
 import { getSettings, handlingFromSettings, replaceSettings, settingsStore, subscribeSettings, updateSection } from '../settings/store';
@@ -73,6 +74,20 @@ type FrameListener = (now: number, dt: number) => void;
  */
 export class GameShell {
   readonly input = new InputManager();
+  /** Optional mouse play (setting): the piece follows the pointer, clicks drop, rotate and hold. */
+  readonly mouse = new MouseControl({
+    playing: () => this.session?.status === 'running' && !this.xr?.presenting,
+    columnAt: (x, y) => this.renderSystem?.boardColumnAt(x, y) ?? null,
+    piece: () => {
+      const e = this.session?.engine;
+      return e?.active ? { piece: e.active, serial: e.stats.pieces } : null;
+    },
+    pending: () => this.session?.runner.hasPendingInputs ?? false,
+    send: (action, time) => {
+      this.session?.handleAction(action, true, time);
+      this.session?.handleAction(action, false, time);
+    },
+  });
   /** WebXR immersive mode (created once the renderer exists). */
   xr: XRManager | null = null;
   /** True while another loop (the XR session) drives frames instead of requestAnimationFrame. */
@@ -474,6 +489,12 @@ export class GameShell {
   private setupInput(): void {
     const im = this.input;
     im.attach();
+    this.mouse.attach();
+    this.mouse.enabled = getSettings().gameplay.mouseControl;
+    subscribeSettings(
+      (s) => s.gameplay.mouseControl,
+      (on) => (this.mouse.enabled = on),
+    );
     const applyBindings = (): void => {
       const s = getSettings();
       im.setBindings(s.keyboard, s.gamepad, s.controller.swapConfirmBack);
@@ -521,6 +542,7 @@ export class GameShell {
   }
 
   private handleGameplayAction(e: ActionEvent<InputAction>): void {
+    if (e.down) this.mouse.yieldToOtherDevice();
     if (e.action === 'pause') {
       if (e.down) this.togglePause();
       return;
@@ -1012,6 +1034,7 @@ export class GameShell {
     const dt = Math.min(0.1, Math.max(0, (t - (this.lastFrame || t)) / 1000));
     this.lastFrame = t;
     this.input.poll(t);
+    this.mouse.sync(t);
     const beats = this.features.update(t, dt);
     if (beats.length > 0) {
       this.pendingBeats.push(...beats);
