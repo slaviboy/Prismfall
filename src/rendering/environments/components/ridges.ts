@@ -33,6 +33,8 @@ const schema = z.object({
   span: z.tuple([z.number(), z.number()]).default([-110, 110]),
   hazeColor: zColor.default('#0b1822'),
   rimColor: zColor.default('#7fffc8'),
+  /** Side light from the ridge slopes: side -1 = light from the left, 1 = from the right. */
+  light: z.object({ side: z.number().min(-1).max(1).default(-1), strength: z.number().min(0).max(1).default(0.35) }).prefault({}),
 });
 
 type Params = z.infer<typeof schema>;
@@ -107,18 +109,29 @@ export const ridgesComponent: ComponentFactory<Params> = {
       });
       const lo = Math.min(...raw);
       const hi = Math.max(...raw);
+      const heights = raw.map((r) => Math.pow((r - lo) / Math.max(1e-6, hi - lo), 1.35) * layer.height + 2);
+      // Silhouette slope, smoothed over a few columns: where the ridge line rises towards the
+      // light, the face below it turns towards the light.
+      const dx = ((a1 - a0) * layer.distance) / segs;
+      const facingCols = heights.map((_, i) => {
+        const k = 9;
+        const l = heights[Math.max(0, i - k)] as number;
+        const r = heights[Math.min(segs, i + k)] as number;
+        return Math.max(-1, Math.min(1, ((r - l) / (2 * k * dx)) * -p.light.side * 1.4));
+      });
       for (let i = 0; i <= segs; i++) {
         const t = i / segs;
         const az = a0 + (a1 - a0) * t;
-        const h = Math.pow(((raw[i] as number) - lo) / Math.max(1e-6, hi - lo), 1.35) * layer.height + 2;
+        const h = heights[i] as number;
         const x = Math.sin(az) * layer.distance;
         const z = -Math.cos(az) * layer.distance;
         positions.push(x, layer.base - 60, z, x, layer.base + h, z);
-        info.push(t, -60, h, 0, t, h, h, 1);
+        info.push(t, -60, h, facingCols[i] as number, t, h, h, facingCols[i] as number);
       }
+      // Counter-clockwise as seen from the viewer at the centre of the ring (front faces).
       for (let i = 0; i < segs; i++) {
         const a = i * 2;
-        index.push(a, a + 1, a + 3, a, a + 3, a + 2);
+        index.push(a, a + 3, a + 1, a, a + 2, a + 3);
       }
       const geometry = new BufferGeometry();
       geometry.setAttribute('position', new BufferAttribute(new Float32Array(positions), 3));
@@ -131,14 +144,17 @@ export const ridgesComponent: ComponentFactory<Params> = {
       const y = r.y;
       const top = r.z.max(0.001);
       const rel = clamp(y.div(top), 0, 1);
-      // Gullies run down the faces; snow collects higher up and between them.
-      const gully = mx_fractal_noise_float(vec3(along.mul(0.09), y.mul(0.035), layer.seed), 4, 2.2, 0.55);
-      const streak = mx_noise_float(vec3(along.mul(0.6), y.mul(0.012), layer.seed + 7)).mul(0.5).add(0.5);
-      const snowMask = smoothstep(0.55, 0.75, gully.mul(0.5).add(0.5).add(rel.mul(0.7)).sub(float(1).sub(layer.snowAmount).mul(0.8)).add(streak.mul(0.12)));
-      // Faces turn slightly towards or away from the sky: a facet term along the range.
-      const facet = mx_noise_float(vec3(along.mul(0.025), layer.seed + 3, 0)).mul(0.35).add(0.75);
-      const footShade = smoothstep(-10, top.mul(0.6), y).mul(0.6).add(0.4);
-      let color = mix(colorUniform(layer.rock), colorUniform(layer.snow).mul(facet), snowMask).mul(footShade);
+      // Gullies and ribs run down the faces (noise stretched vertically); snow lies higher up and
+      // between the ribs, rock shows on the ribs and lower down.
+      const ribs = mx_fractal_noise_float(vec3(along.mul(0.22), y.mul(0.012), layer.seed), 4, 2.1, 0.5);
+      const fine = mx_noise_float(vec3(along.mul(0.9), y.mul(0.05), layer.seed + 7));
+      const snowline = float(1).sub(layer.snowAmount).mul(0.9);
+      const snowMask = smoothstep(0.42, 0.58, rel.add(ribs.mul(0.38)).add(fine.mul(0.08)).sub(snowline).add(0.25));
+      // Side light from the silhouette slope, plus a little facet variation along the range.
+      const facing = r.w;
+      const sun = float(1).add(facing.mul(p.light.strength)).mul(mx_noise_float(vec3(along.mul(0.03), layer.seed + 3, 0)).mul(0.12).add(0.94));
+      const footShade = smoothstep(-10, top.mul(0.5), y).mul(0.5).add(0.5);
+      let color = mix(colorUniform(layer.rock), colorUniform(layer.snow), snowMask).mul(sun).mul(footShade);
       if (layer.rim > 0) color = color.add(rimColor.mul(exp(top.sub(y).mul(-0.45)).mul(layer.rim)));
       color = mix(color, haze, layer.haze * 1);
       const material = new MeshBasicNodeMaterial();

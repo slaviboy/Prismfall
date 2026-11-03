@@ -773,23 +773,24 @@ kbd {
 }
 
 .hud-label {
-  font-size: calc(14px * var(--hud-scale, 1));
-  color: var(--haze);
+  font-size: calc(16px * var(--hud-scale, 1));
+  font-weight: 600;
+  color: #e9eef5;
   /* A tight dark edge keeps labels legible over bright worlds (snow, desert sun). */
   text-shadow: 0 0 2px rgba(var(--night-rgb), 0.95), 0 1px 3px rgba(var(--night-rgb), 0.9), 0 0 8px rgba(var(--night-rgb), 0.85), 0 1px 18px rgba(var(--night-rgb), 0.7);
 }
 
 .hud-value {
   font-family: var(--font-display);
-  font-weight: 400;
-  font-size: calc(22px * var(--hud-scale, 1));
+  font-weight: 500;
+  font-size: calc(27px * var(--hud-scale, 1));
   font-variant-numeric: tabular-nums;
   text-shadow: 0 0 2px rgba(var(--night-rgb), 0.9), 0 1px 4px rgba(var(--night-rgb), 0.85), 0 2px 14px rgba(var(--night-rgb), 0.85);
 }
 
 .hud-stat.big .hud-value {
-  font-weight: 300;
-  font-size: calc(34px * var(--hud-scale, 1));
+  font-weight: 400;
+  font-size: calc(42px * var(--hud-scale, 1));
 }
 
 .hud-practice {

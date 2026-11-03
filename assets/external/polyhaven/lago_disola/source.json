@@ -1,0 +1,30 @@
+{
+  "id": "lago_disola",
+  "kind": "hdri",
+  "name": "Lago d'Isola",
+  "page": "https://polyhaven.com/a/lago_disola",
+  "api": {
+    "info": "https://api.polyhaven.com/info/lago_disola",
+    "files": "https://api.polyhaven.com/files/lago_disola"
+  },
+  "authors": {
+    "Andreas Mischok": "All"
+  },
+  "licence": "CC0 1.0",
+  "licenceUrl": "https://polyhaven.com/license",
+  "files": [
+    {
+      "path": "lago_disola_tonemapped.jpg",
+      "url": "https://dl.polyhaven.org/file/ph-assets/HDRIs/extra/Tonemapped%20JPG/lago_disola.jpg",
+      "md5": "56de4d96b5bbea9a2483e3ec69beb37b",
+      "size": 50106035
+    }
+  ],
+  "downloaded": "2026-11-03",
+  "derived": [
+    {
+      "path": "content/stages/frozen-kingdom/textures/lago_disola_band.webp",
+      "how": "ffmpeg crop=8192:1048:0:1138 (elevations -6..+40 deg), libwebp quality 86"
+    }
+  ]
+}

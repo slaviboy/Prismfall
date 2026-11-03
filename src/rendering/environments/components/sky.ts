@@ -1,6 +1,9 @@
-import { BackSide, Mesh, MeshBasicNodeMaterial, SphereGeometry, Vector3 } from 'three/webgpu';
+import { BackSide, LinearMipmapLinearFilter, Mesh, MeshBasicNodeMaterial, RepeatWrapping, SphereGeometry, SRGBColorSpace, TextureLoader, Vector3, type Texture } from 'three/webgpu';
 import {
   abs,
+  asin,
+  atan,
+  clamp,
   dot,
   exp,
   floor,
@@ -13,7 +16,9 @@ import {
   sin,
   smoothstep,
   step,
+  texture,
   uniform,
+  vec2,
   vec3,
   vec4,
 } from 'three/tsl';
@@ -46,6 +51,20 @@ const schema = z.object({
     .object({ strength: z.number().min(0).default(0.5), pole: zVec3.default([0.55, 0.35, 0.75]), width: z.number().default(0.16), color: zColor.default('#8a9ab8') })
     .optional(),
   bloom: z.boolean().default(false),
+  /**
+   * A photographic horizon band (an equirectangular panorama cropped to `elevation`, in degrees),
+   * blended into the gradient above it. `offset` turns it (0..1 of a full turn).
+   */
+  panorama: z
+    .object({
+      src: z.string(),
+      elevation: z.tuple([z.number(), z.number()]).default([-6, 40]),
+      offset: z.number().default(0),
+      exposure: z.number().min(0).default(1),
+      /** Degrees over which the top of the band fades into the gradient. */
+      fade: z.number().positive().default(8),
+    })
+    .optional(),
 });
 
 export type SkyParams = z.infer<typeof schema>;
@@ -56,7 +75,18 @@ export const skyComponent: ComponentFactory<SkyParams> = {
   version: 1,
   description: 'Gradient sky dome with stars, nebula and an optional sun or moon disc.',
   schema,
-  create(ctx, p) {
+  async create(ctx, p) {
+    let photo: Texture | null = null;
+    if (p.panorama) {
+      const url = ctx.assets.url(p.panorama.src);
+      if (url) {
+        photo = await new TextureLoader().loadAsync(url);
+        photo.colorSpace = SRGBColorSpace;
+        photo.wrapS = RepeatWrapping;
+        photo.minFilter = LinearMipmapLinearFilter;
+        photo.anisotropy = 8;
+      } else console.warn(`[sky] panorama ${p.panorama.src} not found`);
+    }
     const u = {
       top: colorUniform(p.top),
       horizon: colorUniform(p.horizon),
@@ -79,6 +109,17 @@ export const skyComponent: ComponentFactory<SkyParams> = {
     let color = mix(upper, u.bottom, down);
     const band = exp(abs(y).div(p.horizonWidth).negate()).mul(u.glow);
     color = color.add(u.horizon.mul(band));
+
+    if (photo && p.panorama) {
+      const pano = p.panorama;
+      const deg = 180 / Math.PI;
+      const elev = asin(clamp(y, -1, 1)).mul(deg);
+      const turn = atan(dir.x, dir.z.negate()).div(Math.PI * 2).add(pano.offset);
+      const v = elev.sub(pano.elevation[0]).div(pano.elevation[1] - pano.elevation[0]);
+      const sample = texture(photo, vec2(turn, v)).rgb.mul(pano.exposure);
+      const inBand = smoothstep(pano.elevation[1], pano.elevation[1] - pano.fade, elev).mul(step(pano.elevation[0], elev));
+      color = mix(color, sample, inBand);
+    }
 
     if (p.nebula > 0) {
       const t = ctx.uniforms.time.mul(p.nebulaDrift);
@@ -150,6 +191,7 @@ export const skyComponent: ComponentFactory<SkyParams> = {
       dispose() {
         mesh.geometry.dispose();
         material.dispose();
+        photo?.dispose();
       },
     };
   },

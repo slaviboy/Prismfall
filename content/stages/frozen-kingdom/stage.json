@@ -16,12 +16,12 @@
     "accent": "#7fe8ff",
     "secondary": "#7f9cff",
     "highlight": "#e8fbff",
-    "fog": "#9fc4e0",
+    "fog": "#c6dbea",
     "plate": "#04101c"
   },
   "fog": {
-    "color": "#8fb6d8",
-    "density": 0.0023
+    "color": "#b8c6d4",
+    "density": 0.0012
   },
   "backdrop": {
     "top": "#061430",
@@ -30,57 +30,57 @@
   },
   "lighting": {
     "key": {
-      "color": "#dff2ff",
+      "color": "#fff4e4",
       "intensity": 2.4,
-      "azimuth": -58,
-      "elevation": 28
+      "azimuth": -36,
+      "elevation": 50
     },
     "rim": {
-      "color": "#7fe8ff",
-      "intensity": 2.6
+      "color": "#cfeeff",
+      "intensity": 1.0
     },
     "ambient": {
-      "sky": "#5a86c0",
-      "ground": "#bcd6ec",
-      "intensity": 0.75
+      "sky": "#7aa6d6",
+      "ground": "#dce8f2",
+      "intensity": 0.8
     },
     "accents": [
       {
         "color": "#7fe8ff",
-        "intensity": 24,
+        "intensity": 10,
         "x": -9,
         "y": -6,
         "z": 6
       },
       {
         "color": "#a69cff",
-        "intensity": 18,
+        "intensity": 8,
         "x": 9,
         "y": 8,
         "z": 6
       }
     ],
-    "beatResponse": 0.3
+    "beatResponse": 0.2
   },
   "grade": {
-    "saturation": 1.05,
-    "contrast": 1.05,
+    "saturation": 1.04,
+    "contrast": 1.1,
     "tint": [
       0.95,
       1.0,
       1.06
     ],
-    "vignette": 0.38,
-    "bloomThreshold": 0.22,
+    "vignette": 0.3,
+    "bloomThreshold": 0.5,
     "bloomRadius": 0.55,
     "toneMapping": "neutral",
     "envIntensity": 0.4,
-    "exposure": 0.92
+    "exposure": 1.0
   },
   "camera": {
-    "pitch": 5,
+    "pitch": 2,
     "yaw": 0,
-    "sway": 0.6,
+    "sway": 0.4,
     "targetY": 0
   },
   "blocks": {
@@ -102,65 +102,27 @@
         "id": "sky",
         "type": "sky",
         "params": {
-          "top": "#04102a",
-          "mid": "#173e6a",
-          "midHeight": 0.18,
-          "horizon": "#8cc4e6",
-          "bottom": "#0c2236",
-          "horizonGlow": 0.35,
-          "horizonWidth": 0.12,
-          "stars": 0.55,
+          "top": "#30599a",
+          "mid": "#7a90ab",
+          "midHeight": 0.62,
+          "horizon": "#a8bccf",
+          "bottom": "#8ea4b8",
+          "horizonGlow": 0.0,
+          "horizonWidth": 0.08,
+          "stars": 0,
           "starSize": 0.9,
-          "disc": {
-            "direction": [
-              0.45,
-              0.32,
-              -1
+          "panorama": {
+            "src": "textures/lago_disola_band.webp",
+            "elevation": [
+              -6,
+              40
             ],
-            "color": "#e6f4ff",
-            "size": 1.4,
-            "halo": 7,
-            "intensity": 0.6
+            "offset": 0.7,
+            "exposure": 1.0,
+            "fade": 8
           }
         },
         "bind": []
-      },
-      {
-        "id": "northern-glow",
-        "type": "aurora",
-        "params": {
-          "ribbons": 3,
-          "distance": [
-            480,
-            700
-          ],
-          "base": 70,
-          "height": [
-            110,
-            170
-          ],
-          "width": 1100,
-          "low": "#4dffc6",
-          "high": "#5a7bff",
-          "alt": {
-            "low": "#7fe8ff",
-            "high": "#c07bff",
-            "share": 0.35
-          },
-          "intensity": 0.55,
-          "speed": 0.8,
-          "seed": 4
-        },
-        "bind": [
-          {
-            "target": "intensity",
-            "feature": "sectionIntensity",
-            "amount": 0.5,
-            "category": "lighting",
-            "attackMs": 800,
-            "releaseMs": 2500
-          }
-        ]
       },
       {
         "id": "snowfield",
@@ -184,33 +146,21 @@
                 "crest": 0.62,
                 "warp": 0.4,
                 "variation": 0.6
-              },
-              {
-                "type": "ridged",
-                "amplitude": 170,
-                "scale": 240,
-                "octaves": 4,
-                "sharpness": 2.0,
-                "band": {
-                  "near": 380,
-                  "ramp": 160,
-                  "far": 5000
-                }
               }
             ],
             "clearing": {
               "center": [
                 0,
-                -95
+                -190
               ],
-              "radius": 34,
-              "falloff": 26,
-              "depth": -1.4
+              "radius": 135,
+              "falloff": 24,
+              "depth": -3
             }
           },
           "mesh": {
             "near": 12,
-            "far": 1150,
+            "far": 420,
             "rows": 220,
             "cols": 230,
             "spread": 1.45
@@ -245,12 +195,12 @@
         "type": "water",
         "params": {
           "y": -16.0,
-          "deep": "#5a8cb4",
-          "shallow": "#b9dcf2",
-          "skyTop": "#5f8fbf",
-          "skyHorizon": "#d6eefa",
+          "deep": "#16324a",
+          "shallow": "#2a5272",
+          "skyTop": "#3a6ea4",
+          "skyHorizon": "#cfe2f0",
           "glow": "#7fe8ff",
-          "glowStrength": 0.05,
+          "glowStrength": 0,
           "amplitude": 0.0,
           "wavelength": 40,
           "speed": 0.0,
@@ -259,7 +209,15 @@
             0.32,
             -1
           ],
-          "rippleColor": "#bfefff"
+          "rippleColor": "#bfefff",
+          "size": 900,
+          "moonColor": "#000000",
+          "reflection": {
+            "strength": 0.85,
+            "resolution": 0.5,
+            "distortion": 0.003,
+            "tint": "#e8f2fa"
+          }
         },
         "bind": [
           {
@@ -272,504 +230,10 @@
         ]
       },
       {
-        "id": "citadel",
-        "type": "gltfScene",
-        "params": {
-          "src": "models/ice.glb",
-          "snapToGround": true,
-          "sink": 1.0,
-          "vertexAO": true,
-          "materials": [
-            {
-              "match": "^iceWall",
-              "preset": "ice",
-              "color": "#a6d6f2",
-              "roughness": 0.1
-            },
-            {
-              "match": "^iceDeep",
-              "preset": "ice",
-              "color": "#4f86b8",
-              "roughness": 0.08
-            },
-            {
-              "match": "^snowCap",
-              "preset": "stone",
-              "color": "#f4f8ff",
-              "roughness": 0.7
-            },
-            {
-              "match": "^iceGlow",
-              "preset": "emissive",
-              "color": "#0a2030",
-              "emissive": "#7fe8ff",
-              "emissiveIntensity": 1.1,
-              "musicGlow": 0.8
-            }
-          ]
-        },
-        "bind": [
-          {
-            "target": "emissive",
-            "feature": "sectionIntensity",
-            "amount": 0.5,
-            "category": "lighting",
-            "attackMs": 300,
-            "releaseMs": 1600
-          }
-        ]
-      },
-      {
-        "id": "ice-spires",
-        "type": "scatter",
-        "params": {
-          "src": "/content/shared/flora/flora.glb",
-          "count": 60,
-          "seed": 3,
-          "items": [
-            {
-              "mesh": "ice_spire",
-              "weight": 3,
-              "scale": [
-                0.5,
-                1.3
-              ],
-              "tintJitter": 0.08
-            },
-            {
-              "mesh": "crystal_cluster",
-              "weight": 2,
-              "scale": [
-                0.8,
-                2.0
-              ],
-              "tintJitter": 0.1
-            }
-          ],
-          "area": {
-            "kind": "band",
-            "near": 70,
-            "far": 420,
-            "spread": 1.25
-          },
-          "exclude": [
-            {
-              "center": [
-                0,
-                -95
-              ],
-              "radius": 44
-            },
-            {
-              "center": [
-                -95,
-                -260
-              ],
-              "radius": 60
-            }
-          ],
-          "clustering": 0.6,
-          "clusterScale": 60,
-          "sway": {
-            "amount": 0.0
-          },
-          "materials": [
-            {
-              "match": "^ice",
-              "preset": "ice",
-              "color": "#9fd4f4",
-              "roughness": 0.08
-            },
-            {
-              "match": "^crystal",
-              "preset": "ice",
-              "color": "#8fe6ff",
-              "roughness": 0.06,
-              "emissive": "#2fb8ff",
-              "emissiveIntensity": 0.25,
-              "musicGlow": 1
-            }
-          ]
-        },
-        "bind": [
-          {
-            "target": "emissive",
-            "feature": "highMid",
-            "amount": 0.6,
-            "category": "lighting",
-            "attackMs": 40,
-            "releaseMs": 600
-          }
-        ]
-      },
-      {
-        "id": "icebergs",
-        "type": "scatter",
-        "params": {
-          "src": "/content/shared/flora/flora.glb",
-          "count": 5,
-          "seed": 8,
-          "items": [
-            {
-              "mesh": "iceberg",
-              "scale": [
-                0.3,
-                0.6
-              ],
-              "tintJitter": 0.06
-            }
-          ],
-          "area": {
-            "kind": "rect",
-            "center": [
-              0,
-              -98
-            ],
-            "size": [
-              60,
-              30
-            ]
-          },
-          "exclude": [],
-          "clustering": 0,
-          "sink": 2.5,
-          "sway": {
-            "amount": 0.0
-          },
-          "materials": [
-            {
-              "match": "^ice",
-              "preset": "ice",
-              "color": "#cfe9fb",
-              "roughness": 0.12
-            }
-          ]
-        },
-        "bind": []
-      },
-      {
-        "id": "pines",
-        "type": "scatter",
-        "params": {
-          "src": "/content/shared/flora/flora.glb",
-          "count": 420,
-          "seed": 5,
-          "items": [
-            {
-              "mesh": "pine_snow",
-              "scale": [
-                0.8,
-                1.5
-              ],
-              "tintJitter": 0.12
-            }
-          ],
-          "area": {
-            "kind": "band",
-            "near": 120,
-            "far": 380,
-            "spread": 1.35
-          },
-          "exclude": [
-            {
-              "center": [
-                0,
-                -95
-              ],
-              "radius": 44
-            },
-            {
-              "center": [
-                -95,
-                -260
-              ],
-              "radius": 75
-            },
-            {
-              "center": [
-                70,
-                -150
-              ],
-              "radius": 30
-            }
-          ],
-          "clustering": 0.7,
-          "clusterScale": 80,
-          "sway": {
-            "amount": 0.15,
-            "speed": 0.7
-          },
-          "materials": [
-            {
-              "match": "^needles",
-              "preset": "foliage",
-              "color": "#24463f"
-            },
-            {
-              "match": "^snow",
-              "preset": "stone",
-              "color": "#f2f7ff",
-              "roughness": 0.65
-            },
-            {
-              "match": "^bark",
-              "preset": "stone",
-              "color": "#3a2c26"
-            }
-          ]
-        },
-        "bind": []
-      },
-      {
-        "id": "near-crystals",
-        "type": "scatter",
-        "params": {
-          "src": "/content/shared/flora/flora.glb",
-          "count": 34,
-          "seed": 21,
-          "items": [
-            {
-              "mesh": "crystal_cluster",
-              "weight": 3,
-              "scale": [
-                0.7,
-                1.6
-              ],
-              "tintJitter": 0.1
-            },
-            {
-              "mesh": "rock_a",
-              "weight": 2,
-              "scale": [
-                0.6,
-                1.3
-              ],
-              "tintJitter": 0.08
-            }
-          ],
-          "area": {
-            "kind": "band",
-            "near": 22,
-            "far": 75,
-            "spread": 1.4
-          },
-          "exclude": [
-            {
-              "center": [
-                0,
-                -10
-              ],
-              "radius": 30
-            },
-            {
-              "center": [
-                0,
-                -95
-              ],
-              "radius": 40
-            }
-          ],
-          "clustering": 0.5,
-          "clusterScale": 25,
-          "sway": {
-            "amount": 0.0
-          },
-          "alignToSlope": true,
-          "materials": [
-            {
-              "match": "^crystal",
-              "preset": "ice",
-              "color": "#9fe2ff",
-              "emissive": "#3cc8ff",
-              "emissiveIntensity": 0.3,
-              "musicGlow": 1
-            },
-            {
-              "match": "^rock",
-              "preset": "stone",
-              "color": "#c8dcee",
-              "roughness": 0.6
-            }
-          ]
-        },
-        "bind": [
-          {
-            "target": "emissive",
-            "feature": "highMid",
-            "amount": 0.6,
-            "category": "lighting",
-            "attackMs": 40,
-            "releaseMs": 600
-          }
-        ]
-      },
-      {
-        "id": "floating-ice",
-        "type": "scatter",
-        "params": {
-          "src": "/content/shared/flora/flora.glb",
-          "count": 26,
-          "seed": 9,
-          "items": [
-            {
-              "mesh": "crystal_cluster",
-              "weight": 2,
-              "scale": [
-                0.18,
-                0.38
-              ]
-            },
-            {
-              "mesh": "ice_spire",
-              "weight": 1,
-              "scale": [
-                0.06,
-                0.12
-              ]
-            }
-          ],
-          "area": {
-            "kind": "volume",
-            "center": [
-              0,
-              6,
-              -75
-            ],
-            "size": [
-              150,
-              18,
-              50
-            ]
-          },
-          "spin": 0.12,
-          "sway": {
-            "amount": 0.0
-          },
-          "materials": [
-            {
-              "match": "^crystal",
-              "preset": "ice",
-              "color": "#b8ecff",
-              "emissive": "#5fd8ff",
-              "emissiveIntensity": 0.35,
-              "musicGlow": 1
-            },
-            {
-              "match": "^ice",
-              "preset": "ice",
-              "color": "#b8ecff",
-              "emissive": "#5fd8ff",
-              "emissiveIntensity": 0.3,
-              "musicGlow": 1
-            }
-          ]
-        },
-        "bind": [
-          {
-            "target": "emissive",
-            "feature": "beatPulse",
-            "amount": 0.5,
-            "category": "lighting",
-            "attackMs": 20,
-            "releaseMs": 400
-          }
-        ]
-      },
-      {
-        "id": "ice-spirits",
-        "type": "creatureHerd",
-        "params": {
-          "model": "/content/shared/creatures/deer.glb",
-          "rig": "/content/shared/creatures/deer.rig.json",
-          "representation": "particles",
-          "groups": [
-            {
-              "path": {
-                "kind": "line",
-                "from": [
-                  -150,
-                  0,
-                  -120
-                ],
-                "to": [
-                  160,
-                  0,
-                  -105
-                ]
-              },
-              "members": 4,
-              "formation": "herd",
-              "spacing": 4,
-              "speed": 0.9,
-              "scale": 2.6,
-              "start": 0.35,
-              "rest": 16,
-              "fade": 18,
-              "stopEvery": 30,
-              "stopFor": 7
-            },
-            {
-              "path": {
-                "kind": "line",
-                "from": [
-                  120,
-                  0,
-                  -78
-                ],
-                "to": [
-                  -140,
-                  0,
-                  -88
-                ]
-              },
-              "members": 1,
-              "speed": 1.0,
-              "scale": 2.4,
-              "start": 0.15,
-              "rest": 26,
-              "fade": 12
-            }
-          ],
-          "particles": {
-            "perCreature": 2400,
-            "size": 0.07,
-            "color": "#d6f6ff",
-            "colorB": "#6fd6ff",
-            "brightness": 1.1,
-            "jitter": 0.03,
-            "bloom": 0.5,
-            "scatter": 6,
-            "wind": [
-              0.6,
-              0.6,
-              0.2
-            ],
-            "lodDistance": 80
-          },
-          "dust": {
-            "enabled": true,
-            "color": "#e8f6ff",
-            "amount": 0.8,
-            "size": 0.5
-          },
-          "seed": 7
-        },
-        "bind": [
-          {
-            "target": "brightness",
-            "feature": "treble",
-            "amount": 0.3,
-            "category": "particles",
-            "attackMs": 40,
-            "releaseMs": 500
-          }
-        ]
-      },
-      {
         "id": "snowfall",
         "type": "particles",
         "params": {
-          "count": 9000,
+          "count": 2500,
           "center": [
             0,
             6,
@@ -785,13 +249,13 @@
           "minSize": 0.05,
           "maxSize": 0.16,
           "velocity": [
-            1.2,
-            -2.2,
-            0.4
+            0.6,
+            -1.4,
+            0.2
           ],
           "turbulence": 0.8,
           "twinkle": 0.3,
-          "brightness": 0.75,
+          "brightness": 0.6,
           "shape": "snow",
           "seed": 13,
           "bloom": 0.25
@@ -806,139 +270,15 @@
             "releaseMs": 1500
           }
         ]
-      },
-      {
-        "id": "snowstorm",
-        "type": "particles",
-        "params": {
-          "count": 5000,
-          "center": [
-            0,
-            -6,
-            -80
-          ],
-          "size": [
-            300,
-            20,
-            160
-          ],
-          "color": "#ffffff",
-          "colorB": "#d6ecff",
-          "minSize": 0.05,
-          "maxSize": 0.14,
-          "velocity": [
-            9,
-            -0.6,
-            1
-          ],
-          "turbulence": 0.6,
-          "twinkle": 0.2,
-          "brightness": 0.5,
-          "shape": "streak",
-          "angle": 78,
-          "density": 0.4,
-          "seed": 17,
-          "bloom": 0.15
-        },
-        "bind": [
-          {
-            "target": "density",
-            "feature": "sectionIntensity",
-            "amount": 0.55,
-            "category": "particles",
-            "attackMs": 600,
-            "releaseMs": 2500
-          }
-        ]
-      },
-      {
-        "id": "mist",
-        "type": "clouds",
-        "params": {
-          "count": 26,
-          "center": [
-            20,
-            -6,
-            -200
-          ],
-          "spread": [
-            600,
-            20,
-            200
-          ],
-          "size": [
-            60,
-            130
-          ],
-          "color": "#cfe6f8",
-          "colorB": "#9cc0e0",
-          "opacity": 0.2,
-          "drift": [
-            3,
-            0,
-            0.4
-          ],
-          "additive": false,
-          "seed": 6
-        },
-        "bind": [
-          {
-            "target": "opacity",
-            "feature": "sectionIntensity",
-            "amount": 0.35,
-            "attackMs": 1200,
-            "releaseMs": 3000
-          }
-        ]
-      },
-      {
-        "id": "ice-motes",
-        "type": "particles",
-        "params": {
-          "count": 2200,
-          "center": [
-            0,
-            0,
-            -30
-          ],
-          "size": [
-            120,
-            30,
-            70
-          ],
-          "color": "#9ff0ff",
-          "colorB": "#e0f8ff",
-          "minSize": 0.03,
-          "maxSize": 0.09,
-          "velocity": [
-            0.3,
-            0.12,
-            0.1
-          ],
-          "turbulence": 0.5,
-          "twinkle": 1,
-          "brightness": 1.2,
-          "shape": "star",
-          "seed": 19,
-          "bloom": 0.6
-        },
-        "bind": []
       }
     ]
   },
   "reactivity": {
     "profiles": [
       {
-        "name": "treble-sparkle",
-        "layers": [
-          "ice-motes"
-        ]
-      },
-      {
         "name": "flux-turbulence",
         "layers": [
-          "snowfall",
-          "ice-motes"
+          "snowfall"
         ]
       }
     ],
