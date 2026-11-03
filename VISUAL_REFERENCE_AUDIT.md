@@ -1,82 +1,96 @@
 # Visual reference audit
 
-Benchmark: Tetris Effect: Connected (owned by the project owner, installed locally). The aim is to match its presentation quality with original content — no assets, music, models, shaders or stage designs are copied or extracted.
+Benchmark: Tetris Effect: Connected, installed locally and owned by the project owner. The goal is to reach (and exceed) its presentation quality with **original** content: nothing here is copied, extracted or traced — no assets, music, models, shaders or stage designs. Controls and gameplay rules are out of scope; this audit is about the rendered experience.
 
-## Status and sources
+## Sources
 
-| Source | Status |
+| Source | Notes |
 |---|---|
-| Running the installed game myself | **Not possible in this environment.** This session has no desktop-control or live screen tools, and the game needs real-time play, which tool round trips (seconds each) cannot provide. Earlier milestones never inspected the game either; REFERENCE_NOTES.md marks every item "Not observed". |
-| Screen recordings of the game | **Pending.** `scripts\record-screen.cmd <name> <seconds>` records the primary display (fullscreen games included) into `reference-capture\` (git-ignored). Verified working at 2560×1080, ~60 fps. Recordings are needed for everything about motion. |
-| Screenshots supplied by the owner (2026-11-03) | **Analysed below.** Three gameplay frames: a deep-blue ocean stage with a particle whale (`ref-01`), a saturated multi-colour stage during the Zone mechanic (`ref-02`), a space stage above a planet horizon with particle birds (`ref-03`). Stored locally in `reference-capture\user-screens\` (not committed). |
+| 16-minute screen recording, 2026-11-03 | The owner played while the screen was recorded at 2560×1080, 60 fps (`scripts\record-screen.cmd`-style ddagrab capture, GPU-encoded). Seven stages: an abyssal ocean stage, a desert, a dark forest, a dolphin ocean stage, a bright windmill stage, a night stage and a hot-air-balloon stage that goes from day to night. Includes four-line clears, back-to-backs and results screens. |
+| Frames and filmstrips extracted from it | Overview sheets (one frame per 20 s), 16 full-resolution key frames, and 15 fps filmstrips around three line clears. |
+| Brightness timeline | Mean luminance sampled 10× per second over the whole recording; spikes mark clears and flashes. |
+| A short run driven by simulated keys | Menus and the first minute of the abyssal stage, captured frame by frame. |
 
-Everything below comes from those three still frames. Statements about timing, animation, particle motion and music response are deliberately absent until recordings exist.
+All of it is stored only in `reference-capture\` (git-ignored, never committed or reused as assets).
 
-## Observations from the screenshots
+Not covered yet: the Zone mechanic, a mid-run stage transition inside Journey mode, and VR.
 
-### Composition and camera
+## Findings
 
-- The playfield is dead centre and occupies roughly the middle third of the frame height-wise (about 45–55% of the image height). The camera looks straight at it: no visible tilt, no perspective distortion of the well.
-- The board is framed by large environmental shapes: a particle whale arcing over the top-left (`ref-01`), symmetric creature formations left and right (`ref-03`), a nebula mass on one side (`ref-02`). The environment is composed *around* the board like a vignette, not scattered.
-- A thin circular arc (the score/level meter ring) sits around the board, tying it into the scene geometrically.
-- In `ref-03` the horizon line meets the bottom of the board; the bright sun sits just right of the board at that line. Strong, simple horizontal structure.
+### 1. Stages reveal themselves over time
 
-### Contrast and value structure
+Every stage starts almost empty and builds up as lines are cleared and the music progresses. The abyssal stage stays nearly black for its first ~100 s (only small creature formations appear); its large creatures arrive later. The balloon stage starts in daylight and ends at night with lit balloons. The reveal is part of the experience — but it also hides a stage's full look until you have played into it. (Prismfall will add a way to skip straight to a world's full visual state for review.)
 
-- The dominant value is near-black. Roughly 50–70% of each frame is very dark negative space; luminous elements are placed against it. This is the single biggest reason everything glows without washing out.
-- Brightness is concentrated in small elements (particles, creature highlights, board rim, HUD text) with large dark gaps between them. Bloom is strong but only bright things bloom.
-- The board interior is the darkest, calmest region in every frame, so the pieces always read.
+### 2. Value structure: either very dark or deliberately overexposed — never murky
 
-### Colour
+Mean luminance per stage (0–255), from the timeline:
 
-- Each stage is close to monochrome (`ref-01` and `ref-03`: cyan/blue only). Accent colours are rare and small (a magenta T piece, a white sun).
-- **Piece colours are tinted to the stage palette** rather than the standard seven guideline colours: in `ref-01` blues, violets and magentas; in `ref-03` almost everything is icy blue; in `ref-02` the stack runs as a vertical gradient from violet at the top to cyan at the bottom.
-- Even the saturated `ref-02` keeps the board interior dark navy and limits the rainbow to the edges of the frame.
+| Stage | Mean luminance |
+|---|---|
+| Abyssal ocean, forest, dolphins, night | 18–23 (near black) |
+| Hot-air balloons (day → night) | 85–100 → 50 |
+| Desert | 120 |
+| Windmills | 210 (white, overexposed) |
 
-### Playfield and blocks
+Dark stages put small luminous elements on black. Bright stages blow the sky out to white with heavy bloom and keep the **board interior dark** (a deep blue or grey gradient backplate) so the stack still reads. No stage sits in a hazy, evenly lit middle grey.
 
-- The well is a thin luminous outline (`ref-01`, `ref-03`), or a bright glowing rim during Zone (`ref-02`). There is no heavy 3D box or opaque wall; the environment shows faintly through a dark, slightly transparent back panel.
-- Blocks are rounded "chiclet" cubes: generous corner radius, a dark or translucent body, a bright edge or inner square highlight. They read as glass or light, not as painted solid cubes.
-- `ref-03` blocks look frosted: soft top-lit gradient, slight translucency, no texture noise.
-- The active piece is shown as a bright outline / hollow shape in `ref-02`; the ghost piece is a faint outline (`ref-01`).
-- The settled stack carries fine sparkle particles drifting over it (`ref-01`), so even the stack feels alive without changing its shape.
-- Next and hold previews are tiny and understated (top corners of the well).
+### 3. The playfield is minimal and constant
 
-### Particles and creatures
+- One thin line frames the well, coloured per stage (cyan, gold, pink, pale yellow). No walls, no box, no bevelled frame.
+- The interior is black or a dark gradient; the environment barely shows through.
+- The layout never moves: the well is centred and fills ~83% of the screen height; speed level and lines sit to its left, time, score and high score to its right, in a bold white sans with no panels; the next queue is small at the top right.
+- The camera is straight-on, with only a hint of perspective on the blocks' side faces near the edges.
 
-- Particles come in families with clear roles:
-  - tiny elongated streaks (krill or fish) organised into one coherent vortex around the board (`ref-01`);
-  - large soft glow orbs with bokeh-like falloff, few in number, giving depth (`ref-01`, `ref-02`);
-  - distant star fields: small, dim, many (`ref-03`).
-- Creatures are made of dense particle point clouds with brighter structural lines (spine, fins, wing edges). Silhouettes are large, recognisable and readable at a glance. They are big relative to the board (the whale spans half the frame).
-- Particle size varies strongly with depth: near particles are large and soft, far ones are pin-points. This is the main depth cue in `ref-01`.
+### 4. Blocks carry each stage's material identity
 
-### HUD and typography
+| Stage | Block look |
+|---|---|
+| Abyssal ocean | Translucent "jelly" cubes, saturated blue body, bright cyan fresnel rim |
+| Dolphins | Glossy liquid-glass cubes with sharp specular highlights and bubbles drifting over them |
+| Desert | Sculpted pillow blocks with deep embossed bevels, warm gold, like carved sandstone |
+| Forest | Green blocks with diagonal stripes |
+| Night | Glowing LED-dot cells (red, green, yellow, cyan) |
+| Balloons at night | Neon glass cubes with bright emissive cores (cyan, orange, magenta) |
+| Windmills | Orange cells with a flower or cog pattern |
 
-- A clean white geometric sans; small uppercase labels with larger figures beneath. Text sits directly beside the board, left and right, aligned to the board edges.
-- Event callouts (`TETRIS`, `BACK to BACK`) appear beside the board in heavier type, stacked, then fade.
-- No panels or boxes behind HUD text; legibility comes from the dark scene behind it.
+Constant across all of them: a clear dark gap between every block (each cell reads as its own object), a white outline ghost of the whole piece, and piece colours chosen from the stage palette while staying distinguishable.
 
-## Needs recordings (not yet observed)
+### 5. Line clears are a short, layered event
 
-Each of these needs a short clip (20–60 s) of real play. Ideally one or two different stages for each:
+From the filmstrips (15 fps):
 
-1. Ordinary play with a few pieces falling: camera, ambient motion, how calm the scene is.
-2. Pieces landing and locking: impact flash, sound-synced effects.
-3. A single, a double/triple and a four-line clear: clear animation timing and scale.
-4. A combo chain and a back-to-back.
-5. Zone (or any special event).
-6. Stage-specific effects and how they ramp up within a stage.
-7. Music response: what pulses on the beat and what doesn't.
-8. A stage transition in Journey mode.
+1. The instant the clear registers, the cleared rows turn **solid white-hot** (about 0.25–0.3 s).
+2. A dense burst of fine particles sprays out of them, mostly downward and outward past the frame; on the night stage the rows become a sheet of embers.
+3. The callout ("TETRIS", "BACK-TO-BACK") slides in from the left with motion blur and holds for about 2 s.
+4. The white rows dissolve into dust, and the stack above drops.
+5. Afterwards the remaining stack **recolours in a ripple** over about half a second (blue to magenta and cyan on the abyssal stage), so the board itself changes with the clear.
 
-## Preliminary implications for Prismfall (principles, not designs)
+A hard drop leaves a **vertical beam of light** above the piece that fades in about 0.3 s.
 
-These come from the screenshots only and are refined in VISUAL_GAP_ANALYSIS.md once our own build has been captured the same way:
+### 6. Creatures and set pieces are large and frame the board
 
-- Build scenes around a dark value floor with small luminous elements, instead of evenly lit, hazy mid-tone environments.
-- Tint piece colours to each world's palette (keeping the seven pieces distinguishable), instead of fixed rainbow colours on every world.
-- Lighter, more transparent board framing; the board interior is the calmest, darkest area.
-- Rounded glass or light-like blocks with clean edges, not noisy surface textures.
-- Compose large creature and particle formations around the board; organise particles into coherent flows with depth-dependent size.
-- Typography beside the board without boxes; callouts as typographic events.
+- Creatures are built from particles on recognisable forms: white luminous particle camels walking across the dunes, a glossy dolphin with particle shimmer along its body, schools of small fish formations.
+- Set pieces are detailed 3D models at large scale: hot-air balloons with neon rim lines and sparkle-filled envelopes, windmills.
+- They are placed left and right of the board and at the frame edges, close to the camera, rather than scattered in the distance.
+
+### 7. Particles have a job
+
+Each stage uses a few particle families with a clear role: ring-shaped bubbles (dolphins), gold glints and drifting sand (desert), embers (night), star fields (space, balloons at night), fine dust inside the well. Sizes vary with depth; near particles are big and soft.
+
+### 8. Environments are rendered, not just decorated
+
+The desert is real terrain: rolling dunes with a strong glitter-like sand sparkle and a bloom-white sky. The balloon stage has a lit landscape below and detailed balloons above. Atmosphere comes from light and value, not fog.
+
+### 9. Motion
+
+The recording runs at 60 fps; motion in the extracted sequences is even (no visible hitches). Board events are fast and snappy (flash, burst, drop within half a second), while the environment moves slowly and continuously. A per-frame pacing measurement of the reference was not done (the capture is limited to 60 fps and the display runs at 144 Hz).
+
+## Implications for Prismfall (principles, not designs)
+
+1. Give each world a decisive value key: near black, or bright with a dark board interior. Remove the murky mid-tone haze.
+2. Replace the heavy 3D board frame with a single thin luminous line in the world's accent colour, over a black or dark-gradient interior.
+3. Make block materials per world much more distinctive (glass, jelly, carved stone, emissive cores, patterned cells), always with a visible gap between cells. Draw piece colours from the world palette.
+4. Rebuild line clears as a sequence: white-hot rows, then a particle burst, then dissolve and drop, then a stack recolour ripple; hard-drop light beams; sliding typographic callouts.
+5. Scale creatures and set pieces up and compose them around the board, built from dense particles on solid recognisable forms.
+6. Build a progressive reveal into each world, plus a **preview switch that shows a world at full intensity immediately**.
+7. Keep the HUD typographic and fixed: no panels, bold white type beside the board.
