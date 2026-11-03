@@ -542,6 +542,20 @@
         "title": "Curtains of the Sky",
         "kind": "composition",
         "src": "music/main.ts"
+      },
+      {
+        "id": "northern-lights-solar-wind",
+        "title": "Solar Wind",
+        "kind": "composition",
+        "src": "music/solar-wind.ts",
+        "bpm": 134
+      },
+      {
+        "id": "northern-lights-magnetic-north",
+        "title": "Magnetic North",
+        "kind": "composition",
+        "src": "music/magnetic-north.ts",
+        "bpm": 100
       }
     ],
     "defaultTrack": "northern-lights-curtains"

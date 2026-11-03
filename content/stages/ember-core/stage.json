@@ -486,6 +486,20 @@
         "title": "Heart of the Mountain",
         "kind": "composition",
         "src": "music/main.ts"
+      },
+      {
+        "id": "ember-core-tectonic",
+        "title": "Tectonic",
+        "kind": "composition",
+        "src": "music/tectonic.ts",
+        "bpm": 150
+      },
+      {
+        "id": "ember-core-caldera-rite",
+        "title": "Caldera Rite",
+        "kind": "composition",
+        "src": "music/caldera-rite.ts",
+        "bpm": 144
       }
     ],
     "defaultTrack": "ember-core-heart-of-the-mountain"

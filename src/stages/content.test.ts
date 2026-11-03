@@ -43,6 +43,26 @@ describe('shipped content', () => {
     });
   }
 
+  // Composition tracks: the module's id matches the manifest id, and the tempo the Music Room
+  // shows (the track's `bpm`, else the stage's) is the composition's own.
+  const compositions = import.meta.glob('/content/**/music/*.ts', { eager: true, import: 'default' }) as Record<string, { id: string; bpm: number }>;
+  for (const stage of stages) {
+    const m = stage.manifest;
+    if (!m) continue;
+    it(`stage "${stage.id}" lists its compositions with their own ids and tempos`, () => {
+      const ids = m.music.tracks.map((t) => t.id);
+      expect(new Set(ids).size, 'track ids are unique').toBe(ids.length);
+      const defaultSpec = m.music.tracks.find((t) => t.id === m.music.defaultTrack) ?? m.music.tracks[0];
+      for (const t of m.music.tracks.filter((x) => x.kind === 'composition')) {
+        const comp = compositions[`${stage.dir}/${t.src.replace(/^\.\//, '')}`];
+        expect(comp, `${t.id}: ${t.src}`).toBeDefined();
+        expect(comp?.id, `${t.src} composition id`).toBe(t.id);
+        expect(t.bpm ?? m.music.bpm, `${t.id} tempo`).toBe(comp?.bpm);
+      }
+      if (defaultSpec?.kind === 'composition') expect(m.music.bpm, 'music.bpm is the default track tempo').toBe(compositions[`${stage.dir}/${defaultSpec.src.replace(/^\.\//, '')}`]?.bpm);
+    });
+  }
+
   for (const [path, raw] of Object.entries(reactivityProfileFiles())) {
     it(`reactivity profile ${path.slice(path.lastIndexOf('/') + 1)} is valid`, () => {
       const parsed = reactivityProfileSchema.safeParse(raw);

@@ -480,6 +480,20 @@
         "title": "Caravan of Embers",
         "kind": "composition",
         "src": "music/main.ts"
+      },
+      {
+        "id": "moving-sands-sirocco",
+        "title": "Sirocco",
+        "kind": "composition",
+        "src": "music/sirocco.ts",
+        "bpm": 168
+      },
+      {
+        "id": "moving-sands-salt-road",
+        "title": "Salt Road",
+        "kind": "composition",
+        "src": "music/salt-road.ts",
+        "bpm": 122
       }
     ],
     "defaultTrack": "moving-sands-caravan-of-embers"

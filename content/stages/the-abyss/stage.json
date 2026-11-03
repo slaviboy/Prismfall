@@ -449,6 +449,20 @@
         "title": "Pressure and Light",
         "kind": "composition",
         "src": "music/main.ts"
+      },
+      {
+        "id": "the-abyss-silver-schools",
+        "title": "Silver Schools",
+        "kind": "composition",
+        "src": "music/silver-schools.ts",
+        "bpm": 114
+      },
+      {
+        "id": "the-abyss-moon-jellies",
+        "title": "Moon Jellies",
+        "kind": "composition",
+        "src": "music/moon-jellies.ts",
+        "bpm": 120
       }
     ],
     "defaultTrack": "the-abyss-pressure-and-light"

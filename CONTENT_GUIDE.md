@@ -319,7 +319,7 @@ A profile file is `{ "description": "…", "bindings": [ … ] }` with at least 
 
 ## 7. Step 4: music
 
-`music` lists the stage's tracks; the track named by `defaultTrack` (or the first one) plays in the stage:
+`music` lists the stage's tracks. The track named by `defaultTrack` (or the first one) is the world's main track: it plays in the menus, in world previews, in the sound test and in Voyage. In free play with each world's own music, a world's tracks take turns: the first game in the world plays the main track, and each later game plays the next track in this list, wrapping around.
 
 ```json
 "music": {
@@ -330,7 +330,7 @@ A profile file is `{ "description": "…", "bindings": [ … ] }` with at least 
 }
 ```
 
-A track has `id`, `title`, `kind` (`composition` or `file`), `src`, optional `meta` (file tracks) and `artist` (default `Prismfall`). Keep `music.bpm` equal to the default track's tempo. It is the fallback tempo when the composition cannot be loaded, and the Music Room lists it as the BPM of every track in the stage.
+A track has `id`, `title`, `kind` (`composition` or `file`), `src`, optional `meta` (file tracks) and `artist` (default `Prismfall`). Keep `music.bpm` equal to the default track's tempo. It is the fallback tempo when the composition cannot be loaded. Give any other track whose tempo differs its own `bpm`, which the Music Room and world selection show. `content.test.ts` checks that each composition's `id` and `bpm` match its entry.
 
 ### Composition tracks
 
@@ -380,7 +380,9 @@ export default composition({
 | Field | Meaning |
 |---|---|
 | `key`, `scale` | Root note (`C` … `B`, with `#` or `b`) and one of `major`, `minor`, `dorian`, `phrygian`, `lydian`, `mixolydian`, `harmonicMinor`, `phrygianDominant`, `pentatonicMinor`, `pentatonicMajor`, `inScale`, `yoScale`. |
+| `beatsPerBar` | Beats per bar; a bar has four steps per beat. 3 and 5 give 3/4 and 5/4. For 6/8, use 6 with the eighth note as the beat (count `bpm` in eighths), so the beat clock pulses on every eighth. |
 | `swing` | 0 to 0.5; delays every off-beat sixteenth. |
+| `shuffle` | Optional eighth-note swing in steps: delays every off-beat eighth. 0.67 is a triplet shuffle; add `swing` 0.33 so the other sixteenths follow the triplet grid. |
 | `space` | Reverb `{ decay, wet, damping }` (default 3.2, 0.32, 0.5). |
 | `stinger` | Instrument for gameplay flourishes (clears, level-ups), quantised to the next sixteenth. Without it the first `bell`, `pluck`, `mallet` or `epiano` instrument is used. |
 | `instruments` | Named instruments. `kind` is one of `pad`, `strings`, `choir`, `pluck`, `lead`, `bass`, `sub`, `bell`, `epiano`, `mallet`, `kick`, `snare`, `clap`, `hat`, `openhat`, `ride`, `shaker`, `tom`, `perc`, `crash`, `riser`, `impact`. Common options are `gain`, `pan`, `reverb` and `delay` sends, `layer` and `duck`. Synth options (`wave`, `cutoff`, `resonance`, `attack`, `decay`, `sustain`, `release`, `detune`, `voices`, `ratio`, `index`, `envAmount`, `drive`, `tone`) are interpreted per kind. `glide` (seconds, lead instruments) slides each note of a phrase from the previous pitch; notes that start together or more than 2 s apart don't glide. |
@@ -394,14 +396,14 @@ Chords are diatonic Roman numerals with optional suffixes `7`, `9`, `sus2`, `sus
 | Generator | Writes |
 |---|---|
 | `hold({ octave, voicing, vel, every })` | The bar's chord held for the bar, or for `every` bars (pads, strings). `voicing`: `close`, `open`, `spread`. |
-| `arp({ rate, octave, span, order, gate, vel, accent, startBar })` | Arpeggio of the bar's chord. `order`: `up`, `down`, `updown`, `random`, `pendulum`; `rate` is in sixteenths. |
+| `arp({ rate, octave, span, order, gate, vel, accent, startBar, ramp })` | Arpeggio of the bar's chord. `order`: `up`, `down`, `updown`, `random`, `pendulum`; `rate` is in sixteenths. |
 | `bassline(pattern, { octave, fifths, octaves, gate, vel })` | Chord roots on a rhythm, with a chance of fifths and octave jumps. |
-| `beat(pattern, { vel, prob, fillLastBar })` | Drum pattern repeated over the section; `prob` thins unaccented hits deterministically. |
-| `melody(phrase, { octave, vel, gate, bars })` | Scale degrees with durations in sixteenths: `"1:4 3:2 5:2 -:4 6':4"`. `'` raises an octave, `,` lowers one, `-` is a rest, `\|` is ignored. The phrase repeats to fill the section. |
+| `beat(pattern, { vel, prob, fillLastBar, ramp })` | Drum pattern repeated over the section; `prob` thins unaccented hits deterministically. |
+| `melody(phrase, { octave, vel, gate, bars, ramp })` | Scale degrees with durations in sixteenths: `"1:4 3:2 5:2 -:4 6':4"`. `'` raises an octave, `,` lowers one, `-` is a rest, `\|` is ignored. The phrase repeats to fill the section. |
 | `stab(pattern, { octave, voicing, gate, vel })` | Chord stabs on a rhythm. |
 | `once({ step, dur, vel, note })` | One event at the section start (risers, impacts, crashes). |
 
-Patterns use one character per sixteenth: `x` hit, `X` accent, `o` ghost, `.` rest. Spaces and `|` are ignored. Expansion is deterministic: each part has a random generator seeded from the track id, section name and instrument.
+`ramp: [from, to]` scales the velocity of `arp`, `beat` and `melody` linearly across the section, for crescendos in builds and fades in outros. Patterns use one character per sixteenth: `x` hit, `X` accent, `o` ghost, `.` rest. Spaces and `|` are ignored. Expansion is deterministic: each part has a random generator seeded from the track id, section name and instrument.
 
 ### File tracks
 

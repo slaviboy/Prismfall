@@ -50,7 +50,8 @@ function WorldDetails(props: { info: StageInfo | undefined; locked: boolean }): 
       <p className="world-details-desc">{m.description}</p>
       {track ? (
         <p className="world-details-music">
-          Music: {track.title}, {m.music.bpm} BPM
+          Music: {track.title}, {track.bpm ?? m.music.bpm} BPM
+          {m.music.tracks.length > 1 ? `. Its ${m.music.tracks.length} tracks take turns, one per game.` : null}
         </p>
       ) : null}
       {props.locked ? <p className="world-details-lock">{unlockHint(m, name)}</p> : null}

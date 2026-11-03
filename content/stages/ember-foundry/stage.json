@@ -414,6 +414,13 @@
         "title": "Anvil Pulse",
         "kind": "composition",
         "src": "music/main.ts"
+      },
+      {
+        "id": "ember-foundry-steam-hammer",
+        "title": "Steam Hammer",
+        "kind": "composition",
+        "src": "music/steam-hammer.ts",
+        "bpm": 112
       }
     ],
     "defaultTrack": "ember-foundry-anvil-pulse"

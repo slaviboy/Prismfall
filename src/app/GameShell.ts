@@ -44,6 +44,7 @@ import type { Composition } from '../audio/sequencer/composition';
 import { loadMusicModule, readTrackMeta, resolveAsset, type StageInfo } from '../stages/registry';
 import { UserMusicLibrary } from '../audio/library/UserMusic';
 import type { FileTrackMeta } from '../audio/music-director/tracks';
+import { TrackRotation } from '../audio/music-director/trackRotation';
 import { resolveMaterialAudio, type MaterialAudioInput } from '../audio/sound-effects/materialAudio';
 import type { StageManifest } from '../stages/schema';
 
@@ -119,6 +120,10 @@ export class GameShell {
   readonly userMusic = new UserMusicLibrary(() => this.backend ?? null);
   /** Track playing instead of the world's music (Music Room, free-play choice); null = world music. */
   currentTrackId: string | null = null;
+  /** World music in free play: each world's tracks take turns, game by game (in memory only). */
+  readonly worldRotation = new TrackRotation();
+  /** The world track chosen for the game in progress; menus and previews use each world's default track. */
+  private gameWorldTrack: { stageId: string; trackId: string } | null = null;
   /** Voyage run in progress (null in other modes). */
   voyage: VoyageRun | null = null;
   private readonly voyagePreloaded = new Set<string>();
@@ -234,11 +239,21 @@ export class GameShell {
   /** Increments on every stage-audio request, so a slow load can't replace a newer world's music. */
   private stageAudioRequest = 0;
 
-  private async loadStageAudio(info: StageInfo): Promise<void> {
+  /** A world's default track id (the one menus, previews and Voyage play). */
+  private static defaultTrackId(m: StageManifest): string | undefined {
+    return (m.music.tracks.find((t) => t.id === m.music.defaultTrack) ?? m.music.tracks[0])?.id;
+  }
+
+  /**
+   * Loads a world's music and sound palette: `trackId`, else the track chosen for the game in
+   * progress in that world, else its default track.
+   */
+  private async loadStageAudio(info: StageInfo, trackId?: string): Promise<void> {
     const m = info.manifest;
     if (!m) return;
     const request = ++this.stageAudioRequest;
-    const trackSpec = m.music.tracks.find((t) => t.id === m.music.defaultTrack) ?? m.music.tracks[0];
+    const wanted = trackId ?? (this.gameWorldTrack?.stageId === m.id ? this.gameWorldTrack.trackId : GameShell.defaultTrackId(m));
+    const trackSpec = m.music.tracks.find((t) => t.id === wanted) ?? m.music.tracks.find((t) => t.id === m.music.defaultTrack) ?? m.music.tracks[0];
     let composition: Composition | null = null;
     if (trackSpec?.kind === 'composition') {
       try {
@@ -250,6 +265,7 @@ export class GameShell {
     const file = trackSpec?.kind === 'file' ? this.fileTrack(info, trackSpec.src, trackSpec.meta, trackSpec.title) : null;
     const stageAudio: StageAudio = {
       id: m.id,
+      trackId: trackSpec?.id,
       bpm: composition?.bpm ?? file?.meta.bpm ?? m.music.bpm,
       beatsPerBar: composition?.beatsPerBar ?? file?.meta.beatsPerBar ?? m.music.beatsPerBar,
       composition,
@@ -344,7 +360,8 @@ export class GameShell {
   /** A short note naming the music at the start of a game, so the player always knows what plays. */
   private announceTrack(stageId: string): void {
     const m = getStage(stageId)?.manifest;
-    const own = m?.music.tracks.find((t) => t.id === m.music.defaultTrack) ?? m?.music.tracks[0];
+    const ownId = this.gameWorldTrack?.stageId === stageId ? this.gameWorldTrack.trackId : m ? GameShell.defaultTrackId(m) : undefined;
+    const own = m?.music.tracks.find((t) => t.id === ownId);
     const override = this.currentTrackId;
     void (override ? this.catalog().then((c) => c.find((t) => t.id === override)?.title) : Promise.resolve(own?.title)).then((title) => {
       if (title) toast(`Now playing: ${title}`, 'info', 3500);
@@ -588,9 +605,15 @@ export class GameShell {
       }
     }
     await this.ensureStage(options.stageId);
-    // The world may have been previewed without its music (music previews off).
     const stageInfo = getStage(options.stageId);
-    if (stageInfo?.available && this.audio.stageId !== options.stageId) await this.loadStageAudio(stageInfo);
+    const manifest = stageInfo?.manifest;
+    // Free play with world music: the world's tracks take turns, one game each (the first game
+    // plays its default track). Menus, world previews and Voyage keep each world's default track.
+    const turn = options.modeId !== 'voyage' && getSettings().setup.music === 'stage' && manifest ? this.worldRotation.next(manifest.id, manifest.music.tracks.map((t) => t.id), manifest.music.defaultTrack) : undefined;
+    this.gameWorldTrack = turn && manifest ? { stageId: manifest.id, trackId: turn } : null;
+    const wanted = turn ?? (manifest ? GameShell.defaultTrackId(manifest) : undefined);
+    // The world may have been previewed without its music (music previews off), or be playing another of its tracks.
+    if (stageInfo?.available && (this.audio.stageId !== options.stageId || this.audio.stage?.trackId !== wanted)) await this.loadStageAudio(stageInfo, wanted);
     if (options.modeId === 'voyage') await this.playTrack(null);
     else await this.applyFreePlayMusic();
     this.announceTrack(options.stageId);
@@ -748,8 +771,11 @@ export class GameShell {
   private endSessionView(): void {
     if (this.audio.director.paused) this.audio.resume();
     this.clearVoyage();
-    // Menus play the world's own music again.
+    // Menus play the world's own music again, on its default track.
+    this.gameWorldTrack = null;
     void this.playTrack(null);
+    const info = this.audio.stageId ? getStage(this.audio.stageId) : undefined;
+    if (info?.manifest && this.audio.stage?.trackId !== GameShell.defaultTrackId(info.manifest)) void this.loadStageAudio(info);
     this.session = null;
     this.stopReplay();
     hudStore.setState({ visible: false, callouts: [] });

@@ -258,7 +258,7 @@ export const AUDIO_TAB: TabDef = {
         { value: 'stop', label: 'Stop' },
       ],
     },
-    { kind: 'toggle', section: 'audio', key: 'musicPreview', label: 'Preview music while choosing', description: 'Browsing worlds plays each world’s music; otherwise the current music keeps playing until the game starts.' },
+    { kind: 'toggle', section: 'audio', key: 'musicPreview', label: 'Preview music while choosing', description: 'Browsing worlds plays each world’s main track; otherwise the current music keeps playing until the game starts.' },
     {
       kind: 'toggle',
       section: 'audio',

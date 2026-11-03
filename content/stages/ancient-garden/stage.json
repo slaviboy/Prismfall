@@ -217,6 +217,20 @@
         "title": "Lanterns on Still Water",
         "kind": "composition",
         "src": "music/main.ts"
+      },
+      {
+        "id": "ancient-garden-hanami-drums",
+        "title": "Hanami Drums",
+        "kind": "composition",
+        "src": "music/hanami-drums.ts",
+        "bpm": 116
+      },
+      {
+        "id": "ancient-garden-maple-shade",
+        "title": "Maple Shade",
+        "kind": "composition",
+        "src": "music/maple-shade.ts",
+        "bpm": 70
       }
     ],
     "defaultTrack": "ancient-garden-lanterns"

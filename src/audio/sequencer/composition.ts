@@ -105,6 +105,11 @@ export interface Composition {
   readonly scale: ScaleName;
   /** 0..0.5 delays every off-beat sixteenth. */
   readonly swing: number;
+  /**
+   * Eighth-note swing in sixteenth steps: delays every off-beat eighth (the "and" of each beat).
+   * 0.67 is a triplet shuffle; with `swing` 0.33 the other sixteenths follow the triplet grid.
+   */
+  readonly shuffle?: number;
   readonly instruments: Readonly<Record<string, InstrumentSpec>>;
   readonly sections: readonly SectionSpec[];
   /** Section index the music loops back to after the last section. */
@@ -135,6 +140,11 @@ function hashString(text: string): number {
   let h = 2166136261;
   for (let i = 0; i < text.length; i++) h = Math.imul(h ^ text.charCodeAt(i), 16777619);
   return h >>> 0;
+}
+
+/** Velocity scale at `step` of `total` for a `[from, to]` crescendo/decrescendo (1 without a ramp). */
+function rampAt(ramp: readonly [number, number] | undefined, step: number, total: number): number {
+  return ramp ? ramp[0] + (ramp[1] - ramp[0]) * Math.min(1, Math.max(0, step / Math.max(1, total))) : 1;
 }
 
 /** Parses "x...x.x." style patterns: x = hit, X = accent, o = ghost, . = rest. */
@@ -169,7 +179,7 @@ export function hold(opts: { octave?: number; voicing?: 'close' | 'open' | 'spre
 }
 
 /** Arpeggiates the bar's chord. */
-export function arp(opts: { rate?: number; octave?: number; span?: number; order?: 'up' | 'down' | 'updown' | 'random' | 'pendulum'; gate?: number; vel?: number; accent?: number; startBar?: number } = {}): PartGenerator {
+export function arp(opts: { rate?: number; octave?: number; span?: number; order?: 'up' | 'down' | 'updown' | 'random' | 'pendulum'; gate?: number; vel?: number; accent?: number; startBar?: number; ramp?: readonly [number, number] } = {}): PartGenerator {
   return (ctx) => {
     const out: NoteEvent[] = [];
     const rate = opts.rate ?? 2;
@@ -185,7 +195,8 @@ export function arp(opts: { rate?: number; octave?: number; span?: number; order
       for (let s = 0, i = 0; s < stepsPerBar; s += rate, i++) {
         const note = opts.order === 'random' ? (notes[Math.floor(ctx.rand() * notes.length)] as number) : (seq[i % seq.length] as number);
         const accent = s % (STEPS_PER_BEAT * 2) === 0 ? (opts.accent ?? 0.15) : 0;
-        out.push({ inst: ctx.inst, step: bar * stepsPerBar + s, note, dur: rate * (opts.gate ?? 0.8), vel: Math.min(1, (opts.vel ?? 0.55) + accent + (ctx.rand() - 0.5) * 0.08) });
+        const step = bar * stepsPerBar + s;
+        out.push({ inst: ctx.inst, step, note, dur: rate * (opts.gate ?? 0.8), vel: Math.min(1, ((opts.vel ?? 0.55) + accent + (ctx.rand() - 0.5) * 0.08) * rampAt(opts.ramp, step, ctx.bars * stepsPerBar)) });
       }
     }
     return out;
@@ -219,7 +230,7 @@ export function bassline(pattern: string, opts: { octave?: number; fifths?: numb
 }
 
 /** Drum/percussion pattern repeated over the section. `prob` thins hits deterministically. */
-export function beat(pattern: string, opts: { vel?: number; prob?: number; fillLastBar?: string } = {}): PartGenerator {
+export function beat(pattern: string, opts: { vel?: number; prob?: number; fillLastBar?: string; ramp?: readonly [number, number] } = {}): PartGenerator {
   const hits = parsePattern(pattern);
   const len = pattern.replace(/[\s|]/g, '').length;
   return (ctx) => {
@@ -233,7 +244,7 @@ export function beat(pattern: string, opts: { vel?: number; prob?: number; fillL
         const step = start + h.step;
         if (step >= total) continue;
         if (opts.prob !== undefined && ctx.rand() > opts.prob && h.vel < 1) continue;
-        out.push({ inst: ctx.inst, step, note: 60, dur: 1, vel: (opts.vel ?? 1) * h.vel * (0.94 + ctx.rand() * 0.12) });
+        out.push({ inst: ctx.inst, step, note: 60, dur: 1, vel: (opts.vel ?? 1) * h.vel * (0.94 + ctx.rand() * 0.12) * rampAt(opts.ramp, step, total) });
       }
     }
     return out;
@@ -244,7 +255,7 @@ export function beat(pattern: string, opts: { vel?: number; prob?: number; fillL
  * Melody from scale degrees with durations in steps: "1:4 3:2 5:2 -:4 6':4".
  * `'` raises an octave, `,` lowers; `-` is a rest. The phrase repeats to fill the section.
  */
-export function melody(phrase: string, opts: { octave?: number; vel?: number; gate?: number; bars?: number } = {}): PartGenerator {
+export function melody(phrase: string, opts: { octave?: number; vel?: number; gate?: number; bars?: number; ramp?: readonly [number, number] } = {}): PartGenerator {
   const tokens = phrase.replace(/\|/g, ' ').split(/\s+/).filter(Boolean);
   return (ctx) => {
     const out: NoteEvent[] = [];
@@ -262,7 +273,7 @@ export function melody(phrase: string, opts: { octave?: number; vel?: number; ga
           const down = (deg.match(/,/g) ?? []).length;
           const d = Number(deg.replace(/['|,]/g, ''));
           const note = degreeToMidi(ctx.key, ctx.scale, d, (opts.octave ?? 4) + up - down);
-          out.push({ inst: ctx.inst, step, note, dur: dur * (opts.gate ?? 0.9), vel: (opts.vel ?? 0.6) * (0.92 + ctx.rand() * 0.16) });
+          out.push({ inst: ctx.inst, step, note, dur: dur * (opts.gate ?? 0.9), vel: (opts.vel ?? 0.6) * (0.92 + ctx.rand() * 0.16) * rampAt(opts.ramp, step, total) });
         }
         step += dur;
       }
@@ -319,7 +330,8 @@ export function expandComposition(c: Composition): ExpandedSection[] {
       gens.forEach((g, gi) => {
         const rand = seededRandom(hashString(`${c.id}:${spec.name}:${inst}:${gi}`));
         for (const e of g({ inst, bars: spec.bars, beatsPerBar: c.beatsPerBar, key: c.key, scale: c.scale, chords, rand })) {
-          const swung = c.swing > 0 && Math.floor(e.step) % 2 === 1 ? e.step + c.swing : e.step;
+          let swung = c.swing > 0 && Math.floor(e.step) % 2 === 1 ? e.step + c.swing : e.step;
+          if ((c.shuffle ?? 0) > 0 && e.step % STEPS_PER_BEAT === 2) swung += c.shuffle as number;
           events.push({ ...e, step: swung });
         }
       });

@@ -41,6 +41,60 @@ test.describe('audio engine', () => {
     expect(await hooks<number>(page, 'h.shell.audio.director.current?.composition?.bpm ?? 0')).toBe(desertBpm);
   });
 
+  test("world music: a world's tracks take turns game by game, menus keep the default, shuffle and a chosen track still work", async ({ page }) => {
+    test.setTimeout(180_000);
+    await openMenu(page);
+    await expect.poll(() => hooks<string>(page, 'h.shell.audio.engine.state'), { timeout: 10_000 }).toBe('running');
+    const world = await hooks<{ id: string; tracks: string[]; first: string }>(
+      page,
+      '(() => { const s = h.shell.stageManager.stages().filter((x) => x.available && x.manifest.music.tracks.length > 1).sort((a, b) => b.manifest.music.tracks.length - a.manifest.music.tracks.length)[0]; const m = s.manifest.music; return { id: s.id, tracks: m.tracks.map((t) => t.id), first: m.defaultTrack ?? m.tracks[0].id }; })()',
+    );
+    const setup = (patch: Record<string, unknown>): Promise<void> => page.evaluate((p) => (window as unknown as { __PRISMFALL__: { updateSection(s: string, p: unknown): void } }).__PRISMFALL__.updateSection('setup', p), patch);
+    await setup({ unlockAll: true, stageId: world.id, music: 'stage' });
+    const playing = (): Promise<string | undefined> => hooks<string | undefined>(page, 'h.shell.audio.director.current?.id');
+    const startZen = async (): Promise<void> => {
+      await page.getByTestId('menu-play').click();
+      await page.getByTestId('mode-zen').click();
+      await page.getByTestId('setup-start').click();
+      await expect.poll(() => hooks<string>(page, 'h.shell.session?.status'), { timeout: 20_000 }).toBe('running');
+    };
+    const quit = async (): Promise<void> => {
+      await page.keyboard.press('Escape');
+      await page.getByTestId('pause-quit').click();
+      await expect(page.getByTestId('main-menu')).toBeVisible();
+    };
+    // Expected order: the default track first, then manifest order from there, wrapping around.
+    const start = world.tracks.indexOf(world.first);
+    const order = Array.from({ length: world.tracks.length + 1 }, (_, i) => world.tracks[(start + i) % world.tracks.length] as string);
+    for (const expected of order) {
+      await startZen();
+      await expect.poll(playing, { timeout: 20_000 }).toBe(expected);
+      expect(await hooks<string | undefined>(page, 'h.shell.audio.stage?.trackId')).toBe(expected);
+      expect(await hooks<string | null>(page, 'h.shell.currentTrackId')).toBeNull();
+      await quit();
+      // Back in the menus the world plays its default track again.
+      await expect.poll(playing, { timeout: 20_000 }).toBe(world.first);
+    }
+    // A chosen track plays as chosen (and does not move the turn on).
+    const chosen = world.tracks.find((t) => t !== world.first) as string;
+    await setup({ music: `stage:${world.id}:${chosen}` });
+    await startZen();
+    await expect.poll(playing, { timeout: 20_000 }).toBe(chosen);
+    expect(await hooks<string | null>(page, 'h.shell.currentTrackId')).toBe(`stage:${world.id}:${chosen}`);
+    await quit();
+    await expect.poll(() => hooks<string | null>(page, 'h.shell.currentTrackId')).toBeNull();
+    await expect.poll(playing, { timeout: 20_000 }).toBe(world.first);
+    // Shuffle picks some catalog track.
+    await setup({ music: 'shuffle' });
+    await startZen();
+    await expect.poll(() => hooks<string | null>(page, 'h.shell.currentTrackId'), { timeout: 20_000 }).toMatch(/^(stage|user):/);
+    await quit();
+    // World music again: the turn continues after the last world-music game.
+    await setup({ music: 'stage' });
+    await startZen();
+    await expect.poll(playing, { timeout: 20_000 }).toBe(order[1]);
+  });
+
   test('mute silences the output and volume scales it', async ({ page }) => {
     await openMenu(page);
     await expect.poll(() => hooks<number>(page, 'h.shell.audio.engine.outputRms()'), { timeout: 15_000 }).toBeGreaterThan(0.004);

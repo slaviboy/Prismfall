@@ -59,6 +59,23 @@ describe('composition DSL', () => {
     for (const e of lead) expect(e.step % 1).toBeCloseTo(0.2);
   });
 
+  it('shuffles off-beat eighths and ramps velocities across a section', () => {
+    const c = composition({ ...demo, swing: 0, shuffle: 0.67, sections: [{ ...demo.sections[0]!, parts: { kick: beat('x.x.x.x.x.x.x.x.', { ramp: [0.2, 1] }), lead: melody('1:2 2:2', { ramp: [1, 0.5] }) } }] });
+    const events = expandComposition(c)[0]!.events;
+    const kicks = events.filter((e) => e.inst === 'kick');
+    // Downbeats stay; every off-beat eighth moves to the triplet position.
+    expect(kicks.filter((e) => e.step % STEPS_PER_BEAT === 0)).toHaveLength(8);
+    const offbeats = kicks.filter((e) => Math.floor(e.step) % STEPS_PER_BEAT === 2);
+    expect(offbeats).toHaveLength(8);
+    for (const e of offbeats) expect(e.step % STEPS_PER_BEAT).toBeCloseTo(2.67);
+    // The kick crescendos and the melody fades.
+    expect(kicks[kicks.length - 1]!.vel).toBeGreaterThan(kicks[0]!.vel * 2.5);
+    const lead = events.filter((e) => e.inst === 'lead');
+    expect(lead[lead.length - 1]!.vel).toBeLessThan(lead[0]!.vel * 0.7);
+    // Without the options nothing changes.
+    expect(expandComposition({ ...c, shuffle: undefined })[0]!.events.filter((e) => e.inst === 'kick').every((e) => Number.isInteger(e.step))).toBe(true);
+  });
+
   it('rejects unknown instruments', () => {
     expect(() => expandComposition({ ...demo, sections: [{ ...demo.sections[0]!, parts: { ghost: hold() } }] })).toThrow(/unknown instrument/);
   });

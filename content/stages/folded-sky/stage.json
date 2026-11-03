@@ -209,6 +209,13 @@
         "title": "Paper Wind",
         "kind": "composition",
         "src": "music/main.ts"
+      },
+      {
+        "id": "folded-sky-seeds-on-the-wind",
+        "title": "Seeds on the Wind",
+        "kind": "composition",
+        "src": "music/seeds-on-the-wind.ts",
+        "bpm": 102
       }
     ],
     "defaultTrack": "folded-sky-paper-wind"

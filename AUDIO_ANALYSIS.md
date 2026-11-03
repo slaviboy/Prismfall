@@ -207,7 +207,9 @@ The spec enforces these thresholds:
 | Response steps | no energy step above 0.35 per hop |
 | Signal integrity | peak ≤ −1 dBFS, no NaN, no DC, all features within 0..1 |
 
-The same spec checks every SFX in every preset and the first 24 s of every shipped track for peak level, NaN and DC.
+The same spec checks every SFX in every preset, and the opening and loudest section (12 s each) of every shipped track, for peak level, NaN and DC.
+
+`e2e/audio-tracks.spec.ts` (on demand: `AUDIO_TRACKS=1`) renders every manifest track's whole first pass plus the loop seam (`src/audio/lab/trackReport.ts`) and checks headroom, DC, gated loudness (BS.1770) against the soundtrack's median, the balance of low, mid and high bands, the loudness range between sections, and onsets and flux in each track's most intense section. Results go to `test-results/audio-tracks.json`.
 
 ## 8. Profiling: analysis path and FFT size
 

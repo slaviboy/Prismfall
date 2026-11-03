@@ -111,9 +111,9 @@ export function MusicRoom(): ReactNode {
     >
       <ChoiceRow
         label="Music in free play"
-        description="Marathon, Sprint, Ultra, Zen and Practice. Voyage always plays each world’s own music."
+        description="Marathon, Sprint, Ultra, Zen and Practice. With each world’s own music, a world’s tracks take turns: the first game there plays its main track, each later game the next one. Voyage always plays each world’s main track."
         value={tracks.some((t) => t.id === freePlay) || freePlay === 'stage' || freePlay === 'shuffle' ? freePlay : 'stage'}
-        options={[{ value: 'stage', label: 'Each world’s own' }, { value: 'shuffle', label: 'Shuffle all' }, ...tracks.map((t) => ({ value: t.id, label: t.title }))]}
+        options={[{ value: 'stage', label: 'Each world’s own, taking turns' }, { value: 'shuffle', label: 'Shuffle all' }, ...tracks.map((t) => ({ value: t.id, label: t.title }))]}
         onChange={(v) => updateSection('setup', { music: v })}
         testId="music-freeplay"
       />

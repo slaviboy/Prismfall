@@ -112,8 +112,8 @@ How to read the Evidence column:
 | Requirement | Status | Evidence |
 |---|---|---|
 | Music, SFX and ambience channels; master and individual volumes; mute; enable and disable | Done | `AudioEngine.ts`; `e2e/audio.spec.ts` ("mute silences the output and volume scales it"), `e2e/audio-settings.spec.ts` |
-| Track selection, looping, fades, transitions, pause and resume | Done | `src/audio/music-director/`, `src/ui/menus/MusicRoom.tsx`; `e2e/audio.spec.ts` (bar-line crossfade, stop-mode pause), `e2e/music-room.spec.ts` |
-| Original music | Done / Manual check | 14 procedural compositions in `content/stages/*/music/*.ts`; `composition.test.ts`. Musical quality is a manual check |
+| Track selection, looping, fades, transitions, pause and resume | Done | `src/audio/music-director/`, `src/ui/menus/MusicRoom.tsx`; a world's tracks take turns game by game in free play (`trackRotation.ts`); `trackRotation.test.ts`, `e2e/audio.spec.ts` (bar-line crossfade, stop-mode pause, tracks taking turns), `e2e/music-room.spec.ts` |
+| Original music | Done / Manual check | 34 procedural compositions in `content/stages/*/music/*.ts`; `composition.test.ts`, `content.test.ts`; whole-track mix measurements in `e2e/audio-tracks.spec.ts` (on demand). Musical quality is a manual check |
 | Architecture for the owner's own audio files | Done | `FileTrackPlayer` in `src/audio/music-director/tracks.ts`, `src/audio/library/UserMusic.ts`; `tracks.test.ts`, `e2e/audio.spec.ts` (WAV with beat metadata) |
 | Beat metadata: BPM, beat and bar position, sections, intensity, cues | Done | `src/audio/sequencer/composition.ts`, `tracks.ts`; `tracks.test.ts` |
 | Analyser-driven reactivity; gameplay never depends on analysis | Done | `src/audio/analysis/`, `src/rendering/environments/reactivity.ts`; `reactivity.test.ts`, `e2e/stages.spec.ts` |
@@ -344,7 +344,7 @@ How to read the Evidence column:
 
 | Requirement | Status | Evidence |
 |---|---|---|
-| A. An original soundtrack per world | Done / Manual check | 13 worlds, 14 compositions (Deep Cosmos has two), each with its own tempo and instrumentation. All are procedural; listening review pending |
+| A. An original soundtrack per world | Done / Manual check | 13 worlds, 34 compositions (two or three per world), each with its own tempo, meter, key and instrumentation; in free play a world's tracks take turns. All are procedural; listening review pending |
 | B. Adaptive layers and sections that follow gameplay (calm, active, combo, climax, pause, transitions) | Done | Layer thresholds in `composition.ts`, intensity in `src/audio/AudioSystem.ts`, stems for recorded tracks in `tracks.ts`; `tracks.test.ts` (stems in sync, fading by intensity) |
 | C. Full event library: spawn, move, both rotations, drops, lock, clears 1–4, hold, combo, back-to-back, spin, level up, stage complete, game over, pause, resume, menu sounds, unlock | Done | `SFX_IDS` in `SfxBank.ts`; `e2e/audio-acceptance.spec.ts` (headroom, no NaN or DC) |
 | D. Material-aware impact profiles per world | Done | 14 profiles in `src/audio/sound-effects/materialAudio.ts`, `impactSynth.ts`; `impactSynth.test.ts`, `e2e/audio-acceptance.spec.ts` ("hard drop outweighs lock and soft drop, and each world has its own colour") |

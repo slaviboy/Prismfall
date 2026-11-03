@@ -158,6 +158,13 @@
         "title": "Where the Fireflies Gather",
         "kind": "composition",
         "src": "music/main.ts"
+      },
+      {
+        "id": "enchanted-wilderness-through-the-ferns",
+        "title": "Through the Ferns",
+        "kind": "composition",
+        "src": "music/through-the-ferns.ts",
+        "bpm": 110
       }
     ],
     "defaultTrack": "enchanted-wilderness-fireflies"

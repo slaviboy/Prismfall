@@ -447,6 +447,20 @@
         "title": "Glass Meridian",
         "kind": "composition",
         "src": "music/main.ts"
+      },
+      {
+        "id": "frozen-kingdom-hoarfrost-waltz",
+        "title": "Hoarfrost Waltz",
+        "kind": "composition",
+        "src": "music/hoarfrost-waltz.ts",
+        "bpm": 138
+      },
+      {
+        "id": "frozen-kingdom-diamond-dust",
+        "title": "Diamond Dust",
+        "kind": "composition",
+        "src": "music/diamond-dust.ts",
+        "bpm": 132
       }
     ],
     "defaultTrack": "frozen-kingdom-glass-meridian"

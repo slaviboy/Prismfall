@@ -317,6 +317,13 @@
         "kind": "composition",
         "src": "music/main.ts",
         "bpm": 92
+      },
+      {
+        "id": "celestial-drift-hidden-sun",
+        "title": "Hidden Sun",
+        "kind": "composition",
+        "src": "music/hidden-sun.ts",
+        "bpm": 64
       }
     ],
     "defaultTrack": "celestial-drift-leviathan"

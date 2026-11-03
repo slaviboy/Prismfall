@@ -33,7 +33,13 @@ Each composition has a convolution reverb whose impulse response is generated pr
 
 The arrangement adapts to play. Game intensity rises with level, combos, recent clears and a high stack (`AudioSystem`). Once per bar, each instrument with a `layer` threshold opens when `min(1, sectionIntensity × 0.65 + gameIntensity × 0.5)` reaches that threshold. Line clears and level-ups trigger a short "stinger" phrase on one instrument, quantised to the next sixteenth and kept in the track's key.
 
-Every track uses the same five-section form: intro (8 bars), verse (16), build (4; 8 in Anvil Pulse), drop (16) and break (8). It loops from the verse (`loopFrom: 1`). The tracks differ in tempo, scale, instrumentation, patterns and melodies, not in structure.
+The first fourteen tracks share one five-section form: intro (8 bars), verse (16), build (4; 8 in Anvil Pulse), drop (16) and break (8), looping from the verse (`loopFrom: 1`). The twenty tracks added after them vary the form: a second verse, bridges, two drops, an outro that leads back into the loop, and three to four minutes per pass. Every track loops from its section 1.
+
+Not every track is in 4/4. `beatsPerBar` sets the bar (sixteen steps per four beats): the waltzes and Seeds on the Wind are in 3/4, Magnetic North and Steam Hammer in 5/4, grouped three plus two. The 6/8 tracks (Sirocco, Moon Jellies, Caldera Rite) use `beatsPerBar: 6` with the eighth note as the beat, so their BPM counts eighths and the beat clock and visuals pulse on every eighth, strongest on the two dotted-quarter pulses. `shuffle` delays every off-beat eighth (0.67 is a triplet shuffle; Through the Ferns and Maple Shade use it), and the `ramp` option of `beat`, `arp` and `melody` crescendos or fades a part across its section, which the builds and outros use.
+
+### Which track plays
+
+A world's default track (`defaultTrack`) plays in the menus, in world previews, in the sound test and in Voyage. In free play with "Each world's own, taking turns" (the default free-play music, `setup.music: 'stage'`), a world's tracks take turns: the first game in a world in a session plays its default track, and each later game there plays the next track in manifest order, wrapping around (`TrackRotation`, `src/audio/music-director/trackRotation.ts`; in memory only, keyed by stage id). Returning to the menus goes back to the default track. "Shuffle all" and a chosen track work as before and do not move a world's turn on.
 
 ### Tracks per stage
 
@@ -55,6 +61,31 @@ Read from each `music/*.ts` file. "Swing" delays off-beat sixteenths (0 to 0.5).
 | Northern Lights | Curtains of the Sky | `music/main.ts` | 80 | B major | 0.03 | pad, warm, strings, seq, keys, lead, sparkle, sub, kick, snap, tick, riser, impact |
 | Future Nights | Afterglow District | `music/main.ts` | 118 | F minor | 0.05 | pad, stabs, arp, lead, bass, sub, kick, clap, hat, openhat, perc, riser, impact |
 | Folded Sky | Paper Wind | `music/main.ts` | 136 | E yo scale | 0.12 | pad, koto, pluck, flute, bass, kick, snare, hat, shaker, riser, impact |
+
+Added tracks (each world's default track is still the one above):
+
+| Stage | Track | File | BPM | Meter | Key and scale | Groove and character |
+|---|---|---|---|---|---|---|
+| Frozen Kingdom | Hoarfrost Waltz | `music/hoarfrost-waltz.ts` | 138 | 3/4 | C# harmonic minor | Ballroom waltz: music box, oom-pah-pah pizzicato and waltz bass, violin-like lead, choir, timpani |
+| Frozen Kingdom | Diamond Dust | `music/diamond-dust.ts` | 132 | 4/4 | G minor | Future-garage 2-step (swing 0.16): deep bass, minor-ninth e-piano stabs, chopped choir, random high bells |
+| Moving Sands | Sirocco | `music/sirocco.ts` | 168 (eighths) | 6/8 | A harmonic minor | Galloping hand-drum storm: darbuka, doum, riq, oud ostinato, qanun runs, reed lead, choir |
+| Moving Sands | Salt Road | `music/salt-road.ts` | 122 | 4/4 | B Phrygian | Desert deep house: four-on-the-floor, rolling bass, oud hook, hand drums, ney-like flute, beatless mirage break |
+| The Abyss | Silver Schools | `music/silver-schools.ts` | 114 | 4/4 | Eb minor | Dub techno: delayed minor-ninth stabs, soft kick, round sub, 3-against-4 bubbles, gliding lure lead |
+| The Abyss | Moon Jellies | `music/moon-jellies.ts` | 120 (eighths) | 6/8 | G# Phrygian | Slow sway: sine pads, deep drum on each dotted beat, sonar pings, water swishes, gliding call, choir |
+| Northern Lights | Solar Wind | `music/solar-wind.ts` | 134 | 4/4 | Ab major | Uplifting trance: off-beat bass, gated saw arpeggios, long choir breakdown, supersaw drop, soaring lead |
+| Northern Lights | Magnetic North | `music/magnetic-north.ts` | 100 | 5/4 | F# Lydian | Broken 3+2 groove, e-piano ostinato that shifts against the bar, wide strings, glass bells, gliding lead |
+| Future Nights | Chrome Rain | `music/chrome-rain.ts` | 174 | 4/4 | B Dorian | Liquid drum and bass: beatless rain intro, two-step break with ghost snares, reese bass and sub, e-piano ninths |
+| Future Nights | Neon Boulevard | `music/neon-boulevard.ts` | 104 | 4/4 | A minor | Synthwave: root-and-octave eighth bass, big snare, sixteenth arpeggios, brass stabs, tom fills, saw lead |
+| Ember Core | Tectonic | `music/tectonic.ts` | 150 | 4/4 | C# Phrygian | Heavy half-time: distorted kick, snare on three, huge sub, growling resonant bass, war toms, choir |
+| Ember Core | Caldera Rite | `music/caldera-rite.ts` | 144 (eighths) | 6/8 | Bb harmonic minor | Fire ritual: taiko and tuned toms, chanting choir, brass stabs, horn line over a dark drone |
+| Ancient Garden | Hanami Drums | `music/hanami-drums.ts` | 116 | 4/4 | F yo scale | Festival drum procession: big and high taiko, shamisen-like riff, bamboo-flute melody, cymbal bursts |
+| Ancient Garden | Maple Shade | `music/maple-shade.ts` | 70 | 4/4 | C in scale | Lo-fi (swing 0.22, shuffle 0.45): dusty drums, rounded bass, e-piano sevenths, koto riff, shakuhachi-like flute |
+| Alpine Horizon | Thermals | `music/thermals.ts` | 146 | 4/4 | Eb major | Orchestral chase: galloping cello, sixteenth spiccato, timpani and snare, dotted horn calls, choir |
+| Enchanted Wilderness | Through the Ferns | `music/through-the-ferns.ts` | 110 | 4/4 | Bb Lydian | Triplet shuffle (shuffle 0.67): swung marimba, bouncing bass, brushes, flute, pizzicato, woodblocks |
+| Luminous Tide | Phosphor Bay | `music/phosphor-bay.ts` | 124 | 4/4 | F major | Bossa: nylon-like comping on sevenths, root-and-fifth bass, rim clave, flute, vibraphone, strings |
+| Ember Foundry | Steam Hammer | `music/steam-hammer.ts` | 112 | 5/4 | G Phrygian | Lurching 3+2 machine groove: driven kick, hammer strikes, resonant sequenced bass, tuned clanks, steam |
+| Celestial Drift | Hidden Sun | `music/hidden-sun.ts` | 64 | 4/4 | Bb minor | Vast and slow: heartbeat kick, deep sub, wide drones, sixteenth pulse sequence, star bells, gliding lead |
+| Folded Sky | Seeds on the Wind | `music/seeds-on-the-wind.ts` | 102 | 3/4 | Ab major pentatonic | Airy: kalimba and music-box arpeggios over quartal chords, whistled melody, light drums |
 
 The instrument names describe the intended character, but each one is one of the synth kinds above. For example, `oud`, `koto` (Ancient Garden) and `harp` are `pluck` voices; Folded Sky's `koto` is an `epiano` FM voice; `taiko` and `doum` are `tom`; `cello` and `strings` are `strings`; and `brass` (Ember Core) is a `pluck`. The doc comment of the Enchanted Wilderness file says "A minor with Dorian colour"; its `scale` field is `dorian`.
 
@@ -177,4 +208,4 @@ Settings → Audio → Sound test (`AudioTest` in `src/ui/settings/audioPanels.t
   - Moments: Level up, Goal reached, World unlocked, Danger, Game over, Pause, Resume.
 - **Creature passing (spatial)**: eight positional footsteps moving from left to right in front of the listener.
 
-The Music Room plays every unlocked world's tracks, including Celestial Drift's second track, Orbit of Glass.
+The Music Room plays every unlocked world's tracks, not only each world's default track.

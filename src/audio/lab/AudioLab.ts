@@ -4,6 +4,7 @@ import { FRAME, FrameAnalyzer } from '../analysis/dsp/frameAnalyzer';
 import { CompositionPlayer } from '../music-director/tracks';
 import { arp, bassline, beat, composition, hold, melody, once, type Composition, type SectionSpec } from '../sequencer/composition';
 import { SFX_IDS, SFX_PRESETS, renderSfx } from '../sound-effects/SfxBank';
+import { measureTrack, renderSpan, sectionTimeline, type TrackReport } from './trackReport';
 
 /**
  * Audio acceptance lab (dev/test builds only): renders a corpus of styles offline with the real
@@ -340,22 +341,38 @@ export async function impactReport(materials: readonly string[], ids: readonly s
   return out;
 }
 
-/** Peak/DC/NaN checks of shipped stage compositions (first 24 s through the limiter). */
+/**
+ * Peak/DC/NaN checks of shipped stage compositions through the limiter: the opening and the start
+ * of the most intense section (its impact and full arrangement), `seconds / 2` each.
+ */
 export async function checkCompositions(list: readonly Composition[], seconds = 24): Promise<{ id: string; peakDb: number; dc: number; nan: boolean }[]> {
   const out: { id: string; peakDb: number; dc: number; nan: boolean }[] = [];
   for (const c of list) {
-    const { buffer } = await renderStyle(c, seconds);
-    const l = buffer.getChannelData(0);
-    let peak = 0;
+    const half = seconds / 2;
+    const timeline = sectionTimeline(c);
+    const peak = timeline.reduce((a, s) => (s.intensity > a.intensity ? s : a), timeline[0] as (typeof timeline)[number]);
+    const preroll = 6;
+    const [opening, drop] = await Promise.all([renderStyle(c, half).then((r) => r.buffer), renderSpan(c, (peak.startS * c.bpm) / 60, half, preroll)]);
+    let max = 0;
     let sum = 0;
+    let n = 0;
     let nan = false;
-    for (let i = 0; i < l.length; i++) {
-      const v = l[i] as number;
-      if (!Number.isFinite(v)) nan = true;
-      peak = Math.max(peak, Math.abs(v));
-      sum += v;
+    for (const [buffer, from] of [[opening, 0], [drop, Math.round(preroll * 48000)]] as const) {
+      for (let ch = 0; ch < 2; ch++) {
+        const d = buffer.getChannelData(ch);
+        for (let i = from; i < d.length; i++) {
+          const v = d[i] as number;
+          if (!Number.isFinite(v)) {
+            nan = true;
+            continue;
+          }
+          max = Math.max(max, Math.abs(v));
+          sum += v;
+          n++;
+        }
+      }
     }
-    out.push({ id: c.id, peakDb: 20 * Math.log10(Math.max(1e-9, peak)), dc: sum / l.length, nan });
+    out.push({ id: c.id, peakDb: 20 * Math.log10(Math.max(1e-9, max)), dc: sum / Math.max(1, n), nan });
   }
   return out;
 }
@@ -370,6 +387,26 @@ export async function shippedCompositions(): Promise<Composition[]> {
     }
   }
   return out;
+}
+
+export { measureTrack, renderSpan, sectionTimeline, type TrackReport, type TrackSectionStats } from './trackReport';
+
+/** Measures shipped composition tracks (all, or those whose id is listed) one after another. */
+export async function measureShippedTracks(ids?: readonly string[], opts: Parameters<typeof measureTrack>[1] = {}): Promise<TrackReport[]> {
+  const out: TrackReport[] = [];
+  for (const c of await shippedCompositions()) if (!ids || ids.includes(c.id)) out.push(await measureTrack(c, opts));
+  return out;
+}
+
+/** Each available world's composition tracks and default track (for per-world loudness checks). */
+export async function worldTracks(): Promise<{ stage: string; defaultTrack: string; tracks: string[] }[]> {
+  const { availableStages } = await import('../../stages/registry');
+  return availableStages().flatMap((info) => {
+    const m = info.manifest;
+    if (!m) return [];
+    const tracks = m.music.tracks.filter((t) => t.kind === 'composition').map((t) => t.id);
+    return [{ stage: m.id, defaultTrack: m.music.defaultTrack ?? tracks[0] ?? '', tracks }];
+  });
 }
 
 export function sfxPresetNames(): string[] {

@@ -365,6 +365,13 @@
         "title": "Moonwater",
         "kind": "composition",
         "src": "music/main.ts"
+      },
+      {
+        "id": "luminous-tide-phosphor-bay",
+        "title": "Phosphor Bay",
+        "kind": "composition",
+        "src": "music/phosphor-bay.ts",
+        "bpm": 124
       }
     ],
     "defaultTrack": "luminous-tide-moonwater"

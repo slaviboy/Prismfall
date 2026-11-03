@@ -48,6 +48,8 @@ class FeaturesHub implements AudioFeatureSource {
 
 export interface StageAudio {
   readonly id: string;
+  /** The manifest track playing as the stage's music (a world's tracks take turns in free play). */
+  readonly trackId?: string;
   readonly bpm: number;
   readonly beatsPerBar: number;
   readonly composition: Composition | null;
@@ -197,9 +199,9 @@ export class AudioSystem {
     void this.configureAnalysis();
   }
 
-  /** Switches to a stage's music, ambience and sound palette. */
+  /** Switches to a stage's music, ambience and sound palette (or to another of the same stage's tracks). */
   async setStage(stage: StageAudio): Promise<void> {
-    const changed = this.stage?.id !== stage.id || this.stage?.materialKey !== stage.materialKey;
+    const changed = this.stage?.id !== stage.id || this.stage?.materialKey !== stage.materialKey || this.stage?.trackId !== stage.trackId;
     this.stage = stage;
     this.hub.metronome.setBpm(stage.bpm);
     this.hub.metronome.beatsPerBar = stage.beatsPerBar;

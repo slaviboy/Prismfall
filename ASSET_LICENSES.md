@@ -165,6 +165,26 @@ See `AUDIO_ASSETS.md` for details.
 | `content/stages/moving-sands/music/main.ts` | "Caravan of Embers", authored composition | Original work for Prismfall |
 | `content/stages/northern-lights/music/main.ts` | "Curtains of the Sky", authored composition | Original work for Prismfall |
 | `content/stages/the-abyss/music/main.ts` | "Pressure and Light", authored composition | Original work for Prismfall |
+| `content/stages/alpine-horizon/music/thermals.ts` | "Thermals", authored composition | Original work for Prismfall |
+| `content/stages/ancient-garden/music/hanami-drums.ts` | "Hanami Drums", authored composition | Original work for Prismfall |
+| `content/stages/ancient-garden/music/maple-shade.ts` | "Maple Shade", authored composition | Original work for Prismfall |
+| `content/stages/celestial-drift/music/hidden-sun.ts` | "Hidden Sun", authored composition | Original work for Prismfall |
+| `content/stages/ember-core/music/caldera-rite.ts` | "Caldera Rite", authored composition | Original work for Prismfall |
+| `content/stages/ember-core/music/tectonic.ts` | "Tectonic", authored composition | Original work for Prismfall |
+| `content/stages/ember-foundry/music/steam-hammer.ts` | "Steam Hammer", authored composition | Original work for Prismfall |
+| `content/stages/enchanted-wilderness/music/through-the-ferns.ts` | "Through the Ferns", authored composition | Original work for Prismfall |
+| `content/stages/folded-sky/music/seeds-on-the-wind.ts` | "Seeds on the Wind", authored composition (recorded in `assets.json`) | Original work for Prismfall |
+| `content/stages/frozen-kingdom/music/diamond-dust.ts` | "Diamond Dust", authored composition | Original work for Prismfall |
+| `content/stages/frozen-kingdom/music/hoarfrost-waltz.ts` | "Hoarfrost Waltz", authored composition | Original work for Prismfall |
+| `content/stages/future-nights/music/chrome-rain.ts` | "Chrome Rain", authored composition | Original work for Prismfall |
+| `content/stages/future-nights/music/neon-boulevard.ts` | "Neon Boulevard", authored composition | Original work for Prismfall |
+| `content/stages/luminous-tide/music/phosphor-bay.ts` | "Phosphor Bay", authored composition | Original work for Prismfall |
+| `content/stages/moving-sands/music/salt-road.ts` | "Salt Road", authored composition | Original work for Prismfall |
+| `content/stages/moving-sands/music/sirocco.ts` | "Sirocco", authored composition | Original work for Prismfall |
+| `content/stages/northern-lights/music/magnetic-north.ts` | "Magnetic North", authored composition | Original work for Prismfall |
+| `content/stages/northern-lights/music/solar-wind.ts` | "Solar Wind", authored composition | Original work for Prismfall |
+| `content/stages/the-abyss/music/moon-jellies.ts` | "Moon Jellies", authored composition | Original work for Prismfall |
+| `content/stages/the-abyss/music/silver-schools.ts` | "Silver Schools", authored composition | Original work for Prismfall |
 
 ## 8. Other content data and code
 

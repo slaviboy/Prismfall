@@ -158,6 +158,13 @@
         "title": "Above the Treeline",
         "kind": "composition",
         "src": "music/main.ts"
+      },
+      {
+        "id": "alpine-horizon-thermals",
+        "title": "Thermals",
+        "kind": "composition",
+        "src": "music/thermals.ts",
+        "bpm": 146
       }
     ],
     "defaultTrack": "alpine-horizon-treeline"

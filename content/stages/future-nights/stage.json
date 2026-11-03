@@ -537,6 +537,20 @@
         "title": "Afterglow District",
         "kind": "composition",
         "src": "music/main.ts"
+      },
+      {
+        "id": "future-nights-chrome-rain",
+        "title": "Chrome Rain",
+        "kind": "composition",
+        "src": "music/chrome-rain.ts",
+        "bpm": 174
+      },
+      {
+        "id": "future-nights-neon-boulevard",
+        "title": "Neon Boulevard",
+        "kind": "composition",
+        "src": "music/neon-boulevard.ts",
+        "bpm": 104
       }
     ],
     "defaultTrack": "future-nights-afterglow"
