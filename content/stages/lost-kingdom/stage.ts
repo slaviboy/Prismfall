@@ -17,7 +17,7 @@ import { horizonHaze } from './haze';
  * everywhere (see env.ts).
  */
 export default defineStage({
-  sdkVersion: '1.2.0',
+  sdkVersion: '1.5.0',
   register(sdk) {
     sdk.components.register(lostKingdomRuins as unknown as ComponentFactory);
     sdk.components.register(jungleFoliage as unknown as ComponentFactory);

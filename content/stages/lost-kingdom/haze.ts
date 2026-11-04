@@ -1,6 +1,6 @@
 import { BackSide, CylinderGeometry, Group, Mesh, MeshBasicNodeMaterial, NormalBlending } from 'three/webgpu';
-import { asin, atan, clamp, float, mx_fractal_noise_float, normalize, positionWorld, smoothstep, vec3 } from 'three/tsl';
-import { colorUniform, floatUniform, noBloom, z, zColor, type ComponentFactory } from '@prismfall/sdk';
+import { asin, atan, clamp, float, mix, mx_fractal_noise_float, normalize, positionWorld, smoothstep, vec3 } from 'three/tsl';
+import { clearFront, colorUniform, floatUniform, noBloom, z, zColor, type ComponentFactory } from '@prismfall/sdk';
 
 /**
  * Humid air between the plaza and the photographed forest: a few nested, open cylinders of haze
@@ -29,6 +29,8 @@ const schema = z.object({
   to: z.number().default(11),
   /** Bindable as `density` (scales every shell). */
   density: z.number().min(0).default(1),
+  /** The world clear wave (SDK 1.5): the mist lights up (`glow`, towards `color`) where a front passes. */
+  clearWave: z.object({ glow: z.number().min(0).default(0), color: zColor.default('#f6f2d8') }).prefault({}),
 });
 type Params = z.infer<typeof schema>;
 
@@ -57,8 +59,16 @@ export const horizonHaze: ComponentFactory<Params> = {
       const top = float(p.to).add(wav.mul(3.5));
       const fade = smoothstep(top, float(p.from), elev);
       const m = new MeshBasicNodeMaterial();
-      m.colorNode = colorUniform(p.color);
-      m.opacityNode = fade.mul(fade).mul(s.opacity).mul(u.density).mul(u.presence).mul(wav.mul(0.25).add(0.9));
+      const body = fade.mul(fade).mul(s.opacity).mul(u.density).mul(u.presence).mul(wav.mul(0.25).add(0.9));
+      if (p.clearWave.glow > 0) {
+        // Sunlit mist: the front brightens the haze towards its colour and thickens it a little.
+        const front = clearFront(positionWorld).mul(p.clearWave.glow);
+        m.colorNode = mix(colorUniform(p.color), colorUniform(p.clearWave.color), front.min(1));
+        m.opacityNode = body.mul(front.mul(0.35).add(1));
+      } else {
+        m.colorNode = colorUniform(p.color);
+        m.opacityNode = body;
+      }
       m.transparent = true;
       m.depthWrite = false;
       m.blending = NormalBlending;

@@ -1,6 +1,6 @@
 import { Group, Mesh, MeshBasicNodeMaterial, type Material, type MeshStandardMaterial, type Texture } from 'three/webgpu';
 import { float, mrt, positionWorld, texture, uv, vec4 } from 'three/tsl';
-import { colorUniform, floatUniform, z, zColor, type ComponentFactory } from '@prismfall/sdk';
+import { clearFront, colorUniform, floatUniform, z, zColor, type ComponentFactory } from '@prismfall/sdk';
 import { canopyTime, leafFlicker, zSun } from './env';
 
 /**
@@ -34,6 +34,12 @@ const schema = z.object({
   /** Glyph glow colour and strength (bindable as `glow`; 0 by default). */
   glowColor: zColor.default('#7fe0b4'),
   glow: z.number().min(0).default(0),
+  /**
+   * The world clear wave (SDK 1.5): as a front passes, the carved glyphs wake in their jade glow
+   * (`glyph`) and the stone catches a soft sheen of light (`sheen`, in `color`). Light only, never
+   * sent to bloom; 0 (off) by default.
+   */
+  clearWave: z.object({ glyph: z.number().min(0).default(0), sheen: z.number().min(0).default(0), color: zColor.default('#fff2d0') }).prefault({}),
 });
 type Params = z.infer<typeof schema>;
 
@@ -53,6 +59,8 @@ export const lostKingdomRuins: ComponentFactory<Params> = {
     };
     const sunColor = colorUniform(p.sun.color);
     const glowColor = colorUniform(p.glowColor);
+    const waveColor = colorUniform(p.clearWave.color);
+    const waving = p.clearWave.glyph > 0 || p.clearWave.sheen > 0;
     const materials: Material[] = [];
     const flicker = ctx.quality.reducedMotion ? p.flicker * 0.3 : p.flicker;
     for (const g of p.groups) {
@@ -76,7 +84,11 @@ export const lostKingdomRuins: ComponentFactory<Params> = {
         const lit = a.rgb.mul(sky.add(sun)).mul(u.exposure).mul(g.exposure);
         const glyph = glowColor.mul(l.a.mul(u.glow));
         const m = new MeshBasicNodeMaterial();
-        m.colorNode = lit.add(glyph);
+        if (waving) {
+          const front = clearFront(positionWorld);
+          const wave = glowColor.mul(l.a.mul(front.mul(p.clearWave.glyph))).add(a.rgb.mul(waveColor).mul(front.mul(p.clearWave.sheen)));
+          m.colorNode = lit.add(glyph).add(wave);
+        } else m.colorNode = lit.add(glyph);
         m.opacityNode = u.presence;
         m.alphaHash = true;
         m.mrtNode = mrt({ emissive: vec4(glyph.mul(0.35), float(1)) });
