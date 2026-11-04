@@ -27,7 +27,7 @@ import type { Node } from 'three/webgpu';
  * Procedural block surfaces for stage block themes. Every surface keeps the piece colour as its
  * identity (tint, glow or crack colour), so the seven pieces stay distinguishable in any theme.
  */
-export const BLOCK_SURFACES = ['plain', 'wood', 'ice', 'sandstone', 'obsidian', 'emerald', 'cosmic', 'aquatic', 'neon', 'mineral', 'aurora', 'paper', 'lumen', 'dichroic', 'ingot', 'ribbon', 'gel', 'rosette', 'marble', 'lantern', 'basalt', 'veil', 'jade', 'machined', 'frontier'] as const;
+export const BLOCK_SURFACES = ['plain', 'wood', 'ice', 'sandstone', 'obsidian', 'emerald', 'cosmic', 'aquatic', 'neon', 'mineral', 'aurora', 'paper', 'lumen', 'dichroic', 'ingot', 'ribbon', 'gel', 'rosette', 'marble', 'lantern', 'basalt', 'veil', 'jade', 'machined', 'frontier', 'storm'] as const;
 export type BlockSurface = (typeof BLOCK_SURFACES)[number];
 
 type F = Node<'float'>;
@@ -368,6 +368,32 @@ export function buildSurface(kind: BlockSurface, i: SurfaceInputs): SurfaceOutpu
       albedo = cast<V3>(mix(albedo, vec3(0.78, 0.55, 0.24), rivet).mul(mix(float(1), float(0.8), edge)));
       const rough = mix(mix(float(0.7).sub(grain.mul(0.08)), float(0.85), wear), float(0.42), strap).sub(rivet.mul(0.25));
       return { albedo: cast<V3>(albedo), emissive: zero, roughness: cast<F>(rough) };
+    }
+    case 'storm': {
+      // Storm crystal (Dark Storm): deep, polished crystal in the piece colour over graphite, faint
+      // charge filaments far inside it (a slow, steady glow, never a flicker), a fine silver bevel
+      // on every edge and beads of rain standing on the faces. The colour stays saturated and the
+      // glow low, so the seven pieces read as solid, distinct cubes in the dark.
+      const uv = faceUV(p);
+      const d = borderDistance(p);
+      const depth = mx_fractal_noise_float(q.mul(1.9), 3, 2, 0.5).mul(0.5).add(0.5);
+      const graphite = vec3(0.022, 0.025, 0.03);
+      const crystal = mix(graphite, base.mul(0.84), float(0.8).add(depth.mul(0.16)));
+      // Charge filaments: thin cell boundaries deep in the crystal, drifting very slowly.
+      const cells = mx_worley_noise_vec2(q.mul(2.6).add(vec3(0, time.mul(0.012), 0)));
+      const filament = smoothstep(0.045, 0.0, cells.y.sub(cells.x)).mul(smoothstep(0.04, 0.2, d));
+      // Silver edges: a fine bright metal line along the bevel.
+      const silver = smoothstep(0.035, 0.012, d);
+      // Rain beads: small round drops on the faces, each with a bright rim and a tiny highlight.
+      const beadCells = mx_worley_noise_vec2(vec3(uv.x.mul(7.5), uv.y.mul(7.5), seed.x.mul(3.7).add(seed.y.mul(1.3))));
+      const beadR = mx_cell_noise_float(floor(vec3(uv.x.mul(7.5), uv.y.mul(7.5), seed.z.mul(5.1)))).mul(0.12).add(0.06);
+      const bead = smoothstep(beadR, beadR.mul(0.7), beadCells.x).mul(step(0.62, mx_cell_noise_float(floor(vec3(uv.x.mul(7.5).add(0.5), uv.y.mul(7.5), seed.x)))));
+      const beadRim = smoothstep(beadR.mul(0.55), beadR.mul(0.95), beadCells.x).mul(bead);
+      const albedo = mix(mix(crystal, vec3(0.62, 0.65, 0.7), silver.mul(0.85)), crystal.mul(1.25).add(0.02), beadRim.mul(0.6)).mul(mix(float(1), float(0.85), edge.mul(float(1).sub(silver))));
+      const inner = mix(base, vec3(0.75, 0.85, 1), 0.35).mul(filament.mul(float(0.1).add(music.mul(0.04)))).add(base.mul(ndv.pow(2).mul(depth).mul(0.03)));
+      const glint = vec3(0.8, 0.86, 1).mul(beadRim.mul(ndv.pow(4)).mul(0.08)).add(vec3(0.6, 0.66, 0.74).mul(silver.mul(0.05)));
+      const rough = mix(mix(float(0.13).add(depth.mul(0.05)), float(0.07), silver), float(0.02), bead);
+      return { albedo: cast<V3>(albedo), emissive: cast<V3>(inner.add(glint)), roughness: cast<F>(rough) };
     }
     default:
       return { albedo: base, emissive: zero, roughness: null };

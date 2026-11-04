@@ -1,0 +1,321 @@
+{
+  "schemaVersion": 1,
+  "id": "dark-storm",
+  "name": "Dark Storm",
+  "description": "A moorland ledge above a black loch at the height of a thunderstorm. Rain hammers the stones, and every flash shows the mountains for a moment before the thunder rolls in.",
+  "order": 74,
+  "tags": [
+    "night",
+    "storm",
+    "rain",
+    "lightning",
+    "weather"
+  ],
+  "intensity": 0.6,
+  "recommendedQuality": "high",
+  "module": "stage.ts",
+  "requires": {
+    "sdk": "^1.5.0"
+  },
+  "palette": {
+    "accent": "#9fb8e8",
+    "secondary": "#5a6678",
+    "highlight": "#e8f0ff",
+    "fog": "#0a0d12",
+    "plate": "#030406"
+  },
+  "fog": {
+    "color": "#0a0d12",
+    "density": 0.0004
+  },
+  "backdrop": {
+    "top": "#07090c",
+    "bottom": "#020304",
+    "glow": "#3a4658"
+  },
+  "lighting": {
+    "key": {
+      "color": "#d6e0ee",
+      "intensity": 2.0,
+      "azimuth": -32,
+      "elevation": 46
+    },
+    "rim": {
+      "color": "#9fb4e0",
+      "intensity": 1.2
+    },
+    "ambient": {
+      "sky": "#5a6a80",
+      "ground": "#121418",
+      "intensity": 0.72
+    },
+    "accents": [
+      {
+        "color": "#b8c8e8",
+        "intensity": 2.4,
+        "x": -9,
+        "y": 8,
+        "z": 6
+      },
+      {
+        "color": "#7890b8",
+        "intensity": 2.0,
+        "x": 9,
+        "y": -6,
+        "z": 6
+      }
+    ],
+    "beatResponse": 0
+  },
+  "grade": {
+    "exposure": 1,
+    "saturation": 1.0,
+    "contrast": 1.1,
+    "tint": [
+      0.97,
+      1,
+      1.04
+    ],
+    "vignette": 0.5,
+    "bloomThreshold": 0.8,
+    "bloomRadius": 0.45,
+    "toneMapping": "neutral",
+    "envIntensity": 0.3
+  },
+  "camera": {
+    "pitch": 1,
+    "yaw": 0,
+    "sway": 0.15,
+    "targetY": 0
+  },
+  "blocks": {
+    "geometry": "chamfer",
+    "material": "stormCrystal",
+    "palette": {
+      "I": "#2aa8d8",
+      "O": "#e8b62a",
+      "T": "#9a50e0",
+      "S": "#3fb84a",
+      "Z": "#e0342e",
+      "J": "#3a62e8",
+      "L": "#ee7a22"
+    }
+  },
+  "environment": {
+    "layers": [
+      {
+        "id": "sky",
+        "type": "stormSky",
+        "params": {}
+      },
+      {
+        "id": "land",
+        "type": "stormLand",
+        "params": {}
+      },
+      {
+        "id": "props",
+        "type": "stormProps",
+        "params": {}
+      },
+      {
+        "id": "grass",
+        "type": "stormGrass",
+        "params": {},
+        "minDetail": "medium"
+      },
+      {
+        "id": "lightning",
+        "type": "stormLightning",
+        "params": {}
+      },
+      {
+        "id": "rain",
+        "type": "stormRain",
+        "params": {}
+      }
+    ]
+  },
+  "reactivity": {
+    "profiles": [],
+    "bindings": []
+  },
+  "effects": {
+    "lineClear": {
+      "effect": "stormSurge",
+      "params": {}
+    },
+    "landing": {
+      "shape": "spark"
+    },
+    "transition": {
+      "effect": "stormFront",
+      "params": {
+        "colors": [
+          "#8a98b0",
+          "#c8d4e8",
+          "#4a5668"
+        ]
+      }
+    }
+  },
+  "music": {
+    "bpm": 68,
+    "beatsPerBar": 4,
+    "tracks": [
+      {
+        "id": "dark-storm-black-squall",
+        "title": "Black Squall",
+        "kind": "composition",
+        "src": "music/black-squall.ts"
+      },
+      {
+        "id": "dark-storm-eye-of-the-storm",
+        "title": "Eye of the Storm",
+        "kind": "composition",
+        "src": "music/eye-of-the-storm.ts",
+        "bpm": 84
+      }
+    ],
+    "defaultTrack": "dark-storm-black-squall"
+  },
+  "ambience": {
+    "preset": "storm",
+    "level": 0.35
+  },
+  "sfx": {
+    "preset": "void",
+    "material": {
+      "gain": 0.95,
+      "transient": {
+        "level": 0.32,
+        "freq": 2700,
+        "ms": 3
+      },
+      "body": {
+        "level": 0.62,
+        "baseHz": 205,
+        "modes": [
+          {
+            "ratio": 1,
+            "decay": 0.3,
+            "gain": 1
+          },
+          {
+            "ratio": 2.63,
+            "decay": 0.17,
+            "gain": 0.42
+          },
+          {
+            "ratio": 4.87,
+            "decay": 0.09,
+            "gain": 0.18
+          }
+        ],
+        "drop": 0.012,
+        "noise": 0.2,
+        "noiseCutoff": 1700,
+        "noiseDecay": 0.08
+      },
+      "scatter": {
+        "kind": "bubbles",
+        "level": 0.08,
+        "count": 6,
+        "lo": 900,
+        "hi": 2600,
+        "spread": 0.2
+      },
+      "tail": {
+        "kind": "air",
+        "level": 0.1,
+        "freq": 1100,
+        "decay": 0.7
+      },
+      "reverb": {
+        "wet": 0.3,
+        "size": 1.6
+      },
+      "sub": {
+        "level": 0.62,
+        "from": 68,
+        "to": 30,
+        "decay": 0.55
+      },
+      "signature": {
+        "resonance": {
+          "kind": "comb",
+          "level": 0.32,
+          "freq": 46,
+          "decay": 2.6
+        },
+        "scatter": {
+          "kind": "sparks",
+          "level": 0.22,
+          "count": 60,
+          "lo": 2600,
+          "hi": 8000,
+          "delay": 0.01,
+          "spread": 0.5,
+          "width": 1
+        },
+        "tail": {
+          "kind": "rumble",
+          "level": 0.4,
+          "freq": 90,
+          "decay": 3
+        },
+        "sub": {
+          "level": 0.85,
+          "from": 55,
+          "to": 22,
+          "decay": 2.2
+        },
+        "reverb": {
+          "wet": 0.6,
+          "size": 2
+        }
+      },
+      "response": {
+        "transient": {
+          "level": 0
+        },
+        "body": {
+          "level": 0,
+          "modes": [
+            {
+              "ratio": 1,
+              "decay": 0.1,
+              "gain": 0
+            }
+          ]
+        },
+        "sub": {
+          "level": 0.42,
+          "from": 46,
+          "to": 24,
+          "decay": 1.6
+        },
+        "resonance": {
+          "kind": "cavity",
+          "level": 0.26,
+          "freq": 55,
+          "q": 10,
+          "decay": 1.9
+        },
+        "tail": {
+          "kind": "rumble",
+          "level": 0.28,
+          "freq": 100,
+          "decay": 2.2
+        },
+        "reverb": {
+          "wet": 0.55,
+          "size": 2
+        }
+      }
+    }
+  },
+  "unlock": {
+    "type": "always"
+  }
+}

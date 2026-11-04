@@ -1,0 +1,168 @@
+import { arp, bassline, beat, composition, hold, melody, once } from '@prismfall/sdk';
+
+/**
+ * "Black Squall": C# minor at 68 BPM, dark and wide, written to sit under rain and let thunder
+ * through. A low sawtooth drone and a sub hold the floor; filtered air pads drift above them with
+ * long attacks, so the harmony moves slowly from chord to chord like weather. Low strings gather in
+ * the second verse, a muffled heartbeat kick and far toms come and go, a sequenced low pulse ticks
+ * like rain on a roof, and a cello-like gliding line sings over the heights. The build rises on a
+ * riser and the toms into a heavy, slow drop with a choir; the break falls back to drone and bell.
+ * The mix leaves the mids open for the rain and keeps sharp attacks rare. Original composition for
+ * Prismfall.
+ */
+export default composition({
+  id: 'dark-storm-black-squall',
+  title: 'Black Squall',
+  bpm: 68,
+  beatsPerBar: 4,
+  key: 'C#',
+  scale: 'minor',
+  swing: 0,
+  space: { decay: 7.5, wet: 0.5, damping: 0.65 },
+  stinger: 'bell',
+  instruments: {
+    drone: { kind: 'pad', wave: 'sawtooth', voices: 5, detune: 20, cutoff: 260, attack: 6, release: 9, gain: 0.24, reverb: 0.65 },
+    haze: { kind: 'pad', wave: 'triangle', voices: 3, detune: 14, cutoff: 1100, attack: 5, release: 7, gain: 0.11, reverb: 0.9, layer: 0.22 },
+    strings: { kind: 'strings', attack: 3.2, release: 5.5, cutoff: 1300, gain: 0.15, reverb: 0.85, layer: 0.36 },
+    choir: { kind: 'choir', attack: 4, release: 6, gain: 0.1, reverb: 0.95, layer: 0.62 },
+    cello: { kind: 'lead', wave: 'sawtooth', cutoff: 760, envAmount: 0.3, attack: 0.6, decay: 3, gain: 0.1, reverb: 0.8, delay: 0.25, glide: 0.45, layer: 0.48, pan: -0.15 },
+    pulse: { kind: 'pluck', wave: 'triangle', cutoff: 680, envAmount: 1, decay: 0.32, gain: 0.1, reverb: 0.55, delay: 0.32, layer: 0.4, pan: 0.2 },
+    bell: { kind: 'bell', ratio: 3.51, index: 1, decay: 5.5, gain: 0.06, reverb: 0.95, delay: 0.45, pan: 0.3 },
+    sub: { kind: 'sub', gain: 0.44, duck: 0.15 },
+    heart: { kind: 'kick', tone: 41, decay: 0.75, gain: 0.4, layer: 0.38 },
+    toms: { kind: 'tom', tone: 46, decay: 1.3, gain: 0.28, reverb: 0.8, layer: 0.55 },
+    tick: { kind: 'hat', gain: 0.035, pan: 0.3, layer: 0.62 },
+    shaker: { kind: 'shaker', gain: 0.04, pan: -0.3, layer: 0.5 },
+    riser: { kind: 'riser', gain: 0.2, reverb: 0.9 },
+    impact: { kind: 'impact', gain: 0.28, reverb: 0.95 },
+  },
+  sections: [
+    {
+      name: 'the sky closes',
+      kind: 'intro',
+      bars: 8,
+      intensity: 0.12,
+      chords: ['i', 'i', 'VI', 'VI', 'i', 'i', 'VII', 'VII'],
+      parts: {
+        drone: hold({ octave: 2, voicing: 'open', vel: 0.5, every: 4 }),
+        sub: bassline('x...............', { octave: 1, gate: 0.95, vel: 0.5 }),
+        bell: melody('-:16 | -:16 | 5:16 | -:16 | -:16 | -:16 | 4:12 -:4 | -:16', { octave: 5, vel: 0.3 }),
+      },
+    },
+    {
+      name: 'first rain',
+      kind: 'verse',
+      bars: 16,
+      intensity: 0.3,
+      chords: ['i', 'VI', 'III', 'VII', 'i', 'VI', 'iv', 'v', 'i', 'VI', 'III', 'VII', 'iv', 'VI', 'VII', 'i'],
+      parts: {
+        drone: hold({ octave: 2, voicing: 'open', vel: 0.46, every: 2 }),
+        haze: hold({ octave: 3, voicing: 'spread', vel: 0.34, every: 2 }),
+        pulse: arp({ rate: 4, octave: 3, span: 1, order: 'pendulum', gate: 0.6, vel: 0.26 }),
+        sub: bassline('x.......x.......', { octave: 1, gate: 0.9, vel: 0.6 }),
+        heart: beat('x..x............', { vel: 0.45, prob: 0.7 }),
+        bell: melody('-:16 | 1:16 | -:16 | -:16 | -:16 | 3:16 | -:16 | 2:16', { octave: 5, vel: 0.26 }),
+      },
+    },
+    {
+      name: 'the front arrives',
+      kind: 'verse',
+      bars: 16,
+      intensity: 0.46,
+      chords: ['i', 'VI', 'III', 'VIIsus4', 'VII', 'iv', 'VI', 'v', 'i', 'III', 'VI', 'VII', 'iv', 'VI', 'vsus4', 'v'],
+      parts: {
+        drone: hold({ octave: 2, voicing: 'open', vel: 0.46, every: 2 }),
+        haze: hold({ octave: 3, voicing: 'spread', vel: 0.34 }),
+        strings: hold({ octave: 3, voicing: 'spread', vel: 0.4 }),
+        cello: melody("5:12 4:4 | 3:8 1:8 | 3:16 | 2:8 7,:8 | 1:12 2:4 | 3:8 4:8 | 3:16 | -:16", { octave: 3, vel: 0.42 }),
+        pulse: arp({ rate: 4, octave: 3, span: 2, order: 'pendulum', gate: 0.6, vel: 0.28 }),
+        sub: bassline('x.......x.......', { octave: 1, gate: 0.9 }),
+        heart: beat('x..x....x.......', { vel: 0.5, prob: 0.8 }),
+        shaker: beat('..x...x...x...x.', { vel: 0.3, prob: 0.7 }),
+      },
+    },
+    {
+      name: 'pressure falls',
+      kind: 'build',
+      bars: 8,
+      intensity: 0.7,
+      chords: ['iv', 'v', 'VI', 'VII', 'iv', 'v', 'VI', 'v'],
+      parts: {
+        drone: hold({ octave: 2, voicing: 'open', vel: 0.5 }),
+        strings: hold({ octave: 3, voicing: 'spread', vel: 0.46 }),
+        choir: hold({ octave: 4, voicing: 'close', vel: 0.3, every: 2 }),
+        pulse: arp({ rate: 2, octave: 3, span: 2, order: 'up', gate: 0.55, vel: 0.3, ramp: [0.5, 1] }),
+        sub: bassline('x.......x...x...', { octave: 1, gate: 0.85 }),
+        heart: beat('x..x....x..x....', { vel: 0.55, ramp: [0.6, 1] }),
+        toms: beat('........x.....x.', { vel: 0.5, ramp: [0.4, 1] }),
+        riser: once({ step: 64, vel: 0.6 }),
+      },
+    },
+    {
+      name: 'the storm breaks',
+      kind: 'drop',
+      bars: 16,
+      intensity: 0.88,
+      chords: ['i', 'VI', 'III', 'VII', 'i', 'VI', 'iv', 'v', 'VI', 'III', 'VII', 'i', 'iv', 'VI', 'VIIsus4', 'v'],
+      parts: {
+        impact: once({ dur: 16, vel: 0.6 }),
+        drone: hold({ octave: 2, voicing: 'open', vel: 0.5 }),
+        haze: hold({ octave: 3, voicing: 'spread', vel: 0.36 }),
+        strings: hold({ octave: 3, voicing: 'spread', vel: 0.5 }),
+        choir: hold({ octave: 4, voicing: 'open', vel: 0.36 }),
+        cello: melody("1':12 7:4 | 6:8 5:8 | 3:16 | -:8 4:8 | 5:12 6:4 | 7:8 6:4 5:4 | 5:16 | -:16", { octave: 3, vel: 0.5 }),
+        pulse: arp({ rate: 2, octave: 3, span: 2, order: 'pendulum', gate: 0.55, vel: 0.3 }),
+        sub: bassline('x.......x.......', { octave: 1, gate: 0.9 }),
+        heart: beat('x..x....x..x....', { vel: 0.6 }),
+        toms: beat('........x.....x.', { vel: 0.55, prob: 0.8 }),
+        tick: beat('..x...x...x...x.', { vel: 0.4, prob: 0.6 }),
+        bell: melody('-:8 5:8 | -:16 | -:8 1:8 | -:16', { octave: 5, vel: 0.26 }),
+      },
+    },
+    {
+      name: 'between flashes',
+      kind: 'break',
+      bars: 8,
+      intensity: 0.2,
+      chords: ['i', 'VI', 'VII', 'i', 'III', 'VI', 'VII', 'v'],
+      parts: {
+        drone: hold({ octave: 2, voicing: 'open', vel: 0.4, every: 2 }),
+        haze: hold({ octave: 3, voicing: 'spread', vel: 0.3, every: 2 }),
+        sub: bassline('x...............', { octave: 1, gate: 0.95, vel: 0.5 }),
+        bell: melody('5:16 | -:16 | 4:16 | -:16 | 3:16 | -:16 | 2:16 | -:16', { octave: 5, vel: 0.28 }),
+      },
+    },
+    {
+      name: 'the long night',
+      kind: 'verse',
+      bars: 16,
+      intensity: 0.56,
+      chords: ['i', 'III', 'VI', 'VII', 'iv', 'VI', 'v', 'i', 'VI', 'VII', 'III', 'VI', 'iv', 'VII', 'VIIsus4', 'v'],
+      parts: {
+        drone: hold({ octave: 2, voicing: 'open', vel: 0.46, every: 2 }),
+        strings: hold({ octave: 3, voicing: 'spread', vel: 0.44 }),
+        choir: hold({ octave: 4, voicing: 'close', vel: 0.26, every: 2 }),
+        cello: melody('-:16 | -:16 | 5:12 4:4 | 3:16 | -:16 | 1:8 2:8 | 3:12 2:4 | 1:16', { octave: 3, vel: 0.42 }),
+        pulse: arp({ rate: 4, octave: 3, span: 2, order: 'pendulum', gate: 0.6, vel: 0.28 }),
+        sub: bassline('x.......x.......', { octave: 1, gate: 0.9 }),
+        heart: beat('x..x....x.......', { vel: 0.5, prob: 0.85 }),
+        shaker: beat('..x...x...x...x.', { vel: 0.3, prob: 0.6 }),
+      },
+    },
+    {
+      name: 'it moves on',
+      kind: 'outro',
+      bars: 8,
+      intensity: 0.24,
+      chords: ['VI', 'VII', 'i', 'i', 'VI', 'VII', 'v', 'v'],
+      parts: {
+        drone: hold({ octave: 2, voicing: 'open', vel: 0.44, every: 2 }),
+        haze: hold({ octave: 3, voicing: 'spread', vel: 0.3, every: 2 }),
+        sub: bassline('x...............', { octave: 1, gate: 0.95, vel: 0.5 }),
+        pulse: arp({ rate: 4, octave: 3, span: 1, order: 'pendulum', gate: 0.6, vel: 0.26, ramp: [1, 0.3] }),
+        bell: melody('-:16 | 3:16 | -:16 | 1:16 | -:16 | -:16 | 7,:16 | -:16', { octave: 5, vel: 0.26 }),
+      },
+    },
+  ],
+  loopFrom: 1,
+});
