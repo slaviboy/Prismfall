@@ -1,0 +1,4447 @@
+{
+ "moving-sands": {
+  "layers": [
+   {
+    "id": "sky",
+    "type": "sandsNightSky"
+   },
+   {
+    "id": "meteors",
+    "type": "meteors"
+   },
+   {
+    "id": "dunes",
+    "type": "terrain"
+   },
+   {
+    "id": "far-dunes",
+    "type": "sandsFarDunes"
+   },
+   {
+    "id": "quiver-trees",
+    "type": "model"
+   },
+   {
+    "id": "quiver-young",
+    "type": "model"
+   },
+   {
+    "id": "dead-trunk",
+    "type": "model"
+   },
+   {
+    "id": "boulders",
+    "type": "model"
+   },
+   {
+    "id": "boulder-small",
+    "type": "model"
+   },
+   {
+    "id": "loose-rocks",
+    "type": "model"
+   },
+   {
+    "id": "outcrop",
+    "type": "model"
+   },
+   {
+    "id": "camel-caravan",
+    "type": "model"
+   },
+   {
+    "id": "blowing-sand",
+    "type": "particles"
+   }
+  ],
+  "targets": [
+   {
+    "layer": "sky",
+    "type": "sandsNightSky",
+    "target": "stars",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sandsNightSky",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sandsNightSky",
+    "target": "milkyWay",
+    "cls": "none"
+   },
+   {
+    "layer": "meteors",
+    "type": "meteors",
+    "target": "rate",
+    "cls": "events"
+   },
+   {
+    "layer": "meteors",
+    "type": "meteors",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "dunes",
+    "type": "terrain",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "dunes",
+    "type": "terrain",
+    "target": "ripple",
+    "cls": "motion"
+   },
+   {
+    "layer": "dunes",
+    "type": "terrain",
+    "target": "sparkle",
+    "cls": "light"
+   },
+   {
+    "layer": "dunes",
+    "type": "terrain",
+    "target": "presence",
+    "cls": "none"
+   },
+   {
+    "layer": "dunes",
+    "type": "terrain",
+    "target": "music",
+    "cls": "none"
+   },
+   {
+    "layer": "dunes",
+    "type": "terrain",
+    "target": "light",
+    "cls": "light"
+   },
+   {
+    "layer": "quiver-trees",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "quiver-trees",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "quiver-trees",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "quiver-young",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "quiver-young",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "quiver-young",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "dead-trunk",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "dead-trunk",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "dead-trunk",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "boulders",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "boulders",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "boulders",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "boulder-small",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "boulder-small",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "boulder-small",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "loose-rocks",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "loose-rocks",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "loose-rocks",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "outcrop",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "outcrop",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "outcrop",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "camel-caravan",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "camel-caravan",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "camel-caravan",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "blowing-sand",
+    "type": "particles",
+    "target": "brightness",
+    "cls": "particles"
+   },
+   {
+    "layer": "blowing-sand",
+    "type": "particles",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "blowing-sand",
+    "type": "particles",
+    "target": "size",
+    "cls": "particles"
+   },
+   {
+    "layer": "blowing-sand",
+    "type": "particles",
+    "target": "turbulence",
+    "cls": "motion"
+   },
+   {
+    "layer": "blowing-sand",
+    "type": "particles",
+    "target": "density",
+    "cls": "particles"
+   },
+   {
+    "layer": "blowing-sand",
+    "type": "particles",
+    "target": "presence",
+    "cls": "none"
+   }
+  ],
+  "events": [
+   "clear>=4 -> meteors.burst"
+  ],
+  "warnings": []
+ },
+ "luminous-tide": {
+  "layers": [
+   {
+    "id": "sky",
+    "type": "sky"
+   },
+   {
+    "id": "meteors",
+    "type": "meteors"
+   },
+   {
+    "id": "ocean",
+    "type": "water"
+   },
+   {
+    "id": "plankton",
+    "type": "particles"
+   },
+   {
+    "id": "sea-haze",
+    "type": "clouds"
+   },
+   {
+    "id": "dolphins",
+    "type": "model"
+   }
+  ],
+  "targets": [
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "stars",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "nebula",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "disc",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "dusk",
+    "cls": "none"
+   },
+   {
+    "layer": "meteors",
+    "type": "meteors",
+    "target": "rate",
+    "cls": "events"
+   },
+   {
+    "layer": "meteors",
+    "type": "meteors",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "ocean",
+    "type": "water",
+    "target": "amplitude",
+    "cls": "motion"
+   },
+   {
+    "layer": "ocean",
+    "type": "water",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "ocean",
+    "type": "water",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "ocean",
+    "type": "water",
+    "target": "surf",
+    "cls": "light"
+   },
+   {
+    "layer": "plankton",
+    "type": "particles",
+    "target": "brightness",
+    "cls": "particles"
+   },
+   {
+    "layer": "plankton",
+    "type": "particles",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "plankton",
+    "type": "particles",
+    "target": "size",
+    "cls": "particles"
+   },
+   {
+    "layer": "plankton",
+    "type": "particles",
+    "target": "turbulence",
+    "cls": "motion"
+   },
+   {
+    "layer": "plankton",
+    "type": "particles",
+    "target": "density",
+    "cls": "particles"
+   },
+   {
+    "layer": "plankton",
+    "type": "particles",
+    "target": "presence",
+    "cls": "none"
+   },
+   {
+    "layer": "sea-haze",
+    "type": "clouds",
+    "target": "opacity",
+    "cls": "atmosphere"
+   },
+   {
+    "layer": "dolphins",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "dolphins",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "dolphins",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   }
+  ],
+  "events": [
+   "clear>=4 -> dolphins.pass",
+   "combo>=4 -> dolphins.pass",
+   "b2b -> meteors.burst"
+  ],
+  "warnings": []
+ },
+ "frozen-kingdom": {
+  "layers": [
+   {
+    "id": "sky",
+    "type": "sky"
+   },
+   {
+    "id": "dusk-aurora",
+    "type": "aurora"
+   },
+   {
+    "id": "snowfield",
+    "type": "terrain"
+   },
+   {
+    "id": "lake",
+    "type": "water"
+   },
+   {
+    "id": "wolf",
+    "type": "model"
+   },
+   {
+    "id": "elk",
+    "type": "model"
+   },
+   {
+    "id": "snowy-owl",
+    "type": "model"
+   },
+   {
+    "id": "snowfall",
+    "type": "particles"
+   },
+   {
+    "id": "crystal-flakes",
+    "type": "particleShapes"
+   }
+  ],
+  "targets": [
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "stars",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "nebula",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "disc",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "dusk",
+    "cls": "none"
+   },
+   {
+    "layer": "dusk-aurora",
+    "type": "aurora",
+    "target": "intensity",
+    "cls": "light"
+   },
+   {
+    "layer": "dusk-aurora",
+    "type": "aurora",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "snowfield",
+    "type": "terrain",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "snowfield",
+    "type": "terrain",
+    "target": "ripple",
+    "cls": "motion"
+   },
+   {
+    "layer": "snowfield",
+    "type": "terrain",
+    "target": "sparkle",
+    "cls": "light"
+   },
+   {
+    "layer": "snowfield",
+    "type": "terrain",
+    "target": "presence",
+    "cls": "none"
+   },
+   {
+    "layer": "snowfield",
+    "type": "terrain",
+    "target": "music",
+    "cls": "none"
+   },
+   {
+    "layer": "snowfield",
+    "type": "terrain",
+    "target": "light",
+    "cls": "light"
+   },
+   {
+    "layer": "lake",
+    "type": "water",
+    "target": "amplitude",
+    "cls": "motion"
+   },
+   {
+    "layer": "lake",
+    "type": "water",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "lake",
+    "type": "water",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "wolf",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "wolf",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "wolf",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "elk",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "elk",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "elk",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "snowy-owl",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "snowy-owl",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "snowy-owl",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "snowfall",
+    "type": "particles",
+    "target": "brightness",
+    "cls": "particles"
+   },
+   {
+    "layer": "snowfall",
+    "type": "particles",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "snowfall",
+    "type": "particles",
+    "target": "size",
+    "cls": "particles"
+   },
+   {
+    "layer": "snowfall",
+    "type": "particles",
+    "target": "turbulence",
+    "cls": "motion"
+   },
+   {
+    "layer": "snowfall",
+    "type": "particles",
+    "target": "density",
+    "cls": "particles"
+   },
+   {
+    "layer": "snowfall",
+    "type": "particles",
+    "target": "presence",
+    "cls": "none"
+   }
+  ],
+  "events": [
+   "clear>=4 -> snowy-owl.pass",
+   "combo>=4 -> snowy-owl.pass",
+   "b2b -> elk.show"
+  ],
+  "warnings": []
+ },
+ "last-frontier": {
+  "layers": [
+   {
+    "id": "sky",
+    "type": "frontierSky"
+   },
+   {
+    "id": "ground",
+    "type": "frontierGround"
+   },
+   {
+    "id": "town",
+    "type": "frontierTown"
+   },
+   {
+    "id": "outcrop",
+    "type": "frontierRocks"
+   },
+   {
+    "id": "outcrop-small",
+    "type": "frontierRocks"
+   },
+   {
+    "id": "rail",
+    "type": "frontierRail"
+   },
+   {
+    "id": "shrubs",
+    "type": "frontierScatter"
+   },
+   {
+    "id": "boulders",
+    "type": "frontierScatter"
+   },
+   {
+    "id": "shrubs-near",
+    "type": "frontierScatter"
+   },
+   {
+    "id": "quivers",
+    "type": "frontierScatter"
+   },
+   {
+    "id": "quivers-b",
+    "type": "frontierScatter"
+   },
+   {
+    "id": "outcrop-near",
+    "type": "frontierRocks"
+   },
+   {
+    "id": "outcrop-face",
+    "type": "frontierRocks"
+   },
+   {
+    "id": "clutter",
+    "type": "frontierClutter"
+   },
+   {
+    "id": "riders",
+    "type": "model"
+   },
+   {
+    "id": "riders-b",
+    "type": "model"
+   },
+   {
+    "id": "galloper",
+    "type": "model"
+   },
+   {
+    "id": "corral-horses",
+    "type": "model"
+   },
+   {
+    "id": "corral-idle",
+    "type": "model"
+   },
+   {
+    "id": "donkey",
+    "type": "model"
+   },
+   {
+    "id": "cow",
+    "type": "model"
+   },
+   {
+    "id": "stallion",
+    "type": "model"
+   },
+   {
+    "id": "wagon",
+    "type": "model"
+   },
+   {
+    "id": "wagon-team",
+    "type": "model"
+   },
+   {
+    "id": "stagecoach",
+    "type": "model"
+   },
+   {
+    "id": "stagecoach-team",
+    "type": "model"
+   },
+   {
+    "id": "motes-town",
+    "type": "particles"
+   },
+   {
+    "id": "motes-right",
+    "type": "particles"
+   },
+   {
+    "id": "dust",
+    "type": "frontierDust"
+   }
+  ],
+  "targets": [
+   {
+    "layer": "riders",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "riders",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "riders",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "riders-b",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "riders-b",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "riders-b",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "galloper",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "galloper",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "galloper",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "corral-horses",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "corral-horses",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "corral-horses",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "corral-idle",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "corral-idle",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "corral-idle",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "donkey",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "donkey",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "donkey",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "cow",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "cow",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "cow",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "stallion",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "stallion",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "stallion",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "wagon",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "wagon",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "wagon",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "wagon-team",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "wagon-team",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "wagon-team",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "stagecoach",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "stagecoach",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "stagecoach",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "stagecoach-team",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "stagecoach-team",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "stagecoach-team",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "motes-town",
+    "type": "particles",
+    "target": "brightness",
+    "cls": "particles"
+   },
+   {
+    "layer": "motes-town",
+    "type": "particles",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "motes-town",
+    "type": "particles",
+    "target": "size",
+    "cls": "particles"
+   },
+   {
+    "layer": "motes-town",
+    "type": "particles",
+    "target": "turbulence",
+    "cls": "motion"
+   },
+   {
+    "layer": "motes-town",
+    "type": "particles",
+    "target": "density",
+    "cls": "particles"
+   },
+   {
+    "layer": "motes-town",
+    "type": "particles",
+    "target": "presence",
+    "cls": "none"
+   },
+   {
+    "layer": "motes-right",
+    "type": "particles",
+    "target": "brightness",
+    "cls": "particles"
+   },
+   {
+    "layer": "motes-right",
+    "type": "particles",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "motes-right",
+    "type": "particles",
+    "target": "size",
+    "cls": "particles"
+   },
+   {
+    "layer": "motes-right",
+    "type": "particles",
+    "target": "turbulence",
+    "cls": "motion"
+   },
+   {
+    "layer": "motes-right",
+    "type": "particles",
+    "target": "density",
+    "cls": "particles"
+   },
+   {
+    "layer": "motes-right",
+    "type": "particles",
+    "target": "presence",
+    "cls": "none"
+   },
+   {
+    "layer": "dust",
+    "type": "frontierDust",
+    "target": "drift",
+    "cls": "motion"
+   }
+  ],
+  "events": [
+   "clear>=4 -> stallion.pass",
+   "combo>=4 -> stallion.pass",
+   "b2b -> donkey.clip"
+  ],
+  "warnings": []
+ },
+ "tradewind-cove": {
+  "layers": [
+   {
+    "id": "sky",
+    "type": "sky"
+   },
+   {
+    "id": "cove",
+    "type": "tradewindCove"
+   },
+   {
+    "id": "palms",
+    "type": "coconutPalms"
+   },
+   {
+    "id": "frigatebirds",
+    "type": "birdFlock"
+   },
+   {
+    "id": "dolphins",
+    "type": "model"
+   },
+   {
+    "id": "flamingos",
+    "type": "model"
+   },
+   {
+    "id": "seagull",
+    "type": "model"
+   }
+  ],
+  "targets": [
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "stars",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "nebula",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "disc",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "dusk",
+    "cls": "none"
+   },
+   {
+    "layer": "cove",
+    "type": "tradewindCove",
+    "target": "tide",
+    "cls": "none"
+   },
+   {
+    "layer": "cove",
+    "type": "tradewindCove",
+    "target": "chop",
+    "cls": "motion"
+   },
+   {
+    "layer": "palms",
+    "type": "coconutPalms",
+    "target": "wind",
+    "cls": "motion"
+   },
+   {
+    "layer": "dolphins",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "dolphins",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "dolphins",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "flamingos",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "flamingos",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "flamingos",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "seagull",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "seagull",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "seagull",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   }
+  ],
+  "events": [
+   "clear>=4 -> seagull.pass",
+   "combo>=4 -> seagull.pass",
+   "b2b -> dolphins.show"
+  ],
+  "warnings": []
+ },
+ "ancient-garden": {
+  "layers": [
+   {
+    "id": "sky",
+    "type": "sky"
+   },
+   {
+    "id": "sun-shafts",
+    "type": "beams"
+   },
+   {
+    "id": "petals",
+    "type": "particles"
+   },
+   {
+    "id": "dragonflies",
+    "type": "dragonflies"
+   },
+   {
+    "id": "crane",
+    "type": "model"
+   }
+  ],
+  "targets": [
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "stars",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "nebula",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "disc",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "dusk",
+    "cls": "none"
+   },
+   {
+    "layer": "sun-shafts",
+    "type": "beams",
+    "target": "intensity",
+    "cls": "light"
+   },
+   {
+    "layer": "petals",
+    "type": "particles",
+    "target": "brightness",
+    "cls": "particles"
+   },
+   {
+    "layer": "petals",
+    "type": "particles",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "petals",
+    "type": "particles",
+    "target": "size",
+    "cls": "particles"
+   },
+   {
+    "layer": "petals",
+    "type": "particles",
+    "target": "turbulence",
+    "cls": "motion"
+   },
+   {
+    "layer": "petals",
+    "type": "particles",
+    "target": "density",
+    "cls": "particles"
+   },
+   {
+    "layer": "petals",
+    "type": "particles",
+    "target": "presence",
+    "cls": "none"
+   },
+   {
+    "layer": "crane",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "crane",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "crane",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   }
+  ],
+  "events": [
+   "clear>=4 -> crane.pass",
+   "combo>=4 -> crane.pass"
+  ],
+  "warnings": []
+ },
+ "lost-kingdom": {
+  "layers": [
+   {
+    "id": "sky",
+    "type": "sky"
+   },
+   {
+    "id": "ruins",
+    "type": "lostKingdomRuins"
+   },
+   {
+    "id": "undergrowth",
+    "type": "jungleFoliage"
+   },
+   {
+    "id": "waterfall",
+    "type": "jungleWaterfall"
+   },
+   {
+    "id": "lianas",
+    "type": "lianas"
+   },
+   {
+    "id": "shafts",
+    "type": "sunShafts"
+   },
+   {
+    "id": "mist-pool",
+    "type": "clouds"
+   },
+   {
+    "id": "haze",
+    "type": "horizonHaze"
+   },
+   {
+    "id": "relief",
+    "type": "model"
+   },
+   {
+    "id": "macaws",
+    "type": "model"
+   },
+   {
+    "id": "jaguar",
+    "type": "model"
+   },
+   {
+    "id": "quetzals",
+    "type": "model"
+   },
+   {
+    "id": "macaw-near",
+    "type": "model"
+   },
+   {
+    "id": "toucan",
+    "type": "model"
+   },
+   {
+    "id": "hummingbirds",
+    "type": "model"
+   },
+   {
+    "id": "butterflies",
+    "type": "model"
+   },
+   {
+    "id": "butterflies-small",
+    "type": "model"
+   },
+   {
+    "id": "pollen",
+    "type": "particles"
+   },
+   {
+    "id": "leaves",
+    "type": "particles"
+   }
+  ],
+  "targets": [
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "stars",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "nebula",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "disc",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "dusk",
+    "cls": "none"
+   },
+   {
+    "layer": "ruins",
+    "type": "lostKingdomRuins",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "ruins",
+    "type": "lostKingdomRuins",
+    "target": "sun",
+    "cls": "none"
+   },
+   {
+    "layer": "ruins",
+    "type": "lostKingdomRuins",
+    "target": "sky",
+    "cls": "none"
+   },
+   {
+    "layer": "undergrowth",
+    "type": "jungleFoliage",
+    "target": "wind",
+    "cls": "motion"
+   },
+   {
+    "layer": "undergrowth",
+    "type": "jungleFoliage",
+    "target": "sun",
+    "cls": "none"
+   },
+   {
+    "layer": "waterfall",
+    "type": "jungleWaterfall",
+    "target": "flow",
+    "cls": "motion"
+   },
+   {
+    "layer": "waterfall",
+    "type": "jungleWaterfall",
+    "target": "spray",
+    "cls": "none"
+   },
+   {
+    "layer": "lianas",
+    "type": "lianas",
+    "target": "sway",
+    "cls": "motion"
+   },
+   {
+    "layer": "shafts",
+    "type": "sunShafts",
+    "target": "intensity",
+    "cls": "light"
+   },
+   {
+    "layer": "mist-pool",
+    "type": "clouds",
+    "target": "opacity",
+    "cls": "atmosphere"
+   },
+   {
+    "layer": "haze",
+    "type": "horizonHaze",
+    "target": "density",
+    "cls": "atmosphere"
+   },
+   {
+    "layer": "relief",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "relief",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "relief",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "macaws",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "macaws",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "macaws",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "jaguar",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "jaguar",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "jaguar",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "quetzals",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "quetzals",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "quetzals",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "macaw-near",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "macaw-near",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "macaw-near",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "toucan",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "toucan",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "toucan",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "hummingbirds",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "hummingbirds",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "hummingbirds",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "butterflies",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "butterflies",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "butterflies",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "butterflies-small",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "butterflies-small",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "butterflies-small",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "pollen",
+    "type": "particles",
+    "target": "brightness",
+    "cls": "particles"
+   },
+   {
+    "layer": "pollen",
+    "type": "particles",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "pollen",
+    "type": "particles",
+    "target": "size",
+    "cls": "particles"
+   },
+   {
+    "layer": "pollen",
+    "type": "particles",
+    "target": "turbulence",
+    "cls": "motion"
+   },
+   {
+    "layer": "pollen",
+    "type": "particles",
+    "target": "density",
+    "cls": "particles"
+   },
+   {
+    "layer": "pollen",
+    "type": "particles",
+    "target": "presence",
+    "cls": "none"
+   },
+   {
+    "layer": "leaves",
+    "type": "particles",
+    "target": "brightness",
+    "cls": "particles"
+   },
+   {
+    "layer": "leaves",
+    "type": "particles",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "leaves",
+    "type": "particles",
+    "target": "size",
+    "cls": "particles"
+   },
+   {
+    "layer": "leaves",
+    "type": "particles",
+    "target": "turbulence",
+    "cls": "motion"
+   },
+   {
+    "layer": "leaves",
+    "type": "particles",
+    "target": "density",
+    "cls": "particles"
+   },
+   {
+    "layer": "leaves",
+    "type": "particles",
+    "target": "presence",
+    "cls": "none"
+   }
+  ],
+  "events": [
+   "clear>=4 -> quetzals.pass",
+   "b2b -> quetzals.pass",
+   "combo>=4 -> macaws.burst"
+  ],
+  "warnings": []
+ },
+ "celestial-drift": {
+  "layers": [
+   {
+    "id": "sky",
+    "type": "sky"
+   },
+   {
+    "id": "giant",
+    "type": "planet"
+   },
+   {
+    "id": "asteroids",
+    "type": "model"
+   },
+   {
+    "id": "asteroids-b",
+    "type": "model"
+   },
+   {
+    "id": "nebula-haze",
+    "type": "clouds"
+   },
+   {
+    "id": "star-dust",
+    "type": "particles"
+   },
+   {
+    "id": "leviathan",
+    "type": "model"
+   },
+   {
+    "id": "leviathan-pass",
+    "type": "model"
+   }
+  ],
+  "targets": [
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "stars",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "nebula",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "disc",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "dusk",
+    "cls": "none"
+   },
+   {
+    "layer": "giant",
+    "type": "planet",
+    "target": "atmosphere",
+    "cls": "light"
+   },
+   {
+    "layer": "giant",
+    "type": "planet",
+    "target": "phase",
+    "cls": "none"
+   },
+   {
+    "layer": "asteroids",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "asteroids",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "asteroids",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "asteroids-b",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "asteroids-b",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "asteroids-b",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "nebula-haze",
+    "type": "clouds",
+    "target": "opacity",
+    "cls": "atmosphere"
+   },
+   {
+    "layer": "star-dust",
+    "type": "particles",
+    "target": "brightness",
+    "cls": "particles"
+   },
+   {
+    "layer": "star-dust",
+    "type": "particles",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "star-dust",
+    "type": "particles",
+    "target": "size",
+    "cls": "particles"
+   },
+   {
+    "layer": "star-dust",
+    "type": "particles",
+    "target": "turbulence",
+    "cls": "motion"
+   },
+   {
+    "layer": "star-dust",
+    "type": "particles",
+    "target": "density",
+    "cls": "particles"
+   },
+   {
+    "layer": "star-dust",
+    "type": "particles",
+    "target": "presence",
+    "cls": "none"
+   },
+   {
+    "layer": "leviathan",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "leviathan",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "leviathan",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "leviathan-pass",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "leviathan-pass",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "leviathan-pass",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   }
+  ],
+  "events": [
+   "clear>=4 -> leviathan-pass.pass",
+   "combo>=4 -> leviathan-pass.pass"
+  ],
+  "warnings": []
+ },
+ "alpine-horizon": {
+  "layers": [
+   {
+    "id": "sky",
+    "type": "sky"
+   },
+   {
+    "id": "does",
+    "type": "model"
+   },
+   {
+    "id": "raptors",
+    "type": "birdFlock"
+   },
+   {
+    "id": "eagles",
+    "type": "model"
+   },
+   {
+    "id": "pollen",
+    "type": "particles"
+   }
+  ],
+  "targets": [
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "stars",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "nebula",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "disc",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "dusk",
+    "cls": "none"
+   },
+   {
+    "layer": "does",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "does",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "does",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "eagles",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "eagles",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "eagles",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "pollen",
+    "type": "particles",
+    "target": "brightness",
+    "cls": "particles"
+   },
+   {
+    "layer": "pollen",
+    "type": "particles",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "pollen",
+    "type": "particles",
+    "target": "size",
+    "cls": "particles"
+   },
+   {
+    "layer": "pollen",
+    "type": "particles",
+    "target": "turbulence",
+    "cls": "motion"
+   },
+   {
+    "layer": "pollen",
+    "type": "particles",
+    "target": "density",
+    "cls": "particles"
+   },
+   {
+    "layer": "pollen",
+    "type": "particles",
+    "target": "presence",
+    "cls": "none"
+   }
+  ],
+  "events": [
+   "clear>=4 -> eagles.pass",
+   "combo>=4 -> eagles.pass",
+   "b2b -> does.show"
+  ],
+  "warnings": []
+ },
+ "the-abyss": {
+  "layers": [
+   {
+    "id": "sky",
+    "type": "sky"
+   },
+   {
+    "id": "seafloor",
+    "type": "terrain"
+   },
+   {
+    "id": "light-shafts",
+    "type": "beams"
+   },
+   {
+    "id": "jellyfish",
+    "type": "jellyfish"
+   },
+   {
+    "id": "glow-fish-left",
+    "type": "glowSchool"
+   },
+   {
+    "id": "glow-fish-right",
+    "type": "glowSchool"
+   },
+   {
+    "id": "blue-whale",
+    "type": "model"
+   },
+   {
+    "id": "humpback-whale",
+    "type": "model"
+   },
+   {
+    "id": "sea-turtles",
+    "type": "model"
+   },
+   {
+    "id": "sperm-whale",
+    "type": "model"
+   },
+   {
+    "id": "eagle-rays",
+    "type": "model"
+   },
+   {
+    "id": "great-white",
+    "type": "model"
+   },
+   {
+    "id": "climax-whale",
+    "type": "model"
+   },
+   {
+    "id": "climax-vortex",
+    "type": "glowSchool"
+   },
+   {
+    "id": "marine-snow",
+    "type": "particles"
+   },
+   {
+    "id": "plankton",
+    "type": "particles"
+   }
+  ],
+  "targets": [
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "stars",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "nebula",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "disc",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "dusk",
+    "cls": "none"
+   },
+   {
+    "layer": "seafloor",
+    "type": "terrain",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "seafloor",
+    "type": "terrain",
+    "target": "ripple",
+    "cls": "motion"
+   },
+   {
+    "layer": "seafloor",
+    "type": "terrain",
+    "target": "sparkle",
+    "cls": "light"
+   },
+   {
+    "layer": "seafloor",
+    "type": "terrain",
+    "target": "presence",
+    "cls": "none"
+   },
+   {
+    "layer": "seafloor",
+    "type": "terrain",
+    "target": "music",
+    "cls": "none"
+   },
+   {
+    "layer": "seafloor",
+    "type": "terrain",
+    "target": "light",
+    "cls": "light"
+   },
+   {
+    "layer": "light-shafts",
+    "type": "beams",
+    "target": "intensity",
+    "cls": "light"
+   },
+   {
+    "layer": "jellyfish",
+    "type": "jellyfish",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "jellyfish",
+    "type": "jellyfish",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "glow-fish-left",
+    "type": "glowSchool",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "glow-fish-right",
+    "type": "glowSchool",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "blue-whale",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "blue-whale",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "blue-whale",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "humpback-whale",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "humpback-whale",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "humpback-whale",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "sea-turtles",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "sea-turtles",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "sea-turtles",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "sperm-whale",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "sperm-whale",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "sperm-whale",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "eagle-rays",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "eagle-rays",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "eagle-rays",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "great-white",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "great-white",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "great-white",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "climax-whale",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "climax-whale",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "climax-whale",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "climax-vortex",
+    "type": "glowSchool",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "marine-snow",
+    "type": "particles",
+    "target": "brightness",
+    "cls": "particles"
+   },
+   {
+    "layer": "marine-snow",
+    "type": "particles",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "marine-snow",
+    "type": "particles",
+    "target": "size",
+    "cls": "particles"
+   },
+   {
+    "layer": "marine-snow",
+    "type": "particles",
+    "target": "turbulence",
+    "cls": "motion"
+   },
+   {
+    "layer": "marine-snow",
+    "type": "particles",
+    "target": "density",
+    "cls": "particles"
+   },
+   {
+    "layer": "marine-snow",
+    "type": "particles",
+    "target": "presence",
+    "cls": "none"
+   },
+   {
+    "layer": "plankton",
+    "type": "particles",
+    "target": "brightness",
+    "cls": "particles"
+   },
+   {
+    "layer": "plankton",
+    "type": "particles",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "plankton",
+    "type": "particles",
+    "target": "size",
+    "cls": "particles"
+   },
+   {
+    "layer": "plankton",
+    "type": "particles",
+    "target": "turbulence",
+    "cls": "motion"
+   },
+   {
+    "layer": "plankton",
+    "type": "particles",
+    "target": "density",
+    "cls": "particles"
+   },
+   {
+    "layer": "plankton",
+    "type": "particles",
+    "target": "presence",
+    "cls": "none"
+   }
+  ],
+  "events": [
+   "clear>=4 -> great-white.pass",
+   "combo>=4 -> great-white.pass",
+   "b2b -> eagle-rays.show"
+  ],
+  "warnings": []
+ },
+ "enchanted-wilderness": {
+  "layers": [
+   {
+    "id": "sky",
+    "type": "sky"
+   },
+   {
+    "id": "forest-mist",
+    "type": "clouds"
+   },
+   {
+    "id": "red-deer",
+    "type": "model"
+   },
+   {
+    "id": "bear",
+    "type": "model"
+   },
+   {
+    "id": "owl",
+    "type": "model"
+   },
+   {
+    "id": "fireflies",
+    "type": "fireflies"
+   },
+   {
+    "id": "spores",
+    "type": "particles"
+   }
+  ],
+  "targets": [
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "stars",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "nebula",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "disc",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "dusk",
+    "cls": "none"
+   },
+   {
+    "layer": "forest-mist",
+    "type": "clouds",
+    "target": "opacity",
+    "cls": "atmosphere"
+   },
+   {
+    "layer": "red-deer",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "red-deer",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "red-deer",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "bear",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "bear",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "bear",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "owl",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "owl",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "owl",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "fireflies",
+    "type": "fireflies",
+    "target": "activity",
+    "cls": "creatures"
+   },
+   {
+    "layer": "fireflies",
+    "type": "fireflies",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "spores",
+    "type": "particles",
+    "target": "brightness",
+    "cls": "particles"
+   },
+   {
+    "layer": "spores",
+    "type": "particles",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "spores",
+    "type": "particles",
+    "target": "size",
+    "cls": "particles"
+   },
+   {
+    "layer": "spores",
+    "type": "particles",
+    "target": "turbulence",
+    "cls": "motion"
+   },
+   {
+    "layer": "spores",
+    "type": "particles",
+    "target": "density",
+    "cls": "particles"
+   },
+   {
+    "layer": "spores",
+    "type": "particles",
+    "target": "presence",
+    "cls": "none"
+   }
+  ],
+  "events": [
+   "clear>=4 -> owl.pass",
+   "b2b -> owl.pass",
+   "combo>=4 -> red-deer.burst"
+  ],
+  "warnings": []
+ },
+ "ember-foundry": {
+  "layers": [
+   {
+    "id": "sky",
+    "type": "sky"
+   },
+   {
+    "id": "hall",
+    "type": "gltfScene"
+   },
+   {
+    "id": "robot-arms",
+    "type": "model"
+   },
+   {
+    "id": "molten-channel",
+    "type": "lava"
+   },
+   {
+    "id": "anvil-sparks",
+    "type": "emitter"
+   },
+   {
+    "id": "pour-sparks",
+    "type": "emitter"
+   },
+   {
+    "id": "embers",
+    "type": "particles"
+   },
+   {
+    "id": "smoke",
+    "type": "clouds"
+   }
+  ],
+  "targets": [
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "stars",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "nebula",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "disc",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "dusk",
+    "cls": "none"
+   },
+   {
+    "layer": "hall",
+    "type": "gltfScene",
+    "target": "emissive",
+    "cls": "light"
+   },
+   {
+    "layer": "robot-arms",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "robot-arms",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "robot-arms",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "molten-channel",
+    "type": "lava",
+    "target": "heat",
+    "cls": "light"
+   },
+   {
+    "layer": "anvil-sparks",
+    "type": "emitter",
+    "target": "amount",
+    "cls": "particles"
+   },
+   {
+    "layer": "pour-sparks",
+    "type": "emitter",
+    "target": "amount",
+    "cls": "particles"
+   },
+   {
+    "layer": "embers",
+    "type": "particles",
+    "target": "brightness",
+    "cls": "particles"
+   },
+   {
+    "layer": "embers",
+    "type": "particles",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "embers",
+    "type": "particles",
+    "target": "size",
+    "cls": "particles"
+   },
+   {
+    "layer": "embers",
+    "type": "particles",
+    "target": "turbulence",
+    "cls": "motion"
+   },
+   {
+    "layer": "embers",
+    "type": "particles",
+    "target": "density",
+    "cls": "particles"
+   },
+   {
+    "layer": "embers",
+    "type": "particles",
+    "target": "presence",
+    "cls": "none"
+   },
+   {
+    "layer": "smoke",
+    "type": "clouds",
+    "target": "opacity",
+    "cls": "atmosphere"
+   }
+  ],
+  "events": [
+   "clear>=3 -> robot-arms.clip",
+   "b2b -> robot-arms.clip"
+  ],
+  "warnings": []
+ },
+ "ember-core": {
+  "layers": [
+   {
+    "id": "sky",
+    "type": "sky"
+   },
+   {
+    "id": "fire-streaks",
+    "type": "meteors"
+   },
+   {
+    "id": "lava-fields",
+    "type": "terrain"
+   },
+   {
+    "id": "eruption",
+    "type": "emitter"
+   },
+   {
+    "id": "crater-burst",
+    "type": "emitter"
+   },
+   {
+    "id": "ash-plume",
+    "type": "clouds"
+   },
+   {
+    "id": "crater-glow",
+    "type": "clouds"
+   },
+   {
+    "id": "embers",
+    "type": "particles"
+   },
+   {
+    "id": "ash",
+    "type": "particles"
+   },
+   {
+    "id": "heat-smoke",
+    "type": "clouds"
+   }
+  ],
+  "targets": [
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "stars",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "nebula",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "disc",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "dusk",
+    "cls": "none"
+   },
+   {
+    "layer": "fire-streaks",
+    "type": "meteors",
+    "target": "rate",
+    "cls": "events"
+   },
+   {
+    "layer": "fire-streaks",
+    "type": "meteors",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "lava-fields",
+    "type": "terrain",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "lava-fields",
+    "type": "terrain",
+    "target": "ripple",
+    "cls": "motion"
+   },
+   {
+    "layer": "lava-fields",
+    "type": "terrain",
+    "target": "sparkle",
+    "cls": "light"
+   },
+   {
+    "layer": "lava-fields",
+    "type": "terrain",
+    "target": "presence",
+    "cls": "none"
+   },
+   {
+    "layer": "lava-fields",
+    "type": "terrain",
+    "target": "music",
+    "cls": "none"
+   },
+   {
+    "layer": "lava-fields",
+    "type": "terrain",
+    "target": "light",
+    "cls": "light"
+   },
+   {
+    "layer": "eruption",
+    "type": "emitter",
+    "target": "amount",
+    "cls": "particles"
+   },
+   {
+    "layer": "crater-burst",
+    "type": "emitter",
+    "target": "amount",
+    "cls": "particles"
+   },
+   {
+    "layer": "ash-plume",
+    "type": "clouds",
+    "target": "opacity",
+    "cls": "atmosphere"
+   },
+   {
+    "layer": "crater-glow",
+    "type": "clouds",
+    "target": "opacity",
+    "cls": "atmosphere"
+   },
+   {
+    "layer": "embers",
+    "type": "particles",
+    "target": "brightness",
+    "cls": "particles"
+   },
+   {
+    "layer": "embers",
+    "type": "particles",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "embers",
+    "type": "particles",
+    "target": "size",
+    "cls": "particles"
+   },
+   {
+    "layer": "embers",
+    "type": "particles",
+    "target": "turbulence",
+    "cls": "motion"
+   },
+   {
+    "layer": "embers",
+    "type": "particles",
+    "target": "density",
+    "cls": "particles"
+   },
+   {
+    "layer": "embers",
+    "type": "particles",
+    "target": "presence",
+    "cls": "none"
+   },
+   {
+    "layer": "ash",
+    "type": "particles",
+    "target": "brightness",
+    "cls": "particles"
+   },
+   {
+    "layer": "ash",
+    "type": "particles",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "ash",
+    "type": "particles",
+    "target": "size",
+    "cls": "particles"
+   },
+   {
+    "layer": "ash",
+    "type": "particles",
+    "target": "turbulence",
+    "cls": "motion"
+   },
+   {
+    "layer": "ash",
+    "type": "particles",
+    "target": "density",
+    "cls": "particles"
+   },
+   {
+    "layer": "ash",
+    "type": "particles",
+    "target": "presence",
+    "cls": "none"
+   },
+   {
+    "layer": "heat-smoke",
+    "type": "clouds",
+    "target": "opacity",
+    "cls": "atmosphere"
+   }
+  ],
+  "events": [
+   "clear>=4 -> fire-streaks.burst",
+   "b2b -> fire-streaks.burst"
+  ],
+  "warnings": []
+ },
+ "northern-lights": {
+  "layers": [
+   {
+    "id": "sky",
+    "type": "sky"
+   },
+   {
+    "id": "meteors",
+    "type": "meteors"
+   },
+   {
+    "id": "aurora-main",
+    "type": "aurora"
+   },
+   {
+    "id": "aurora-far",
+    "type": "aurora"
+   },
+   {
+    "id": "ranges",
+    "type": "ridges"
+   },
+   {
+    "id": "tundra",
+    "type": "terrain"
+   },
+   {
+    "id": "mirror-lake",
+    "type": "water"
+   },
+   {
+    "id": "spruce",
+    "type": "conifers"
+   },
+   {
+    "id": "elk-herd",
+    "type": "model"
+   },
+   {
+    "id": "snow",
+    "type": "particles"
+   }
+  ],
+  "targets": [
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "stars",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "nebula",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "disc",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "dusk",
+    "cls": "none"
+   },
+   {
+    "layer": "meteors",
+    "type": "meteors",
+    "target": "rate",
+    "cls": "events"
+   },
+   {
+    "layer": "meteors",
+    "type": "meteors",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "aurora-main",
+    "type": "aurora",
+    "target": "intensity",
+    "cls": "light"
+   },
+   {
+    "layer": "aurora-main",
+    "type": "aurora",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "aurora-far",
+    "type": "aurora",
+    "target": "intensity",
+    "cls": "light"
+   },
+   {
+    "layer": "aurora-far",
+    "type": "aurora",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "tundra",
+    "type": "terrain",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "tundra",
+    "type": "terrain",
+    "target": "ripple",
+    "cls": "motion"
+   },
+   {
+    "layer": "tundra",
+    "type": "terrain",
+    "target": "sparkle",
+    "cls": "light"
+   },
+   {
+    "layer": "tundra",
+    "type": "terrain",
+    "target": "presence",
+    "cls": "none"
+   },
+   {
+    "layer": "tundra",
+    "type": "terrain",
+    "target": "music",
+    "cls": "none"
+   },
+   {
+    "layer": "tundra",
+    "type": "terrain",
+    "target": "light",
+    "cls": "light"
+   },
+   {
+    "layer": "mirror-lake",
+    "type": "water",
+    "target": "amplitude",
+    "cls": "motion"
+   },
+   {
+    "layer": "mirror-lake",
+    "type": "water",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "mirror-lake",
+    "type": "water",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "elk-herd",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "elk-herd",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "elk-herd",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "snow",
+    "type": "particles",
+    "target": "brightness",
+    "cls": "particles"
+   },
+   {
+    "layer": "snow",
+    "type": "particles",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "snow",
+    "type": "particles",
+    "target": "size",
+    "cls": "particles"
+   },
+   {
+    "layer": "snow",
+    "type": "particles",
+    "target": "turbulence",
+    "cls": "motion"
+   },
+   {
+    "layer": "snow",
+    "type": "particles",
+    "target": "density",
+    "cls": "particles"
+   },
+   {
+    "layer": "snow",
+    "type": "particles",
+    "target": "presence",
+    "cls": "none"
+   }
+  ],
+  "events": [
+   "combo>=3 -> meteors.burst",
+   "clear>=4 -> meteors.burst"
+  ],
+  "warnings": []
+ },
+ "future-nights": {
+  "layers": [
+   {
+    "id": "sky",
+    "type": "sky"
+   },
+   {
+    "id": "river",
+    "type": "water"
+   },
+   {
+    "id": "river-edge",
+    "type": "matte"
+   },
+   {
+    "id": "traffic",
+    "type": "traffic"
+   },
+   {
+    "id": "aircraft",
+    "type": "aircraft"
+   },
+   {
+    "id": "rain",
+    "type": "particles"
+   },
+   {
+    "id": "splashes",
+    "type": "particles"
+   }
+  ],
+  "targets": [
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "stars",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "nebula",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "disc",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "dusk",
+    "cls": "none"
+   },
+   {
+    "layer": "river",
+    "type": "water",
+    "target": "amplitude",
+    "cls": "motion"
+   },
+   {
+    "layer": "river",
+    "type": "water",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "river",
+    "type": "water",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "traffic",
+    "type": "traffic",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "traffic",
+    "type": "traffic",
+    "target": "lamps",
+    "cls": "light"
+   },
+   {
+    "layer": "aircraft",
+    "type": "aircraft",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "rain",
+    "type": "particles",
+    "target": "brightness",
+    "cls": "particles"
+   },
+   {
+    "layer": "rain",
+    "type": "particles",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "rain",
+    "type": "particles",
+    "target": "size",
+    "cls": "particles"
+   },
+   {
+    "layer": "rain",
+    "type": "particles",
+    "target": "turbulence",
+    "cls": "motion"
+   },
+   {
+    "layer": "rain",
+    "type": "particles",
+    "target": "density",
+    "cls": "particles"
+   },
+   {
+    "layer": "rain",
+    "type": "particles",
+    "target": "presence",
+    "cls": "none"
+   },
+   {
+    "layer": "splashes",
+    "type": "particles",
+    "target": "brightness",
+    "cls": "particles"
+   },
+   {
+    "layer": "splashes",
+    "type": "particles",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "splashes",
+    "type": "particles",
+    "target": "size",
+    "cls": "particles"
+   },
+   {
+    "layer": "splashes",
+    "type": "particles",
+    "target": "turbulence",
+    "cls": "motion"
+   },
+   {
+    "layer": "splashes",
+    "type": "particles",
+    "target": "density",
+    "cls": "particles"
+   },
+   {
+    "layer": "splashes",
+    "type": "particles",
+    "target": "presence",
+    "cls": "none"
+   }
+  ],
+  "events": [],
+  "warnings": []
+ },
+ "dead-acre": {
+  "layers": [
+   {
+    "id": "sky",
+    "type": "sky"
+   },
+   {
+    "id": "lamps",
+    "type": "deadAcreLamps"
+   },
+   {
+    "id": "horde",
+    "type": "deadAcreHorde"
+   },
+   {
+    "id": "shamblers",
+    "type": "model"
+   },
+   {
+    "id": "shambler-women",
+    "type": "model"
+   },
+   {
+    "id": "crows",
+    "type": "deadAcreCrows"
+   },
+   {
+    "id": "bats",
+    "type": "model"
+   },
+   {
+    "id": "ground-fog",
+    "type": "deadAcreFog"
+   }
+  ],
+  "targets": [
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "stars",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "nebula",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "disc",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "dusk",
+    "cls": "none"
+   },
+   {
+    "layer": "lamps",
+    "type": "deadAcreLamps",
+    "target": "tension",
+    "cls": "none"
+   },
+   {
+    "layer": "lamps",
+    "type": "deadAcreLamps",
+    "target": "dusk",
+    "cls": "none"
+   },
+   {
+    "layer": "lamps",
+    "type": "deadAcreLamps",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "horde",
+    "type": "deadAcreHorde",
+    "target": "horde",
+    "cls": "none"
+   },
+   {
+    "layer": "horde",
+    "type": "deadAcreHorde",
+    "target": "fog",
+    "cls": "atmosphere"
+   },
+   {
+    "layer": "horde",
+    "type": "deadAcreHorde",
+    "target": "dusk",
+    "cls": "none"
+   },
+   {
+    "layer": "horde",
+    "type": "deadAcreHorde",
+    "target": "tempo",
+    "cls": "motion"
+   },
+   {
+    "layer": "horde",
+    "type": "deadAcreHorde",
+    "target": "ambient",
+    "cls": "none"
+   },
+   {
+    "layer": "shamblers",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "shamblers",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "shamblers",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "shambler-women",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "shambler-women",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "shambler-women",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "crows",
+    "type": "deadAcreCrows",
+    "target": "dusk",
+    "cls": "none"
+   },
+   {
+    "layer": "bats",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "bats",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "bats",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "ground-fog",
+    "type": "deadAcreFog",
+    "target": "density",
+    "cls": "atmosphere"
+   },
+   {
+    "layer": "ground-fog",
+    "type": "deadAcreFog",
+    "target": "drift",
+    "cls": "motion"
+   },
+   {
+    "layer": "ground-fog",
+    "type": "deadAcreFog",
+    "target": "dusk",
+    "cls": "none"
+   }
+  ],
+  "events": [
+   "section:drop -> bats.pass",
+   "section:drop -> bats.pass",
+   "combo>=4 -> bats.pass"
+  ],
+  "warnings": []
+ },
+ "the-veil": {
+  "layers": [
+   {
+    "id": "sky",
+    "type": "sky"
+   },
+   {
+    "id": "atmosphere",
+    "type": "veilAtmosphere"
+   },
+   {
+    "id": "land",
+    "type": "veilLand"
+   },
+   {
+    "id": "scenery",
+    "type": "veilScenery"
+   },
+   {
+    "id": "marsh",
+    "type": "veilMarsh"
+   },
+   {
+    "id": "mist",
+    "type": "veilMist"
+   },
+   {
+    "id": "creatures",
+    "type": "veilCreatures"
+   }
+  ],
+  "targets": [
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "stars",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "nebula",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "disc",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "dusk",
+    "cls": "none"
+   },
+   {
+    "layer": "atmosphere",
+    "type": "veilAtmosphere",
+    "target": "density",
+    "cls": "atmosphere"
+   },
+   {
+    "layer": "atmosphere",
+    "type": "veilAtmosphere",
+    "target": "drift",
+    "cls": "motion"
+   },
+   {
+    "layer": "atmosphere",
+    "type": "veilAtmosphere",
+    "target": "fineDrift",
+    "cls": "motion"
+   },
+   {
+    "layer": "atmosphere",
+    "type": "veilAtmosphere",
+    "target": "lights",
+    "cls": "light"
+   },
+   {
+    "layer": "mist",
+    "type": "veilMist",
+    "target": "shafts",
+    "cls": "none"
+   },
+   {
+    "layer": "mist",
+    "type": "veilMist",
+    "target": "glow",
+    "cls": "light"
+   }
+  ],
+  "events": [
+   "section:drop -> atmosphere.show",
+   "clear>=4 -> atmosphere.reveal",
+   "section:break -> atmosphere.show"
+  ],
+  "warnings": []
+ },
+ "ashen-vigil": {
+  "layers": [
+   {
+    "id": "sky",
+    "type": "ashenSky"
+   },
+   {
+    "id": "detonations",
+    "type": "nuclearDetonations"
+   },
+   {
+    "id": "smoke-layers",
+    "type": "smokeDrift"
+   },
+   {
+    "id": "vultures",
+    "type": "birdFlock"
+   },
+   {
+    "id": "ash",
+    "type": "ashfall"
+   }
+  ],
+  "targets": [
+   {
+    "layer": "sky",
+    "type": "ashenSky",
+    "target": "dusk",
+    "cls": "none"
+   },
+   {
+    "layer": "sky",
+    "type": "ashenSky",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "ashenSky",
+    "target": "fire",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "ashenSky",
+    "target": "smoke",
+    "cls": "atmosphere"
+   },
+   {
+    "layer": "detonations",
+    "type": "nuclearDetonations",
+    "target": "dusk",
+    "cls": "none"
+   },
+   {
+    "layer": "smoke-layers",
+    "type": "smokeDrift",
+    "target": "dusk",
+    "cls": "none"
+   },
+   {
+    "layer": "smoke-layers",
+    "type": "smokeDrift",
+    "target": "opacity",
+    "cls": "atmosphere"
+   },
+   {
+    "layer": "ash",
+    "type": "ashfall",
+    "target": "dusk",
+    "cls": "none"
+   },
+   {
+    "layer": "ash",
+    "type": "ashfall",
+    "target": "opacity",
+    "cls": "atmosphere"
+   }
+  ],
+  "events": [
+   "section:drop -> detonations.burst"
+  ],
+  "warnings": []
+ },
+ "wardens-spire": {
+  "layers": [
+   {
+    "id": "sky",
+    "type": "sky"
+   },
+   {
+    "id": "land",
+    "type": "wardenSpireLand"
+   },
+   {
+    "id": "rocks",
+    "type": "wardenSpireRocks"
+   },
+   {
+    "id": "citadel",
+    "type": "wardenSpireCitadel"
+   },
+   {
+    "id": "warden",
+    "type": "wardenSpireWarden"
+   },
+   {
+    "id": "sentinels",
+    "type": "model"
+   },
+   {
+    "id": "storm",
+    "type": "wardenSpireStorm"
+   },
+   {
+    "id": "ash",
+    "type": "wardenSpireAsh"
+   },
+   {
+    "id": "embers",
+    "type": "wardenSpireAsh"
+   }
+  ],
+  "targets": [
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "stars",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "nebula",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "disc",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "dusk",
+    "cls": "none"
+   },
+   {
+    "layer": "land",
+    "type": "wardenSpireLand",
+    "target": "heat",
+    "cls": "light"
+   },
+   {
+    "layer": "sentinels",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "sentinels",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "sentinels",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   }
+  ],
+  "events": [
+   "section:drop -> warden.show",
+   "b2b -> storm.burst",
+   "section:build -> storm.burst"
+  ],
+  "warnings": []
+ },
+ "red-horizon": {
+  "layers": [
+   {
+    "id": "sky",
+    "type": "redHorizonSky"
+   },
+   {
+    "id": "ground",
+    "type": "redHorizonGround"
+   },
+   {
+    "id": "ruins",
+    "type": "redHorizonScenery"
+   },
+   {
+    "id": "smoke",
+    "type": "redHorizonSmoke"
+   },
+   {
+    "id": "fires",
+    "type": "redHorizonFires"
+   },
+   {
+    "id": "factory",
+    "type": "redHorizonFactory"
+   },
+   {
+    "id": "machines",
+    "type": "redHorizonSentinels"
+   },
+   {
+    "id": "drones",
+    "type": "redHorizonDrones"
+   },
+   {
+    "id": "walkers",
+    "type": "redHorizonColossus"
+   },
+   {
+    "id": "explosions",
+    "type": "redHorizonExplosions"
+   },
+   {
+    "id": "sparks",
+    "type": "redHorizonSparks"
+   },
+   {
+    "id": "ash",
+    "type": "particles"
+   },
+   {
+    "id": "embers",
+    "type": "particles"
+   }
+  ],
+  "targets": [
+   {
+    "layer": "sky",
+    "type": "redHorizonSky",
+    "target": "dusk",
+    "cls": "none"
+   },
+   {
+    "layer": "sky",
+    "type": "redHorizonSky",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "smoke",
+    "type": "redHorizonSmoke",
+    "target": "rate",
+    "cls": "atmosphere"
+   },
+   {
+    "layer": "machines",
+    "type": "redHorizonSentinels",
+    "target": "pace",
+    "cls": "motion"
+   },
+   {
+    "layer": "drones",
+    "type": "redHorizonDrones",
+    "target": "search",
+    "cls": "none"
+   },
+   {
+    "layer": "walkers",
+    "type": "redHorizonColossus",
+    "target": "pace",
+    "cls": "motion"
+   },
+   {
+    "layer": "explosions",
+    "type": "redHorizonExplosions",
+    "target": "rate",
+    "cls": "events"
+   },
+   {
+    "layer": "ash",
+    "type": "particles",
+    "target": "brightness",
+    "cls": "particles"
+   },
+   {
+    "layer": "ash",
+    "type": "particles",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "ash",
+    "type": "particles",
+    "target": "size",
+    "cls": "particles"
+   },
+   {
+    "layer": "ash",
+    "type": "particles",
+    "target": "turbulence",
+    "cls": "motion"
+   },
+   {
+    "layer": "ash",
+    "type": "particles",
+    "target": "density",
+    "cls": "particles"
+   },
+   {
+    "layer": "ash",
+    "type": "particles",
+    "target": "presence",
+    "cls": "none"
+   },
+   {
+    "layer": "embers",
+    "type": "particles",
+    "target": "brightness",
+    "cls": "particles"
+   },
+   {
+    "layer": "embers",
+    "type": "particles",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "embers",
+    "type": "particles",
+    "target": "size",
+    "cls": "particles"
+   },
+   {
+    "layer": "embers",
+    "type": "particles",
+    "target": "turbulence",
+    "cls": "motion"
+   },
+   {
+    "layer": "embers",
+    "type": "particles",
+    "target": "density",
+    "cls": "particles"
+   },
+   {
+    "layer": "embers",
+    "type": "particles",
+    "target": "presence",
+    "cls": "none"
+   }
+  ],
+  "events": [
+   "clear>=4 -> machines.burst",
+   "b2b -> machines.burst"
+  ],
+  "warnings": []
+ },
+ "folded-sky": {
+  "layers": [
+   {
+    "id": "sky",
+    "type": "sky"
+   },
+   {
+    "id": "seeds",
+    "type": "particles"
+   },
+   {
+    "id": "murmuration",
+    "type": "birdFlock"
+   },
+   {
+    "id": "gull",
+    "type": "model"
+   }
+  ],
+  "targets": [
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "stars",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "nebula",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "disc",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "dusk",
+    "cls": "none"
+   },
+   {
+    "layer": "seeds",
+    "type": "particles",
+    "target": "brightness",
+    "cls": "particles"
+   },
+   {
+    "layer": "seeds",
+    "type": "particles",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "seeds",
+    "type": "particles",
+    "target": "size",
+    "cls": "particles"
+   },
+   {
+    "layer": "seeds",
+    "type": "particles",
+    "target": "turbulence",
+    "cls": "motion"
+   },
+   {
+    "layer": "seeds",
+    "type": "particles",
+    "target": "density",
+    "cls": "particles"
+   },
+   {
+    "layer": "seeds",
+    "type": "particles",
+    "target": "presence",
+    "cls": "none"
+   },
+   {
+    "layer": "murmuration",
+    "type": "birdFlock",
+    "target": "tempo",
+    "cls": "creatures"
+   },
+   {
+    "layer": "murmuration",
+    "type": "birdFlock",
+    "target": "agitation",
+    "cls": "creatures"
+   },
+   {
+    "layer": "gull",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "gull",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "gull",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   }
+  ],
+  "events": [
+   "clear>=4 -> gull.pass",
+   "combo>=4 -> gull.pass",
+   "clear>=3 -> murmuration.burst",
+   "b2b -> murmuration.burst"
+  ],
+  "warnings": []
+ },
+ "the-web": {
+  "layers": [
+   {
+    "id": "sky",
+    "type": "sky"
+   },
+   {
+    "id": "ruins",
+    "type": "webRuins"
+   },
+   {
+    "id": "webs",
+    "type": "webWebs"
+   },
+   {
+    "id": "spiders",
+    "type": "webSpiders"
+   },
+   {
+    "id": "bats",
+    "type": "model"
+   },
+   {
+    "id": "mist",
+    "type": "webMist"
+   },
+   {
+    "id": "dust",
+    "type": "particles"
+   }
+  ],
+  "targets": [
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "glow",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "stars",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "nebula",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "disc",
+    "cls": "light"
+   },
+   {
+    "layer": "sky",
+    "type": "sky",
+    "target": "dusk",
+    "cls": "none"
+   },
+   {
+    "layer": "webs",
+    "type": "webWebs",
+    "target": "breathe",
+    "cls": "motion"
+   },
+   {
+    "layer": "bats",
+    "type": "model",
+    "target": "brightness",
+    "cls": "light"
+   },
+   {
+    "layer": "bats",
+    "type": "model",
+    "target": "pace",
+    "cls": "creatures"
+   },
+   {
+    "layer": "bats",
+    "type": "model",
+    "target": "visible",
+    "cls": "none"
+   },
+   {
+    "layer": "mist",
+    "type": "webMist",
+    "target": "density",
+    "cls": "atmosphere"
+   },
+   {
+    "layer": "dust",
+    "type": "particles",
+    "target": "brightness",
+    "cls": "particles"
+   },
+   {
+    "layer": "dust",
+    "type": "particles",
+    "target": "speed",
+    "cls": "motion"
+   },
+   {
+    "layer": "dust",
+    "type": "particles",
+    "target": "size",
+    "cls": "particles"
+   },
+   {
+    "layer": "dust",
+    "type": "particles",
+    "target": "turbulence",
+    "cls": "motion"
+   },
+   {
+    "layer": "dust",
+    "type": "particles",
+    "target": "density",
+    "cls": "particles"
+   },
+   {
+    "layer": "dust",
+    "type": "particles",
+    "target": "presence",
+    "cls": "none"
+   }
+  ],
+  "events": [
+   "section:drop -> spiders.show",
+   "section:build -> spiders.show",
+   "b2b -> spiders.show"
+  ],
+  "warnings": []
+ },
+ "dark-storm": {
+  "layers": [
+   {
+    "id": "sky",
+    "type": "stormSky"
+   },
+   {
+    "id": "land",
+    "type": "stormLand"
+   },
+   {
+    "id": "props",
+    "type": "stormProps"
+   },
+   {
+    "id": "grass",
+    "type": "stormGrass"
+   },
+   {
+    "id": "lightning",
+    "type": "stormLightning"
+   },
+   {
+    "id": "rain",
+    "type": "stormRain"
+   }
+  ],
+  "targets": [],
+  "events": [
+   "section:drop -> lightning.burst",
+   "combo>=4 -> lightning.burst"
+  ],
+  "warnings": []
+ }
+}

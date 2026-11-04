@@ -140,6 +140,12 @@ export const skyComponent: ComponentFactory<SkyParams> = {
       discIntensity: floatUniform(p.disc?.intensity ?? 0),
       presence: floatUniform(1),
       dusk: floatUniform(0),
+      /**
+       * The photograph's light (reactive, since SDK 1.7): a world's music reactions let the whole
+       * panorama breathe a few percent with the song's sections. 1 = as authored; Background
+       * intensity never scales it (the photo's look is the world's art).
+       */
+      exposure: floatUniform(1),
     };
     const dir = normalize(positionWorldDirection);
     const y = dir.y;
@@ -175,7 +181,7 @@ export const skyComponent: ComponentFactory<SkyParams> = {
         const inDetail = smoothstep(0, 0.012, du).mul(smoothstep(1, 0.988, du));
         base = mix(base, texture(detailTex, vec2(du.clamp(0, 1), v)).rgb, inDetail);
       }
-      const sample = base.mul(pano.exposure).mul(darken);
+      const sample = base.mul(pano.exposure).mul(darken).mul(u.exposure);
       const inBand = smoothstep(pano.elevation[1], pano.elevation[1] - pano.fade, elev).mul(step(pano.elevation[0], elev));
       color = mix(color, sample, inBand);
       if (space) {
@@ -276,7 +282,7 @@ export const skyComponent: ComponentFactory<SkyParams> = {
     mesh.frustumCulled = false;
     return {
       object: mesh,
-      reactive: { glow: u.glow, stars: u.stars, nebula: u.nebula, disc: u.discIntensity, dusk: u.dusk },
+      reactive: { glow: u.glow, stars: u.stars, nebula: u.nebula, disc: u.discIntensity, dusk: u.dusk, exposure: u.exposure },
       setPresence(v) {
         u.presence.value = v;
       },

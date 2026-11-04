@@ -1,6 +1,6 @@
 # Features: requirements audit
 
-This audit checks the brief (`prompt.md`, §1–§27) against the code as of 2026-11-03.
+This audit checks the brief (`prompt.md`, §1–§27, and the §40 background overhaul) against the code as of 2026-11-04.
 
 | Status | Meaning |
 |---|---|
@@ -360,9 +360,28 @@ How to read the Evidence column:
 | L. Audio settings, persisted, and a sound test screen | Done | Audio tab (hard-drop, world-effects and menu volumes, music intensity, adaptive music, spatial audio, variation, calibration) and Sound test; `e2e/audio-settings.spec.ts` |
 | M. Audio acceptance | Done / Manual check | Automated: headroom, material weight and colour, bus routing, pause, transitions. Listening on headphones and speakers is pending |
 
+## §40 Living backgrounds and music-synchronised worlds
+
+| Requirement | Status | Evidence |
+|---|---|---|
+| Protect the board and the seven pieces (checklist, baseline, verification) | Done | [PROTECTED_PLAYFIELD.md](PROTECTED_PLAYFIELD.md). Snapshot of 34 protected files and every world's board fields (`scripts/protectedPlayfield.test.ts`, in `npm test`); deterministic board-only pixel baseline of all 23 worlds (`scripts/playfield-baseline.ts`) |
+| 2. Reference-game investigation, played and recorded | Done | [BACKGROUND_VISUAL_REFERENCE.md](BACKGROUND_VISUAL_REFERENCE.md). The installed game was played by a screen-reading bot and recorded with audio (The Deep, a whole run, and Spirit Canyon's opening), with measured background-versus-music correlations |
+| 3, 10. Professional, realistic assets; no cheap stand-ins | Partial | Photo panoramas, scans and licensed models in most worlds ([ENVIRONMENTAL_ASSET_REVIEW.md](ENVIRONMENTAL_ASSET_REVIEW.md)). Several worlds still rely on procedural scenery (Northern Lights' ridges and spruce, Luminous Tide's headlands, Ember Core, The Abyss's seafloor); see [BACKGROUND_VISUAL_QUALITY_REPORT.md](BACKGROUND_VISUAL_QUALITY_REPORT.md) |
+| 4. Living worlds: large, midground, fine motion and background events | Done / Manual check | Ambient animation in every component; ambient call-in timers with groups and variety (`callins.ts`); creature passes, including side-on (`pass.path: "lateral"`); every world's `living.json` events |
+| 5, 6. Music drives the environment through one music-to-environment system, using the existing analysis | Done | `EnvironmentMusicDirector` (`src/rendering/environments/living/musicDirector.ts`) reads only AudioFeatures and the beat grid. It publishes typed drives (`EnvFrame.music`, `music.*` bindings, `environmentUniforms`) and cues; `musicDirector.test.ts` |
+| 7. Different reactions for bass, mids, treble, beats and sections | Done | Distinct drives with their own time constants (`DRIVE_TIMING`). Selected-beat and governed-accent pulses; build, drop, break, peak, phrase and calm cues |
+| 8. A music-mapping profile per world | Done / Manual check | `content/stages/*/living.json` (23 worlds), tuned against offline drive measurements of each world's own track ([MUSIC_REACTIVE_ENVIRONMENTS.md](MUSIC_REACTIVE_ENVIRONMENTS.md)). Listening review is the owner's |
+| 9. Four time scales: ambient, music-reactive, beat, major events | Done | [LIVING_ENVIRONMENT_ARCHITECTURE.md](LIVING_ENVIRONMENT_ARCHITECTURE.md) §3 |
+| 11. Cinematic composition around the board | Partial | Clear zone and framing rules kept ([ART_DIRECTION.md](ART_DIRECTION.md)); per-world review in BACKGROUND_VISUAL_QUALITY_REPORT.md |
+| 12. Background intensity: Subtle, Balanced, Immersive, Cinematic, Custom; seven knobs; reduced motion and flash | Done | Settings → World (`WORLD_TAB`), `background` settings section, `resolveBackground` and class scaling (`living/intensity.ts`, `reactivity.ts`); `intensity.test.ts`, `reactivity.test.ts` |
+| 13. Performance: GPU-side animation, no per-frame allocation, independent of React | Done | Music director 0.46 µs, reactivity 9.8 µs (60 bindings) and event director 0.06 µs per frame on the CPU; frame times in [BACKGROUND_PERFORMANCE_REPORT.md](BACKGROUND_PERFORMANCE_REPORT.md) |
+| 14. One reusable environment animation framework; data-driven worlds | Done | SDK 1.7: drives, cues, `pulse` and `wave`, ambient triggers, classes, `living.json`. A new world needs no engine change |
+| 15. Gameplay recordings of every world with the real soundtrack | Done / Manual check | `scripts/record-living.ts`: each world's clip, from a quieter passage through the build into the drop, with the game's own audio and a drive log; review in BACKGROUND_VISUAL_QUALITY_REPORT.md |
+| 16. Desktop and VR tested independently | Partial | Desktop: e2e suite, recordings and the perf matrix. VR: the IWER emulation suite only; no real headset |
+
 ## Known limitations
 
-1. **Reference game never inspected.** No desktop-control tools were available, so REFERENCE_NOTES.md rests on genre conventions and the brief. No feature parity is claimed.
+1. **Reference game only partly inspected.** Gameplay rules and settings in REFERENCE_NOTES.md rest on genre conventions and the brief; no settings parity is claimed. The visual and background studies were made in the installed game (VISUAL_REFERENCE_AUDIT.md, BACKGROUND_VISUAL_REFERENCE.md); only two stages were recorded with sound.
 2. **Motion blur is background-only by design.** It is off by default and never applied to the playfield; samples near the board's edge can pick up a little of the board's colour.
 3. **Reflection quality does nothing.** The `graphics.reflections` setting is passed to environments but read by none, and it is not in the UI. Reflections come only from the environment map and material fresnel; there are no screen-space or planar reflections.
 4. **VR is unverified on hardware.** It has been tested only under IWER emulation. In addition:

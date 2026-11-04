@@ -6,14 +6,14 @@
       "layer": "sky",
       "target": "glow",
       "drive": "swell",
-      "amount": 0.12,
+      "amount": 0.168,
       "role": "large"
     },
     {
       "layer": "sky",
       "target": "fire",
       "drive": "body",
-      "amount": 0.2,
+      "amount": 0.28,
       "role": "large"
     },
     {

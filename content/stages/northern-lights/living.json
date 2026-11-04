@@ -6,14 +6,14 @@
       "layer": "aurora-main",
       "target": "intensity",
       "drive": "swell",
-      "amount": 0.3,
+      "amount": 0.42,
       "role": "large"
     },
     {
       "layer": "aurora-main",
       "target": "speed",
       "drive": "body",
-      "amount": 0.25,
+      "amount": 0.35,
       "role": "large"
     },
     {
@@ -48,8 +48,52 @@
       "layer": "mirror-lake",
       "target": "glow",
       "drive": "swell",
-      "amount": 0.15,
+      "amount": 0.21,
       "role": "large"
+    },
+    {
+      "layer": "snow",
+      "target": "brightness",
+      "drive": "intensity",
+      "amount": 0.3,
+      "role": "section"
+    },
+    {
+      "layer": "snow",
+      "target": "density",
+      "drive": "calm",
+      "amount": -0.35,
+      "role": "section",
+      "note": "fewer in calm passages"
+    },
+    {
+      "layer": "sky",
+      "target": "glow",
+      "drive": "intensity",
+      "amount": 0.2,
+      "role": "section"
+    },
+    {
+      "layer": "sky",
+      "target": "exposure",
+      "drive": "intensity",
+      "amount": 0.14,
+      "role": "section",
+      "note": "the panorama follows the sections"
+    },
+    {
+      "layer": "sky",
+      "target": "exposure",
+      "drive": "swell",
+      "amount": 0.04,
+      "role": "large"
+    },
+    {
+      "layer": "tundra",
+      "target": "light",
+      "drive": "intensity",
+      "amount": 0.12,
+      "role": "section"
     }
   ],
   "events": [

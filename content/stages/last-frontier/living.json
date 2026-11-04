@@ -6,7 +6,7 @@
       "layer": "dust",
       "target": "drift",
       "drive": "body",
-      "amount": 0.25,
+      "amount": 0.35,
       "role": "large"
     },
     {
@@ -36,6 +36,36 @@
       "drive": "intensity",
       "amount": 0.15,
       "role": "section"
+    },
+    {
+      "layer": "motes-right",
+      "target": "brightness",
+      "drive": "intensity",
+      "amount": 0.3,
+      "role": "section"
+    },
+    {
+      "layer": "motes-right",
+      "target": "density",
+      "drive": "calm",
+      "amount": -0.35,
+      "role": "section",
+      "note": "fewer in calm passages"
+    },
+    {
+      "layer": "motes-town",
+      "target": "brightness",
+      "drive": "intensity",
+      "amount": 0.3,
+      "role": "section"
+    },
+    {
+      "layer": "motes-town",
+      "target": "density",
+      "drive": "calm",
+      "amount": -0.35,
+      "role": "section",
+      "note": "fewer in calm passages"
     }
   ],
   "events": [

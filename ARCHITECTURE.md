@@ -75,6 +75,11 @@ React is never inside this loop. The HUD updates on events through a zustand van
 - **Particles:** instanced billboards animated statelessly in shaders. Burst effects use a GPU ring buffer that the CPU writes only when an event spawns particles.
 - **Lighting:** a fixed global light rig. Stages only configure it, which avoids shader recompiles in the middle of a game.
 - **World reactions:** the renderer turns the clears it presents into long-lived signals (`heat`, the long `clearWave`) and up to four clear fronts that roll out through the world (`src/rendering/environments/worldSignals.ts`, `src/rendering/shaders/clearFront.ts`). Stage environments also track song sections (section states, `onSection`) and dispatch manifest event call-ins quantised to the music (`callins.ts`). All of it is derived from presented events and engine read-outs, never from inside the engine, so the simulation stays deterministic. See CONTENT_GUIDE.md, section 6.
+- **Living worlds** (SDK 1.7, [LIVING_ENVIRONMENT_ARCHITECTURE.md](LIVING_ENVIRONMENT_ARCHITECTURE.md)):
+  - The Environment Music Director turns the analysis features and the beat grid into slow, medium and fast drives and governed cues, once for every world.
+  - Each world's `living.json` maps them onto its layers and schedules its events through the event director (music cues, ambient timers, groups).
+  - Background intensity (Settings → World) scales the world's motion, music response, particles, light, events, creatures and atmosphere by target class.
+  - None of it touches the board ([PROTECTED_PLAYFIELD.md](PROTECTED_PLAYFIELD.md)).
 - **Post-processing** (`RenderPipeline`): bloom, colour grading, tone mapping and AA, plus optional GTAO, DOF and FSR1 depending on quality (no screen-space reflections; reflections come from the environment map and material fresnel). MSAA is used only when no depth-based pass is active.
 
 ## 5. Audio

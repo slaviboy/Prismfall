@@ -6,14 +6,14 @@
       "layer": "cove",
       "target": "chop",
       "drive": "body",
-      "amount": 0.25,
+      "amount": 0.35,
       "role": "large"
     },
     {
       "layer": "sky",
       "target": "glow",
       "drive": "swell",
-      "amount": 0.1,
+      "amount": 0.14,
       "role": "large"
     },
     {
@@ -22,6 +22,28 @@
       "drive": "motion",
       "amount": 0.3,
       "role": "mid"
+    },
+    {
+      "layer": "sky",
+      "target": "glow",
+      "drive": "intensity",
+      "amount": 0.2,
+      "role": "section"
+    },
+    {
+      "layer": "sky",
+      "target": "exposure",
+      "drive": "intensity",
+      "amount": 0.14,
+      "role": "section",
+      "note": "the panorama follows the sections"
+    },
+    {
+      "layer": "sky",
+      "target": "exposure",
+      "drive": "swell",
+      "amount": 0.04,
+      "role": "large"
     }
   ],
   "events": [

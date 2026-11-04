@@ -9,14 +9,14 @@
       "layer": "atmosphere",
       "target": "density",
       "drive": "swell",
-      "amount": 0.12,
+      "amount": 0.168,
       "role": "large"
     },
     {
       "layer": "atmosphere",
       "target": "drift",
       "drive": "body",
-      "amount": 0.2,
+      "amount": 0.28,
       "role": "large"
     },
     {
@@ -39,6 +39,28 @@
       "drive": "detail",
       "amount": 0.25,
       "role": "fine"
+    },
+    {
+      "layer": "sky",
+      "target": "glow",
+      "drive": "intensity",
+      "amount": 0.2,
+      "role": "section"
+    },
+    {
+      "layer": "sky",
+      "target": "exposure",
+      "drive": "intensity",
+      "amount": 0.14,
+      "role": "section",
+      "note": "the panorama follows the sections"
+    },
+    {
+      "layer": "sky",
+      "target": "exposure",
+      "drive": "swell",
+      "amount": 0.04,
+      "role": "large"
     }
   ],
   "events": [

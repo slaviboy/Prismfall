@@ -6,14 +6,14 @@
       "layer": "ocean",
       "target": "amplitude",
       "drive": "body",
-      "amount": 0.25,
+      "amount": 0.35,
       "role": "large"
     },
     {
       "layer": "ocean",
       "target": "speed",
       "drive": "swell",
-      "amount": 0.1,
+      "amount": 0.14,
       "role": "large"
     },
     {
@@ -57,6 +57,43 @@
       "drive": "tension",
       "amount": 0.3,
       "role": "section"
+    },
+    {
+      "layer": "plankton",
+      "target": "brightness",
+      "drive": "intensity",
+      "amount": 0.3,
+      "role": "section"
+    },
+    {
+      "layer": "plankton",
+      "target": "density",
+      "drive": "calm",
+      "amount": -0.35,
+      "role": "section",
+      "note": "fewer in calm passages"
+    },
+    {
+      "layer": "sky",
+      "target": "glow",
+      "drive": "intensity",
+      "amount": 0.2,
+      "role": "section"
+    },
+    {
+      "layer": "sky",
+      "target": "exposure",
+      "drive": "intensity",
+      "amount": 0.14,
+      "role": "section",
+      "note": "the panorama follows the sections"
+    },
+    {
+      "layer": "sky",
+      "target": "exposure",
+      "drive": "swell",
+      "amount": 0.04,
+      "role": "large"
     }
   ],
   "events": [
