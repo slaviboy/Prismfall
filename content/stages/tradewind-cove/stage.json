@@ -14,7 +14,7 @@
   "recommendedQuality": "high",
   "module": "stage.ts",
   "requires": {
-    "sdk": "^1.2.0"
+    "sdk": "^1.5.0"
   },
   "palette": {
     "accent": "#3fd2c7",
@@ -105,6 +105,88 @@
       "clearcoatRoughness": 0.18
     }
   },
+  "clearWave": {
+    "far": 1300,
+    "travel": 3.6
+  },
+  "sectionStates": {
+    "fade": 5,
+    "states": [
+      {
+        "section": [
+          "drop"
+        ],
+        "layer": "cove",
+        "target": "chop",
+        "scale": 1.35,
+        "anticipate": 0.5
+      },
+      {
+        "section": [
+          "drop"
+        ],
+        "layer": "palms",
+        "target": "wind",
+        "scale": 1.2,
+        "anticipate": 0.5
+      },
+      {
+        "section": [
+          "break"
+        ],
+        "layer": "cove",
+        "target": "chop",
+        "scale": 0.7
+      },
+      {
+        "section": [
+          "break"
+        ],
+        "layer": "palms",
+        "target": "wind",
+        "scale": 0.8
+      },
+      {
+        "section": [
+          "intro",
+          "verse",
+          "break",
+          "bridge",
+          "outro"
+        ],
+        "layer": "dolphins",
+        "target": "visible",
+        "scale": 0.4
+      }
+    ]
+  },
+  "events": [
+    {
+      "layer": "seagull",
+      "on": "clear>=4",
+      "quantize": "bar",
+      "cooldown": 12,
+      "action": "pass"
+    },
+    {
+      "layer": "seagull",
+      "on": "combo>=4",
+      "quantize": "bar",
+      "cooldown": 20,
+      "action": "pass"
+    },
+    {
+      "layer": "dolphins",
+      "on": "b2b",
+      "quantize": "bar",
+      "cooldown": 30,
+      "action": "show",
+      "params": {
+        "seconds": 2,
+        "hold": 24
+      }
+    }
+  ],
   "environment": {
     "layers": [
       {
@@ -313,6 +395,12 @@
             "gust": 0.7,
             "gustSpeed": 9,
             "gustSpacing": 70
+          },
+          "clearWave": {
+            "glitter": 3.0,
+            "swell": 0.12,
+            "surf": 0.8,
+            "color": "#fff6e2"
           }
         },
         "bind": [
@@ -557,7 +645,10 @@
             0,
             1,
             31
-          ]
+          ],
+          "clearWave": {
+            "gust": 0.035
+          }
         },
         "bind": [
           {
@@ -912,7 +1003,112 @@
               "overlay": 0.35,
               "size": 1.1,
               "brightness": 0.9
+            },
+            "clearWave": 0.5
+          }
+        },
+        "bind": []
+      },
+      {
+        "id": "flamingos",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/flamingo.glb",
+          "render": "solid",
+          "animation": {
+            "clip": "Animation",
+            "speed": 0.9,
+            "vary": 0.3
+          },
+          "instances": [
+            {
+              "position": [
+                44.5,
+                0,
+                -15.2
+              ],
+              "yaw": 70,
+              "scale": 0.0112,
+              "snapToGround": true
+            },
+            {
+              "position": [
+                41,
+                0,
+                -15.4
+              ],
+              "yaw": 130,
+              "scale": 0.0106,
+              "snapToGround": true
+            },
+            {
+              "position": [
+                38.2,
+                0,
+                -13.8
+              ],
+              "yaw": -30,
+              "scale": 0.011,
+              "snapToGround": true
+            },
+            {
+              "position": [
+                35.6,
+                0,
+                -12.4
+              ],
+              "yaw": 20,
+              "scale": 0.0102,
+              "snapToGround": true
+            },
+            {
+              "position": [
+                42.6,
+                0,
+                -17
+              ],
+              "yaw": 200,
+              "scale": 0.0108,
+              "snapToGround": true
             }
+          ]
+        },
+        "bind": []
+      },
+      {
+        "id": "seagull",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/seagull.glb",
+          "render": "solid",
+          "animation": {
+            "clip": "ArmatureAction.006",
+            "speed": 1,
+            "vary": 0
+          },
+          "instances": [
+            {
+              "position": [
+                0,
+                10,
+                -200
+              ],
+              "yaw": 90.0,
+              "scale": 2.6,
+              "snapToGround": false,
+              "pass": true
+            }
+          ],
+          "pass": {
+            "duration": 7,
+            "distance": [
+              10,
+              45
+            ],
+            "height": 0.35,
+            "margin": 0.2,
+            "side": "alternate",
+            "direction": "in"
           }
         },
         "bind": []
@@ -921,7 +1117,33 @@
   },
   "reactivity": {
     "profiles": [],
-    "bindings": []
+    "bindings": [
+      {
+        "layer": "palms",
+        "target": "wind",
+        "feature": "game.heat",
+        "mode": "add",
+        "amount": 0.15,
+        "attackMs": 2000,
+        "releaseMs": 6000
+      },
+      {
+        "layer": "cove",
+        "target": "chop",
+        "feature": "game.heat",
+        "amount": 0.25,
+        "attackMs": 2000,
+        "releaseMs": 6000
+      },
+      {
+        "layer": "dolphins",
+        "target": "pace",
+        "feature": "game.heat",
+        "amount": 0.2,
+        "attackMs": 2500,
+        "releaseMs": 6000
+      }
+    ]
   },
   "effects": {
     "lineClear": {

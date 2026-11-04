@@ -27,7 +27,7 @@ import {
   vec3,
   vec4,
 } from 'three/tsl';
-import { colorUniform, floatUniform, noBloom, z, zColor, type ComponentFactory } from '@prismfall/sdk';
+import { clearFront, clearFrontMotion, colorUniform, floatUniform, noBloom, z, zColor, type ComponentFactory } from '@prismfall/sdk';
 import { loadTexture, palmShade, sampleEnvironment, sampleEnvironmentLevel, skyDirection, windVector, zEnvironment, zSkyDirection, zWind, type F, type V2, type V3 } from './env';
 
 /**
@@ -98,6 +98,15 @@ const schema = z.object({
       /** Distance (m) over which the 3D water fades into the photograph's sea. */
       fade: z.tuple([z.number(), z.number()]).default([700, 1700]),
     })
+    .prefault({}),
+  /**
+   * The world clear wave (SDK 1.5; all 0 = off): as a clear's front runs out over the lagoon its
+   * ripple facets catch the sun (`glitter`), a low swell travels with it (`swell`, m), and the reef
+   * throws up more white water as it arrives there (`surf`). `color` tints the glitter (default
+   * the sun's colour).
+   */
+  clearWave: z
+    .object({ glitter: z.number().min(0).default(0), swell: z.number().min(0).default(0), surf: z.number().min(0).default(0), color: zColor.optional() })
     .prefault({}),
   sand: z
     .object({
@@ -420,7 +429,9 @@ export const tradewindCove: ComponentFactory<Params> = {
       const breaker = crest.mul(exp(sq(dC.sub(R).sub(5).div(7)).negate())).mul(0.9 * p.reef.surf);
       const ocean = sin(ph).mul(p.reef.swell).mul(outside);
       const atten = exp(dC.mul(-0.002));
-      const h = lagoonSwell(g.xz).h.mul(float(1).sub(outside)).add(ocean).mul(atten).add(breaker).add(u.tide);
+      let h: F = lagoonSwell(g.xz).h.mul(float(1).sub(outside)).add(ocean).mul(atten).add(breaker).add(u.tide) as F;
+      // A low swell running out with the clear front.
+      if (p.clearWave.swell > 0) h = h.add(clearFrontMotion(vec3(g.x, g.y, g.z)).mul(p.clearWave.swell)) as F;
       vReef.assign(vec3(dC, R, ph));
       return vec3(g.x, g.y.add(h), g.z);
     })();
@@ -495,6 +506,17 @@ export const tradewindCove: ComponentFactory<Params> = {
     const H = normalize(L.add(V));
     const nh = max(dot(N, H), 0);
     const glint = pow(nh, 1400).mul(24).mul(smoothstep(320, 90, dist)).add(pow(nh, 90).mul(0.12).mul(smoothstep(1200, 300, dist))).mul(p.water.glint);
+    // The clear front crossing the lagoon: ripple facets turn to the sun (broader glints plus sparse
+    // point sparkles drifting with the ripples), only inside the front; the reef surf builds as it
+    // arrives there.
+    const cw = p.clearWave;
+    const front: F = cw.glitter > 0 || cw.surf > 0 ? (clearFront(P) as F) : float(0);
+    let glitter: V3 = vec3(0, 0, 0) as V3;
+    if (cw.glitter > 0) {
+      const points = smoothstep(0.38, 0.85, mx_noise_float(vec3(P.xz.mul(1.4), t.mul(1.7)))).pow(2.5).mul(smoothstep(420, 60, dist));
+      const facets = pow(nh, 220).mul(2.5).mul(smoothstep(1100, 250, dist)).add(points.mul(0.8));
+      glitter = (cw.color ? colorUniform(cw.color) : sunLight).mul(facets.mul(front.min(1.2)).mul(cw.glitter)) as V3;
+    }
     // Foam: lapping lines at the shore, the breaking reef, and the lingering white water behind it.
     const foamTex = smoothstep(0.38, 0.8, mx_noise_float(vec3(P.xz.mul(0.7), t.mul(0.12))).mul(0.5).add(0.5).add(mx_noise_float(vec3(P.xz.mul(2.6), t.mul(0.2).add(3))).mul(0.25)));
     const lap = sin(depth.mul(26).sub(t.mul(1.3)).add(mx_noise_float(vec3(P.xz.mul(0.12), 1.3)).mul(4))).mul(0.5).add(0.5);
@@ -504,10 +526,11 @@ export const tradewindCove: ComponentFactory<Params> = {
     // The surf breaks in sets along the reef, not as one unbroken strip.
     const vReefAz = atan(P.x.sub(p.viewer[0]), P.z.sub(p.viewer[1]).negate());
     const sets = smoothstep(-0.35, 0.55, mx_noise_float(vec3(vReefAz.mul(38), t.mul(0.07), 5.5))).mul(0.75).add(0.25);
-    const reefFoam = clamp(crest.mul(1.2).add(white.mul(foamTex.mul(0.8).add(0.2))), 0, 1).mul(sets).mul(p.reef.surf).min(1);
+    const surge = cw.surf > 0 ? float(1).add(front.mul(cw.surf)) : float(1);
+    const reefFoam = clamp(crest.mul(1.2).add(white.mul(foamTex.mul(0.8).add(0.2))), 0, 1).mul(sets).mul(p.reef.surf).mul(surge).min(1);
     const foam = clamp(shore.add(reefFoam), 0, 1);
     const foamLit = colorUniform(p.water.foam).mul(sunLight.mul(max(dot(N, L), 0.2)).mul(0.85).add(sky(vec3(0, 1, 0))));
-    color = mix(color.add(sunLight.mul(glint).mul(float(1).sub(foam))), foamLit, foam.mul(0.92)) as V3;
+    color = mix(color.add(sunLight.mul(glint).add(glitter).mul(float(1).sub(foam))), foamLit, foam.mul(0.92)) as V3;
     const fade = float(1).sub(smoothstep(p.water.fade[0], p.water.fade[1], dist));
 
     const waterMat = new MeshBasicNodeMaterial();
