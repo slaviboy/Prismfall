@@ -78,6 +78,14 @@ export class StageManager {
   async show(id: string, options: ShowOptions = {}): Promise<boolean> {
     const info = getStage(id);
     if (!info?.manifest) return false;
+    // This is now the newest request: it supersedes a preview still loading or still waiting on
+    // its timer. (Otherwise a game started while the menu's preview loaded was dropped whenever
+    // its own world loaded first, and the game ran in the previewed world.)
+    this.pendingShow = id;
+    if (this.previewTimer) {
+      clearTimeout(this.previewTimer);
+      this.previewTimer = null;
+    }
     try {
       const env = await this.prepare(id, options.onProgress);
       // A newer request may have superseded this one while loading.
