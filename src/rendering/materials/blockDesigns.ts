@@ -42,6 +42,7 @@ export const BLOCK_DESIGNS: readonly BlockDesign[] = [
   { id: 'jade', name: 'Carved jade', description: 'Polished jade with a carved border, a thin gold inlay and a faint inner light (The Lost Kingdom).', material: 'carvedJade', geometry: 'chamfer' },
   { id: 'gunmetal', name: 'Gunmetal', description: 'Machined dark metal in the piece colour: bright chamfers, an engraved red-lit line and a small corner lamp (Red Horizon).', material: 'machinedGunmetal', geometry: 'chamfer' },
   { id: 'frontier', name: 'Frontier timber', description: 'Painted oak planks worn back to bare wood, with forged-iron corner straps and brass rivets (The Last Frontier).', material: 'frontierTimber', geometry: 'chamfer' },
+  { id: 'silk', name: 'Silk obsidian', description: 'Jewel-toned obsidian under smoky glass, with an orb web engraved in silver-violet silk on every face (The Web).', material: 'silkObsidian', geometry: 'chamfer' },
 ];
 
 export function getBlockDesign(id: string): BlockDesign | null {

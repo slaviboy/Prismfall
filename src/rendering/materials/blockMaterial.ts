@@ -187,7 +187,7 @@ export function createBlockMaterial(buffer: InstancedInterleavedBuffer, preset: 
   const base = max(mix(vec3(dot(raw, vec3(0.2126, 0.7152, 0.0722))), raw, u.saturation), 0);
   // Themed surface pattern; the cell position (rounded instance translation) varies it per block.
   const seed = round(positionLocal.sub(positionGeometry));
-  const surf = buildSurface(preset.surface, { p, seed, base, ndv, edge, time: t, music: frameUniforms.bass.mul(0.6).add(frameUniforms.beatPulse.mul(0.4)).mul(frameUniforms.reactivity) });
+  const surf = buildSurface(preset.surface, { p, seed, cell: floor(cellCentre.add(0.25)), base, ndv, edge, time: t, music: frameUniforms.bass.mul(0.6).add(frameUniforms.beatPulse.mul(0.4)).mul(frameUniforms.reactivity) });
   const music = frameUniforms.bass.mul(0.6).add(frameUniforms.beatPulse.mul(0.4)).mul(u.musicGlow).mul(frameUniforms.reactivity);
   const albedo = surf.albedo.mul(u.albedo).mul(ao).mul(surface).mul(mix(float(1), float(0.3), glyphMask));
   // A preset edge colour only tints the piece colour (at most 40 %); pure white edges washed blocks out.
