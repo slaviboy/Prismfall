@@ -3,6 +3,7 @@ import { abs, attribute, cameraPosition, clamp, dot, float, mix, mx_noise_float,
 import { z } from 'zod';
 import type { ComponentFactory } from '../../../sdk/types';
 import { noBloom } from '../../shaders/uniforms';
+import { clearFront } from '../../shaders/clearFront';
 import { colorUniform, floatUniform, seeded, zColor, zVec3 } from './common';
 
 const groupSchema = z.object({
@@ -23,6 +24,11 @@ const schema = z.object({
   snowAmount: z.number().min(0).max(1).default(0.35),
   rimColor: zColor.default('#6affc0'),
   rim: z.number().min(0).default(0.35),
+  /**
+   * The world clear wave (since SDK 1.5; 0 = off): the front catches the snow and the rim of the
+   * trees it passes, by `sheen`, in `color` (default `rimColor`).
+   */
+  clearWave: z.object({ sheen: z.number().min(0).default(0), color: zColor.optional() }).prefault({}),
   /** Direction the rim light comes from (towards the brightest part of the sky). */
   rimDirection: zVec3.default([0, 0.4, -1]),
 });
@@ -122,7 +128,12 @@ export const conifersComponent: ComponentFactory<Params> = {
     const fresnel = float(1).sub(clamp(abs(dot(n, view)), 0, 1)).pow(2.5);
     const facingSky = clamp(dot(n, rimDir).mul(0.6).add(0.4), 0, 1);
     const body = colorUniform(p.needles).mul(tree.x.mul(0.5).add(0.6)).mul(tree.y.mul(0.35).add(0.75));
-    const color = mix(body, colorUniform(p.snow), snowMask).add(colorUniform(p.rimColor).mul(fresnel.mul(facingSky).mul(p.rim)));
+    let color = mix(body, colorUniform(p.snow), snowMask).add(colorUniform(p.rimColor).mul(fresnel.mul(facingSky).mul(p.rim)));
+    if (p.clearWave.sheen > 0) {
+      // Snow on the boughs and the rim catch it; the dark needles stay dark.
+      const catchLight = snowMask.mul(0.5).add(fresnel.mul(facingSky).mul(0.9));
+      color = color.add(colorUniform(p.clearWave.color ?? p.rimColor).mul(clearFront().mul(catchLight).mul(p.clearWave.sheen * 0.35)));
+    }
     const material = new MeshBasicNodeMaterial();
     material.colorNode = vec4(color.mul(presence), 1);
     noBloom(material);

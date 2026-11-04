@@ -9,6 +9,7 @@ import {
   IcosahedronGeometry,
   Mesh,
   MeshStandardMaterial,
+  PerspectiveCamera,
   Quaternion,
   QuaternionKeyframeTrack,
   Scene,
@@ -20,11 +21,12 @@ import {
   type Object3D,
 } from 'three/webgpu';
 import type { GLTF } from 'three/addons/loaders/GLTFLoader.js';
-import type { EnvFrame, EnvironmentContext } from '../../../sdk/types';
+import type { CallInfo, EnvFrame, EnvironmentContext, ViewInfo } from '../../../sdk/types';
 import { frameUniforms } from '../../shaders/uniforms';
 import { createSurfaceParticles } from '../../particles/surfaceParticles';
 import type * as SurfaceParticlesModule from '../../particles/surfaceParticles';
 import { modelComponent } from './model';
+import { passWaypoints } from './modelMotion';
 
 vi.mock('../../particles/surfaceParticles', async (importOriginal) => {
   const mod = await importOriginal<typeof SurfaceParticlesModule>();
@@ -246,5 +248,118 @@ describe('model component glow and reveal', () => {
     for (let t = 10; t < 30; t += 0.1) at(t, 0.8);
     expect(particles.uniforms.presence.value).toBeCloseTo(1, 3);
     expect(particles.uniforms.dissolve.value).toBeLessThan(0.01);
+  });
+});
+
+describe('model component call-ins and reactive targets (SDK 1.5)', () => {
+  const call = (action: CallInfo['action'], params: Record<string, unknown> = {}): CallInfo => ({ action, params, trigger: 'test', strength: 1, time: 0 });
+
+  it('pace speeds the walk up and 0 stands it still', async () => {
+    const { component, roots } = await build({ src: 'x.glb', animation: { clip: 'Walk', inPlace: true }, instances: [{ position: [0, 0, 0], walk: { to: [100, 0, 0], speed: 2, fade: 0.01 } }] });
+    const root = roots[0]!;
+    const pace = component.reactive!.pace!;
+    for (let t = 0; t <= 2; t += 0.1) component.update!(frame(t, 0.1));
+    const x1 = root.position.x;
+    pace.value = 2;
+    for (let t = 2.1; t <= 4.05; t += 0.1) component.update!(frame(t, 0.1));
+    expect(root.position.x - x1).toBeCloseTo(8, 0);
+    pace.value = 0;
+    const x2 = root.position.x;
+    for (let t = 4.1; t <= 6; t += 0.1) component.update!(frame(t, 0.1));
+    expect(root.position.x).toBeCloseTo(x2, 6);
+  });
+
+  it('the visible share fades instances out in order and back in', async () => {
+    const { component, roots } = await build({ src: 'x.glb', instances: [{ position: [0, 0, 0] }, { position: [5, 0, 0] }, { position: [10, 0, 0] }, { position: [15, 0, 0] }] });
+    component.reactive!.visible!.value = 0.5;
+    for (let t = 0; t < 6; t += 0.1) component.update!(frame(t, 0.1));
+    expect(roots.map((r) => r.visible)).toEqual([true, true, false, false]);
+    component.reactive!.visible!.value = 1;
+    for (let t = 6; t < 12; t += 0.1) component.update!(frame(t, 0.1));
+    expect(roots.every((r) => r.visible)).toBe(true);
+  });
+
+  it('show and hide override the share, for a while with `hold`', async () => {
+    const { component, roots } = await build({ src: 'x.glb', instances: [{ position: [0, 0, 0] }, { position: [5, 0, 0] }] });
+    component.onCall!(call('hide', { instances: [1], seconds: 0.5, hold: 4 }));
+    for (let t = 0; t < 3; t += 0.1) component.update!(frame(t, 0.1));
+    expect(roots[1]!.visible).toBe(false);
+    expect(roots[0]!.visible).toBe(true);
+    for (let t = 3; t < 10; t += 0.1) component.update!(frame(t, 0.1));
+    expect(roots[1]!.visible).toBe(true);
+  });
+
+  it('plays a named clip once over the base clip, then returns to it', async () => {
+    const { component, roots } = await build({ src: 'x.glb', animation: { clip: 'Walk' }, instances: [{ position: [0, 0, 0] }] });
+    const head = bone(roots[0]!, 'Head');
+    component.update!(frame(0, 1 / 60));
+    component.onCall!(call('clip', { clip: 'Howl', fade: 0.1, stagger: 0 }));
+    for (let t = 1 / 60; t < 1; t += 1 / 60) component.update!(frame(t));
+    expect(head.quaternion.angleTo(Q_HOWL)).toBeLessThan(0.05);
+    for (let t = 1; t < 3; t += 1 / 60) component.update!(frame(t));
+    expect(head.quaternion.angleTo(Q_HOWL)).toBeGreaterThan(0.3);
+    // Unknown clips are ignored.
+    expect(() => component.onCall!(call('clip', { clip: 'Nope' }))).not.toThrow();
+  });
+
+  it('sends a pass instance by the camera, clear of the board on screen, and hides it after', async () => {
+    const gltf = creature();
+    const camera = new PerspectiveCamera(42, 16 / 9, 0.1, 2000);
+    camera.position.set(0, 2, 30);
+    camera.lookAt(0, 0, 0);
+    camera.updateMatrixWorld();
+    const board = { x0: -0.16, y0: -0.8, x1: 0.16, y1: 0.8 };
+    const view: ViewInfo = {
+      boardRect: (m = 0) => ({ x0: board.x0 - m, y0: board.y0 - m, x1: board.x1 + m, y1: board.y1 + m }),
+      toWorld: (x, y, d, out) => out.set(x, y, 0.5).unproject(camera).sub(camera.position).normalize().multiplyScalar(d).add(camera.position),
+      cameraPosition: (out) => out.copy(camera.position),
+    };
+    const component = await modelComponent.create({ ...context(gltf), view }, modelComponent.schema.parse({ src: 'x.glb', animation: { clip: 'Walk', inPlace: true }, instances: [{ position: [0, 0, -50] }, { position: [0, -20, -400], pass: true }], pass: { duration: 5, side: 'right', ground: false } }));
+    const passer = component.object.children[1]!;
+    component.update!(frame(0, 0.1));
+    expect(passer.visible).toBe(false);
+    component.onCall!(call('pass'));
+    const ndc = new Vector3();
+    let seen = 0;
+    for (let t = 0.1; t < 5.05; t += 0.1) {
+      component.update!(frame(t, 0.1));
+      if (!passer.visible) continue;
+      seen++;
+      ndc.copy(passer.position).project(camera);
+      // Never in front of the board on screen, always on the right of it.
+      expect(ndc.x).toBeGreaterThan(board.x1 + 0.1);
+    }
+    expect(seen).toBeGreaterThan(30);
+    for (let t = 5.1; t < 6; t += 0.1) component.update!(frame(t, 0.1));
+    expect(passer.visible).toBe(false);
+  });
+
+  it('reveal call-ins call creatures in whatever the progress', async () => {
+    const make = vi.mocked(createSurfaceParticles);
+    make.mockClear();
+    const { component } = await build({ src: 'x.glb', render: 'particles', instances: [{ position: [0, 0, 0] }], particles: { count: 100 }, reveal: { from: 0.5, to: 0.6, hold: 10 } });
+    const particles = make.mock.results[0]!.value as ReturnType<typeof createSurfaceParticles>;
+    const at = (time: number) => component.update!({ ...frame(time, 0.1), game: { progress: 0 } } as EnvFrame);
+    at(0);
+    component.onCall!(call('reveal', { hold: 8 }));
+    for (let t = 0.1; t < 7; t += 0.1) at(t);
+    expect(particles.uniforms.presence.value).toBeGreaterThan(0.9);
+    for (let t = 7; t < 30; t += 0.1) at(t);
+    expect(particles.uniforms.presence.value).toBeLessThan(0.05);
+  });
+});
+
+describe('near-field pass waypoints', () => {
+  it('stay on one side, outside the widened board, and run in or out', () => {
+    const rect = { x0: -0.2, y0: -0.9, x1: 0.18, y1: 0.9 };
+    for (const side of [1, -1] as const) {
+      const pts = passWaypoints(rect, side, 'in', -0.2, 18, 140, 0.15);
+      for (const p of pts) expect(p.x * side).toBeGreaterThan((side > 0 ? rect.x1 : -rect.x0) + 0.15);
+      expect(pts[0]!.distance).toBe(140);
+      expect(pts[pts.length - 1]!.distance).toBe(18);
+      for (let i = 1; i < pts.length; i++) expect(Math.abs(pts[i]!.x)).toBeGreaterThan(Math.abs(pts[i - 1]!.x));
+    }
+    const out = passWaypoints(rect, 1, 'out', 0, 18, 140, 0.15);
+    expect(out[0]!.distance).toBe(18);
   });
 });

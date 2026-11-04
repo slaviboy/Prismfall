@@ -45,6 +45,10 @@ export function validateManifest(raw: unknown, env: ValidationEnv): ValidationRe
     if (env.profileExists && !env.profileExists(ref.name)) errors.push(`reactivity profile "${ref.name}" not found in content/shared/reactivity`);
     for (const id of ref.layers ?? []) if (!layerIds.has(id)) errors.push(`reactivity profile "${ref.name}": no layer with id "${id}"`);
   }
+  // Call-ins and section states name layers by id (or `type:`/`*`): a missing id is a typo.
+  const names = (sel: string): boolean => sel === '*' || sel.startsWith('type:') || layerIds.has(sel);
+  for (const ev of m.events) if (!names(ev.layer)) errors.push(`event "${ev.on}": no layer with id "${ev.layer}"`);
+  for (const st of m.sectionStates.states) if (!names(st.layer)) errors.push(`section state "${st.target}": no layer with id "${st.layer}"`);
   if (m.music.defaultTrack && !m.music.tracks.some((t) => t.id === m.music.defaultTrack)) errors.push(`defaultTrack "${m.music.defaultTrack}" is not one of the tracks`);
   for (const [sfx, path] of Object.entries(m.sfx.overrides)) if (!env.assetExists(path)) errors.push(`sfx override "${sfx}": "${path}" not found`);
   if (m.thumbnail && !env.assetExists(m.thumbnail)) warnings.push(`thumbnail "${m.thumbnail}" not found (a generated card is shown)`);

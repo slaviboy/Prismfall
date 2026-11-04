@@ -249,9 +249,12 @@ export const landComponent: ComponentFactory<Params> = {
     const cosV = cast<F>(dot(wn, v).clamp(0, 1));
     const fres = cast<F>(float(0.02).add(float(0.98).mul(float(1).sub(cosV).pow(5))));
     let refl: V3 = fog.base(cast<V3>(vec3(v.x.negate(), v.y, v.z.negate())));
+    // The mirror owns its render targets: released with the layer.
+    let mirrorNode: { dispose(): void } | null = null;
     if (ctx.quality.reflections !== 'off' && p.water.reflection > 0) {
       const slow = detail === 'low' || detail === 'medium';
       const mirror = reflector({ resolutionScale: p.water.resolution * (detail === 'low' ? 0.6 : slow ? 0.8 : 1), bounces: false });
+      mirrorNode = mirror;
       mirror.target.rotateX(-Math.PI / 2);
       mirror.target.position.y = WATER;
       group.add(mirror.target);
@@ -291,6 +294,7 @@ export const landComponent: ComponentFactory<Params> = {
         waterGeo.dispose();
         ground.dispose();
         water.dispose();
+        mirrorNode?.dispose();
         [mudD, mudN, mudA, litD, litN].forEach((t2) => t2.dispose());
         hm.dispose();
         release(ctx, s);

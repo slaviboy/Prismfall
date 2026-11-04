@@ -17,6 +17,8 @@ export interface ShowOptions {
  */
 export class StageManager {
   private readonly inflight = new Map<string, Promise<StageEnvironment>>();
+  /** Builds that finished, by stage id (to notice ones disposed since). */
+  private readonly resolved = new Map<string, StageEnvironment>();
   activeId: string | null = null;
   /** Called when a stage becomes active (music BPM, palette, effects). */
   onActivate: ((info: StageInfo) => void) | null = null;
@@ -48,7 +50,11 @@ export class StageManager {
   /** Builds (or returns the cached) environment for a stage without showing it. */
   prepare(id: string, onProgress?: (fraction: number) => void): Promise<StageEnvironment> {
     const existing = this.inflight.get(id);
-    if (existing) return existing;
+    // A finished build that has since been evicted or cleared is disposed: build it again.
+    const built = this.resolved.get(id);
+    if (existing && !(built && built.disposed)) return existing;
+    this.inflight.delete(id);
+    this.resolved.delete(id);
     const info = getStage(id);
     if (!info || !info.manifest || !info.available) return Promise.reject(new Error(info ? info.errors.join('; ') : `unknown stage ${id}`));
     const manifest = info.manifest;
@@ -60,6 +66,7 @@ export class StageManager {
       const env = await this.render.environments.prepare(manifest, this.assetsFor(info), this.render.quality(), (f) => onProgress?.(0.08 + f * 0.92));
       const total = performance.now() - started;
       perfStore.setState({ stageLoadMs: total, stageCompileMs: performance.now() - buildStart });
+      this.resolved.set(id, env);
       return env;
     })();
     this.inflight.set(id, task);
@@ -82,7 +89,11 @@ export class StageManager {
       this.lastError = null;
       this.onActivate?.(info);
       // Keep cache bounded to what is on screen plus one preloaded stage.
-      for (const key of [...this.inflight.keys()]) if (!this.render.environments.preparedIds.includes(key)) this.inflight.delete(key);
+      for (const key of [...this.inflight.keys()]) {
+        if (this.render.environments.preparedIds.includes(key)) continue;
+        this.inflight.delete(key);
+        this.resolved.delete(key);
+      }
       return true;
     } catch (err) {
       this.lastError = err instanceof Error ? err.message : String(err);
@@ -116,6 +127,7 @@ export class StageManager {
     const id = this.activeId;
     this.render.environments.clearCache();
     this.inflight.clear();
+    this.resolved.clear();
     if (id) {
       this.activeId = null;
       this.render.environments.deactivate(0.001);

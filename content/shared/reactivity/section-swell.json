@@ -1,8 +1,11 @@
 {
-  "description": "Song structure drives the big lights: beams and rings grow through builds and drops and recede in breakdowns.",
+  "description": "Song structure drives the big lights and the air: beams, rings and aurora grow through builds and drops and recede in breakdowns; the sky glows and particles stir ahead of a drop (anticipation), and in drops.",
   "bindings": [
-    { "layer": "type:beams", "target": "intensity", "feature": "sectionIntensity", "amount": 0.6, "category": "lighting", "attackMs": 300, "releaseMs": 1200 },
-    { "layer": "type:rings", "target": "intensity", "feature": "sectionIntensity", "amount": 0.8, "category": "lighting", "attackMs": 400, "releaseMs": 1500 },
-    { "layer": "type:sky", "target": "glow", "feature": "anticipation", "amount": 0.25, "attackMs": 400, "releaseMs": 800 }
+    {"layer": "type:beams", "target": "intensity", "feature": "sectionIntensity", "amount": 0.6, "category": "lighting", "attackMs": 300, "releaseMs": 1200},
+    {"layer": "type:rings", "target": "intensity", "feature": "sectionIntensity", "amount": 0.8, "category": "lighting", "attackMs": 400, "releaseMs": 1500},
+    {"layer": "type:sky", "target": "glow", "feature": "anticipation", "amount": 0.25, "attackMs": 400, "releaseMs": 800},
+    {"layer": "type:aurora", "target": "intensity", "feature": "sectionIntensity", "amount": 0.4, "category": "lighting", "attackMs": 1500, "releaseMs": 4000},
+    {"layer": "type:particles", "target": "turbulence", "feature": "anticipation", "amount": 0.6, "category": "particles", "attackMs": 800, "releaseMs": 1500},
+    {"layer": "type:particles", "target": "brightness", "feature": "sectionIntensity", "amount": 0.3, "category": "particles", "attackMs": 1500, "releaseMs": 4000, "when": {"section": ["drop"]}}
   ]
 }

@@ -1,0 +1,11 @@
+{
+  "description": "A stack near the top tightens the world: glows dim, the air churns and thickens, seas rise and creatures slow, easing back once the stack comes down.",
+  "bindings": [
+    {"layer": "type:sky", "target": "glow", "feature": "game.danger", "amount": -0.3, "category": "lighting", "attackMs": 1200, "releaseMs": 2500},
+    {"layer": "type:aurora", "target": "intensity", "feature": "game.danger", "amount": -0.35, "category": "lighting", "attackMs": 1500, "releaseMs": 3000},
+    {"layer": "type:particles", "target": "turbulence", "feature": "game.danger", "amount": 0.8, "category": "particles", "attackMs": 1000, "releaseMs": 2500},
+    {"layer": "type:clouds", "target": "opacity", "feature": "game.danger", "amount": 0.4, "attackMs": 1500, "releaseMs": 3000},
+    {"layer": "type:water", "target": "amplitude", "feature": "game.danger", "amount": 0.4, "attackMs": 1500, "releaseMs": 3000},
+    {"layer": "type:model", "target": "pace", "feature": "game.danger", "amount": -0.3, "attackMs": 1500, "releaseMs": 3000}
+  ]
+}

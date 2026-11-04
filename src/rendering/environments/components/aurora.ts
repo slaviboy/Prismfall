@@ -26,6 +26,7 @@ import {
 import { z } from 'zod';
 import type { ComponentFactory } from '../../../sdk/types';
 import { additiveFog } from '../../shaders/uniforms';
+import { clearFront } from '../../shaders/clearFront';
 import { colorUniform, floatUniform, seeded, zColor } from './common';
 
 const schema = z.object({
@@ -63,6 +64,11 @@ const schema = z.object({
   gaps: z.number().min(0).max(1).default(0.55),
   /** Height fraction over which the bright lower edge fades in (smaller = sharper). */
   edge: z.number().min(0.005).max(0.3).default(0.035),
+  /**
+   * The world clear wave (since SDK 1.5; 0 = off): when a big clear's front reaches the curtains it
+   * runs along them as a surge, brightening the lower edge and rays by `surge` (x their light).
+   */
+  clearWave: z.object({ surge: z.number().min(0).default(0) }).prefault({}),
 });
 
 type Params = z.infer<typeof schema>;
@@ -183,7 +189,9 @@ export const auroraComponent: ComponentFactory<Params> = {
     // The densest emission at the lower edge reads paler, close to white-green.
     const color = mix(mix(lowC, lowC.mul(0.55).add(0.45), rim.mul(0.6)), highC, smoothstep(0.2, 0.65, rv));
     const breathe = sin(ru.mul(7).sub(t.mul(0.3)).add(seed)).mul(0.15).add(0.85);
-    const light = color.mul(profile).mul(rays).mul(along).mul(edgeOn).mul(breathe).mul(u.intensity).mul(u.presence).mul(0.42);
+    // A surge where the clear front crosses the curtain: strongest at the lower edge, carried up the rays.
+    const surge = p.clearWave.surge > 0 ? float(1).add(clearFront(world).mul(p.clearWave.surge).mul(lower.mul(rim.add(0.6)).mul(rays.mul(0.5).add(0.5)))) : float(1);
+    const light = color.mul(profile).mul(rays).mul(along).mul(edgeOn).mul(breathe).mul(surge).mul(u.intensity).mul(u.presence).mul(0.42);
     material.colorNode = vec4(additiveFog(light), 1);
     material.transparent = true;
     material.depthWrite = false;

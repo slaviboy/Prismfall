@@ -1,6 +1,6 @@
-import { Color, FogExp2, MathUtils } from 'three/webgpu';
+import { Color, FogExp2, MathUtils, Vector3 } from 'three/webgpu';
 import type { AudioFeatures, BeatEvent } from '../../audio/analysis/features';
-import type { EnvironmentContext, GameSignals, QualityInfo, StageAssets, StageGameEvent } from '../../sdk/types';
+import type { EnvironmentContext, GameSignals, QualityInfo, StageAssets, StageGameEvent, ViewInfo } from '../../sdk/types';
 import type { StageManifest } from '../../stages/schema';
 import { resolveBlockPreset, type BlockMaterialPreset } from '../materials/blockPresets';
 import { frameUniforms } from '../shaders/uniforms';
@@ -51,6 +51,40 @@ export class EnvironmentHost {
 
   constructor(private readonly render: RenderSystem) {
     render.scene.fog = this.fog;
+    this.view = this.createView();
+  }
+
+  /** The desktop view for components (EnvironmentContext.view). */
+  readonly view: ViewInfo;
+
+  private createView(): ViewInfo {
+    const v = new Vector3();
+    const corners = [[-5, -10], [5, -10], [-5, 10], [5, 10]] as const;
+    return {
+      boardRect: (margin = 0) => {
+        const cam = this.render.cameraRig.camera;
+        cam.updateMatrixWorld();
+        let x0 = Infinity;
+        let y0 = Infinity;
+        let x1 = -Infinity;
+        let y1 = -Infinity;
+        for (const [x, y] of corners) {
+          v.set(x, y, 0.5).applyMatrix4(this.render.boardRoot.matrixWorld).project(cam);
+          x0 = Math.min(x0, v.x);
+          x1 = Math.max(x1, v.x);
+          y0 = Math.min(y0, v.y);
+          y1 = Math.max(y1, v.y);
+        }
+        return { x0: x0 - margin, y0: y0 - margin, x1: x1 + margin, y1: y1 + margin };
+      },
+      toWorld: (ndcX, ndcY, distance, out) => {
+        const cam = this.render.cameraRig.camera;
+        cam.updateMatrixWorld();
+        out.set(ndcX, ndcY, 0.5).unproject(cam).sub(cam.position).normalize();
+        return out.multiplyScalar(distance).add(cam.position);
+      },
+      cameraPosition: (out) => out.copy(this.render.cameraRig.camera.position),
+    };
   }
 
   /** Builds a stage environment off-scene and precompiles its shaders. Cached by stage id. */
@@ -70,6 +104,7 @@ export class EnvironmentHost {
       shakeWorld: (strength, seconds) => {
         if (this.current?.manifest.id === manifest.id) this.shakeWorld(strength, seconds);
       },
+      view: this.view,
     };
     const env = await StageEnvironment.build(manifest, ctx, (f) => onProgress?.(f * 0.85));
     // Compile its shaders in the background before it is ever shown (the group stays at
@@ -118,6 +153,11 @@ export class EnvironmentHost {
     return [...this.prepared.keys()];
   }
 
+  /** Environments in the scene (on screen or still fading out). */
+  get activeCount(): number {
+    return this.active.length;
+  }
+
   /** Makes `env` the visible stage. `seconds` = crossfade length (0 = cut). */
   activate(env: StageEnvironment, seconds = 2.5, blockGeometry?: (id: string) => void): void {
     if (this.current === env) return;
@@ -135,6 +175,11 @@ export class EnvironmentHost {
     }
     this.current = env;
     this.applyLook(env.manifest, seconds > 0.001);
+    // How this world's clear fronts travel.
+    const w = env.manifest.clearWave;
+    const far = Math.max(w.near * 1.5, w.far);
+    frameUniforms.waveShape.value.set(w.near, 1 / Math.log(far / w.near), 1 / w.travel);
+    this.render.worldSignals.worldStrength = w.strength;
     void blockGeometry;
     if (seconds > 0.6) this.render.feedback.stageTransition(env.manifest.palette, env.manifest.effects.transition, seconds);
   }

@@ -339,7 +339,46 @@ export class RevealTracker {
     return this.level;
   }
 
+  /** A QUAD or perfect clear: calls the creatures in once progress has passed `unlock`. */
   bigClear(): void {
-    if (this.plan && this.progress >= this.plan.unlock) this.calledUntil = this.clock + this.plan.hold;
+    if (this.plan && this.progress >= this.plan.unlock) this.callIn(this.plan.hold);
   }
+
+  /** An event call-in (`reveal`): calls the creatures in for `hold` seconds, whatever the progress. */
+  callIn(hold = this.plan?.hold ?? 0): void {
+    if (this.plan && hold > 0) this.calledUntil = Math.max(this.calledUntil, this.clock + hold);
+  }
+}
+
+/** The board's rectangle on screen, in normalised device coordinates. */
+export interface NdcRect {
+  readonly x0: number;
+  readonly y0: number;
+  readonly x1: number;
+  readonly y1: number;
+}
+
+/** A waypoint of a near-field pass: where it is on screen (NDC) and how far from the camera. */
+export interface PassWaypoint {
+  readonly x: number;
+  readonly y: number;
+  readonly distance: number;
+}
+
+/**
+ * Waypoints of a near-field pass (a creature crossing close in front of the camera): all on one
+ * side of the board, never inside its screen rectangle widened by `margin`, so the path never
+ * crosses the playfield or the cone around it from the viewer's eye. `in`: it emerges in the
+ * distance beside the board and sweeps out past the camera; `out`: the reverse. `height` is the
+ * NDC height the pass keeps to (it rises a little towards the far end).
+ */
+export function passWaypoints(rect: NdcRect, side: 1 | -1, direction: 'in' | 'out', height: number, near: number, far: number, margin: number): PassWaypoint[] {
+  const edge = Math.max(0, side > 0 ? rect.x1 : -rect.x0) + margin;
+  const inner = Math.min(0.97, edge + 0.04);
+  const x1 = Math.min(0.95, Math.max(inner + 0.12, edge + 0.3));
+  const xs = [inner, x1, Math.max(x1 + 0.05, 0.88), 1.45];
+  const ds = [far, far * 0.42 + near * 1.04, near * 1.5, near];
+  const ys = [height + 0.1, height + 0.05, height, height - 0.06];
+  const pts = xs.map((x, i) => ({ x: x * side, y: Math.max(-0.95, Math.min(0.95, ys[i] as number)), distance: ds[i] as number }));
+  return direction === 'in' ? pts : pts.reverse();
 }

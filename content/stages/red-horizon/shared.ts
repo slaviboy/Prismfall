@@ -37,6 +37,7 @@ import {
   mx_noise_float,
   normalize,
   output,
+  pmremTexture,
   positionWorld,
   pow,
   select,
@@ -84,6 +85,12 @@ export interface World {
   env: Promise<Texture | null> | null;
   backdrop: Promise<DataTexture | null> | null;
   textures: Map<string, Promise<Texture | null>>;
+  /**
+   * The prefiltered reflection environment, one per environment texture. Made here (not left to
+   * `material.envMap`) so it can be disposed with the world: three.js gives every automatic one its
+   * own PMREM generator, which nothing releases, a geometry and a render target per visit.
+   */
+  pmrem: Map<Texture, ReturnType<typeof pmremTexture>>;
   /** Local point lights: xyz + intensity; rgb colour + range. Slots are claimed by components. */
   readonly lightPos: ReturnType<typeof uniformArray>;
   readonly lightCol: ReturnType<typeof uniformArray>;
@@ -139,6 +146,7 @@ export function world(ctx: EnvironmentContext): World {
       env: null,
       backdrop: null,
       textures: new Map(),
+      pmrem: new Map(),
       lightPos: uniformArray(lightValues, 'vec4'),
       lightCol: uniformArray(lightColours, 'vec4'),
       lightValues,
@@ -163,6 +171,8 @@ export function world(ctx: EnvironmentContext): World {
 export function release(w: World): void {
   w.users--;
   if (w.users > 0) return;
+  for (const node of w.pmrem.values()) node.dispose();
+  w.pmrem.clear();
   void w.env?.then((t) => t?.dispose());
   void w.backdrop?.then((t) => t?.dispose());
   for (const t of w.textures.values()) void t.then((x) => x?.dispose());
@@ -443,8 +453,15 @@ export function shadeMaterial(w: World, o: ShadeOptions): MeshStandardNodeMateri
   m.metalnessNode = o.metalness;
   m.normalNode = normalize(cameraViewMatrix.mul(vec4(o.normal, 0)).xyz);
   if (o.env) {
+    // envMap keeps the material's own reflection strength; envNode supplies the shared PMREM.
     m.envMap = o.env;
     m.envMapIntensity = o.envIntensity ?? 1;
+    let pmrem = w.pmrem.get(o.env);
+    if (!pmrem) {
+      pmrem = pmremTexture(o.env);
+      w.pmrem.set(o.env, pmrem);
+    }
+    m.envNode = pmrem;
   }
   // Local light on the surface: diffuse on the dielectric part, a broad sheen on metal.
   const lit = localLight(w, wp, o.normal).mul(o.local ?? 1);

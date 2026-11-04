@@ -18,7 +18,8 @@ import {
 } from 'three/tsl';
 import { z } from 'zod';
 import type { ComponentFactory } from '../../../sdk/types';
-import { additiveFog } from '../../shaders/uniforms';
+import { additiveFog, frameUniforms } from '../../shaders/uniforms';
+import { clearFront, clearFrontMotion } from '../../shaders/clearFront';
 import { colorUniform, floatUniform, scaledCount, seeded, zColor, zVec3 } from './common';
 
 const SHAPES = { soft: 0, star: 1, spark: 2, snow: 3, bubble: 4, streak: 5, petal: 6 } as const;
@@ -45,6 +46,12 @@ const schema = z.object({
   density: z.number().min(0).max(1).default(1),
   seed: z.number().default(1),
   bloom: z.number().default(0.6),
+  /**
+   * The world clear wave (since SDK 1.5; 0 = off): as a clear's front passes, the particles flare
+   * by `brightness` (x their light) and are stirred: pushed outward from the board and whirled,
+   * `stir` world units at the front's peak.
+   */
+  clearWave: z.object({ brightness: z.number().min(0).default(0), stir: z.number().min(0).default(0) }).prefault({}),
 });
 
 export type ParticleFieldParams = z.infer<typeof schema>;
@@ -89,7 +96,16 @@ export const particlesComponent: ComponentFactory<ParticleFieldParams> = {
     const wrapped = mod(base, vol).sub(vol.mul(0.5)).add(center);
     const ph = s.w.mul(6.283).add(time.mul(0.35));
     const wobble = vec3(sin(ph.add(s.x.mul(20))), cos(ph.mul(0.8).add(s.y.mul(17))), sin(ph.mul(0.6).add(s.z.mul(13)))).mul(u.turbulence);
-    const pos = wrapped.add(wobble);
+    let pos = wrapped.add(wobble);
+    const cw = p.clearWave;
+    if (cw.stir > 0) {
+      // A gust front: pushed away from the board and lifted a little as it passes, then a whirl
+      // that settles in its soft tail.
+      const push = clearFrontMotion(wrapped);
+      const away = wrapped.sub(frameUniforms.waveOrigin).mul(vec3(1, 0, 1)).normalize();
+      const whirl = vec3(sin(ph.mul(3.1).add(s.y.mul(31))), cos(ph.mul(2.7).add(s.x.mul(29))).mul(0.6).add(0.4), cos(ph.mul(3.3).add(s.z.mul(23))));
+      pos = pos.add(away.add(vec3(0, 0.35, 0)).mul(push.mul(cw.stir)).add(whirl.mul(push.mul(cw.stir * 0.45))));
+    }
     // Fade out near the volume's faces so wrapping is invisible.
     const local = mod(base, vol).div(vol);
     const edge = smoothstep(0, 0.08, local.x).mul(smoothstep(1, 0.92, local.x)).mul(smoothstep(0, 0.08, local.y)).mul(smoothstep(1, 0.92, local.y)).mul(smoothstep(0, 0.08, local.z)).mul(smoothstep(1, 0.92, local.z));
@@ -118,7 +134,8 @@ export const particlesComponent: ComponentFactory<ParticleFieldParams> = {
       }
     })();
     const tint = mix(colorA, colorB, s.y);
-    const light = tint.mul(shapeMask).mul(twinkle).mul(u.brightness).mul(u.presence);
+    const flare = cw.brightness > 0 ? float(1).add(clearFront(wrapped).mul(cw.brightness)) : float(1);
+    const light = tint.mul(shapeMask).mul(twinkle).mul(u.brightness).mul(flare).mul(u.presence);
 
     const material = new SpriteNodeMaterial();
     material.positionNode = pos;

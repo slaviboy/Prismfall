@@ -1,12 +1,12 @@
-import { AnimationClip, AnimationMixer, Box3, Color, Group, Mesh, PropertyBinding, Quaternion, SkinnedMesh, Vector3, type AnimationAction, type Bone, type Material, type Object3D } from 'three/webgpu';
+import { AnimationClip, AnimationMixer, Box3, Color, Group, LoopOnce, Mesh, PropertyBinding, Quaternion, SkinnedMesh, Vector3, type AnimationAction, type Bone, type Material, type Object3D } from 'three/webgpu';
 import { clone as cloneSkinned } from 'three/addons/utils/SkeletonUtils.js';
 import { z } from 'zod';
-import type { ComponentFactory } from '../../../sdk/types';
+import type { CallInfo, ComponentFactory } from '../../../sdk/types';
 import { sampleModel, type SurfaceSampleSet } from '../../particles/meshSampler';
 import { createSurfaceParticles, type GlowOptions, type SurfaceParticleOptions, type SurfaceParticles } from '../../particles/surfaceParticles';
 import { createRemapper, materialRuleSchema } from './materialRemap';
 import { floatUniform, seeded, zColor, zVec3 } from './common';
-import { RevealTracker, buildPath, inPlaceClip, orderedStops, pathState, stopWeight, type PathPlan, type PathShape } from './modelMotion';
+import { RevealTracker, buildPath, inPlaceClip, orderedStops, passWaypoints, pathState, stopWeight, type PathPlan, type PathShape } from './modelMotion';
 
 const zStop = z.object({
   /** Share of the path (0..1) where the walker halts. */
@@ -34,6 +34,11 @@ const schema = z.object({
         snapToGround: z.boolean().default(true),
         /** Slow tumble around a random axis, degrees per second (floating rocks, debris). */
         spin: z.number().default(0),
+        /**
+         * Kept out of sight until a `pass` call-in sends it past the camera (since SDK 1.5); its
+         * position only sets where it rests unseen, and `walk` is ignored.
+         */
+        pass: z.boolean().default(false),
         /**
          * Walks from `position` through `via` to `to` at `speed` units per second and loops,
          * assembling from its particles at the start and dispersing at the end (`fade`: share of the
@@ -183,7 +188,34 @@ const schema = z.object({
           brightness: z.number().min(0).default(1),
         })
         .prefault({}),
+      /** Shimmer as the world clear wave passes the creatures (x their light; 0 = off). Since SDK 1.5. */
+      clearWave: z.number().min(0).default(0),
       seed: z.number().default(1),
+    })
+    .prefault({}),
+  /**
+   * Near-field passes (since SDK 1.5): a `pass` call-in sends an instance marked `pass` along a path
+   * close in front of the camera, on one side of the board and never across its screen rectangle
+   * (widened by `margin`, in NDC): from `distance[1]` units away in to `distance[0]` (`in`), or out
+   * the other way, over `duration` seconds, at NDC height `height`. `ground` keeps it on the terrain
+   * (walkers) instead of flying; `y` keeps it at that world height instead (a swimmer at the water
+   * line), and `arc` with `leaps` lifts it into that many leaps of `arc` units along the way, nose
+   * following the arc. A call's params may override any of these, plus `instance` (index) and `side`
+   * (`left`, `right`).
+   */
+  pass: z
+    .object({
+      duration: z.number().positive().default(7),
+      distance: z.tuple([z.number().positive(), z.number().positive()]).default([18, 140]),
+      height: z.number().min(-0.9).max(0.9).default(-0.15),
+      margin: z.number().min(0).max(0.8).default(0.18),
+      direction: z.enum(['in', 'out', 'alternate']).default('in'),
+      side: z.enum(['left', 'right', 'alternate']).default('alternate'),
+      ground: z.boolean().optional(),
+      y: z.number().optional(),
+      arc: z.number().min(0).default(0),
+      leaps: z.number().int().min(1).max(12).default(1),
+      scale: z.number().positive().default(1),
     })
     .prefault({}),
   dissolve: z
@@ -284,6 +316,31 @@ export const modelComponent: ComponentFactory<Params> = {
       phase: number;
     }
     const walkers: Walker[] = [];
+    /** Per instance: what call-ins and the bindable `visible` share act on. */
+    interface Inst {
+      root: Group;
+      scene: Object3D;
+      mixer: AnimationMixer | null;
+      /** The looping clip it normally plays (walk or idle). */
+      base: AnimationAction | null;
+      walker: Walker | null;
+      sets: SurfaceParticles[];
+      materials: Material[];
+      scale: number;
+      heading: number;
+      snap: boolean;
+      lift: number;
+      /** Shown share 0..1 (it fades towards its target at `fadeRate` per second). */
+      fade: number;
+      fadeRate: number;
+      /** A show or hide call's override of the bindable visible share, until `overrideUntil`. */
+      override: number | null;
+      overrideUntil: number;
+      passer: boolean;
+      oneShot: { action: AnimationAction; start: number; duration: number; fade: number } | null;
+      run: { path: PathShape; start: number; duration: number; ground: boolean; arc: number; leaps: number } | null;
+    }
+    const insts: Inst[] = [];
     const mixers: AnimationMixer[] = [];
     const flexed: Flexed[] = [];
     const spinners: { obj: Object3D; axis: Vector3; speed: number }[] = [];
@@ -451,6 +508,7 @@ export const modelComponent: ComponentFactory<Params> = {
           shading: p.particles.shading,
           light: p.particles.light,
           saturation: p.particles.saturation,
+          clearWave: p.particles.clearWave,
         };
         const glowing = { ...options, size: p.particles.size * p.particles.glow.size, glow: glowOptions };
         instanceParticles = createSurfaceParticles(sets, p.particles.style === 'glow' ? glowing : options, ctx.uniforms.time);
@@ -471,7 +529,7 @@ export const modelComponent: ComponentFactory<Params> = {
           }
         }
       }
-      if (inst.walk) {
+      if (inst.walk && !inst.pass) {
         const wk = inst.walk;
         const path = buildPath([new Vector3(x, y, zPos), ...wk.via.map((v) => new Vector3(...v)), new Vector3(...wk.to)], wk.closed, wk.smooth);
         const heading = (inst.yaw * Math.PI) / 180;
@@ -504,10 +562,40 @@ export const modelComponent: ComponentFactory<Params> = {
         if (walkAction && stride > 0) walkAction.timeScale = 0;
       }
       if (p.render === 'particles') scene.traverse((o) => o instanceof Mesh && !o.name.endsWith(':particles') && (o.material = hiddenMaterial(o.material)));
+      const walker = inst.walk && !inst.pass ? (walkers[walkers.length - 1] ?? null) : null;
+      insts.push({
+        root,
+        scene,
+        mixer,
+        base: walkAction,
+        walker,
+        sets: [instanceParticles, instanceOverlay].filter((x): x is SurfaceParticles => x !== null),
+        materials: instanceMaterials,
+        scale: inst.scale,
+        heading: (inst.yaw * Math.PI) / 180,
+        snap: inst.snapToGround,
+        lift: y,
+        fade: inst.pass ? 0 : 1,
+        fadeRate: 1,
+        override: null,
+        overrideUntil: 0,
+        passer: inst.pass,
+        oneShot: null,
+        run: null,
+      });
     }
 
     let burst = 0;
+    /** A `burst` call on a model that does not dissolve: the particles flare and fade back. */
+    let shimmer = 0;
     let presenceValue = 1;
+    // Bindable: pace scales walking and clips; visible is the share of instances shown.
+    const pace = floatUniform(1);
+    const visibleShare = floatUniform(1);
+    /** Walk and clip clock: frame time advanced at `pace` (equal to it while pace stays 1). */
+    let clock = Number.NaN;
+    let lastTime = 0;
+    let passCount = 0;
     // Bindable particle brightness (dims particle creatures at night, for instance).
     const particleBrightness = floatUniform(p.particles.brightness);
     // Arrival with the run (reveal): 0 = not here yet (scattered and dark), 1 = whole.
@@ -518,22 +606,25 @@ export const modelComponent: ComponentFactory<Params> = {
     const apply = (shared: number): void => {
       const dissolve = Math.max(shared, 1 - revealLevel);
       const arrived = presenceValue * smooth(Math.min(1, revealLevel * 4));
-      for (const s of particleSets) {
-        s.uniforms.dissolve.value = dissolve;
-        s.uniforms.presence.value = arrived;
-        // Not yet arrived: skip drawing (and skinning) them at all.
-        if (p.reveal) for (const o of s.objects) o.visible = arrived > 1e-3;
-        s.uniforms.brightness.value = particleBrightness.value * (brightnessOf.get(s) ?? 1);
-      }
       const solid = p.render === 'dissolve' ? 1 - smooth(Math.min(1, dissolve * 1.4)) : 1;
-      for (const m of fading) m.opacity = solid * presenceValue;
-      // Walkers assemble and disperse at their path ends on top of any shared dissolve.
-      for (const w of walkers) {
-        const d = Math.max(dissolve, w.apart);
-        if (w.particles) w.particles.uniforms.dissolve.value = d;
-        if (w.overlay) w.overlay.uniforms.dissolve.value = d;
-        const wSolid = 1 - smooth(Math.min(1, d * 1.4));
-        for (const m of w.materials) m.opacity = wSolid * presenceValue;
+      const lift = 1 + shimmer;
+      for (const it of insts) {
+        // Hidden instances (show/hide, the visible share, passes) break into their particles and fade.
+        const f = it.fade;
+        const away = 1 - f;
+        // Walkers assemble and disperse at their path ends on top of any shared dissolve.
+        const d = Math.max(dissolve, it.walker?.apart ?? 0, away);
+        const shown = arrived * smooth(Math.min(1, f * 1.6));
+        for (const s of it.sets) {
+          s.uniforms.dissolve.value = d;
+          s.uniforms.presence.value = shown;
+          // Not yet arrived (or hidden): skip drawing (and skinning) them at all.
+          if (p.reveal || it.passer || f < 1) for (const o of s.objects) o.visible = shown > 1e-3;
+          s.uniforms.brightness.value = particleBrightness.value * (brightnessOf.get(s) ?? 1) * lift;
+        }
+        const own = it.walker || away > 0 ? 1 - smooth(Math.min(1, d * 1.4)) : solid;
+        for (const m of it.materials) m.opacity = own * presenceValue;
+        it.root.visible = f > 1e-3;
       }
     };
     const point = new Vector3();
@@ -587,19 +678,186 @@ export const modelComponent: ComponentFactory<Params> = {
     const flexAt = (time: number): void => {
       for (const f of flexed) f.bone.quaternion.multiply(qYaw.setFromAxisAngle(f.axis, f.offset + f.amp * Math.sin(Math.PI * 2 * (time / f.period + f.phase))));
     };
+    // ---- call-ins (since SDK 1.5): clips, near-field passes, show and hide ----
+    const num = (v: unknown, d: number): number => (typeof v === 'number' && Number.isFinite(v) ? v : d);
+    const pick = (v: unknown, fallback: Inst[]): Inst[] => {
+      if (Array.isArray(v)) return v.map((i) => insts[Math.round(num(i, -1))]).filter((x): x is Inst => x !== undefined);
+      if (v === 'random') {
+        const pool = fallback.filter((i) => i.fade > 0.5);
+        const one = pool[Math.floor(rand() * pool.length)];
+        return one ? [one] : [];
+      }
+      return fallback;
+    };
+    const regular = insts.filter((i) => !i.passer);
+    /** Plays a clip once on an instance, crossfaded in and out over the base clip. */
+    const playClip = (it: Inst, name: string, speed: number, fade: number, delay: number): boolean => {
+      const clip = named(name);
+      if (!clip) return false;
+      if (!it.mixer) {
+        it.mixer = new AnimationMixer(it.scene);
+        mixers.push(it.mixer);
+      }
+      it.oneShot?.action.stop();
+      const action = it.mixer.clipAction(prepare(clip).clip);
+      action.reset();
+      action.setLoop(LoopOnce, 1);
+      action.clampWhenFinished = false;
+      action.timeScale = speed;
+      action.setEffectiveWeight(0);
+      action.play();
+      action.paused = delay > 0;
+      it.oneShot = { action, start: clock + delay, duration: clip.duration / Math.max(0.05, speed), fade };
+      return true;
+    };
+    const tickClips = (time: number): void => {
+      for (const it of insts) {
+        const o = it.oneShot;
+        if (!o) continue;
+        const t = time - o.start;
+        if (t >= o.duration) {
+          o.action.stop();
+          it.oneShot = null;
+          if (it.base && !it.walker) it.base.setEffectiveWeight(1);
+          continue;
+        }
+        if (t < 0) continue;
+        o.action.paused = false;
+        const w = smooth(Math.max(0, Math.min(1, t / o.fade, (o.duration - t) / o.fade)));
+        o.action.setEffectiveWeight(w);
+        // The walk weight was just set by walk(); idle clips sit at 1.
+        if (it.base) it.base.setEffectiveWeight((it.walker ? it.base.getEffectiveWeight() : 1) * (1 - w));
+      }
+    };
+    let passSide = 1;
+    let passDir = 1;
+    /** Sends a `pass` instance close past the camera, clear of the board on screen. */
+    const startPass = (call: CallInfo): void => {
+      const view = ctx.view;
+      if (!view) return;
+      const q = call.params;
+      const cfg = p.pass;
+      const idle = insts.filter((i) => i.passer && !i.run);
+      const it = typeof q.instance === 'number' ? insts[Math.round(q.instance)] : idle[passCount % Math.max(1, idle.length)];
+      if (!it || it.run) return;
+      passCount++;
+      const sideParam = typeof q.side === 'string' ? q.side : cfg.side;
+      const side: 1 | -1 = sideParam === 'left' ? -1 : sideParam === 'right' ? 1 : (passSide = -passSide) > 0 ? 1 : -1;
+      const dirParam = typeof q.direction === 'string' ? q.direction : cfg.direction;
+      const direction = dirParam === 'out' ? 'out' : dirParam === 'in' ? 'in' : (passDir = -passDir) > 0 ? 'in' : 'out';
+      const dist = Array.isArray(q.distance) ? [num(q.distance[0], cfg.distance[0]), num(q.distance[1], cfg.distance[1])] : cfg.distance;
+      const pts = passWaypoints(view.boardRect(), side, direction, num(q.height, cfg.height), dist[0] as number, dist[1] as number, num(q.margin, cfg.margin));
+      const fixedY = typeof q.y === 'number' ? q.y : cfg.y;
+      const ground = fixedY === undefined && (typeof q.ground === 'boolean' ? q.ground : (cfg.ground ?? it.snap));
+      const world = pts.map((w) => view.toWorld(w.x, w.y, w.distance, new Vector3()));
+      if (ground) for (const w of world) w.y = ctx.ground.height(w.x, w.z) + it.lift;
+      else if (fixedY !== undefined) for (const w of world) w.y = fixedY;
+      it.run = { path: buildPath(world, false, true), start: clock, duration: Math.max(1, num(q.duration, cfg.duration)), ground, arc: Math.max(0, num(q.arc, cfg.arc)), leaps: Math.max(1, Math.round(num(q.leaps, cfg.leaps))) };
+      it.root.scale.setScalar(it.scale * num(q.scale, cfg.scale));
+    };
+    const passVelocity = new Vector3();
+    const runPasses = (time: number): void => {
+      for (const it of insts) {
+        const r = it.run;
+        if (!r) continue;
+        const t = (time - r.start) / r.duration;
+        if (t >= 1) {
+          it.run = null;
+          it.fade = 0;
+          continue;
+        }
+        const distance = r.path.length * t;
+        r.path.sample(distance, point, tangent);
+        // Leaps: ballistic-looking arcs that touch down between them; the nose follows the arc.
+        const leap = (u: number): number => r.arc * Math.pow(Math.abs(Math.sin(Math.PI * r.leaps * u)), 0.85);
+        const rise = r.arc > 0 ? (leap(Math.min(1, t + 0.002)) - leap(Math.max(0, t - 0.002))) / (0.004 * r.path.length) : 0;
+        it.root.position.set(point.x, (r.ground ? ctx.ground.height(point.x, point.z) + it.lift : point.y) + leap(t), point.z);
+        const yaw = Math.atan2(tangent.x, tangent.z);
+        const pitch = r.ground ? 0 : Math.atan2(tangent.y + rise, Math.hypot(tangent.x, tangent.z));
+        qYaw.setFromAxisAngle(UP, yaw);
+        qPitch.setFromAxisAngle(SIDE, -pitch);
+        qHead.setFromAxisAngle(UP, it.heading);
+        it.root.quaternion.copy(qYaw).multiply(qPitch).multiply(qHead);
+        // Assembles out of the distance, and is gone by the time it leaves the frame close by.
+        it.fade = smooth(Math.max(0, Math.min(1, t / 0.12, (1 - t) / 0.1)));
+        passVelocity.copy(tangent).multiplyScalar(r.path.length / r.duration);
+        for (const set of it.sets) set.uniforms.velocity.value.copy(passVelocity);
+        if (it.base && stride > 0) it.base.time = mod(distance / (stride * it.root.scale.x), it.base.getClip().duration);
+      }
+    };
+    /** Visibility targets: the bindable share of the regular instances, show/hide overrides on top. */
+    const fadeTowards = (time: number, dt: number): void => {
+      const share = Math.max(0, Math.min(1, visibleShare.value)) * regular.length;
+      regular.forEach((it, k) => {
+        if (it.override !== null && time > it.overrideUntil) it.override = null;
+        const target = it.override ?? Math.max(0, Math.min(1, share - k));
+        it.fade += (target - it.fade) * (1 - Math.exp(-dt * it.fadeRate * 2.2));
+        if (Math.abs(target - it.fade) < 1e-3) it.fade = target;
+      });
+      for (const it of insts) if (it.passer && !it.run) it.fade = 0;
+    };
+    const onCall = (call: CallInfo): void => {
+      const q = call.params;
+      // Before the first frame the walk clock has not started: it will start at the call's time.
+      if (Number.isNaN(clock)) clock = lastTime = call.time;
+      switch (call.action) {
+        case 'clip': {
+          if (typeof q.clip !== 'string') return;
+          const targets = pick(q.instances, regular.filter((i) => i.fade > 0.5));
+          const stagger = num(q.stagger, 0.15);
+          targets.forEach((it, i) => playClip(it, q.clip as string, num(q.speed, 1), Math.max(0.05, num(q.fade, 0.35)), i * stagger + rand() * stagger * 0.5));
+          return;
+        }
+        case 'pass':
+          startPass(call);
+          return;
+        case 'show':
+        case 'hide': {
+          const seconds = Math.max(0.1, num(q.seconds, 1.5));
+          const hold = num(q.hold, 0);
+          for (const it of pick(q.instances, regular)) {
+            it.override = call.action === 'show' ? 1 : 0;
+            it.overrideUntil = hold > 0 ? clock + hold : Number.POSITIVE_INFINITY;
+            it.fadeRate = 1 / seconds;
+          }
+          return;
+        }
+        case 'reveal':
+          reveal.callIn(num(q.hold, p.reveal?.hold ?? 0));
+          return;
+        case 'burst':
+          if (p.render === 'dissolve') burst = 1;
+          else shimmer = Math.min(1.5, shimmer + num(q.strength, 0.8) * Math.min(1, call.strength));
+          return;
+        default:
+          return;
+      }
+    };
+
     walk(0);
     for (const m of mixers) m.update(0);
     flexAt(0);
     apply(0);
     return {
       object: group,
-      reactive: { brightness: particleBrightness },
+      reactive: { brightness: particleBrightness, pace, visible: visibleShare },
+      onCall,
       update(frame) {
+        // Walks, clips and bone swings run on their own clock at the bindable pace.
+        // It follows the frame clock exactly at pace 1, so walks keep their place in time.
+        const rate = Math.max(0, pace.value);
+        clock = Number.isNaN(clock) ? frame.time : clock + (frame.time - lastTime) * rate;
+        lastTime = frame.time;
+        const dtp = frame.dt * rate;
         // Flexed bones start from rest each frame; any clip then poses them, and the swing goes on top.
         for (const f of flexed) f.bone.quaternion.copy(f.rest);
-        walk(frame.time);
-        for (const m of mixers) m.update(frame.dt);
-        flexAt(frame.time);
+        walk(clock);
+        runPasses(clock);
+        fadeTowards(clock, frame.dt);
+        tickClips(clock);
+        for (const m of mixers) m.update(dtp);
+        flexAt(clock);
+        shimmer *= Math.exp(-frame.dt / 1.2);
         // Music: the bass slowly breathes the glow, the treble adds sparkle (slow envelopes: never on the beat).
         breath += ((frame.audio.bass ?? 0) - breath) * (1 - Math.exp(-frame.dt / 1.6));
         sparkle += ((frame.audio.treble ?? 0) - sparkle) * (1 - Math.exp(-frame.dt / 0.5));
@@ -616,6 +874,8 @@ export const modelComponent: ComponentFactory<Params> = {
         apply(dissolve);
       },
       onGameEvent(e) {
+        // Built-in call-ins: `reveal.hold` and `dissolve.onBigClears` are shorthands for
+        // `events: [{ "on": "clear>=4", "action": "reveal" | "burst" }]` (no quantise, no cooldown).
         const big = e.kind === 'clear' && (e.lines >= 4 || e.perfectClear);
         if (p.render === 'dissolve' && p.dissolve.onBigClears && big) burst = 1;
         if (big) reveal.bigClear();
@@ -630,6 +890,8 @@ export const modelComponent: ComponentFactory<Params> = {
         for (const m of fading) m.dispose();
         for (const mixer of mixers) mixer.stopAllAction();
         remapper.dispose();
+        // The clones share the cached GLB's geometry and textures: release it (ref-counted).
+        ctx.assets.release(p.src);
       },
     };
   },

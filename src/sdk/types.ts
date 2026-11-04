@@ -1,4 +1,4 @@
-import type { Object3D, Scene } from 'three/webgpu';
+import type { Object3D, Scene, Vector3 } from 'three/webgpu';
 import type { GLTF } from 'three/addons/loaders/GLTFLoader.js';
 import type { ZodType } from 'zod';
 import type { AudioFeatures } from '../audio/analysis/features';
@@ -29,16 +29,73 @@ export interface GameSignals {
   readonly clearPulse: number;
   /** 0..1 progress toward the current goal (Voyage leg, Sprint lines), if any. */
   readonly progress: number;
+  /**
+   * 0..1 heat of the run (since SDK 1.5): rises with consecutive clears, combos, back-to-back and
+   * spins, holds for a few seconds after each clear and then cools over about 10 to 20 seconds.
+   */
+  readonly heat: number;
+  /** 0..1 long-release clear signal (since SDK 1.5): set by each clear's size, falls over ~3 s. */
+  readonly clearWave: number;
+  /** 0 (empty) .. 1 (top of the visible field): the stack's height, smoothed (since SDK 1.5). */
+  readonly stackHeight: number;
+  /** The active piece across the board, -1 (left wall) .. 1 (right wall), smoothed (since SDK 1.5). */
+  readonly pieceX: number;
 }
 
-/** Stage-level game moments forwarded to environment components. */
+/**
+ * Stage-level game moments forwarded to environment components. `column` is the piece's centre
+ * across the board, 0 (left wall) .. 10 (right wall); in board space its x is `column - 5`.
+ * `move`, `rotate`, `spawn` and `hold`, and the columns, were added in SDK 1.5; a component must
+ * ignore kinds it does not know.
+ */
 export type StageGameEvent =
   | { readonly kind: 'clear'; readonly lines: number; readonly intensity: number; readonly spin: boolean; readonly perfectClear: boolean; readonly combo: number; readonly backToBack: boolean }
   | { readonly kind: 'levelUp'; readonly level: number }
-  | { readonly kind: 'hardDrop'; readonly rows: number }
-  | { readonly kind: 'lock' }
+  | { readonly kind: 'hardDrop'; readonly rows: number; readonly column?: number }
+  | { readonly kind: 'lock'; readonly column?: number }
+  | { readonly kind: 'move'; readonly dx: number; readonly column: number }
+  | { readonly kind: 'rotate'; readonly kick: boolean; readonly column: number }
+  | { readonly kind: 'spawn'; readonly piece: string; readonly column: number }
+  | { readonly kind: 'hold'; readonly piece: string; readonly column: number }
   | { readonly kind: 'danger'; readonly active: boolean }
   | { readonly kind: 'gameOver' };
+
+/** The music entered a new section (EnvironmentComponent.onSection, since SDK 1.5). */
+export interface SectionInfo {
+  /** intro, verse, build, drop, break, bridge or outro ('' when the music has no sections). */
+  readonly kind: string;
+  /** The composition's own section name. */
+  readonly name: string;
+  /** The section's composed intensity (smoothed), 0..1. */
+  readonly intensity: number;
+  /** The previous section's kind, or null for the first section heard. */
+  readonly previous: string | null;
+  readonly time: number;
+}
+
+/** What an event call-in asks a layer to do (EnvironmentComponent.onCall, since SDK 1.5). */
+export type CallAction = 'pass' | 'clip' | 'burst' | 'show' | 'hide' | 'reveal';
+
+export interface CallInfo {
+  readonly action: CallAction;
+  /** The manifest entry's `params`, unvalidated: components check what they read. */
+  readonly params: Readonly<Record<string, unknown>>;
+  /** The trigger that fired (`clear>=4`, `section:drop`...). */
+  readonly trigger: string;
+  /** Size of the moment, 0..1.5 (a clear's strength; 1 for other triggers). */
+  readonly strength: number;
+  readonly time: number;
+}
+
+/** The viewer's camera and the board on screen (EnvironmentContext.view, since SDK 1.5). */
+export interface ViewInfo {
+  /** The board's rectangle in normalised device coordinates (-1..1), widened by `margin`. */
+  boardRect(margin?: number): { readonly x0: number; readonly y0: number; readonly x1: number; readonly y1: number };
+  /** The world point seen at NDC (x, y), `distance` units from the camera, written to `out`. */
+  toWorld(ndcX: number, ndcY: number, distance: number, out: Vector3): Vector3;
+  /** The camera's world position, written to `out`. */
+  cameraPosition(out: Vector3): Vector3;
+}
 
 export interface BeatInfo {
   readonly beat: number;
@@ -99,6 +156,12 @@ export interface EnvironmentContext {
    * stage that is not on screen. Since SDK 1.3.
    */
   readonly shakeWorld?: (strength: number, seconds: number) => void;
+  /**
+   * The desktop view (camera and the board's screen rectangle), for paths that must stay clear of
+   * the playfield, such as a creature passing close by. Since SDK 1.5; in VR it still describes the
+   * desktop view.
+   */
+  readonly view?: ViewInfo;
 }
 
 /**
@@ -144,6 +207,10 @@ export interface EnvironmentComponent {
   update?(frame: EnvFrame): void;
   onBeat?(beat: BeatInfo): void;
   onGameEvent?(event: StageGameEvent): void;
+  /** The music entered a new section (since SDK 1.5). */
+  onSection?(info: SectionInfo): void;
+  /** A manifest event call-in addressed to this layer (since SDK 1.5). */
+  onCall?(call: CallInfo): void;
   /** Called when the environment fades (0..1) during transitions. */
   setPresence?(presence: number): void;
   dispose(): void;

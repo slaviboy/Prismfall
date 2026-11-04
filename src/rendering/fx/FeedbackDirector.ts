@@ -12,6 +12,14 @@ import { cellToWorld } from '../board/BoardView';
 import { frameUniforms } from '../shaders/uniforms';
 
 const GHOST_CAP = 160;
+
+/** Centre column of a set of cells, 0 (left wall) .. 10 (right wall); the middle without cells. */
+export function columnOf(cells: readonly { readonly x: number }[]): number {
+  if (cells.length === 0) return 5;
+  let sum = 0;
+  for (const c of cells) sum += c.x;
+  return sum / cells.length + 0.5;
+}
 const GHOST_STRIDE = 8; // [x y z t0] [r g b dur]
 
 export interface FeedbackSettings {
@@ -141,14 +149,25 @@ export class FeedbackDirector {
   }
 
   handle(events: readonly GameEvent[], engine: Engine | null, nowSec: number): void {
+    // The active piece's column (0 = left wall .. 10 = right wall), worked out once per frame.
+    let pieceColumn: number | null = null;
+    const column = (): number => (pieceColumn ??= engine ? columnOf(engine.activeCells()) : 5);
     for (const e of events) {
       switch (e.type) {
+        case 'move':
+          this.onStageEvent?.({ kind: 'move', dx: e.dx, column: column() });
+          break;
+        case 'hold':
+          this.onStageEvent?.({ kind: 'hold', piece: e.held, column: column() });
+          break;
         case 'spawn': {
+          this.onStageEvent?.({ kind: 'spawn', piece: e.piece, column: column() });
           const p = cellToWorld(e.x + 1, Math.min(e.y + 1, 20));
           this.puff(p.x, p.y, 0.6, 5, this.cellColor(PIECE_TYPES.indexOf(e.piece) + 1).map((c) => c * 1.5) as [number, number, number], nowSec, { speed: 1.2, size: 0.18, up: 0.2, life: 0.35, shape: 'star' });
           break;
         }
         case 'rotate':
+          this.onStageEvent?.({ kind: 'rotate', kick: e.kick > 0, column: column() });
           if (e.kick > 0 && engine?.active) {
             const cells = engine.activeCells();
             const c = cells[0];
@@ -174,7 +193,7 @@ export class FeedbackDirector {
             this.puff(p.x, p.y - 0.5, 0.5, 6, color.map((v) => v * 1.2) as [number, number, number], nowSec, { speed: 3, size: 0.25, up: 0.3 });
           }
           this.camera.addTrauma(Math.min(0.35, 0.08 + e.rows * 0.012));
-          this.onStageEvent?.({ kind: 'hardDrop', rows: e.rows });
+          this.onStageEvent?.({ kind: 'hardDrop', rows: e.rows, column: columnOf(e.cells) });
           break;
         }
         case 'lock': {
@@ -183,7 +202,7 @@ export class FeedbackDirector {
             const p = cellToWorld(c.x, c.y);
             this.puff(p.x, p.y - 0.5, 0.5, 2, [0.6, 0.65, 0.9], nowSec, { speed: 1.6, size: 0.2, up: 0.2, life: 0.45 });
           }
-          this.onStageEvent?.({ kind: 'lock' });
+          this.onStageEvent?.({ kind: 'lock', column: columnOf(e.cells) });
           break;
         }
         case 'lineClear': {

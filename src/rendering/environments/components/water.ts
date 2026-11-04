@@ -30,6 +30,8 @@ import {
 import { z } from 'zod';
 import type { ComponentFactory } from '../../../sdk/types';
 import { colorUniform, floatUniform, zColor, zVec3 } from './common';
+import { clearFront, clearFrontMotion } from '../../shaders/clearFront';
+import { glintField } from '../../shaders/glints';
 
 const schema = z.object({
   y: z.number().default(-14),
@@ -87,6 +89,15 @@ const schema = z.object({
       tint: zColor.default('#ffffff'),
     })
     .optional(),
+  /**
+   * The world clear wave (since SDK 1.5; 0 = off). As a clear's front runs out over the water:
+   * `glitter` sets the facets it crosses sparkling (in `color`, default `rippleColor`), `swell`
+   * lifts the surface into a low travelling swell (world units), and with `surf`, the crests it
+   * reaches break into glowing foam (outside the cone around the board).
+   */
+  clearWave: z
+    .object({ glitter: z.number().min(0).default(0), swell: z.number().min(0).max(4).default(0), surf: z.number().min(0).default(0), color: zColor.optional() })
+    .prefault({}),
 });
 
 /**
@@ -159,7 +170,10 @@ export const waterComponent: ComponentFactory<z.infer<typeof schema>> = {
     // Distance attenuation keeps far waves calm (no aliasing at the horizon).
     const atten = exp(positionLocal.xz.length().mul(-0.004));
     const material = new MeshBasicNodeMaterial();
-    material.positionNode = positionLocal.add(vec3(0, vtx.h.mul(atten), 0));
+    const cw = p.clearWave;
+    // A low swell travelling with the clear front (the plane's local xz is world xz).
+    const swell = cw.swell > 0 ? clearFrontMotion(positionLocal.add(vec3(0, p.y, 0))).mul(cw.swell) : float(0);
+    material.positionNode = positionLocal.add(vec3(0, vtx.h.mul(atten).add(swell), 0));
 
     const frag = height(positionWorld.xz);
     const v = normalize(cameraPosition.sub(positionWorld));
@@ -272,14 +286,19 @@ export const waterComponent: ComponentFactory<z.infer<typeof schema>> = {
         .mul(exp(t.sub(u.rippleTime).mul(-0.55)))
         .mul(smoothstep(0.35, 1.3, frag.h.div(u.amplitude.add(0.001))))
         .mul(sp.clearGlow);
-      surf = lip.mul(lipTex).add(foamBand.add(ring).mul(foamTex).mul(0.5)).mul(cone).mul(near).mul(uSurf);
+      // The clear front brightens the breaks it reaches as it runs out to sea.
+      const frontBreak = cw.surf > 0 ? float(1).add(clearFront(positionWorld).mul(cw.surf)) : float(1);
+      surf = lip.mul(lipTex).add(foamBand.add(ring).mul(foamTex).mul(0.5)).mul(frontBreak).mul(cone).mul(near).mul(uSurf);
     }
     const surfC = colorUniform(p.surf?.color ?? '#000000');
     let surface: Node<'vec3'> = mix(body, skyRef, fresnel);
     const group = new Group();
+    // The mirror's render targets are its own: they must be released with the layer.
+    let mirrorNode: { dispose(): void } | null = null;
     if (p.reflection) {
       const r = p.reflection;
       const mirror = reflector({ resolutionScale: r.resolution * (ctx.quality.detail === 'low' ? 0.6 : 1), bounces: false });
+      mirrorNode = mirror;
       mirror.target.rotateX(-Math.PI / 2);
       mirror.target.position.y = p.y;
       group.add(mirror.target);
@@ -298,6 +317,16 @@ export const waterComponent: ComponentFactory<z.infer<typeof schema>> = {
       .add(glowC.mul(crest.mul(0.35)))
       .add(colorUniform(p.rippleColor).mul(ripple));
     let emissive = glowC.mul(crest.mul(0.25)).add(colorUniform(p.rippleColor).mul(ripple.mul(0.8)));
+    if (cw.glitter > 0) {
+      // Facets catching the light as the front crosses them: point glints drifting with the swell,
+      // flickering fast, the same few pixels across at every distance.
+      const front = clearFront(positionWorld);
+      const drift = positionWorld.xz.add(vec2(t.mul(0.35), t.mul(0.12)));
+      const facets = glintField(drift, front.min(1).mul(0.3), t, 13);
+      const glitter = colorUniform(cw.color ?? p.rippleColor).mul(front.mul(facets).mul(cw.glitter * 3));
+      color = color.add(glitter);
+      emissive = emissive.add(glitter.mul(0.2));
+    }
     if (surf && p.surf) {
       color = color.add(surfC.mul(surf));
       emissive = emissive.add(surfC.mul(surf.mul(p.surf.bloom)));
@@ -327,6 +356,7 @@ export const waterComponent: ComponentFactory<z.infer<typeof schema>> = {
         ctx.ground.setWaterLevel(null);
         geometry.dispose();
         material.dispose();
+        mirrorNode?.dispose();
       },
     };
   },

@@ -26,7 +26,7 @@ import {
   vec3,
   vec4,
 } from 'three/tsl';
-import { colorUniform, floatUniform, noBloom, seeded, z, zColor, type ComponentFactory, type EnvironmentContext } from '@prismfall/sdk';
+import { clearFront, colorUniform, floatUniform, noBloom, seeded, z, zColor, type ComponentFactory, type EnvironmentContext } from '@prismfall/sdk';
 import { buildDuneMesh, createDuneField, type DuneField } from './duneField';
 
 type F = Node<'float'>;
@@ -61,6 +61,11 @@ const schema = z.object({
   /** The near terrain layer's mesh wedge (`apex`, `far`, `spread`): the field stays under it. */
   near: z.object({ apex: z.tuple([z.number(), z.number()]).default([0, 34]), far: z.number().positive(), spread: z.number().positive() }).optional(),
   mesh: z.object({ columnsPerDegree: z.number().min(1).max(20).default(7), rowsPerGap: z.number().int().min(6).max(64).default(22) }).prefault({}),
+  /**
+   * The world clear wave (SDK 1.5): when a big clear's front rolls out over the dune sea it lifts a
+   * cool sheen along the crests and brinks it crosses (0 = off), softened by the haze.
+   */
+  clearWave: z.object({ sheen: z.number().min(0).default(0), color: zColor.default('#c8d4ff') }).prefault({}),
   /**
    * Light on the sand (albedo folded in, engine colour convention): `ambient` from the sky, `moon`
    * at full facing. The grade crushes scene values under about 0.02, so these sit just above it.
@@ -221,7 +226,13 @@ function duneMaterial(p: Params, s: Shading, presence: F): MeshBasicNodeMaterial
   // Sharper and rounder stretches of brink alternate along the crests.
   const brinkVary = mx_noise_float(vec3(wp.x.mul(0.012), 6.1, wp.z.mul(0.012))).mul(0.45).add(0.85);
   const brink = smoothstep(0.8, 0.99, h01).mul(slipSide).mul(clamp(dot(brinkNormal, s.L), 0, 1)).mul(brinkVary).mul(p.light.brink);
-  const color = s.haze(s.lit(n, occlusion).add(s.moon.mul(brink)).mul(albedo)).add(s.dither);
+  let light: V3 = s.lit(n, occlusion).add(s.moon.mul(brink)).mul(albedo);
+  if (p.clearWave.sheen > 0) {
+    // Crests and brinks catch the passing front most; the slip faces in shadow hardly at all.
+    const catchLight = smoothstep(0.35, 1, h01).mul(0.75).add(brink.mul(0.25)).add(0.08);
+    light = light.add(colorUniform(p.clearWave.color).mul(clearFront(wp).mul(catchLight).mul(p.clearWave.sheen * 0.06)));
+  }
+  const color = s.haze(light).add(s.dither);
   const material = new MeshBasicNodeMaterial();
   material.colorNode = vec4(color, 1);
   material.opacityNode = reveal(presence);

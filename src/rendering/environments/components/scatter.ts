@@ -1,5 +1,7 @@
 import { BufferAttribute, BufferGeometry, Color, Group, InstancedMesh, Matrix3, Matrix4, Mesh, Quaternion, Vector3, type Material } from 'three/webgpu';
 import { cos, float, positionGeometry, positionLocal, sin, vec3 } from 'three/tsl';
+import { clearFrontMotion } from '../../shaders/clearFront';
+import { frameUniforms } from '../../shaders/uniforms';
 import { z } from 'zod';
 import type { ComponentFactory } from '../../../sdk/types';
 import { Noise2 } from '../terrain/heightfield';
@@ -39,6 +41,12 @@ const schema = z.object({
   vertexAO: z.boolean().default(true),
   /** Wind (or current) sway: displacement grows with height. */
   sway: z.object({ amount: z.number().min(0).default(0.25), speed: z.number().default(0.9) }).prefault({}),
+  /**
+   * The world clear wave (since SDK 1.5; 0 = off): a gust front. As a clear's front passes, the
+   * props bend away from the board by `sway` (as a share of their height, tips most) and swing back
+   * in its tail.
+   */
+  clearWave: z.object({ sway: z.number().min(0).max(1).default(0) }).prefault({}),
   sink: z.number().default(0.3),
   /** Tilt instances to the ground slope (rocks) instead of standing upright (trees). */
   alignToSlope: z.boolean().default(false),
@@ -108,8 +116,16 @@ export const scatterComponent: ComponentFactory<Params> = {
       const h = positionGeometry.y.div(Math.max(0.5, height)).clamp(0, 1.5);
       const k = h.mul(h).mul(u.sway).mul(height * 0.08);
       const ph = time.mul(p.sway.speed).add(positionLocal.x.mul(0.045)).add(positionLocal.z.mul(0.03));
-      return positionLocal.add(vec3(sin(ph).mul(k), float(0), cos(ph.mul(0.83).add(1.3)).mul(k).mul(0.6)));
+      let bent = positionLocal.add(vec3(sin(ph).mul(k), float(0), cos(ph.mul(0.83).add(1.3)).mul(k).mul(0.6)));
+      if (p.clearWave.sway > 0) {
+        // The instanced position is in the layer's space, which sits at the world origin.
+        const away = positionLocal.sub(frameUniforms.waveOrigin).mul(vec3(1, 0, 1)).normalize();
+        const gust = clearFrontMotion(positionLocal).mul(h.mul(h)).mul(height * p.clearWave.sway * 0.22);
+        bent = bent.add(away.mul(gust)).sub(vec3(0, gust.mul(0.15), 0));
+      }
+      return bent;
     };
+    const swaying = p.sway.amount > 0 || p.clearWave.sway > 0;
     const remapper = createRemapper(p.materials, { time, presence: u.presence, music: u.music, emissive: u.emissive }, p.vertexAO, true);
 
     // Gather each item's parts (one per material primitive) in item space.
@@ -216,7 +232,7 @@ export const scatterComponent: ComponentFactory<Params> = {
       const entry = parts.get(it.mesh)!;
       if (list.length === 0) continue;
       for (const part of entry.parts) {
-        const material = remapper.remap(part.material, part.hasAO, { positionNode: p.sway.amount > 0 ? swayFor(entry.height) : undefined });
+        const material = remapper.remap(part.material, part.hasAO, { positionNode: swaying ? swayFor(entry.height) : undefined });
         const mesh = new InstancedMesh(part.geometry, material, list.length);
         list.forEach((pl, i) => {
           mesh.setMatrixAt(i, pl.m);

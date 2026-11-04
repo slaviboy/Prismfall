@@ -51,6 +51,7 @@ import {
   vec4,
 } from 'three/tsl';
 import { additiveFog, frameUniforms, type FloatUniform } from '../shaders/uniforms';
+import { clearFront } from '../shaders/clearFront';
 import type { SurfaceSampleSet } from './meshSampler';
 
 export interface SurfaceParticleOptions {
@@ -80,6 +81,8 @@ export interface SurfaceParticleOptions {
   readonly saturation?: number;
   /** Luminous moving points instead of plain surface dots (see GlowOptions); unset keeps the plain look. */
   readonly glow?: GlowOptions;
+  /** Shimmer as the world clear wave passes the body (x the particles' light; 0 or unset = none). Since SDK 1.5. */
+  readonly clearWave?: number;
 }
 
 /**
@@ -416,7 +419,10 @@ export function createSurfaceParticles(sets: readonly SurfaceSampleSet[], opts: 
   const sampled = saturation === 1 ? surfaceColor : mix(vec3(dot(surfaceColor, vec3(0.2126, 0.7152, 0.0722))), surfaceColor, saturation);
   const color = mix(sampled, vec3(...opts.tint), opts.colorMix).mul(shading > 0 ? mix(float(1), lit, shading) : float(1));
   const twinkle = sin(time.mul(seed.mul(3).add(1)).add(seed.mul(50))).mul(0.15).add(0.9);
-  const light = color.mul(shape).mul(twinkle).mul(u.brightness).mul(float(1).sub(d.mul(0.8))).mul(u.presence);
+  const waveK = opts.clearWave ?? 0;
+  // The clear wave passing the body: the points flare and twinkle faster for a moment.
+  const shimmerWave = waveK > 0 ? float(1).add(clearFront().mul(waveK).mul(sin(time.mul(seed.mul(9).add(6)).add(seed.mul(70))).mul(0.4).add(0.8))) : float(1);
+  const light = color.mul(shape).mul(twinkle).mul(u.brightness).mul(shimmerWave).mul(float(1).sub(d.mul(0.8))).mul(u.presence);
 
   const makeMaterial = (morph: Node<'vec3'> | null): MeshBasicNodeMaterial => {
     if (opts.glow) return glowMaterial(opts.glow, morph);
@@ -429,7 +435,7 @@ export function createSurfaceParticles(sets: readonly SurfaceSampleSet[], opts: 
       material.fog = false;
       material.mrtNode = mrt({ emissive: vec4(light.mul(opts.bloom), 1) });
     } else {
-      material.colorNode = vec4(color.mul(u.brightness), shape.mul(u.presence).mul(float(1).sub(d.mul(0.8))));
+      material.colorNode = vec4(color.mul(u.brightness).mul(shimmerWave), shape.mul(u.presence).mul(float(1).sub(d.mul(0.8))));
       material.blending = NormalBlending;
       material.mrtNode = mrt({ emissive: vec4(color.mul(opts.bloom), shape.mul(u.presence)) });
     }
@@ -483,7 +489,8 @@ export function createSurfaceParticles(sets: readonly SurfaceSampleSet[], opts: 
     const spark = step(1 - g.sparkle, s5).mul(flash).mul(u.sparkle.mul(frameUniforms.reactivity).mul(g.shimmer * 2).add(1)).mul(2.5);
     const shedFade = mix(float(1), float(1).sub(age).pow(1.5).mul(smoothstep(0, 0.06, age)), shedOn);
     const streamFade = sin(flowPhase.mul(Math.PI)).mul(0.35).add(0.65);
-    const level = varying(edge.mul(tw).mul(streamFade).add(spark).add(shedOn.mul(0.25)).mul(shedFade), 'vGlowLevel');
+    const wave = waveK > 0 ? clearFront(worldPos).mul(waveK).mul(tw.add(0.4)) : float(0);
+    const level = varying(edge.mul(tw).mul(streamFade).add(spark).add(shedOn.mul(0.25)).add(wave).mul(shedFade), 'vGlowLevel');
     // Colour: the glow colour, optionally mixed with the sampled surface colours (lifted to glow).
     const own = sampled.mul(2.4).min(vec3(1.5));
     const base = mix(vec3(...g.color), own, g.textureMix);

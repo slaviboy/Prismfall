@@ -1,0 +1,12 @@
+{
+  "description": "A run heats up: consecutive clears, combos and back-to-back (game.heat) slowly lift the world's energy and let it cool over ten to twenty seconds: more shooting stars, livelier aurora and particles, creatures a little quicker.",
+  "bindings": [
+    {"layer": "type:meteors", "target": "rate", "feature": "game.heat", "amount": 2.0, "curve": "linear", "attackMs": 600, "releaseMs": 5000},
+    {"layer": "type:aurora", "target": "intensity", "feature": "game.heat", "amount": 0.55, "category": "lighting", "attackMs": 1500, "releaseMs": 6000},
+    {"layer": "type:particles", "target": "brightness", "feature": "game.heat", "amount": 0.35, "category": "particles", "attackMs": 1200, "releaseMs": 6000},
+    {"layer": "type:sky", "target": "stars", "feature": "game.heat", "amount": 0.3, "attackMs": 1500, "releaseMs": 6000},
+    {"layer": "type:terrain", "target": "glow", "feature": "game.heat", "amount": 0.3, "attackMs": 1500, "releaseMs": 6000},
+    {"layer": "type:model", "target": "pace", "feature": "game.heat", "amount": 0.25, "attackMs": 2000, "releaseMs": 6000},
+    {"layer": "type:fireflies", "target": "activity", "feature": "game.heat", "amount": 0.5, "attackMs": 1500, "releaseMs": 6000}
+  ]
+}

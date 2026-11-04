@@ -206,6 +206,10 @@ export const glowSchoolComponent: ComponentFactory<Params> = {
       onGameEvent(e) {
         if (e.kind === 'clear' && (e.lines >= 4 || e.perfectClear)) reveal.bigClear();
       },
+      // Event call-ins (since SDK 1.5): `reveal` calls the school in for `params.hold` seconds.
+      onCall(call) {
+        if (call.action === 'reveal') reveal.callIn(typeof call.params.hold === 'number' ? call.params.hold : (p.reveal?.hold ?? 0));
+      },
       setPresence(v) {
         u.presence.value = v;
       },

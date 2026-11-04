@@ -114,7 +114,7 @@ Imported from the owner's downloads with `scripts/fetch-sketchfab.ts --zip` (pac
 | `content/shared/creatures/zombie-woman.glb` | Sketchfab ".fuse female zombie 1" by Leonardo Carvalho (https://sketchfab.com/3d-models/fuse-female-zombie-1-98415df5d3124381a46ccef5c2e02b71); converted to particles in Dead Acre | CC BY 4.0 (attribution: Leonardo Carvalho) |
 | `content/shared/creatures/bald-eagle.glb` | Sketchfab "animated EAGLE" by Asim3d (https://sketchfab.com/3d-models/animated-eagle-8fb150270adb45aa9653e857f3fa351b); converted to particles in Alpine Horizon | CC BY 4.0 (attribution: Asim3d) |
 | `content/shared/creatures/red-deer.glb` | Sketchfab "Animated Deer" by igor-lir (https://sketchfab.com/3d-models/animated-deer-4cff1e63f4e941198b3d56300b3393b9); its 148 morph targets (vertex animation) drive the particles; converted to particles in Enchanted Wilderness | CC BY 4.0 (attribution: igor-lir) |
-| `content/shared/creatures/dolphin.glb` | Sketchfab "Dolphin" by Alex_Pfe (https://sketchfab.com/3d-models/dolphin-c24dc835a6aa4d3c827450513525cdb8); simplified from 188,492 to 43,615 triangles; its animated splash cubes are not drawn; converted to particles in Tradewind Cove | CC BY 4.0 (attribution: Alex_Pfe) |
+| `content/shared/creatures/dolphin.glb` | Sketchfab "Dolphin" by Alex_Pfe (https://sketchfab.com/3d-models/dolphin-c24dc835a6aa4d3c827450513525cdb8); simplified from 188,492 to 43,615 triangles; its animated splash cubes are not drawn; converted to particles in Tradewind Cove, and in Luminous Tide as the glowing dolphins that leap past on QUADs and long combos | CC BY 4.0 (attribution: Alex_Pfe) |
 
 ### Sketchfab models used by The Last Frontier
 

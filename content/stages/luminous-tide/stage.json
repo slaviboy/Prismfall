@@ -86,12 +86,37 @@
     "geometry": "soft",
     "material": "pearlGlass"
   },
+  "requires": {
+    "sdk": "^1.5.0"
+  },
+  "clearWave": {
+    "far": 1300,
+    "travel": 3.4
+  },
+  "sectionStates": {
+    "fade": 4,
+    "states": [
+      {"section": ["drop"], "layer": "ocean", "target": "surf", "scale": 1.3, "anticipate": 0.5},
+      {"section": ["drop"], "layer": "plankton", "target": "brightness", "scale": 1.3, "anticipate": 0.5},
+      {"section": ["break"], "layer": "plankton", "target": "brightness", "scale": 0.75},
+      {"section": ["break"], "layer": "sea-haze", "target": "opacity", "scale": 1.3}
+    ]
+  },
+  "events": [
+    {"layer": "dolphins", "on": "clear>=4", "quantize": "bar", "cooldown": 12, "action": "pass"},
+    {"layer": "dolphins", "on": "combo>=4", "quantize": "bar", "cooldown": 20, "action": "pass"},
+    {"layer": "meteors", "on": "b2b", "quantize": "beat", "cooldown": 20, "action": "burst", "params": {"count": 1}}
+  ],
   "environment": {
     "layers": [
       {
         "id": "sky",
         "type": "sky",
         "params": {
+          "clearWave": {
+            "glow": 0.7,
+            "stars": 0.4
+          },
           "top": "#01030a",
           "horizon": "#1c3a56",
           "bottom": "#01040a",
@@ -141,6 +166,12 @@
         "id": "ocean",
         "type": "water",
         "params": {
+          "clearWave": {
+            "glitter": 1.3,
+            "swell": 0.5,
+            "surf": 1.6,
+            "color": "#5ee6f0"
+          },
           "y": -13,
           "deep": "#010309",
           "shallow": "#061a2c",
@@ -174,6 +205,10 @@
         "id": "plankton",
         "type": "particles",
         "params": {
+          "clearWave": {
+            "brightness": 1.8,
+            "stir": 1.4
+          },
           "count": 2200,
           "center": [
             0,
@@ -215,6 +250,9 @@
         "id": "sea-haze",
         "type": "clouds",
         "params": {
+          "clearWave": {
+            "glow": 0.8
+          },
           "count": 30,
           "center": [
             0,
@@ -241,25 +279,78 @@
           "seed": 5
         },
         "minDetail": "medium"
+      },
+      {
+        "id": "dolphins",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/dolphin.glb",
+          "include": "^(_rootJoint|Object_\\d+)$",
+          "render": "particles",
+          "animation": {
+            "clip": "Scene",
+            "speed": 1.1,
+            "vary": 0.1
+          },
+          "instances": [
+            {"position": [-60, -30, -200], "scale": 2.2, "snapToGround": false, "pass": true},
+            {"position": [60, -30, -200], "scale": 2.0, "snapToGround": false, "pass": true}
+          ],
+          "pass": {"duration": 6, "distance": [26, 80], "height": -0.3, "margin": 0.2, "y": -13.4, "arc": 3, "leaps": 2, "side": "alternate", "direction": "in"},
+          "particles": {
+            "exclude": "^Object_(50|52|54)$",
+            "count": 6500,
+            "size": 0.07,
+            "brightness": 1.1,
+            "tint": "#bff4ff",
+            "colorMix": 0.2,
+            "saturation": 0.3,
+            "blend": "additive",
+            "jitter": 0.004,
+            "spread": 2.2,
+            "wind": [0.4, 1.2, 0],
+            "bloom": 0.12,
+            "shading": 0.6,
+            "light": [0.55, 1, -0.6],
+            "seed": 23,
+            "style": "glow",
+            "clearWave": 0.6,
+            "glow": {
+              "color": "#6ff2e8",
+              "textureMix": 0.15,
+              "core": 0.25,
+              "edge": 1.3,
+              "twinkle": 0.5,
+              "sparkle": 0.15,
+              "drift": 0.03,
+              "flow": 0.35,
+              "flowRate": 0.15,
+              "shed": 0.3,
+              "shedLife": 2.2,
+              "shedSpread": 1.2,
+              "breathe": 0.3,
+              "shimmer": 0.4,
+              "size": 1,
+              "brightness": 1
+            }
+          }
+        }
       }
     ]
   },
   "reactivity": {
     "profiles": [
-      {
-        "name": "treble-sparkle",
-        "layers": [
-          "plankton"
-        ]
-      },
-      {
-        "name": "flux-turbulence",
-        "layers": [
-          "plankton"
-        ]
-      }
+      {"name": "treble-sparkle", "layers": ["plankton"]},
+      {"name": "flux-turbulence", "layers": ["plankton"]},
+      {"name": "combo-heat", "layers": ["meteors", "plankton"]}
     ],
-    "bindings": []
+    "bindings": [
+      {"layer": "sky", "target": "stars", "feature": "game.progress", "amount": 0.6, "curve": "linear", "attackMs": 3000, "releaseMs": 3000},
+      {"layer": "sky", "target": "glow", "feature": "game.progress", "amount": 0.5, "curve": "linear", "category": "lighting", "attackMs": 3000, "releaseMs": 3000},
+      {"layer": "sky", "target": "disc", "feature": "game.progress", "amount": 0.35, "curve": "linear", "category": "lighting", "attackMs": 3000, "releaseMs": 3000},
+      {"layer": "sky", "target": "glow", "feature": "game.clearWave", "amount": 0.35, "category": "lighting", "attackMs": 500, "releaseMs": 3000},
+      {"layer": "ocean", "target": "surf", "feature": "game.clearWave", "amount": 0.6, "attackMs": 300, "releaseMs": 3500}
+    ]
   },
   "effects": {
     "lineClear": {

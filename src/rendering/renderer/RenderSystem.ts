@@ -16,6 +16,7 @@ import { PerfMonitor } from './PerfMonitor';
 import { BurstSystem } from '../particles/BurstSystem';
 import { FeedbackDirector } from '../fx/FeedbackDirector';
 import { EnvironmentHost } from '../environments/EnvironmentHost';
+import { WorldSignals } from '../environments/worldSignals';
 import { createAudioFeatures, type AudioFeatures } from '../../audio/analysis/features';
 import type { GameSignals, QualityInfo } from '../../sdk/types';
 import { loadBlockGeometry } from '../board/blockLibrary';
@@ -93,14 +94,22 @@ export class RenderSystem implements GameView {
   readonly environments: EnvironmentHost;
   readonly adapter: AdapterInfo;
   private readonly idleAudio: AudioFeatures = createAudioFeatures();
-  readonly signals: { danger: number; combo: number; backToBack: number; level: number; clearPulse: number; progress: number } = {
+  readonly signals: { danger: number; combo: number; backToBack: number; level: number; clearPulse: number; progress: number; heat: number; clearWave: number; stackHeight: number; pieceX: number } = {
     danger: 0,
     combo: -1,
     backToBack: -1,
     level: 1,
     clearPulse: 0,
     progress: 0,
+    heat: 0,
+    clearWave: 0,
+    stackHeight: 0,
+    pieceX: 0,
   };
+  /** Heat, the long clear wave and the world clear fronts (fed from presented clears). */
+  readonly worldSignals = new WorldSignals();
+  private lastEngine: object | null = null;
+  private readonly boardOrigin = new Vector3();
   private readonly hooks = new Set<RenderHook>();
   private renderScale = 1;
   private cssWidth = 1;
@@ -130,7 +139,10 @@ export class RenderSystem implements GameView {
     this.fxRoot.add(this.bursts.object);
     this.boardRoot.add(this.boardBursts.object, this.feedback.ghosts);
     this.environments = new EnvironmentHost(this);
-    this.feedback.onStageEvent = (e) => this.environments.onGameEvent(e);
+    this.feedback.onStageEvent = (e) => {
+      if (e.kind === 'clear') this.worldSignals.onClear(e, frameUniforms.time.value);
+      this.environments.onGameEvent(e);
+    };
     this.perf = new PerfMonitor(renderer, adapter.backend === 'webgpu');
     renderer.onDeviceLost = (info) => {
       console.warn('[render] GPU device lost', info);
@@ -291,6 +303,11 @@ export class RenderSystem implements GameView {
     frameUniforms.flashLimit.value = s.accessibility.flashReduction ? 0.45 : 1;
     frameUniforms.worldEvents.value = s.accessibility.worldEvents === 'off' ? 0 : s.accessibility.worldEvents === 'calm' ? 0.5 : 1;
     frameUniforms.reactivity.value = s.reactivity.enabled ? s.reactivity.strength : 0;
+    // The world clear wave: light (glints, glow) and motion (sway, stir) scaled for accessibility.
+    const effects = Math.min(1.5, Math.max(0, s.gameplay.effectsIntensity));
+    const events = s.accessibility.worldEvents;
+    frameUniforms.waveLight.value = effects * s.accessibility.screenEffects * (s.accessibility.flashReduction ? 0.5 : 1) * (events === 'off' ? 0.4 : events === 'calm' ? 0.7 : 1);
+    frameUniforms.waveMotion.value = effects * (reducedMotion(s) ? 0.25 : 1) * (events === 'off' ? 0 : events === 'calm' ? 0.5 : 1);
   }
 
   resize(): void {
@@ -361,6 +378,20 @@ export class RenderSystem implements GameView {
     frameUniforms.clearPulse.value = Math.max(0, frameUniforms.clearPulse.value - frame.dt * 2.2);
     sig.clearPulse = frameUniforms.clearPulse.value;
     frameUniforms.comboLevel.value = Math.min(1, Math.max(0, sig.combo) / 8);
+    // A new game (or replay) starts cool.
+    if (engine && engine !== this.lastEngine) this.worldSignals.reset();
+    this.lastEngine = engine;
+    const stackTarget = engine ? Math.min(1, engine.board.stackHeight() / Math.max(1, engine.board.visibleRows)) : 0;
+    sig.stackHeight += (stackTarget - sig.stackHeight) * (1 - Math.exp(-frame.dt / 0.3));
+    const cells = engine?.active ? engine.activeCells() : null;
+    if (cells && cells.length > 0) {
+      let cx = 0;
+      for (const c of cells) cx += c.x;
+      const column = cx / cells.length + 0.5;
+      sig.pieceX += (Math.max(-1, Math.min(1, column / 5 - 1)) - sig.pieceX) * (1 - Math.exp(-frame.dt / 0.12));
+    }
+    frameUniforms.stackHeight.value = sig.stackHeight;
+    frameUniforms.pieceX.value = sig.pieceX;
     // Music features → shared shader uniforms (zero when audio reactivity is off).
     const react = this.settings?.reactivity.enabled ?? true;
     frameUniforms.bass.value = react ? audio.bass : 0;
@@ -377,6 +408,17 @@ export class RenderSystem implements GameView {
 
     this.feedback.handle(frame.events, engine, time);
     this.board.sync(engine, frame.events, time);
+    // Heat, the long clear wave and the clear fronts (after this frame's clears were handled).
+    const ws = this.worldSignals;
+    ws.update(frame.dt, time);
+    sig.heat = ws.heat;
+    sig.clearWave = ws.clearWave;
+    frameUniforms.heat.value = ws.heat;
+    frameUniforms.clearWave.value = ws.clearWave;
+    const slots = [frameUniforms.wave0, frameUniforms.wave1, frameUniforms.wave2, frameUniforms.wave3];
+    ws.fronts.forEach((f, i) => slots[i]?.value.set(f.start, f.strength, f.reach, f.width));
+    this.boardRoot.getWorldPosition(this.boardOrigin);
+    frameUniforms.waveOrigin.value.copy(this.boardOrigin);
     this.environments.update(frame.dt, time, audio, frame.beats ?? [], sig as GameSignals);
     // Environment emitters write world bursts during their update; upload the new spawns once.
     this.bursts.flush();

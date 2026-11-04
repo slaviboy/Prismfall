@@ -1,0 +1,10 @@
+{
+  "description": "A clear's light lingers: the horizon, aurora, terrain crests and creature light rise with the clear wave and fade over a few seconds (no flash: the envelopes are slow).",
+  "bindings": [
+    {"layer": "type:sky", "target": "glow", "feature": "game.clearWave", "amount": 0.35, "category": "lighting", "attackMs": 300, "releaseMs": 2800},
+    {"layer": "type:aurora", "target": "intensity", "feature": "game.clearWave", "amount": 0.45, "category": "lighting", "attackMs": 450, "releaseMs": 3500},
+    {"layer": "type:terrain", "target": "glow", "feature": "game.clearWave", "amount": 0.4, "attackMs": 300, "releaseMs": 2800},
+    {"layer": "type:particles", "target": "brightness", "feature": "game.clearWave", "amount": 0.5, "category": "particles", "attackMs": 200, "releaseMs": 2600},
+    {"layer": "type:model", "target": "brightness", "feature": "game.clearWave", "amount": 0.3, "category": "particles", "attackMs": 250, "releaseMs": 2600}
+  ]
+}

@@ -3,6 +3,7 @@ import { cos, float, instancedBufferAttribute, length, mix, mrt, mx_noise_float,
 import { z } from 'zod';
 import type { ComponentFactory } from '../../../sdk/types';
 import { additiveFog } from '../../shaders/uniforms';
+import { clearFront } from '../../shaders/clearFront';
 import { colorUniform, floatUniform, seeded, zColor, zVec3 } from './common';
 
 const schema = z.object({
@@ -16,6 +17,11 @@ const schema = z.object({
   drift: zVec3.default([1.5, 0, 0]),
   additive: z.boolean().default(true),
   seed: z.number().default(11),
+  /**
+   * The world clear wave (since SDK 1.5; 0 = off): the front lights the haze it passes through,
+   * lifting each cloud's colour by `glow` (in `color`, default the cloud's own) as it goes by.
+   */
+  clearWave: z.object({ glow: z.number().min(0).default(0), color: zColor.optional() }).prefault({}),
 });
 
 /** Large soft billboards for nebulae, haze, steam or murk. Cheap hashed-noise texture in the shader. */
@@ -45,7 +51,11 @@ export const cloudsComponent: ComponentFactory<z.infer<typeof schema>> = {
     // Smooth noise (no blocky hash cells) so billboard edges never read as rectangles.
     const n = (v: Node<'vec2'>, s: number) => mx_noise_float(vec3(v.mul(s), a.w.mul(13.7))).mul(0.5).add(0.5);
     const blob = smoothstep(0.5, 0.05, length(q)).pow(1.4).mul(float(0.65).add(n(rot(7), 3.2).mul(0.3)).add(sin(rot(3).x.mul(9).add(t.mul(0.05))).mul(0.1)));
-    const tint = mix(colorUniform(p.color), colorUniform(p.colorB), a.w);
+    let tint: Node<'vec3'> = mix(colorUniform(p.color), colorUniform(p.colorB), a.w);
+    if (p.clearWave.glow > 0) {
+      const front = clearFront(pos).mul(p.clearWave.glow);
+      tint = p.clearWave.color ? tint.add(colorUniform(p.clearWave.color).mul(front.mul(0.5))) : tint.mul(float(1).add(front));
+    }
     const alpha = blob.mul(u.opacity).mul(u.presence);
     const material = new SpriteNodeMaterial();
     material.positionNode = pos;

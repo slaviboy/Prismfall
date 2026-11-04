@@ -31,7 +31,10 @@ export interface AudioFeatures {
   bar: number;
   beatInBar: number;
   barPhase: number;
+  /** The current section's name in the composition (e.g. `cranes`). */
   section: string;
+  /** Its kind: intro, verse, build, drop, break, bridge or outro ('' when the music has no sections). */
+  sectionKind: string;
   sectionIntensity: number;
   /** 0..1 ramp before an upcoming marked event (drop/build end), for wind-up animations. */
   anticipation: number;
@@ -70,6 +73,7 @@ export function createAudioFeatures(): AudioFeatures {
     beatInBar: 0,
     barPhase: 0,
     section: 'intro',
+    sectionKind: '',
     sectionIntensity: 0.5,
     anticipation: 0,
     nextEvent: '',

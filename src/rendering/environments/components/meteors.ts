@@ -381,6 +381,14 @@ export const meteorsComponent: ComponentFactory<Params> = {
       setPresence(v) {
         u.presence.value = v;
       },
+      // Event call-ins (since SDK 1.5): `burst` (or `show`) sends `params.count` meteors (1..6),
+      // spaced a little apart, and with `params.shower` starts a shower from one radiant.
+      onCall(call) {
+        if ((call.action !== 'burst' && call.action !== 'show') || frozen || u.presence.value < 0.5) return;
+        if (call.params.shower === true) scheduler.startShower(clock);
+        const n = Math.max(1, Math.min(6, Math.round(typeof call.params.count === 'number' ? call.params.count : 1)));
+        for (let i = 0; i < n; i++) launch(scheduler.plan(clock, flashSafe(), { fireball: call.params.fireball === true && i === 0 && !flashSafe() }), -(i * 0.45 + Math.random() * 0.35));
+      },
       spawn(o = {}) {
         if (o.shower) scheduler.startShower(clock);
         const plan = scheduler.plan(clock, flashSafe(), { fireball: o.fireball ?? false });

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { CALL_ACTIONS, parseTrigger } from './triggers';
 
 export const STAGE_SCHEMA_VERSION = 1;
 
@@ -11,6 +12,8 @@ export const BINDABLE_FEATURES = [
   'subBass', 'bass', 'lowMid', 'mid', 'highMid', 'treble', 'overallEnergy', 'waveformRms', 'spectralFlux',
   'spectralCentroid', 'transientIntensity', 'beatPulse', 'barPulse', 'beatPhase', 'barPhase', 'sectionIntensity', 'anticipation',
   'game.danger', 'game.clearPulse', 'game.combo', 'game.level', 'game.progress',
+  // Since SDK 1.5: long-lived signals (see src/rendering/environments/worldSignals.ts).
+  'game.heat', 'game.clearWave', 'game.backToBack', 'game.stackHeight',
 ] as const;
 
 export const bindingSchema = z.object({
@@ -27,8 +30,43 @@ export const bindingSchema = z.object({
   category: z.enum(['particles', 'environment', 'lighting']).default('environment'),
   min: z.number().optional(),
   max: z.number().optional(),
+  /**
+   * Gating (since SDK 1.5): the binding follows its feature only while the music is in one of these
+   * sections (kinds such as `drop`, or the composition's own section names); otherwise its input is
+   * 0 and the envelope releases.
+   */
+  when: z.object({ section: z.array(z.string()).min(1) }).optional(),
 });
 export type Binding = z.infer<typeof bindingSchema>;
+
+/**
+ * Section states (since SDK 1.5): while the music is in one of `section`, the layer's `target` is
+ * multiplied by `scale` (and `add` is added), crossfaded over the manifest's `sectionStates.fade`
+ * seconds. `anticipate` (0..1) starts the state early by the music's anticipation before an
+ * upcoming section of that kind, so a scene winds up into a drop.
+ */
+export const sectionStateSchema = z.object({
+  section: z.array(z.string()).min(1),
+  layer: z.string().default('*'),
+  target: z.string(),
+  scale: z.number().min(0).max(8).default(1),
+  add: z.number().default(0),
+  anticipate: z.number().min(0).max(1).default(0),
+});
+export type SectionState = z.infer<typeof sectionStateSchema>;
+
+/** Event call-ins (since SDK 1.5): see src/rendering/environments/callins.ts and CONTENT_GUIDE.md. */
+export const callInSchema = z.object({
+  /** Layer id, `type:<componentType>`, or `*`. */
+  layer: z.string(),
+  on: z.string().refine((on) => parseTrigger(on) !== null, { message: 'unknown trigger (clear>=N, combo>=N, b2b, perfect, spin, levelUp, danger, section:<kind>, progress>=x, heat>=x)' }),
+  quantize: z.enum(['none', 'beat', 'bar', 'phrase']).default('bar'),
+  cooldown: z.number().min(0).default(8),
+  chance: z.number().min(0).max(1).default(1),
+  action: z.enum(CALL_ACTIONS),
+  params: z.record(z.string(), z.unknown()).default({}),
+});
+export type CallInEntry = z.infer<typeof callInSchema>;
 
 /**
  * A reusable reactivity profile (content/shared/reactivity/<name>.json), by name or with a scope:
@@ -128,6 +166,26 @@ export const stageManifestSchema = z.object({
     .prefault({}),
   environment: z.object({ layers: z.array(layerSchema).min(1) }),
   reactivity: z.object({ profiles: z.array(profileRefSchema).default([]), bindings: z.array(bindingSchema).default([]) }).prefault({}),
+  /** Section-keyed layer states with a crossfade (since SDK 1.5). */
+  sectionStates: z
+    .object({ fade: z.number().min(0.1).max(30).default(3), states: z.array(sectionStateSchema).default([]) })
+    .prefault({}),
+  /** Event call-ins (since SDK 1.5): game and music moments that call a layer to act. */
+  events: z.array(callInSchema).default([]),
+  /** Bars per phrase for `quantize: "phrase"` (since SDK 1.5). */
+  phraseBars: z.number().int().min(1).max(16).default(4),
+  /**
+   * How the world's clear fronts travel (since SDK 1.5): from `near` (world units from the board)
+   * to `far` in `travel` seconds; `strength` scales them (0 = no fronts in this world).
+   */
+  clearWave: z
+    .object({
+      near: z.number().positive().default(6),
+      far: z.number().positive().default(900),
+      travel: z.number().min(0.5).max(12).default(3.2),
+      strength: z.number().min(0).max(2).default(1),
+    })
+    .prefault({}),
   effects: z
     .object({
       lineClear: z.object({ effect: z.string(), params: z.record(z.string(), z.unknown()).default({}) }).default({ effect: 'prismBurst', params: {} }),

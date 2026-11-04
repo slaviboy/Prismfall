@@ -31,6 +31,7 @@ import {
 import { z } from 'zod';
 import type { ComponentFactory } from '../../../sdk/types';
 import { noBloom } from '../../shaders/uniforms';
+import { clearFront } from '../../shaders/clearFront';
 import { colorUniform, floatUniform, zColor, zVec3 } from './common';
 
 const schema = z.object({
@@ -94,6 +95,12 @@ const schema = z.object({
   dusk: z
     .object({ top: zColor.default('#05070f'), mid: zColor.default('#0b1222'), horizon: zColor.default('#1a2436'), exposure: z.number().min(0).default(0.18) })
     .optional(),
+  /**
+   * The world clear wave (since SDK 1.5; 0 = off): when a big clear's front reaches the horizon,
+   * the sky low over it lifts by `glow` (in `color`, default the horizon colour) and the stars
+   * brighten by `stars`. Small clears fade out before they get there.
+   */
+  clearWave: z.object({ glow: z.number().min(0).default(0), stars: z.number().min(0).default(0), color: zColor.optional() }).prefault({}),
 });
 
 export type SkyParams = z.infer<typeof schema>;
@@ -205,6 +212,19 @@ export const skyComponent: ComponentFactory<SkyParams> = {
       color = color.add(colorUniform(mw.color).mul(glowMw));
     }
 
+    // The clear front arriving at the horizon (the far end of its travel, in this direction).
+    let skyFront: Node<'float'> | null = null;
+    if (p.clearWave.glow > 0 || p.clearWave.stars > 0) {
+      const shape = ctx.uniforms.waveShape;
+      const far = shape.x.mul(exp(float(1).div(shape.y)));
+      const flat = normalize(vec3(dir.x, 0, dir.z).add(vec3(0, 0, 1e-4)));
+      skyFront = clearFront(ctx.uniforms.waveOrigin.add(flat.mul(far.mul(0.97))));
+      if (p.clearWave.glow > 0) {
+        const low = exp(abs(y).div(Math.max(0.05, p.horizonWidth) * 1.6).negate());
+        color = color.add(colorUniform(p.clearWave.color ?? p.horizon).mul(skyFront.mul(low).mul(p.clearWave.glow * 0.5)));
+      }
+    }
+
     // Worlds with a dusk compile the stars even when they start at zero (bound to progress).
     const starDensity = p.stars > 0 ? p.stars : p.dusk ? 1 : 0;
     if (starDensity > 0) {
@@ -226,7 +246,8 @@ export const skyComponent: ComponentFactory<SkyParams> = {
       };
       const above = space ? float(1) : smoothstep(-0.02, 0.08, y);
       const gain = p.stars > 0 ? u.stars.div(p.stars) : u.stars;
-      const stars = layer(0.22, 420, 1.6, 5).add(layer(0.05, 150, 4.5, 3)).mul(above).mul(gain).mul(starMask);
+      const lift = skyFront && p.clearWave.stars > 0 ? float(1).add(skyFront.mul(p.clearWave.stars)) : float(1);
+      const stars = layer(0.22, 420, 1.6, 5).add(layer(0.05, 150, 4.5, 3)).mul(above).mul(gain).mul(starMask).mul(lift);
       color = color.add(stars);
     }
 

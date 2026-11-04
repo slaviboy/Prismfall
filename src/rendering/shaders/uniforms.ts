@@ -1,4 +1,4 @@
-import type { Node, NodeMaterial, Vector3 } from 'three/webgpu';
+import { Vector3, Vector4, type Node, type NodeMaterial } from 'three/webgpu';
 import { cameraPosition, exp, length, mrt, positionWorld, uniform, vec4 } from 'three/tsl';
 
 const _floatU = (v: number) => uniform(v);
@@ -27,8 +27,30 @@ export const frameUniforms = {
   sectionIntensity: uniform(0.5),
   /** Gameplay-driven pulses (0..1+). */
   clearPulse: uniform(0),
+  /** Current combo, 0 (none) .. 1 (eight or more). */
   comboLevel: uniform(0),
   danger: uniform(0),
+  /** Heat of the run 0..1 (since SDK 1.5; see GameSignals.heat). */
+  heat: uniform(0),
+  /** Long-release clear signal 0..1 (since SDK 1.5; see GameSignals.clearWave). */
+  clearWave: uniform(0),
+  /** The active piece across the board, -1 (left wall) .. 1 (right wall), smoothed (since SDK 1.5). */
+  pieceX: uniform(0),
+  /** Stack height 0..1, smoothed (since SDK 1.5). */
+  stackHeight: uniform(0),
+  /**
+   * World clear fronts (since SDK 1.5; read them through `clearFront()`): the board's world
+   * position, four slots of (start time, strength, reach, width), the travel shape (near, 1 / ln
+   * (far / near), 1 / travel seconds) and the accessibility-scaled multipliers for light and motion.
+   */
+  waveOrigin: uniform(new Vector3()),
+  wave0: uniform(new Vector4(-1000, 0, 0, 0.05)),
+  wave1: uniform(new Vector4(-1000, 0, 0, 0.05)),
+  wave2: uniform(new Vector4(-1000, 0, 0, 0.05)),
+  wave3: uniform(new Vector4(-1000, 0, 0, 0.05)),
+  waveShape: uniform(new Vector3(6, 1 / Math.log(150), 1 / 3.2)),
+  waveLight: uniform(1),
+  waveMotion: uniform(1),
   /** Global multipliers from settings / accessibility. */
   effectsIntensity: uniform(1),
   flashLimit: uniform(1),

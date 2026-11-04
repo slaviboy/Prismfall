@@ -173,6 +173,7 @@ export class MusicDirector {
       this.lastSection = section.name;
     }
     f.section = section.name;
+    f.sectionKind = section.kind;
     this.sectionIntensity += (section.intensity - this.sectionIntensity) * (1 - Math.exp(-dt / 1.5));
     f.sectionIntensity = this.sectionIntensity;
     const up = player.upcoming(beat);

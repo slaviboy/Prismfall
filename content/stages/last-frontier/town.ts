@@ -143,6 +143,8 @@ export const frontierTown: ComponentFactory<Params> = {
 
     // Materials: one converted copy per source material (glass and lamp glass get their glow).
     const converted = new Map<Material, Material>();
+    // Window glass gets its own copy of the shared geometry (tagged per window): ours to dispose.
+    const ownGeometries: BufferGeometry[] = [];
     const lampMeshes: Mesh[] = [];
     const glassCentres: Vector3[] = [];
     root.updateMatrixWorld(true);
@@ -157,6 +159,7 @@ export const frontierTown: ComponentFactory<Params> = {
       const isLamp = /^lampGlow/i.test(name);
       if (isGlass && !mesh.geometry.getAttribute('win')) {
         mesh.geometry = mesh.geometry.clone();
+        ownGeometries.push(mesh.geometry);
         const centres = tagWindows(mesh.geometry, rand, p.litWindows);
         for (const c of centres) glassCentres.push(c.applyMatrix4(mesh.matrixWorld));
       }
@@ -305,6 +308,7 @@ export const frontierTown: ComponentFactory<Params> = {
       },
       dispose() {
         for (const m of converted.values()) m.dispose();
+        for (const g of ownGeometries) g.dispose();
         haloMat.dispose();
         for (let i = 0; i < MAX_LAMPS; i++) s.lampValues[i]!.set(0, -1000, 0, 0);
         ctx.assets.release(p.src);

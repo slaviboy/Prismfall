@@ -1,6 +1,6 @@
 import type { AudioFeatures } from '../../audio/analysis/features';
 import type { GameSignals } from '../../sdk/types';
-import { bindingSchema, type Binding } from '../../stages/schema';
+import { bindingSchema, type Binding, type SectionState } from '../../stages/schema';
 
 export type ReactionPreset = 'cinematic' | 'subtle' | 'energetic' | 'ambient' | 'hypnotic' | 'intense' | 'custom';
 
@@ -37,6 +37,34 @@ interface Resolved {
   env: number;
 }
 
+/** A section state on one target, crossfading in and out (weight 0..1). */
+interface StateItem {
+  readonly state: SectionState;
+  readonly slot: TargetSlot;
+  readonly fade: number;
+  weight: number;
+}
+
+/** Whether the music's current section (kind or name) is one of `list`. */
+export function inSection(list: readonly string[], audio: Readonly<Pick<AudioFeatures, 'section' | 'sectionKind'>>): boolean {
+  return list.includes(audio.sectionKind) || list.includes(audio.section);
+}
+
+/**
+ * Target weight of a section state: 1 inside its sections; before an upcoming section of that kind,
+ * `anticipate` × the music's anticipation; otherwise 0.
+ */
+export function sectionStateTarget(state: Pick<SectionState, 'section' | 'anticipate'>, audio: Readonly<Pick<AudioFeatures, 'section' | 'sectionKind' | 'nextEvent' | 'anticipation'>>): number {
+  if (inSection(state.section, audio)) return 1;
+  if (state.anticipate > 0 && audio.nextEvent && state.section.includes(audio.nextEvent)) return Math.max(0, Math.min(1, audio.anticipation)) * state.anticipate;
+  return 0;
+}
+
+/** Crossfade step: reaches about 95 % of the way in `fade` seconds, at any frame rate. */
+export function crossfade(weight: number, target: number, dt: number, fade: number): number {
+  return weight + (target - weight) * (1 - Math.exp((-3 * dt) / Math.max(0.05, fade)));
+}
+
 /** One driven uniform; several bindings combine on it (mul factors multiply, add terms sum). */
 interface TargetSlot {
   readonly target: { value: number };
@@ -64,9 +92,11 @@ function shape(curve: Binding['curve'], x: number): number {
 export function readFeature(name: Binding['feature'], audio: Readonly<AudioFeatures>, game: GameSignals): number {
   if (name.startsWith('game.')) {
     const key = name.slice(5) as keyof GameSignals;
-    const v = game[key];
+    const v = game[key] ?? 0;
     if (key === 'combo') return Math.min(1, Math.max(0, v) / 10);
     if (key === 'level') return Math.min(1, (v - 1) / 19);
+    // Back-to-back chain: 0 none, a quarter on the first, full after four in a row.
+    if (key === 'backToBack') return v < 0 ? 0 : Math.min(1, (v + 1) / 4);
     return v;
   }
   const v = audio[name as keyof AudioFeatures];
@@ -79,21 +109,41 @@ export function readFeature(name: Binding['feature'], audio: Readonly<AudioFeatu
  */
 export class ReactivityLayer {
   private readonly items: Resolved[] = [];
+  private readonly states: StateItem[] = [];
   private readonly slots = new Map<{ value: number }, TargetSlot>();
 
-  add(binding: Binding, target: { value: number }): void {
+  private slotFor(target: { value: number }): TargetSlot {
     let slot = this.slots.get(target);
     if (!slot) {
       slot = { target, base: target.value, mul: 1, add: 0, min: -Infinity, max: Infinity };
       this.slots.set(target, slot);
     }
+    return slot;
+  }
+
+  add(binding: Binding, target: { value: number }): void {
+    const slot = this.slotFor(target);
     if (binding.min !== undefined) slot.min = Math.max(slot.min, binding.min);
     if (binding.max !== undefined) slot.max = Math.min(slot.max, binding.max);
     this.items.push({ binding, slot, env: 0 });
   }
 
+  /** A section state on `target`, crossfading over `fade` seconds (manifest `sectionStates`). */
+  addState(state: SectionState, target: { value: number }, fade: number): void {
+    this.states.push({ state, slot: this.slotFor(target), fade, weight: 0 });
+  }
+
   get size(): number {
     return this.items.length;
+  }
+
+  get stateCount(): number {
+    return this.states.length;
+  }
+
+  /** Live section-state weights (debug dashboard, tests). */
+  inspectStates(): { state: SectionState; weight: number; value: number }[] {
+    return this.states.map((st) => ({ state: st.state, weight: st.weight, value: st.slot.target.value }));
   }
 
   /** Live view of every binding: its envelope (0..1) and the driven value (debug dashboard). */
@@ -110,6 +160,7 @@ export class ReactivityLayer {
     for (const it of this.items) {
       const b = it.binding;
       let x = readFeature(b.feature, audio, game);
+      if (b.when && !inSection(b.when.section, audio)) x = 0;
       const isGame = b.feature.startsWith('game.');
       if (!isGame) {
         if (!s.enabled) x = 0;
@@ -127,6 +178,11 @@ export class ReactivityLayer {
       if (b.mode === 'add') it.slot.add += amount;
       else it.slot.mul *= 1 + amount;
     }
+    for (const st of this.states) {
+      st.weight = crossfade(st.weight, sectionStateTarget(st.state, audio), dt, st.fade);
+      st.slot.mul *= 1 + (st.state.scale - 1) * st.weight;
+      st.slot.add += st.state.add * st.weight;
+    }
     for (const slot of this.slots.values()) {
       slot.target.value = Math.min(slot.max, Math.max(slot.min, slot.base * slot.mul + slot.add));
     }
@@ -135,6 +191,7 @@ export class ReactivityLayer {
   /** Restores every target to its base value. */
   reset(): void {
     for (const it of this.items) it.env = 0;
+    for (const st of this.states) st.weight = 0;
     for (const slot of this.slots.values()) slot.target.value = slot.base;
   }
 }

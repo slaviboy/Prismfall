@@ -3,6 +3,7 @@ import { attribute, clamp, exp, float, mix, mx_fractal_noise_float, mx_noise_flo
 import { z } from 'zod';
 import type { ComponentFactory } from '../../../sdk/types';
 import { noBloom } from '../../shaders/uniforms';
+import { clearFront } from '../../shaders/clearFront';
 import { colorUniform, floatUniform, seeded, zColor } from './common';
 
 const layerSchema = z.object({
@@ -35,6 +36,11 @@ const schema = z.object({
   rimColor: zColor.default('#7fffc8'),
   /** Side light from the ridge slopes: side -1 = light from the left, 1 = from the right. */
   light: z.object({ side: z.number().min(-1).max(1).default(-1), strength: z.number().min(0).max(1).default(0.35) }).prefault({}),
+  /**
+   * The world clear wave (since SDK 1.5; 0 = off): when a big clear's front reaches the ranges it
+   * catches their snowfields by `sheen`, in `color` (default `rimColor`), less through haze.
+   */
+  clearWave: z.object({ sheen: z.number().min(0).default(0), color: zColor.optional() }).prefault({}),
 });
 
 type Params = z.infer<typeof schema>;
@@ -157,6 +163,10 @@ export const ridgesComponent: ComponentFactory<Params> = {
       let color = mix(colorUniform(layer.rock), colorUniform(layer.snow), snowMask).mul(sun).mul(footShade);
       if (layer.rim > 0) color = color.add(rimColor.mul(exp(top.sub(y).mul(-0.45)).mul(layer.rim)));
       color = mix(color, haze, layer.haze * 1);
+      if (p.clearWave.sheen > 0) {
+        const catchLight = snowMask.mul(0.75).add(0.12).mul(1 - layer.haze * 0.6);
+        color = color.add(colorUniform(p.clearWave.color ?? p.rimColor).mul(clearFront().mul(catchLight).mul(p.clearWave.sheen * 0.3)));
+      }
       const material = new MeshBasicNodeMaterial();
       material.colorNode = vec4(color.mul(presence), 1);
       material.fog = false;

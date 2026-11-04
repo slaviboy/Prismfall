@@ -104,7 +104,7 @@ How to read the Evidence column:
 | Requirement | Status | Evidence |
 |---|---|---|
 | Data-driven definition: name, description, environment, palette, lighting, particles, geometry, music, BPM, intensity, camera, line clears, unlocks | Done | `src/stages/schema.ts`; `content.test.ts` |
-| Special environmental events | Partial | There is no dedicated events field. Worlds react through reactivity bindings on beats, sections and transients, and through quad "signature" responses |
+| Special environmental events | Done / Manual check | Manifest `events` call-ins (clears, combos, back-to-back, level-ups, sections, progress, heat, danger; quantised to beat, bar or phrase) drive layers through `onCall`: creature clips, near-field passes, show and hide, reveals, meteor bursts. Every clear also sends a front out through the world (`clearFront()`), and `sectionStates` change layers per song section. Wired in Moving Sands, Luminous Tide and Northern Lights so far. `callins.test.ts`, `worldSignals.test.ts`, `StageEnvironment.test.ts`, `model.test.ts` |
 | At least 10 distinct, playable worlds | Done | 13 worlds in `content/stages/`; `e2e/stages.spec.ts` ("every stage loads, renders and plays") |
 | Stage selection, locked and unlocked stages, saved completion | Done | `src/ui/menus/StageSelect.tsx`, `src/stages/progression.ts`; `e2e/stage-select.spec.ts`, `e2e/voyage.spec.ts`, `campaign.test.ts` |
 | New stages need no engine changes | Done | Folded Sky (see §22 I) |

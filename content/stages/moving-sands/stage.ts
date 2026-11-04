@@ -4,7 +4,7 @@ import { sandsNightSky } from './nightSky';
 
 /** Moving Sands: the generated far background (night sky and far dune sea). */
 export default defineStage({
-  sdkVersion: '1.0.0',
+  sdkVersion: '1.5.0',
   register(sdk) {
     sdk.components.register(sandsNightSky as unknown as ComponentFactory);
     sdk.components.register(sandsFarDunes as unknown as ComponentFactory);

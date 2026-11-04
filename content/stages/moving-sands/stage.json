@@ -97,6 +97,24 @@
       "L": "#ee8a35"
     }
   },
+  "requires": {
+    "sdk": "^1.5.0"
+  },
+  "clearWave": {
+    "far": 1700,
+    "travel": 3.8
+  },
+  "sectionStates": {
+    "fade": 4,
+    "states": [
+      {"section": ["drop"], "layer": "blowing-sand", "target": "density", "scale": 1.25, "anticipate": 0.5},
+      {"section": ["drop"], "layer": "blowing-sand", "target": "turbulence", "scale": 1.4, "anticipate": 0.5},
+      {"section": ["break", "intro"], "layer": "blowing-sand", "target": "density", "scale": 0.6}
+    ]
+  },
+  "events": [
+    {"layer": "meteors", "on": "clear>=4", "quantize": "bar", "cooldown": 25, "action": "burst", "params": {"count": 1}}
+  ],
   "environment": {
     "layers": [
       {
@@ -130,6 +148,11 @@
         "id": "dunes",
         "type": "terrain",
         "params": {
+          "clearWave": {
+            "glint": 1.3,
+            "sheen": 0.6,
+            "color": "#dde6ff"
+          },
           "height": {
             "base": -15,
             "seed": 7,
@@ -210,6 +233,9 @@
         "id": "far-dunes",
         "type": "sandsFarDunes",
         "params": {
+          "clearWave": {
+            "sheen": 1.2
+          },
           "field": {
             "center": [0, 30],
             "span": [-100, 100],
@@ -636,6 +662,7 @@
             }
           ],
           "particles": {
+            "clearWave": 0.8,
             "count": 8000,
             "exclude": "CamelHair",
             "size": 0.115,
@@ -685,6 +712,10 @@
         "id": "blowing-sand",
         "type": "particles",
         "params": {
+          "clearWave": {
+            "brightness": 1.4,
+            "stir": 2.4
+          },
           "count": 3500,
           "center": [
             10,
@@ -736,14 +767,16 @@
   },
   "reactivity": {
     "profiles": [
-      {
-        "name": "flux-turbulence",
-        "layers": [
-          "blowing-sand"
-        ]
-      }
+      {"name": "flux-turbulence", "layers": ["blowing-sand"]},
+      {"name": "clear-gust", "layers": ["blowing-sand"]}
     ],
-    "bindings": []
+    "bindings": [
+      {"layer": "sky", "target": "stars", "feature": "game.progress", "amount": 0.6, "curve": "linear", "attackMs": 3000, "releaseMs": 3000},
+      {"layer": "sky", "target": "milkyWay", "feature": "game.progress", "amount": 0.45, "curve": "linear", "attackMs": 3000, "releaseMs": 3000},
+      {"layer": "sky", "target": "glow", "feature": "game.clearWave", "amount": 0.5, "category": "lighting", "attackMs": 500, "releaseMs": 3000},
+      {"layer": "meteors", "target": "rate", "feature": "game.heat", "amount": 1.5, "curve": "linear", "attackMs": 800, "releaseMs": 6000},
+      {"layer": "camel-caravan", "target": "pace", "feature": "game.heat", "amount": 0.2, "attackMs": 2500, "releaseMs": 6000}
+    ]
   },
   "effects": {
     "lineClear": {

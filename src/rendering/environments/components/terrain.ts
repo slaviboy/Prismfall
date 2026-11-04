@@ -1,4 +1,4 @@
-import { BufferAttribute, BufferGeometry, Mesh, MeshStandardNodeMaterial } from 'three/webgpu';
+import { BufferAttribute, BufferGeometry, Mesh, MeshStandardNodeMaterial, type Node } from 'three/webgpu';
 import {
   attribute,
   cameraPosition,
@@ -29,6 +29,8 @@ import type { ComponentFactory } from '../../../sdk/types';
 import { createHeightfield, heightNormal, heightfieldSchema } from '../terrain/heightfield';
 import { colorUniform, floatUniform, zColor } from './common';
 import { revealMask } from './reveal';
+import { clearFront } from '../../shaders/clearFront';
+import { glintField } from '../../shaders/glints';
 
 const schema = z.object({
   height: heightfieldSchema.prefault({}),
@@ -77,6 +79,12 @@ const schema = z.object({
   lava: z.object({ strength: z.number().min(0).default(0), y: z.number().default(-18), color: zColor.default('#ff6a1a'), hot: zColor.default('#ffd27a'), speed: z.number().default(0.05) }).prefault({}),
   /** Underwater caustics: drifting cells of focused sunlight on the ground (strength 0 = off). */
   caustics: z.object({ strength: z.number().min(0).default(0), scale: z.number().positive().default(0.12), speed: z.number().default(0.35), color: zColor.default('#9ff6ff') }).prefault({}),
+  /**
+   * The world clear wave (since SDK 1.5; 0 = off): as a clear's front rolls over the ground,
+   * `glint` sets off a sweep of sparkling grains (near and mid distance) and `sheen` lifts the light
+   * on the ground it crosses, most on crests and ripple faces, in `color` (default `colors.sparkle`).
+   */
+  clearWave: z.object({ glint: z.number().min(0).default(0), sheen: z.number().min(0).default(0), color: zColor.optional() }).prefault({}),
 });
 
 type Params = z.infer<typeof schema>;
@@ -195,6 +203,20 @@ export const terrainComponent: ComponentFactory<Params> = {
     const glint = step(0.985, seed).mul(twinkle.pow(4)).mul(smoothstep(60, 8, camDist)).mul(flat).mul(u.sparkle);
     const crest = smoothstep(0.55, 1, h01).mul(u.glow).mul(float(0.6).add(u.music.mul(0.8)));
     let emissive = colorUniform(p.colors.sparkle).mul(glint.mul(1.6)).add(colorUniform(p.glow.color).mul(crest));
+    // Light from the clear wave: on the ground itself, kept mostly out of bloom (no halo).
+    let waveLight: Node<'vec3'> | null = null;
+    if (p.clearWave.glint > 0 || p.clearWave.sheen > 0) {
+      // The clear front passing over the ground: a band of sparkling grains (point glints a few
+      // pixels across at every distance) and a soft sheen that favours crests and the lit faces of
+      // the ripples. Light only; the sand does not move.
+      const front = clearFront(wp);
+      const waveColor = colorUniform(p.clearWave.color ?? p.colors.sparkle);
+      const grains = glintField(wp.xz, front.min(1).mul(0.3), time, 8);
+      const glints = grains.mul(front).mul(flat).mul(p.clearWave.glint * 2.6);
+      const facing = float(0.35).add(h01.mul(0.45)).add(rwave.mul(0.2).mul(rfade).mul(flat));
+      const sheen = front.mul(facing).mul(p.clearWave.sheen * 0.22);
+      waveLight = waveColor.mul(glints.add(sheen));
+    }
     if (p.lava.strength > 0) {
       // Lava: crusted, slowly flowing glow in the valleys; brighter seams pulse with the music.
       const flow = mx_noise_float(vec3(wp.x.mul(0.04).add(time.mul(p.lava.speed)), wp.z.mul(0.04), time.mul(p.lava.speed * 0.5)));
@@ -221,6 +243,13 @@ export const terrainComponent: ComponentFactory<Params> = {
       emissive = emissive.add(colorUniform(p.caustics.color).mul(lines.mul(fade).mul(p.caustics.strength).mul(float(1).add(u.music.mul(0.5)))));
     }
     emissive = emissive.mul(u.presence);
+    let bloomSource = emissive.mul(0.6);
+    if (waveLight) {
+      const lit = waveLight.mul(u.presence);
+      emissive = emissive.add(lit);
+      // A glint may bloom a little; the broad sheen hardly at all.
+      bloomSource = bloomSource.add(lit.mul(0.15));
+    }
 
     const material = new MeshStandardNodeMaterial();
     material.colorNode = vec4(albedo.mul(u.light), 1);
@@ -228,7 +257,7 @@ export const terrainComponent: ComponentFactory<Params> = {
     material.roughnessNode = mix(float(p.roughness), float(0.6), rockMix.mul(0.4));
     material.metalness = 0;
     material.emissiveNode = emissive;
-    material.mrtNode = mrt({ emissive: vec4(emissive.mul(0.6), 1) });
+    material.mrtNode = mrt({ emissive: vec4(bloomSource, 1) });
     material.fog = true;
     // Stage crossfades reveal the ground outward from the playfield instead of fading it to black.
     material.opacityNode = revealMask(u.presence);

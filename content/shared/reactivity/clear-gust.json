@@ -1,0 +1,9 @@
+{
+  "description": "A clear sends a gust through the world that settles over seconds: drifting particles whirl, props bend, the water heaves. Uses the long-release clear wave (game.clearWave); pair it with the layers' own clearWave front for the leading edge.",
+  "bindings": [
+    {"layer": "type:particles", "target": "turbulence", "feature": "game.clearWave", "amount": 1.4, "curve": "sqrt", "category": "particles", "attackMs": 180, "releaseMs": 2800},
+    {"layer": "type:scatter", "target": "sway", "feature": "game.clearWave", "amount": 1.2, "curve": "sqrt", "attackMs": 250, "releaseMs": 3200},
+    {"layer": "type:water", "target": "amplitude", "feature": "game.clearWave", "amount": 0.35, "attackMs": 500, "releaseMs": 3800},
+    {"layer": "type:clouds", "target": "opacity", "feature": "game.clearWave", "amount": 0.2, "attackMs": 400, "releaseMs": 3500}
+  ]
+}

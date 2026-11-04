@@ -126,6 +126,15 @@ describe('manifest validation', () => {
     expect(validateManifest(profiled([{ name: 'bass-breath', layers: ['ocean'] }]), withProfiles).errors.join()).toContain('no layer with id "ocean"');
   });
 
+  it('checks the layers that event call-ins and section states name (since SDK 1.5)', () => {
+    const base = { ...minimal, environment: { layers: [{ id: 'sky', type: 'sky' }] } };
+    const ok = { ...base, events: [{ layer: 'sky', on: 'clear>=4', action: 'show' }, { layer: 'type:sky', on: 'b2b', action: 'burst' }], sectionStates: { states: [{ section: ['drop'], layer: 'sky', target: 'glow', scale: 1.2 }] } };
+    expect(validateManifest(ok, env).errors).toEqual([]);
+    expect(validateManifest({ ...base, events: [{ layer: 'birds', on: 'clear>=4', action: 'pass' }] }, env).errors.join()).toContain('no layer with id "birds"');
+    expect(validateManifest({ ...base, sectionStates: { states: [{ section: ['drop'], layer: 'haze', target: 'opacity' }] } }, env).errors.join()).toContain('no layer with id "haze"');
+    expect(validateManifest({ ...base, events: [{ layer: 'sky', on: 'sometimes', action: 'pass' }] }, env).errors.join()).toContain('unknown trigger');
+  });
+
   it('checks semver ranges', () => {
     expect(satisfiesRange('1.2.0', '^1.0.0')).toBe(true);
     expect(satisfiesRange('2.0.0', '^1.0.0')).toBe(false);

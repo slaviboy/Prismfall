@@ -8,6 +8,8 @@
 export { SDK_VERSION } from './version';
 export type {
   BeatInfo,
+  CallAction,
+  CallInfo,
   ClearInfo,
   ComponentFactory,
   EffectContext,
@@ -24,6 +26,8 @@ export type {
   StageModule,
   StagePalette,
   GroundField,
+  SectionInfo,
+  ViewInfo,
   WorldSounds,
   WorldSoundName,
   TransitionContext,
@@ -32,6 +36,7 @@ export type {
 export type { AudioFeatures } from '../audio/analysis/features';
 export type { BurstParticle, ParticleShape } from '../rendering/particles/BurstSystem';
 export { frameUniforms, noBloom, additiveFog } from '../rendering/shaders/uniforms';
+export { clearFront, clearFrontMotion, clearFrontRaw } from '../rendering/shaders/clearFront';
 export { colorUniform, floatUniform, linear, seeded, scaledCount, zColor, zVec3 } from '../rendering/environments/components/common';
 export { runRecipe, makeRecipeEffect, BASE_RECIPE, type ClearRecipe } from '../rendering/fx/lineClearEffects';
 export { resolveBlockPreset, BLOCK_PRESETS, type BlockMaterialPreset } from '../rendering/materials/blockPresets';

@@ -91,17 +91,18 @@ The SDK exports:
 | `defineStage`, `SDK_VERSION` | the stage module wrapper and the running SDK version |
 | `z` | zod, for component parameter schemas |
 | `zColor`, `zVec3`, `colorUniform`, `floatUniform`, `linear`, `seeded`, `scaledCount` | parameter types, TSL uniforms, sRGB-to-linear colour, deterministic random, quality-scaled counts |
-| `frameUniforms` | per-frame TSL uniforms (time, music features, clear pulse, danger, fog density, flash limit, screen effects) |
+| `frameUniforms` | per-frame TSL uniforms (time, music features, clear pulse, danger, fog density, flash limit, screen effects; since 1.5 also `heat`, `clearWave`, `comboLevel`, `pieceX`, `stackHeight` and the clear-front slots) |
+| `clearFront`, `clearFrontMotion`, `clearFrontRaw` | the world clear wave in a shader (SDK 1.5): the travelling front at a world position, scaled for light or for motion (section 6.1) |
 | `frameUniforms.worldEvents` | the accessibility World events setting: 1 full, 0.5 calm, 0 off. Worlds with creatures or sudden events read it (The Veil: calm makes events rarer, further away and gentler and drops the sudden shadow events; off leaves only the fog weather) |
 | `noBloom`, `additiveFog` | exclude a material from bloom; distance-fade an additive colour |
 | `makeRecipeEffect`, `runRecipe`, `BASE_RECIPE`, `ClearRecipe` | line-clear particle recipes |
 | `resolveBlockPreset`, `BLOCK_PRESETS` | block surface presets |
 | `composition`, `hold`, `arp`, `bassline`, `beat`, `melody`, `stab`, `once` | the music composition DSL |
-| types | `ComponentFactory`, `EnvironmentComponent`, `EnvironmentContext`, `EnvFrame`, `LineClearEffect`, `TransitionEffect`, `GroundField`, `WorldSounds`, `StageAssets`, `AudioFeatures`, `FileTrackMeta` and others (`src/sdk/index.ts`) |
+| types | `ComponentFactory`, `EnvironmentComponent`, `EnvironmentContext`, `EnvFrame`, `LineClearEffect`, `TransitionEffect`, `GroundField`, `WorldSounds`, `StageAssets`, `AudioFeatures`, `FileTrackMeta`, and since 1.5 `SectionInfo`, `CallInfo`, `CallAction`, `ViewInfo` and others (`src/sdk/index.ts`) |
 
 ### SDK versions
 
-`src/sdk/version.ts` holds `SDK_VERSION = '1.4.0'`. Minor versions add API, major versions break it.
+`src/sdk/version.ts` holds `SDK_VERSION = '1.5.0'`. Minor versions add API, major versions break it.
 
 | Version | Added |
 |---|---|
@@ -110,6 +111,7 @@ The SDK exports:
 | 1.2 | `GroundField.surface(x, z)` and `GroundField.setWaterLevel(y)` (the water component declares its surface so a VR viewer stands on it) |
 | 1.3 | `ctx.shakeWorld(strength, seconds)`: a decaying tremor of the world root only (never the board, HUD or camera; off under reduced motion and in VR, scaled by the screen-effects setting), and `frameUniforms.screenEffects` (the screen-effects setting, 0 in VR) for screen-space world effects. Ashen Vigil uses both |
 | 1.4 | creature world sounds: `ctx.sounds.emit()` accepts `skitter`, `crawl`, `silk` and `webHum` (see "World sounds" in section 9), and the `WorldSoundName` type |
+| 1.5 | liveliness (section 6.1): the world clear wave (`clearFront()`, manifest `clearWave`, the built-in components' `clearWave` parameters), the long-lived signals `game.heat`, `game.clearWave`, `game.backToBack` and `game.stackHeight`, section states (`sectionStates`, binding `when`, `onSection`), event call-ins (`events`, `onCall`, `ctx.view`), piece-motion events (`move`, `rotate`, `spawn`, `hold`, columns) and `AudioFeatures.sectionKind` |
 
 Two version checks exist:
 
@@ -180,6 +182,10 @@ The top of Folded Sky's manifest:
 | `blocks` | `geometry` (`soft`, `chamfer`, `faceted`, `pillow`, `framed`, `procedural`, and the procedural `orb` and `tile`), `material` (a name from `BLOCK_PRESETS`, `src/rendering/materials/blockPresets.ts`; unknown names fall back to `prism`), `overrides` (any preset field), `palette` (colours for I, O, T, S, Z, J, L). The named designs players can choose (`BLOCK_DESIGNS`, `src/rendering/materials/blockDesigns.ts`) pair a preset with a shape: the library designs `lumen`, `dichroic`, `ingot`, `ribbon`, `gel`, `rosette`, `marble` and `lantern`, plus every world's own design. |
 | `environment.layers` | The world, built in order (section 5). |
 | `reactivity` | Shared `profiles` and extra `bindings` (section 6). |
+| `clearWave` | How the world's clear fronts travel (SDK 1.5, section 6.1): `near` (world units from the board where a front starts, default 6), `far` (where it has crossed the world, default 900: put the farthest scenery there), `travel` (seconds from near to far, default 3.2), `strength` (0 = no fronts in this world, default 1). |
+| `sectionStates` | Section-keyed layer states with a crossfade (SDK 1.5, section 6.2): `fade` (seconds, default 3) and `states`. |
+| `events` | Event call-ins (SDK 1.5, section 6.3): game and music moments that call a layer to act. |
+| `phraseBars` | Bars per phrase for call-ins quantised to the phrase (default 4). |
 | `effects` | `lineClear` `{ effect, params }` (default `prismBurst`), `transition` `{ effect, params }` (default `warp`), `landing` `{ shape, color }`. |
 | `music` | `bpm`, `beatsPerBar` (default 4), `tracks`, `defaultTrack` (section 7). |
 | `ambience` | `{ preset, level }` (section 8). |
@@ -247,9 +253,10 @@ Registered by `src/rendering/environments/builtins.ts`. The parameter names belo
 | `clouds` | Large soft billboards for nebulae, haze, steam or murk. | `count`, `center`, `spread`, `size`, `color`, `colorB`, `opacity`, `drift`, `additive`, `seed` | `opacity` |
 | `creatureHerd` | Rigged Blender creatures drawn as surface particles, solid meshes or both. Groups walk paths in caravans or herds, assemble and dissolve at the path ends, raise dust and emit footstep sounds. | `model` (required), `rig` (required), `representation` (`particles`, `mesh`, `both`), `groups` (1 to 16; each has `path` {`line` from/to, `loop` center/radius/clockwise, `polyline` points/closed}, `members`, `formation` (`caravan`, `herd`), `spacing`, `speed`, `scale`, `scaleJitter`, `delay`, `start`, `rest`, `stopEvery`, `stopFor`, `fade`, `followGround`), `particles` {`perCreature`, `size`, `color`, `colorB`, `brightness`, `jitter`, `bloom`, `additive`, `scatter`, `wind`, `lodDistance`}, `mesh` {`color`, `roughness`, `rim`, `rimStrength`}, `dust` {`enabled`, `color`, `amount`, `size`}, `seed` | `brightness`, `size`, `jitter`, `pace` |
 | `model` | A GLB (Blender export, scan or licensed model) with its own materials, skeletal or morph animation, and optionally particles sampled from its real surface; instances can walk paths. Particle sizes and distances are world units at any instance scale. | `src` (required), `include`, `recenter`, `instances` [{`position`, `yaw`, `scale`, `snapToGround`, `spin`, `walk` {`to`, `via`, `closed`, `smooth`, `speed`, `phase`, `fade`, `stops` [{`at`, `for`, `clip`}], `ease`, `tilt`, `bank`}}], `animation` {`clip`, `speed`, `vary`, `inPlace` (remove root motion), `stride` (the clip's ground speed: legs then follow the distance walked)}, `flex` [{`match`, `axis`, `degrees`, `period`, `phase`, `offset`}] (procedural bone swing), `render` (`solid`, `surface`, `particles`, `dissolve`), `particles` {`count`, `exclude`, `size`, `brightness`, `tint`, `colorMix`, `blend`, `jitter`, `spread`, `wind`, `bloom`, `shading`, `light`, `saturation`, `seed`}, `dissolve` {`period`, `onBigClears`}, `materials`, `exposure`, `tint`, `castShadow` | none |
+| `model` (call-ins, SDK 1.5) | The same component, reacting to the run: an `events` call-in plays a named clip once over the walk (`clip`), sends a hidden instance close past the camera (`pass`), shows or hides instances with a fade (`show`, `hide`), calls revealed creatures in (`reveal`) or makes the particles flare or dissolve (`burst`). See section 6.3. | `instances[].pass`, `pass` {`duration`, `distance` [near, far], `height`, `margin`, `direction` (`in`, `out`, `alternate`), `side` (`left`, `right`, `alternate`), `ground`, `y`, `arc`, `leaps`, `scale`}, `particles.clearWave` | `brightness`, `pace` (walk and clip speed, x), `visible` (share of the instances shown, 0..1) |
 | `model` (glow, reveal) | The same component: particles that glow and move, and creatures that arrive with the run. Shed points trail by the path velocity and curl noise (stateless in the shader); bass slowly breathes the glow and treble adds sparkle; reduced motion sheds less. | `particles.style` (`surface`, `glow`: luminous moving points for dark worlds, `glowEdges`: own colours plus a glowing overlay for bright ones), `particles.glow` {`color`, `textureMix`, `core`, `edge`, `twinkle`, `sparkle`, `drift`, `flow`, `flowRate`, `shed`, `shedLife`, `shedSpread`, `breathe`, `shimmer`, `overlay`, `size`, `brightness`}, `reveal` {`from`, `to` (game progress over which it arrives), `unlock`, `hold` (a QUAD or perfect clear calls it in once progress passed `unlock`)} | `brightness` (particles) |
 | `glowSchool` | Glowing fish as soft streaks of light (additive, stateless in the shader): a school swimming a loop, or a vortex circling in the view plane around a centre (a climax ring around the board). Can arrive with game progress like `model`'s `reveal`. | `count`, `motion` {`kind` `school`: `center`, `radius`, `speed`, `spread`, `clockwise`; `kind` `vortex`: `center`, `radius` [inner, outer], `squash`, `depth`, `speed`}, `length`, `width`, `color`, `colorB`, `brightness`, `twinkle`, `bloom`, `reveal` {`from`, `to`, `unlock`, `hold`}, `seed` | `brightness` |
-| `terrain` | Large procedural terrain built once on the CPU. It provides the stage's ground height; the shader adds wind ripples, glints, slope rock and snow. | `height` {`base`, `seed`, `layers`, `floor`, `clearing` {`center`, `radius`, `falloff`, `depth`}}, `mesh` {`apex`, `near`, `far`, `rows`, `cols`, `spread`}, `colors` {`low`, `high`, `rock`, `snow`, `snowLine`, `sparkle`}, `ripples` {`strength`, `wavelength`, `direction`, `speed`, `fadeDistance`}, `sparkle`, `roughness`, `rockSlope`, `glow` {`color`, `strength`}, `heatHaze`, `lava` {`strength`, `y`, `color`, `hot`, `speed`}, `caustics` {`strength`, `scale`, `speed`, `color`} | `glow`, `ripple`, `sparkle` |
+| `terrain` | Large procedural terrain built once on the CPU. It provides the stage's ground height; the shader adds wind ripples, glints, slope rock and snow. | `height` {`base`, `seed`, `layers`, `floor`, `clearing` {`center`, `radius`, `falloff`, `depth`}}, `mesh` {`apex`, `near`, `far`, `rows`, `cols`, `spread`}, `colors` {`low`, `high`, `rock`, `snow`, `snowLine`, `sparkle`}, `ripples` {`strength`, `wavelength`, `direction`, `speed`, `fadeDistance`}, `sparkle`, `roughness`, `rockSlope`, `glow` {`color`, `strength`}, `heatHaze`, `lava` {`strength`, `y`, `color`, `hot`, `speed`}, `caustics` {`strength`, `scale`, `speed`, `color`}, `clearWave` {`glint`, `sheen`, `color`} (SDK 1.5) | `glow`, `ripple`, `sparkle` |
 | `scatter` | Instanced Blender props (trees, rocks, crystals, kelp, lanterns, asteroids) over the ground or in a volume, clustered into groves, kept off the playfield, with wind sway. | `src` (default `/content/shared/flora/flora.glb`), `items` (required; each `mesh`, `weight`, `scale`, `tintJitter`, `tint`), `count`, `area` (`band`, `rect`, `ring`, `volume`), `exclude`, `clustering`, `clusterScale`, `materials`, `vertexAO`, `sway` {`amount`, `speed`}, `sink`, `alignToSlope`, `spin`, `seed` | `sway`, `emissive` |
 | `swarm` | Procedurally animated flocks and schools. | `kind` (required: `bird`, `eagle`, `fish`, `koi`, `jellyfish`, `ray`, `turtle`, `butterfly`, `whale`), `motion` (required: `orbit` center/radius/speed, `wander` center/size/speed, `cross` from/to/speed/rest), `count`, `flocks`, `spread`, `size`, `color`, `colorB`, `glow`, `tempo`, `seed` | `glow`, `tempo` |
 | `jellyfish` | Translucent pulsing jellyfish: lathe bells (fresnel rim, canals, four gonads, glowing margin) that contract and climb on each pulse, frilled oral arms and hair-thin trailing tentacles, all animated on the GPU. Homes are mirrored left and right and kept outside the cone around the board, without overlapping on screen. | `count`, `size`, `area` {`center`, `size`, `clearance`, `viewZ`}, `bell`, `rim`, `glow`, `gonad`, `pulseRate`, `pulse`, `tentacles`, `tentacleLength`, `armLength`, `rise`, `cycle`, `wander`, `brightness`, `glowStrength`, `bloom`, `seed` | `glow`, `brightness` |
@@ -285,13 +292,14 @@ A binding drives one reactive uniform from an audio feature or a game signal (`b
 |---|---|---|
 | `layer` | `*` | Which layers: a layer id, `type:<componentType>`, or `*` for every layer that exposes `target`. |
 | `target` | (required) | A name from the component's reactive targets. |
-| `feature` | (required) | `subBass`, `bass`, `lowMid`, `mid`, `highMid`, `treble`, `overallEnergy`, `waveformRms`, `spectralFlux`, `spectralCentroid`, `transientIntensity`, `beatPulse`, `barPulse`, `beatPhase`, `barPhase`, `sectionIntensity`, `anticipation`, `game.danger`, `game.clearPulse`, `game.combo`, `game.level`, `game.progress` |
+| `feature` | (required) | `subBass`, `bass`, `lowMid`, `mid`, `highMid`, `treble`, `overallEnergy`, `waveformRms`, `spectralFlux`, `spectralCentroid`, `transientIntensity`, `beatPulse`, `barPulse`, `beatPhase`, `barPhase`, `sectionIntensity`, `anticipation`, `game.danger`, `game.clearPulse`, `game.combo`, `game.level`, `game.progress`, and since SDK 1.5 `game.heat`, `game.clearWave`, `game.backToBack`, `game.stackHeight` (section 6.1) |
 | `amount` | 0.5 | Strength. |
 | `mode` | `mul` | `mul`: base × (1 + amount × envelope). `add`: base + amount × envelope. |
 | `curve` | `smooth` | `linear`, `smooth`, `pow2`, `sqrt` (applied to the feature value clamped to 0..1). |
 | `attackMs`, `releaseMs` | 40, 260 | Envelope time constants, frame-rate independent. |
 | `category` | `environment` | `particles`, `environment` or `lighting`: which user response slider scales the binding. |
 | `min`, `max` | (none) | Clamp the driven value. |
+| `when` | (none) | Since SDK 1.5: `{ "section": ["drop", …] }`. The binding follows its feature only while the music is in one of these sections (kinds or the composition's own section names); otherwise its input is 0 and the envelope releases (section 6.2). |
 
 Bindings come from three places (`StageEnvironment.wireBindings`):
 
@@ -315,7 +323,11 @@ Shared profiles:
 | `beat-lights` | Water glow, rings and beams flash on the beat grid. |
 | `flux-turbulence` | Particles turn more turbulent when the spectrum changes. |
 | `mid-architecture` | Low mids heat lava and thicken clouds; mids warm emissive gltfScene materials. |
-| `section-swell` | Beams and rings grow through builds and drops; sky glow follows anticipation. |
+| `section-swell` | Beams, rings and aurora grow through builds and drops; sky glow and particle turbulence wind up with anticipation; particles brighten in drops. |
+| `clear-gust` | A clear sends a gust through the world that settles over seconds (`game.clearWave`): particle turbulence, scatter sway, water amplitude, cloud opacity. |
+| `clear-glow` | A clear's light lingers for seconds: sky glow, aurora, terrain glow, particle and model brightness follow `game.clearWave`. |
+| `combo-heat` | The run heats up (`game.heat`): more meteors, livelier aurora, particles and stars, terrain glow, creatures a little quicker, firefly activity. |
+| `danger-tension` | A stack near the top (`game.danger`): glows dim, particles churn, clouds thicken, seas rise, creatures slow. |
 | `transient-strike` | gltfScene emissive and beams flare on transients. |
 | `treble-sparkle` | Particle brightness and sky stars glint with the treble. |
 
@@ -329,6 +341,107 @@ A profile file is `{ "description": "…", "bindings": [ … ] }` with at least 
   ]
 }
 ```
+
+### 6.1 Liveliness: the clear wave and long-lived signals (SDK 1.5)
+
+A world should answer the game physically: each clear is felt out in the world, scaled by its size, for seconds rather than a flash. Beat timing may decide when something starts; it never strobes global light.
+
+**The world clear wave.** After every line clear a front leaves the board and rolls outward through the world: a sharp leading edge with a soft tail, moving at a constant speed in log distance (so on screen it sweeps evenly from the board to the horizon). Its size comes from the clear: a single is a third of a QUAD and fades about halfway out; a QUAD (more with spins, back-to-back, combos or a perfect clear) is thicker, brighter and reaches the horizon. Up to four fronts overlap. The math is `frontValue` in `src/rendering/environments/worldSignals.ts`; shaders read it through `clearFront()` (`src/rendering/shaders/clearFront.ts`).
+
+- The manifest's `clearWave` sets how it travels in this world: `near` (default 6), `far` (default 900; put it at the farthest scenery the front should reach, such as far dunes or the sky), `travel` (seconds, default 3.2) and `strength` (0 turns it off).
+- Built-in components opt in with their own `clearWave` parameters (all 0, off, by default):
+
+| Component | `clearWave` | What it does |
+|---|---|---|
+| `terrain` | `glint`, `sheen`, `color` | Point glints (a few pixels across at every distance) sparkle in a band as the front passes; a soft sheen lifts crests and ripple faces. Light only. |
+| `water` | `glitter`, `swell`, `surf`, `color` | Wave facets glitter where the front crosses; a low swell (world units) travels with it; breaking surf (with `surf` set) brightens as it reaches it, outside the board's cone. |
+| `particles` | `brightness`, `stir` | Particles flare, and are pushed outward from the board and whirled (`stir` world units), settling in the front's tail. |
+| `scatter` | `sway` | A gust: props bend away from the board (share of their height) and swing back. |
+| `sky` | `glow`, `stars`, `color` | When a big clear's front reaches the horizon, the sky low over it lifts and the stars brighten. |
+| `clouds` | `glow`, `color` | Haze lights up as the front passes through it. |
+| `aurora` | `surge` | The front runs along the curtains as a surge of the lower edge and rays. |
+| `conifers`, `ridges` | `sheen`, `color` | Snow and rims catch the passing front. |
+| `model` | `particles.clearWave` | Surface and glow particles shimmer as the front passes the creature. |
+
+- In a stage module, `clearFront(position)` returns the front for light uses, `clearFrontMotion(position)` for movement, and `clearFrontRaw(position)` unscaled (0 to 1.5). In a fragment shader the position defaults to `positionWorld`; in a vertex `positionNode`, pass the position the vertex is built from. Moving Sands' far dune sea (`farDunes.ts`) is an example.
+- Accessibility: the light channel is scaled by the gameplay-effects strength and the screen-effects setting, halved with flash reduction, and reduced with calm (0.7) or no (0.4) world events. The motion channel is scaled by the gameplay-effects strength, a quarter under reduced motion, halved with calm world events and 0 with none. Keep the light on surfaces, not in bloom: the built-ins send little of it to the bloom target.
+
+**Long-lived game signals.** Besides the short `game.clearPulse` (gone in under half a second), bindings can follow:
+
+| Feature | Meaning |
+|---|---|
+| `game.clearWave` | 0..1, set by each clear's size (a single about a third, a QUAD 1), held briefly and released over about three seconds. |
+| `game.heat` | 0..1, rises with consecutive clears, combos, back-to-back and spins (saturating), holds three seconds after each clear, then cools with a nine-second time constant: gone in roughly 15 to 20 seconds. A new game starts cool. |
+| `game.backToBack` | 0 without a back-to-back chain, a quarter on the first, 1 after four in a row. |
+| `game.stackHeight` | 0 (empty) .. 1 (the top of the visible field), smoothed. |
+
+The same values are shader uniforms (`frameUniforms.heat`, `clearWave`, `comboLevel`, `stackHeight`, and `pieceX`, the active piece across the board from -1 to 1). `game.*` features are presentation of the game: they come from the events the renderer shows, never from inside the engine, so gameplay stays deterministic.
+
+**Piece motion.** `onGameEvent` also receives `move` (with `dx`), `rotate` (`kick`), `spawn` (`piece`) and `hold` (`piece`), and `hardDrop` and `lock` now carry a `column`: the piece's centre across the board, 0 (left wall) .. 10 (right wall); in board space its x is `column - 5`. Components must ignore event kinds they do not know.
+
+### 6.2 Section states
+
+Songs have structure (`intro`, `verse`, `build`, `drop`, `break`, `bridge`, `outro`), published as `AudioFeatures.sectionKind` (and the composition's own name in `section`).
+
+- `sectionStates` multiplies (and adds to) a layer's reactive targets while the music is in a section, crossfading over `fade` seconds (default 3):
+
+```json
+"sectionStates": {
+  "fade": 5,
+  "states": [
+    { "section": ["drop"], "layer": "aurora-main", "target": "intensity", "scale": 1.3, "anticipate": 0.6 },
+    { "section": ["break"], "layer": "aurora-main", "target": "intensity", "scale": 0.75 }
+  ]
+}
+```
+
+- `anticipate` (0..1) starts a state early: before an upcoming section of that kind, its weight follows the music's `anticipation` (a ramp over the last four bars) times this value, so the scene winds up into a drop.
+- A binding's `when: { "section": [...] }` gates it the same way.
+- A component may implement `onSection(info)`: `{ kind, name, intensity, previous, time }`, called when the section changes (and once for the section the world opens in, with `previous` null).
+- The validator rejects states and events that name a layer id the stage does not have.
+
+### 6.3 Event call-ins
+
+`events` lists moments that call a layer to act:
+
+```json
+"events": [
+  { "layer": "dolphins", "on": "clear>=4", "quantize": "bar", "cooldown": 12, "action": "pass" },
+  { "layer": "meteors", "on": "combo>=3", "quantize": "beat", "cooldown": 12, "action": "burst", "params": { "count": 2 } }
+]
+```
+
+| Field | Meaning |
+|---|---|
+| `layer` | A layer id, `type:<componentType>` or `*`. |
+| `on` | `clear>=N` (lines; a perfect clear counts as 4), `combo>=N`, `b2b`, `perfect`, `spin`, `levelUp`, `danger` (the stack enters the danger zone), `section:<kind or name>` (the music enters it), `progress>=x`, `heat>=x` (crossing upwards). |
+| `quantize` | `bar` (default), `beat`, `phrase` (`phraseBars`, default 4) or `none`: the call waits for the next such moment in the music (without beats it goes after at most that long). |
+| `cooldown` | Seconds before the entry may fire again (default 8). |
+| `chance` | Probability that a trigger fires (default 1). |
+| `action` | `pass`, `clip`, `burst`, `show`, `hide`, `reveal`. |
+| `params` | Passed to the component (`CallInfo.params`). |
+
+World events (accessibility): calm halves the chance and doubles the cooldown; off stops call-ins.
+
+A component opts in with `onCall(call)`, where `call` is `{ action, params, trigger, strength, time }` (`strength` is the clear's size, 1 for other triggers). Built-ins that answer:
+
+| Component | Actions |
+|---|---|
+| `model` | `clip`: plays `params.clip` once over the walk or idle clip (`instances`: indices, `"random"` or all shown; `speed`, `fade`, `stagger`). `pass`: sends the next instance marked `pass` close past the camera (below). `show` / `hide`: fades instances in or out (`instances`, `seconds`, `hold`: then back to the bindable share). `reveal`: calls `reveal` creatures in for `params.hold` seconds whatever the progress. `burst`: dissolving models break apart; others flare their particles. |
+| `glowSchool` | `reveal` (as for `model`). |
+| `meteors` | `burst` or `show`: `params.count` meteors (1..6) a moment apart; `params.shower` starts a shower. |
+
+`model` also has bindable `pace` (walking and clip speed; legs still follow the ground) and `visible` (the share of its regular instances shown, fading in and out in order).
+
+**Near-field passes.** An instance with `"pass": true` stays out of sight until a `pass` call. Then it travels a path on one side of the board, never inside the board's screen rectangle widened by `pass.margin` (NDC), from `distance[1]` units from the camera in to `distance[0]` (`direction` `in`; `out` reverses it; `alternate` alternates), over `duration` seconds at NDC height `height`, on `side` `left`, `right` or `alternate`. It assembles from its particles at the far end and is gone as it leaves the frame. `ground` keeps it on the terrain, `y` at a fixed world height (a swimmer at the water line), and `arc` with `leaps` lifts it into leaps along the way, nose following the arc. Call params may override any of these and pick an `instance`. Paths are computed from the desktop camera (`ctx.view`); in VR they use the same path.
+
+`reveal.hold` (a QUAD or perfect clear calling revealed creatures in once progress passed `unlock`) and `dissolve.onBigClears` remain as built-in shorthands for an `on: "clear>=4"` call-in with `reveal` or `burst`.
+
+### 6.4 Showcase worlds
+
+- **Moving Sands**: a cool glitter and sheen front sweeps the near dunes and on over the far dune sea (`clearWave.far` 1700); blowing sand gusts with each front (`clearWave.stir`, `clear-gust`), denser in drops, thinner in breaks; the stars and Milky Way grow with the run's progress; the airglow lingers after clears; meteors with heat and one after a QUAD; the caravan's glow shimmers as fronts pass.
+- **Luminous Tide**: wave facets glitter and the bioluminescent surf brightens as fronts run out to sea, with a low travelling swell; plankton flare and stir; the horizon, stars and moon grow with progress; a QUAD or a combo of four sends a glowing dolphin leaping past close by, clear of the board.
+- **Northern Lights**: the front runs over the tundra (glints, sheen), catches the snow and rims of the spruce and the ranges, and surges along the aurora curtains; the aurora also rises with heat and lingers after clears, and swells in drops (winding up ahead of them); meteors come with combos (rate and a call-in).
 
 ## 7. Step 4: music
 
@@ -519,7 +632,8 @@ The manifest then uses these names like built-ins: `"type": "paperCranes"`, `"ef
 
 Things to know:
 
-- **Components.** `create(ctx, params)` may be async. `ctx` provides `scene`, `quality` (detail, particle density, reflections, reduced motion), `uniforms` (`frameUniforms`), `assets` (`url`, `loadGLTF`/`release`, `json`), `bursts`, `palette`, `ground` and `sounds`. The returned component has `object` and `dispose()`. Optional members are `reactive`, `update(frame)`, `onBeat(beat)`, `onGameEvent(event)` (clear, levelUp, hardDrop, lock, danger, gameOver) and `setPresence(0..1)` for crossfades. Scale costs with `ctx.quality`, never gameplay.
+- **Components.** `create(ctx, params)` may be async. `ctx` provides `scene`, `quality` (detail, particle density, reflections, reduced motion), `uniforms` (`frameUniforms`), `assets` (`url`, `loadGLTF`/`release`, `json`), `bursts`, `palette`, `ground`, `sounds` and, since SDK 1.5, `view` (`boardRect(margin)` in NDC, `toWorld(ndcX, ndcY, distance, out)`, `cameraPosition(out)`). The returned component has `object` and `dispose()`. Optional members are `reactive`, `update(frame)`, `onBeat(beat)`, `onGameEvent(event)` (clear, levelUp, hardDrop, lock, danger, gameOver, and since 1.5 move, rotate, spawn, hold), `onSection(info)` and `onCall(call)` (since 1.5, section 6) and `setPresence(0..1)` for crossfades. Scale costs with `ctx.quality`, never gameplay.
+- **Releasing what you load.** Every `ctx.assets.loadGLTF` must be matched by `ctx.assets.release` in `dispose()`, and anything the component creates (cloned geometries, materials, textures, render targets, PMREM nodes made with `pmremTexture`) must be disposed there too. `e2e/stage-memory.spec.ts` loads every world five times and fails if GPU geometries or textures grow.
 - **World sounds.** `ctx.sounds.emit(id, x, y, z, gain?)` plays a one-shot at a world position, panned for the listener (HRTF when Spatial audio is on).
   - **Ids.** `footstep` is a footfall made from the world's block material. Since SDK 1.4 there are also:
     - `skitter`: a small spider's dash. Emit one per dash, not one per leg.
@@ -657,6 +771,7 @@ The full suite (`npm test`) also runs `src/stages/assetLicenses.test.ts`.
 | a layer's `params.src` file missing | `layer "…": asset "…" not found` |
 | a track's `src` or `meta` missing | `music track "…": "…" not found` |
 | unknown reactivity profile, or a profile scope naming a missing layer id | `reactivity profile "…" not found …`, `… no layer with id "…"` |
+| an event call-in or section state naming a missing layer id, or an unknown trigger | `event "…": no layer with id "…"`, `section state "…": no layer with id "…"`, `events.0.on: unknown trigger …` |
 | `defaultTrack` is not one of the tracks | `defaultTrack "…" is not one of the tracks` |
 | an `sfx.overrides` file missing | `sfx override "…": "…" not found` |
 | two stages share an id | `duplicate stage id "…"` |

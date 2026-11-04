@@ -71,7 +71,7 @@ music sources ─→ musicPre ─┬─→ analysisTap ─→ AudioWorklet (defa
 | Level | `waveformRms`, `overallEnergy`, `dynamicRange` (dB), `quiet` |
 | Spectrum | `spectralFlux`, `spectralCentroid` (brightness), `transientIntensity`, 64 log-spaced `spectrum` bars |
 | Detected rhythm | `estimatedBpm`, plus tempo confidence and phase in `processor.tempo` |
-| Music timeline (authoritative for Prismfall's own tracks) | `bpm`, `beat`, `bar`, `beatInBar`, `beatPhase`, `barPhase`, `beatPulse`, `barPulse`, `beatDetected`, `beatConfidence`, `section`, `sectionIntensity`, `nextEvent`, `timeToNextEvent`, `anticipation` |
+| Music timeline (authoritative for Prismfall's own tracks) | `bpm`, `beat`, `bar`, `beatInBar`, `beatPhase`, `barPhase`, `beatPulse`, `barPulse`, `beatDetected`, `beatConfidence`, `section` (the composition's section name), `sectionKind` (intro, verse, build, drop, break, bridge or outro; empty without sections), `sectionIntensity`, `nextEvent`, `timeToNextEvent`, `anticipation` |
 
 **Beats never come from loudness.** For Prismfall's tracks the beat grid comes from the composition itself: the sequencer knows exactly where every beat is. Detected tempo and phase are used for music without that metadata, and they are always reported with a confidence value.
 
@@ -151,7 +151,11 @@ Onset impulses beat continuous flux as the envelope: flux keeps the texture of s
 
 ## 5. Reactivity
 
-**Bindings.** A stage maps features to component uniforms with bindings: `{ target, feature, amount, mode (mul|add), curve, attackMs, releaseMs, category, min, max }`. Envelopes are time-based, so the response is the same at 60, 144 and 240 Hz (unit-tested).
+**Bindings.** A stage maps features to component uniforms with bindings: `{ target, feature, amount, mode (mul|add), curve, attackMs, releaseMs, category, min, max, when }`. Envelopes are time-based, so the response is the same at 60, 144 and 240 Hz (unit-tested). `when: { section: [...] }` gates a binding to sections of the song.
+
+**Song structure.** Manifest `sectionStates` scale layer targets per section kind with a crossfade, and can wind up ahead of a drop from `anticipation`; components may implement `onSection`. Event call-ins (`events`) are quantised to the next beat, bar or phrase of the music grid, so a creature or a meteor arrives with the music; they never pulse light on the beat. See CONTENT_GUIDE.md, sections 6.2 and 6.3.
+
+**Game signals.** Besides the music, bindings can follow the game: `game.danger`, `game.clearPulse`, `game.combo`, `game.level`, `game.progress`, and the long-lived `game.heat` (consecutive clears, combos and back-to-back, cooling over 10 to 20 s), `game.clearWave` (a clear's size, released over about 3 s), `game.backToBack` and `game.stackHeight`. Each clear also sends a front out through the world (`clearFront()` in shaders). These come from the events the renderer presents, not from the engine (CONTENT_GUIDE.md, section 6.1).
 
 **Profiles** (`content/shared/reactivity/*.json`) are reusable mappings that stages combine, optionally scoped to particular layers and scaled:
 
@@ -163,7 +167,11 @@ Onset impulses beat continuous flux as the envelope: flux keeps the texture of s
 | `flux-turbulence` | Particles stir when the spectrum changes |
 | `transient-strike` | Emissive seams and beams flare on drum hits |
 | `mid-architecture` | Low mids heat lava and thicken haze; mids warm emissive structures |
-| `section-swell` | Beams and rings grow through builds and drops; the sky glows ahead of a drop (`anticipation`) |
+| `section-swell` | Beams, rings and aurora grow through builds and drops; the sky glows and particles stir ahead of a drop (`anticipation`) |
+| `clear-gust` | A clear's gust settles over seconds: particle turbulence, scatter sway, water swell |
+| `clear-glow` | A clear's light lingers: sky glow, aurora, terrain, particle and model brightness |
+| `combo-heat` | The run's heat: meteors, aurora, particles, stars, creature pace |
+| `danger-tension` | A stack near the top: dimmer glows, churning air, rising seas, slower creatures |
 
 **Reaction presets** (Cinematic, Subtle, Energetic, Ambient, Hypnotic, Intense, Neutral) scale gain, attack and release times, and the bass, treble and beat groups.
 
