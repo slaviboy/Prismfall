@@ -29,6 +29,8 @@ export type {
   SectionInfo,
   ViewInfo,
   WorldSounds,
+  WeatherSound,
+  StormSound,
   WorldSoundName,
   TransitionContext,
   TransitionEffect,

@@ -1,6 +1,6 @@
 import { Vector3 } from 'three/webgpu';
 import { emitCue, hasCueListeners } from '../audio/cues';
-import { onWorldDrone, onWorldSound } from '../audio/worldSounds';
+import { onStormSound, onWeather, onWorldDrone, onWorldSound } from '../audio/worldSounds';
 import { XRManager, type XRHost } from '../xr/XRManager';
 import type { GameAction, GameEvent } from '../game/core/types';
 import type { Engine } from '../game/core/engine';
@@ -163,8 +163,10 @@ export class GameShell {
     this.audio.applySettings(getSettings());
     onWorldSound((s) => this.audio.playWorldSound(s.id, s.x, s.y, s.z, s.gain));
     onWorldDrone((d) => this.audio.setWorldDrone(d));
+    onWeather((w) => this.audio.setWeather(w));
+    onStormSound((s) => this.audio.playStormSound(s));
     settingsStore.subscribe((state, prev) => {
-      if (state.settings.audio !== prev.settings.audio || state.settings.reactivity !== prev.settings.reactivity) this.audio.applySettings(state.settings);
+      if (state.settings.audio !== prev.settings.audio || state.settings.weather !== prev.settings.weather || state.settings.reactivity !== prev.settings.reactivity) this.audio.applySettings(state.settings);
       // Classic block style swaps every world's blocks for glass: the impact sounds follow.
       if (state.settings.graphics.blockStyle !== prev.settings.graphics.blockStyle) {
         const info = this.audio.stageId ? getStage(this.audio.stageId) : undefined;
@@ -204,7 +206,7 @@ export class GameShell {
         const b = prev.settings;
         if (a.graphics !== b.graphics || a.gameplay !== b.gameplay || a.accessibility !== b.accessibility || a.camera !== b.camera || a.reactivity !== b.reactivity) {
           system.applySettings(a);
-        }
+        } else if (a.weather !== b.weather) system.applyWeather(a);
       });
       system.onLost = (reason) => void this.recoverRenderer(canvas, reason);
       await system.setBlockDesign(GameShell.urlParam('block') ?? 'framed');

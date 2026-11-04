@@ -302,12 +302,18 @@ export class RenderSystem implements GameView {
     frameUniforms.effectsIntensity.value = s.gameplay.effectsIntensity;
     frameUniforms.flashLimit.value = s.accessibility.flashReduction ? 0.45 : 1;
     frameUniforms.worldEvents.value = s.accessibility.worldEvents === 'off' ? 0 : s.accessibility.worldEvents === 'calm' ? 0.5 : 1;
+    this.applyWeather(s);
     frameUniforms.reactivity.value = s.reactivity.enabled ? s.reactivity.strength : 0;
     // The world clear wave: light (glints, glow) and motion (sway, stir) scaled for accessibility.
     const effects = Math.min(1.5, Math.max(0, s.gameplay.effectsIntensity));
     const events = s.accessibility.worldEvents;
     frameUniforms.waveLight.value = effects * s.accessibility.screenEffects * (s.accessibility.flashReduction ? 0.5 : 1) * (events === 'off' ? 0.4 : events === 'calm' ? 0.7 : 1);
     frameUniforms.waveMotion.value = effects * (reducedMotion(s) ? 0.25 : 1) * (events === 'off' ? 0 : events === 'calm' ? 0.5 : 1);
+  }
+
+  /** The weather settings the shaders and weather worlds read (Storm intensity). */
+  applyWeather(s: Settings): void {
+    frameUniforms.weatherIntensity.value = { subtle: 0.55, normal: 1, heavy: 1.35, extreme: 1.7 }[s.weather.intensity];
   }
 
   resize(): void {

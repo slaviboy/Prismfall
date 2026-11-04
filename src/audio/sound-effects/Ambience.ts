@@ -265,6 +265,16 @@ const PRESETS: Record<string, Preset> = {
   },
 };
 
+// Dark Storm: the low base under the world's live weather (its rain, wind and thunder come from the
+// weather engine): far rain across a glen and a deep wind roar, slowly surging.
+PRESETS.storm = {
+  layers: [
+    { noise: 'pink', filter: 'lowpass', freq: 700, q: 0.5, gain: 0.3, lfo: [0.05, 0.4], sweep: 200 },
+    { noise: 'pink', filter: 'lowpass', freq: 110, q: 0.8, gain: 0.42, lfo: [0.03, 0.5] },
+    { noise: 'white', filter: 'highpass', freq: 3500, q: 0.4, gain: 0.035, lfo: [0.07, 0.5] },
+  ],
+};
+
 export const AMBIENCE_PRESETS = Object.keys(PRESETS);
 
 /** Where a bed's events find the world's creature sounds and the music's key (the audio system). */

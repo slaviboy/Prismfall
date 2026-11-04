@@ -246,6 +246,20 @@ export const settingsSchema = z.object({
       sfxAccentLayer: b(true),
     })
     .prefault({}),
+  /**
+   * Weather worlds (Dark Storm and any world that uses the SDK's weather and storm sounds): how
+   * intense the storm is (environment only, never gameplay) and the levels of its sound buses.
+   */
+  weather: z
+    .object({
+      intensity: e(['subtle', 'normal', 'heavy', 'extreme'] as const, 'normal'),
+      rain: n(0, 1, 0.8),
+      wind: n(0, 1, 0.7),
+      thunderDistant: n(0, 1, 0.85),
+      thunderNear: n(0, 1, 0.85),
+      lightningCrack: n(0, 1, 0.75),
+    })
+    .prefault({}),
   reactivity: z
     .object({
       enabled: b(true),

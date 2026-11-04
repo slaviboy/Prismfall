@@ -73,6 +73,7 @@ export const BLOCK_PRESETS = {
   carvedJade: { surface: 'jade', roughness: 0.22, metalness: 0, clearcoat: 0.8, clearcoatRoughness: 0.12, emissive: 0, core: 0.03, edgeGlow: 0.04, edgeColor: [1, 0.85, 0.5], rim: 0.1, surfaceNoise: 0, ao: 0.55, albedo: 1, musicGlow: 0.08, envIntensity: 0.55, saturation: 1.06 },
   machinedGunmetal: { surface: 'machined', roughness: 0.28, metalness: 0.92, clearcoat: 0.3, clearcoatRoughness: 0.18, emissive: 0, core: 0, edgeGlow: 0, edgeColor: null, rim: 0.05, surfaceNoise: 0, ao: 0.6, albedo: 1, musicGlow: 0.08, envIntensity: 1.0, saturation: 1.08 },
   frontierTimber: { surface: 'frontier', roughness: 0.66, metalness: 0, clearcoat: 0.12, clearcoatRoughness: 0.45, emissive: 0, core: 0, edgeGlow: 0, edgeColor: null, rim: 0.05, surfaceNoise: 0, ao: 0.62, albedo: 1, musicGlow: 0, envIntensity: 0.38, saturation: 1.06 },
+  stormCrystal: { surface: 'storm', roughness: 0.22, metalness: 0.06, clearcoat: 0.5, clearcoatRoughness: 0.3, emissive: 0, core: 0.03, edgeGlow: 0.04, edgeColor: [0.82, 0.88, 1], rim: 0.1, surfaceNoise: 0, ao: 0.5, albedo: 1, musicGlow: 0.08, envIntensity: 0.28, saturation: 1.08 },
   silkObsidian: { surface: 'silk', roughness: 0.26, metalness: 0.14, clearcoat: 0.55, clearcoatRoughness: 0.16, emissive: 0, core: 0.03, edgeGlow: 0.04, edgeColor: [0.72, 0.58, 1], rim: 0.08, surfaceNoise: 0, ao: 0.55, albedo: 1, musicGlow: 0.08, envIntensity: 0.5, saturation: 1.08 },
 } satisfies Record<string, BlockMaterialPreset>;
 

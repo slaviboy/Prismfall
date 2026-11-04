@@ -58,6 +58,8 @@ export const frameUniforms = {
   screenEffects: uniform(1),
   /** Accessibility world events: 1 full, 0.5 calm, 0 off (creatures and sudden world events). */
   worldEvents: uniform(1),
+  /** The Storm intensity setting for weather worlds: 0.55 subtle, 1 normal, 1.35 heavy, 1.7 extreme (SDK 1.6). */
+  weatherIntensity: uniform(1),
   reactivity: uniform(1),
   /** Current scene fog density (FogExp2), for materials that fog themselves. */
   fogDensity: uniform(0),

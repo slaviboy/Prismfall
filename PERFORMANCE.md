@@ -82,3 +82,18 @@ Each cell is **fps (p95 frame time in ms)**; WebGPU cells add **· GPU time in m
 - WebGL 2 is slower at low resolution (more CPU-side draw overhead) and roughly on par at 4K, where the GPU is the limit on both.
 - 2560×1440 was not part of this quick matrix; it sits between the two measured resolutions. Run `npm run perf` without `--quick` for low/medium presets and 1440p.
 - VR performance in a headset has not been measured (no headset was available); see VR_TESTING.md.
+
+## Dark Storm
+
+Measured 2026-11-04 with `node scripts/perf.ts --port 4195 --dist dist-storm --stages dark-storm --presets high,ultra --resolutions 2560x1080,2560x1440,3840x2160 --seconds 8` (a private test build; `--port`, `--dist` and `--resolutions` were added to the script for parallel work), the AI playing Zen, uncapped frame rate, the storm running on its own (strikes, rain and flashes as they come). Raw data: `perf-results/perf-2026-11-04T00-36-01-973Z.json` (not committed). Each cell is **fps (p95 frame time in ms)**, WebGPU cells add **· GPU time in ms**.
+
+| Backend | 2560×1080 High | 2560×1080 Ultra | 2560×1440 High | 2560×1440 Ultra | 3840×2160 High | 3840×2160 Ultra |
+|---|---|---|---|---|---|---|
+| WebGPU | 433 (2.6) · 1.5 | 344 (3.3) · 2.1 | 345 (3.3) · 1.8 | 310 (3.5) · 2.6 | 199 (5.5) · 3.6 | 152 (6.9) · 5.8 |
+| WebGL 2 | 273 (4.2) | 290 (5.7) | 276 (6.3) | 252 (4.3) | 157 (9.8) | 147 (7.4) |
+
+**Reading the numbers:**
+
+- The first version of the world, before optimisation, measured 102 fps (p95 12.3 ms) at 2560×1080 High and 39 fps (p95 36.8 ms) at 4K Ultra on WebGPU (`perf-results/perf-2026-11-04T00-29-14-241Z.json`). Hiding each layer in turn (world view, WebGPU, 2560×1080 High) showed the ray-marched cloud deck taking about 3.3 of the world's 4.3 ms of GPU time. It now draws after the opaque world with the depth test on (pixels covered by the land, the props or the playfield skip the march), stops marching once the deck is opaque, skips rays below the horizon or too low to need it, and samples the deck's large cells once per ray; the same view then measured 1.5 ms of GPU time in total, the sky about 0.3 ms of it.
+- At 4K Ultra the world runs at 152 fps on WebGPU and 147 fps on WebGL 2, in line with the other worlds in the table above.
+- The GPU time column comes from WebGPU timestamp queries and was noisy in these runs; the frame times are the reliable measure.

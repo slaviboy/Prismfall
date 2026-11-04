@@ -5,6 +5,9 @@ import type { AudioFeatures } from '../audio/analysis/features';
 import type { WorldSoundId } from '../audio/worldSounds';
 import type { FrameUniforms } from '../rendering/shaders/uniforms';
 import type { BurstSystem } from '../rendering/particles/BurstSystem';
+import type { StormSound, WeatherSound } from '../audio/worldSounds';
+
+export type { StormSound, WeatherSound };
 
 export type QualityLevel = 'low' | 'medium' | 'high' | 'ultra';
 
@@ -190,6 +193,20 @@ export interface WorldSounds {
    * after the calls stop. Optional: a host without it simply stays silent.
    */
   drone?(id: string, level: number, hz: number, brightness?: number, pan?: number): void;
+  /**
+   * Keeps a world's weather sounding (rain and wind on their own buses, each with its own volume
+   * setting): call it every frame or so; the beds fade out soon after the calls stop. Optional,
+   * since SDK 1.5.
+   */
+  weather?(state: WeatherSound): void;
+  /**
+   * Schedules a storm sound on the audio clock: a strike's thunder `delay` seconds from now (time
+   * it from the strike's apparent distance), or the crack of a nearby strike. The audio system
+   * synthesises a unique sound for the event, places it towards (x, y, z) and mixes it on the near
+   * or distant thunder bus (or the crack bus), ducking the music a little under big ones. Optional,
+   * since SDK 1.5.
+   */
+  storm?(sound: StormSound): void;
 }
 
 export interface StagePalette {
