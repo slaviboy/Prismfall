@@ -96,6 +96,86 @@
       "L": "#c97632"
     }
   },
+  "requires": {
+    "sdk": "^1.5.0"
+  },
+  "clearWave": {
+    "far": 600,
+    "travel": 3.4
+  },
+  "sectionStates": {
+    "fade": 6,
+    "states": [
+      {
+        "section": [
+          "drop"
+        ],
+        "layer": "petals",
+        "target": "density",
+        "scale": 1.3,
+        "anticipate": 0.5
+      },
+      {
+        "section": [
+          "drop"
+        ],
+        "layer": "petals",
+        "target": "turbulence",
+        "scale": 1.3,
+        "anticipate": 0.4
+      },
+      {
+        "section": [
+          "break"
+        ],
+        "layer": "petals",
+        "target": "density",
+        "scale": 0.6
+      },
+      {
+        "section": [
+          "break"
+        ],
+        "layer": "petals",
+        "target": "speed",
+        "scale": 0.7
+      },
+      {
+        "section": [
+          "drop"
+        ],
+        "layer": "sun-shafts",
+        "target": "intensity",
+        "scale": 1.5,
+        "anticipate": 0.6
+      },
+      {
+        "section": [
+          "break",
+          "intro"
+        ],
+        "layer": "sun-shafts",
+        "target": "intensity",
+        "scale": 0.45
+      }
+    ]
+  },
+  "events": [
+    {
+      "layer": "crane",
+      "on": "clear>=4",
+      "quantize": "bar",
+      "cooldown": 12,
+      "action": "pass"
+    },
+    {
+      "layer": "crane",
+      "on": "combo>=4",
+      "quantize": "bar",
+      "cooldown": 20,
+      "action": "pass"
+    }
+  ],
   "environment": {
     "layers": [
       {
@@ -131,10 +211,35 @@
         "bind": []
       },
       {
+        "id": "sun-shafts",
+        "type": "beams",
+        "params": {
+          "count": 4,
+          "radius": 110,
+          "y": -20,
+          "z": -95,
+          "arc": 120,
+          "height": 200,
+          "width": 16,
+          "color": "#fff0d2",
+          "base": 0.022,
+          "pulse": 0,
+          "sequence": 4,
+          "tilt": [
+            0,
+            0,
+            -0.38
+          ],
+          "seed": 5
+        },
+        "minDetail": "medium",
+        "bind": []
+      },
+      {
         "id": "petals",
         "type": "particles",
         "params": {
-          "count": 700,
+          "count": 950,
           "center": [
             0,
             4,
@@ -161,7 +266,11 @@
           "spin": 1.6,
           "additive": false,
           "seed": 31,
-          "bloom": 0.2
+          "bloom": 0.2,
+          "clearWave": {
+            "brightness": 0.8,
+            "stir": 2.6
+          }
         },
         "bind": [
           {
@@ -190,6 +299,50 @@
           "seed": 3
         },
         "bind": []
+      },
+      {
+        "id": "crane",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/whooping-crane.glb",
+          "render": "solid",
+          "instances": [
+            {
+              "position": [
+                0,
+                20,
+                -200
+              ],
+              "yaw": 90,
+              "scale": 2.6,
+              "snapToGround": false,
+              "pass": true
+            },
+            {
+              "position": [
+                0,
+                20,
+                -200
+              ],
+              "yaw": 90,
+              "scale": 2.4,
+              "snapToGround": false,
+              "pass": true
+            }
+          ],
+          "pass": {
+            "duration": 7,
+            "distance": [
+              18,
+              32
+            ],
+            "height": 0.45,
+            "margin": 0.2,
+            "side": "alternate",
+            "direction": "in"
+          }
+        },
+        "bind": []
       }
     ]
   },
@@ -200,9 +353,34 @@
         "layers": [
           "petals"
         ]
+      },
+      {
+        "name": "clear-gust",
+        "layers": [
+          "petals"
+        ]
       }
     ],
-    "bindings": []
+    "bindings": [
+      {
+        "layer": "sun-shafts",
+        "target": "intensity",
+        "feature": "game.clearWave",
+        "amount": 1.0,
+        "category": "lighting",
+        "attackMs": 600,
+        "releaseMs": 4000
+      },
+      {
+        "layer": "petals",
+        "target": "density",
+        "feature": "game.heat",
+        "amount": 0.3,
+        "category": "particles",
+        "attackMs": 2000,
+        "releaseMs": 6000
+      }
+    ]
   },
   "effects": {
     "lineClear": {
