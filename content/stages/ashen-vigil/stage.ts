@@ -86,7 +86,7 @@ import {
   viewportSharedTexture,
   viewZToPerspectiveDepth,
 } from 'three/tsl';
-import { clearFront, clearFrontMotion, colorUniform, defineStage, floatUniform, frameUniforms, linear, seeded, z, zColor, zVec3, type ComponentFactory, type EnvironmentComponent, type EnvironmentContext } from '@prismfall/sdk';
+import { clearFront, clearFrontRaw, colorUniform, defineStage, floatUniform, frameUniforms, linear, seeded, z, zColor, zVec3, type ComponentFactory, type EnvironmentComponent, type EnvironmentContext } from '@prismfall/sdk';
 
 /**
  * Ashen Vigil: a dry salt pan at dusk (a real photograph) under a smoke-reddened sky, with distant
@@ -1867,9 +1867,10 @@ const ashfall: ComponentFactory<AshParams> = {
     // A clear's front gusts through the falling ash: flakes in its band are thrown out from the
     // board and up a little (motion), and catch the low sun as it passes (light).
     const away = normalize(vec3(home.x.sub(frameUniforms.waveOrigin.x), 0, home.z.sub(frameUniforms.waveOrigin.z)).add(vec3(1e-4, 0, 0)));
-    const gustW = clearFrontMotion(home as unknown as V3).min(1.2);
+    const ashFront = clearFrontRaw(home as unknown as V3).min(1.2);
+    const gustW = ashFront.mul(frameUniforms.waveMotion);
     const pos = home.add(away.mul(gustW.mul(2.4))).add(vec3(0, gustW.mul(0.8), 0));
-    const catchLight = clearFront(home as unknown as V3).min(1.2);
+    const catchLight = ashFront.mul(frameUniforms.waveLight);
     // Fade near the volume's faces so wrapping never pops.
     const edge = smoothstep(0, 0.06, local).mul(smoothstep(1, 0.94, local));
     const fadeEdges = edge.x.mul(edge.y).mul(edge.z);

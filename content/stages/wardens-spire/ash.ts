@@ -1,6 +1,6 @@
 import { AdditiveBlending, InstancedBufferAttribute, Sprite, SpriteNodeMaterial } from 'three/webgpu';
 import { float, fract, instancedBufferAttribute, length, mix, mrt, normalize, sin, smoothstep, uniform, uv, vec3, vec4 } from 'three/tsl';
-import { additiveFog, clearFront, clearFrontMotion, colorUniform, frameUniforms, seeded, z, zColor, type ComponentFactory, type EnvironmentContext } from '@prismfall/sdk';
+import { additiveFog, clearFrontRaw, colorUniform, frameUniforms, seeded, z, zColor, type ComponentFactory, type EnvironmentContext } from '@prismfall/sdk';
 import { COLORS, DEG, EYE, beamField, clearMask, release, shared } from './shared';
 
 /**
@@ -73,9 +73,10 @@ export const ashComponent: ComponentFactory<Params> = {
     // A clear's front lifts the embers and the ash in its band and throws them out from the board
     // (motion), and they catch its light as it passes (light).
     const away = normalize(vec3(pos0.x.sub(frameUniforms.waveOrigin.x), 0, pos0.z.sub(frameUniforms.waveOrigin.z)).add(vec3(0.0001, 0, 0)));
-    const gust = clearFrontMotion(pos0).min(1.2);
+    const front = clearFrontRaw(pos0).min(1.2);
+    const gust = front.mul(frameUniforms.waveMotion);
     const pos = pos0.add(away.mul(gust.mul(5))).add(vec3(0, gust.mul(p.kind === 'embers' ? 6 : 3), 0));
-    const flare = clearFront(pos0).min(1.2);
+    const flare = front.mul(frameUniforms.waveLight);
     const q = uv().sub(0.5).mul(2);
     const shape = smoothstep(1, 0, length(q)).pow(p.kind === 'embers' ? 2.2 : 1.2);
     const fadeY = smoothstep(0, 0.08, yy.sub(p.height[0]).div(span)).mul(smoothstep(1, 0.85, yy.sub(p.height[0]).div(span)));

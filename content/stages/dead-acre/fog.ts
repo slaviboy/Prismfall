@@ -1,6 +1,6 @@
 import { BufferAttribute, BufferGeometry, Mesh, MeshBasicNodeMaterial, NormalBlending } from 'three/webgpu';
 import { abs, atan, attribute, cameraPosition, exp, float, length, max, mix, mrt, normalize, positionWorld, smoothstep, texture, vec2, vec3, vec4 } from 'three/tsl';
-import { clearFront, clearFrontMotion, floatUniform, frameUniforms, z, zVec3, type ComponentFactory } from '@prismfall/sdk';
+import { clearFrontRaw, floatUniform, frameUniforms, z, zVec3, type ComponentFactory } from '@prismfall/sdk';
 import { backdropSampler, backdropTexture, lampLight, noiseTexture, release, shared, zBackdrop, ORIGIN_Z, type F, type V3 } from './shared';
 
 const schema = z.object({
@@ -82,8 +82,9 @@ export const fogComponent: ComponentFactory<Params> = {
     // A clear's front rolls through the fog: the banks in its band are pushed out from the board
     // (motion) and lift with pale light as it passes (light), then settle back.
     const away = normalize(vec2(positionWorld.x.sub(frameUniforms.waveOrigin.x), positionWorld.z.sub(frameUniforms.waveOrigin.z)).add(vec2(0.0001, 0)));
-    const push = clearFrontMotion(positionWorld as unknown as V3).min(1.2).mul(3.5);
-    const wave = clearFront(positionWorld as unknown as V3).min(1.2);
+    const raw = clearFrontRaw(positionWorld as unknown as V3).min(1.2);
+    const push = raw.mul(frameUniforms.waveMotion).mul(3.5);
+    const wave = raw.mul(frameUniforms.waveLight);
     const uvA = positionWorld.xz.sub(away.mul(push)).div(p.scale).add(flow.div(p.scale));
     const nA = texture(noise, uvA).r;
     const nB = texture(noise, uvA.mul(2.7).add(vec2(0.37, 0.71)).sub(flow.div(p.scale * 1.6))).g;

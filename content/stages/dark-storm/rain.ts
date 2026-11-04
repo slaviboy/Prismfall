@@ -32,7 +32,7 @@ import {
   vec3,
   vec4,
 } from 'three/tsl';
-import { clearFront, clearFrontMotion, frameUniforms, noBloom, z, type ComponentFactory } from '@prismfall/sdk';
+import { clearFrontRaw, frameUniforms, noBloom, z, type ComponentFactory } from '@prismfall/sdk';
 import { EYE, pointAt, terrainHeight } from './terrain';
 import { CLOUD_BASE, FLASH_COLOR, HAZE_DENSITY, MAX_FLASH, cast, hash2, releaseStorm, skyRadiance, storm, surfaceMap, surfaceUV, tickStorm, type F, type Storm, type V2, type V3, type V4 } from './shared';
 
@@ -145,7 +145,8 @@ export const rainComponent: ComponentFactory<Params> = {
         // A clear's front runs through the rain as a gust: drops in its band are shoved out from the
         // board and slant with it, settling in its tail (accessibility-scaled motion).
         const outward = cast<V3>(normalize(vec3(home.x.sub(frameUniforms.waveOrigin.x), 0, home.z.sub(frameUniforms.waveOrigin.z)).add(vec3(0.0001, 0, 0))));
-        const shove = cast<F>(clearFrontMotion(home).min(1));
+        const front = cast<F>(clearFrontRaw(home));
+        const shove = cast<F>(front.mul(frameUniforms.waveMotion).min(1));
         const wrapped = cast<V3>(home.add(outward.mul(shove.mul(1.4))));
         const vel = cast<V3>(vec3(u.wind.x.mul(k).add(outward.x.mul(shove.mul(9))), fall.negate(), u.wind.z.mul(k).add(outward.z.mul(shove.mul(9)))));
         const dir = cast<V3>(normalize(vel));
@@ -173,7 +174,7 @@ export const rainComponent: ComponentFactory<Params> = {
         vAlong.assign(positionGeometry.y.add(0.5));
         vCover.assign(trueW.div(drawW).mul(keep).mul(haze));
         // ...and the drops in the band catch a little cold light as it passes.
-        vColor.assign(dropLight(s, wrapped, view).add(vec3(...FLASH_COLOR).mul(clearFront(home).mul(0.028))));
+        vColor.assign(dropLight(s, wrapped, view).add(vec3(...FLASH_COLOR).mul(front.mul(frameUniforms.waveLight).mul(0.028))));
         const corner = across.mul(positionGeometry.x.mul(drawW).mul(2)).add(dir.mul(positionGeometry.y.mul(len)));
         return wrapped.add(corner.mul(step(0.001, keep)));
       })();

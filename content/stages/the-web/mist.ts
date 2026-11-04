@@ -1,6 +1,6 @@
 import { AdditiveBlending, CylinderGeometry, DoubleSide, Group, Mesh, MeshBasicNodeMaterial, NormalBlending, PlaneGeometry, Vector3 } from 'three/webgpu';
 import { abs, cameraPosition, dot, exp, float, length, mx_noise_float, normalWorld, normalize, positionWorld, smoothstep, uv, vec3, vec4 } from 'three/tsl';
-import { clearFront, clearFrontMotion, floatUniform, frameUniforms, z, zVec3, type ComponentFactory } from '@prismfall/sdk';
+import { clearFront, clearFrontRaw, floatUniform, frameUniforms, z, zVec3, type ComponentFactory } from '@prismfall/sdk';
 import { FLOOR, MOON_DIR, comfortOf, fogDepth, fogTint, release, revealMask, tick, world, type F, type V3 } from './shared';
 
 const schema = z.object({
@@ -45,7 +45,8 @@ export const webMist: ComponentFactory<Params> = {
       // A clear's front rolls through the ground mist: the banks are pushed out from the board in
       // its band (motion) and pale with moonlight as it passes (light).
       const away = normalize(vec3(pw0.x.sub(frameUniforms.waveOrigin.x), 0, pw0.z.sub(frameUniforms.waveOrigin.z)).add(vec3(0.0001, 0, 0)));
-      const pw = pw0.sub(away.mul(clearFrontMotion(pw0 as unknown as V3).mul(4)));
+      const front = clearFrontRaw(pw0 as unknown as V3);
+      const pw = pw0.sub(away.mul(front.mul(frameUniforms.waveMotion).mul(4)));
       const drift = vec3(time.mul(0.6), 0, time.mul(0.25));
       const n1 = mx_noise_float(pw.mul(0.022).add(drift.mul(0.02))).mul(0.5).add(0.5);
       const n2 = mx_noise_float(pw.mul(0.07).add(drift.mul(0.05)).add(vec3(3, 0, 7))).mul(0.5).add(0.5);
@@ -55,7 +56,7 @@ export const webMist: ComponentFactory<Params> = {
       const dir = normalize(pw.sub(cameraPosition)) as unknown as V3;
       // Seen edge-on the bank thickens; seen from above it thins.
       const graze = float(1).sub(abs(dir.y)).pow(2).mul(0.7).add(0.3);
-      const col = fogTint(w, dir).mul(1.6).add(vec3(0.015, 0.018, 0.022)).add(vec3(0.05, 0.058, 0.072).mul(clearFront(pw0 as unknown as V3)));
+      const col = fogTint(w, dir).mul(1.6).add(vec3(0.015, 0.018, 0.022)).add(vec3(0.05, 0.058, 0.072).mul(front.mul(frameUniforms.waveLight)));
       const keep = exp(fogDepth(w, pw0 as unknown as V3).mul(-0.4));
       bankMat.colorNode = vec4(col, dens.mul(graze).mul(keep).mul(reveal).mul(0.85).clamp(0, 0.85));
       bankMat.transparent = true;
