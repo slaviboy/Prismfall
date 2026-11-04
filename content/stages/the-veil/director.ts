@@ -129,6 +129,24 @@ export class Director {
     return this.begin(kind, variant, true);
   }
 
+  /**
+   * A section of the music or a big moment calls an event in (manifest call-ins): one of `kinds`
+   * that may run now begins, by the director's own rules: comfort, each kind's cooldown, one at a
+   * time of a kind, creature events never overlapping one another. The next scheduled event of the
+   * same family waits its usual gap after it. Returns the event, or null when nothing fits (the call
+   * is simply not answered).
+   */
+  call(kinds: readonly EventKind[]): VeilEvent | null {
+    const creatures = kinds.filter((k) => CREATURE_EVENTS.includes(k));
+    const fog = kinds.filter((k) => !CREATURE_EVENTS.includes(k));
+    const k = (!this.creatureBusy() ? this.pick(creatures) : null) ?? this.pick(fog);
+    if (!k) return null;
+    const e = this.begin(k, this.rng(), false);
+    if (CREATURE_EVENTS.includes(k)) this.nextCreatureAt = Math.max(this.nextCreatureAt, this.time + e.duration + 20 * this.gapScale());
+    else this.nextFogAt = Math.max(this.nextFogAt, this.time + 40 * this.gapScale());
+    return e;
+  }
+
   private begin(kind: EventKind, variant: number, forced: boolean): VeilEvent {
     const e: VeilEvent = { id: this.nextId++, kind, start: this.time, duration: this.range(KINDS[kind].duration), variant, forced };
     this.active.push(e);

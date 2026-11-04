@@ -813,6 +813,100 @@
       }
     ]
   },
+  "clearWave": {
+    "near": 6,
+    "far": 1500,
+    "travel": 3.6
+  },
+  "sectionStates": {
+    "fade": 6,
+    "states": [
+      {
+        "section": [
+          "drop"
+        ],
+        "layer": "atmosphere",
+        "target": "density",
+        "scale": 0.8,
+        "anticipate": 0.5
+      },
+      {
+        "section": [
+          "break",
+          "outro"
+        ],
+        "layer": "atmosphere",
+        "target": "density",
+        "scale": 1.15
+      },
+      {
+        "section": [
+          "drop"
+        ],
+        "layer": "atmosphere",
+        "target": "lights",
+        "scale": 1.2,
+        "anticipate": 0.4
+      },
+      {
+        "section": [
+          "drop"
+        ],
+        "layer": "mist",
+        "target": "shafts",
+        "scale": 1.35,
+        "anticipate": 0.4
+      },
+      {
+        "section": [
+          "break"
+        ],
+        "layer": "mist",
+        "target": "glow",
+        "scale": 1.2
+      }
+    ]
+  },
+  "events": [
+    {
+      "layer": "atmosphere",
+      "on": "section:drop",
+      "quantize": "bar",
+      "cooldown": 60,
+      "action": "show",
+      "params": {
+        "kinds": [
+          "silhouette",
+          "swarm",
+          "treeWalker"
+        ]
+      }
+    },
+    {
+      "layer": "atmosphere",
+      "on": "clear>=4",
+      "quantize": "bar",
+      "cooldown": 120,
+      "action": "reveal",
+      "params": {
+        "kinds": [
+          "reveal"
+        ]
+      }
+    },
+    {
+      "layer": "atmosphere",
+      "on": "section:break",
+      "quantize": "bar",
+      "cooldown": 60,
+      "action": "show",
+      "params": {
+        "kinds": [
+          "bankRoll"
+        ]
+      }
+    }
+  ],
   "reactivity": {
     "profiles": [],
     "bindings": []
@@ -986,7 +1080,7 @@
     "type": "always"
   },
   "requires": {
-    "sdk": "^1.2.0"
+    "sdk": "^1.5.0"
   },
   "thumbnail": "previews/thumb.jpg"
 }
