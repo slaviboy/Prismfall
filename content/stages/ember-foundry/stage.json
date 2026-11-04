@@ -11,6 +11,9 @@
   ],
   "intensity": 0.8,
   "recommendedQuality": "high",
+  "requires": {
+    "sdk": "^1.5.0"
+  },
   "palette": {
     "accent": "#ff7a2a",
     "secondary": "#ffb347",
@@ -86,6 +89,26 @@
     "geometry": "chamfer",
     "material": "forgedMetal"
   },
+  "clearWave": {
+    "far": 420,
+    "travel": 3.0
+  },
+  "sectionStates": {
+    "fade": 3,
+    "states": [
+      {"section": ["drop"], "layer": "robot-arms", "target": "pace", "scale": 1.45, "anticipate": 0.4},
+      {"section": ["drop"], "layer": "embers", "target": "brightness", "scale": 1.3, "anticipate": 0.5},
+      {"section": ["drop"], "layer": "embers", "target": "density", "scale": 1.3},
+      {"section": ["drop"], "layer": "smoke", "target": "opacity", "scale": 1.2},
+      {"section": ["break"], "layer": "robot-arms", "target": "pace", "scale": 0.6},
+      {"section": ["break"], "layer": "embers", "target": "brightness", "scale": 0.7},
+      {"section": ["break"], "layer": "molten-channel", "target": "heat", "scale": 0.85}
+    ]
+  },
+  "events": [
+    {"layer": "robot-arms", "on": "clear>=3", "quantize": "beat", "cooldown": 5, "action": "clip", "params": {"clip": "Take 001", "speed": 2.2, "fade": 0.3, "stagger": 0.12}},
+    {"layer": "robot-arms", "on": "b2b", "quantize": "beat", "cooldown": 8, "action": "clip", "params": {"clip": "Take 001", "speed": 2.8, "fade": 0.25, "stagger": 0.08}}
+  ],
   "environment": {
     "layers": [
       {
@@ -182,6 +205,24 @@
             "releaseMs": 450
           }
         ]
+      },
+      {
+        "id": "robot-arms",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/robot-arm.glb",
+          "instances": [
+            {"position": [-48, -14, -74], "yaw": 40, "scale": 0.15, "snapToGround": false},
+            {"position": [52, -14, -80], "yaw": -40, "scale": 0.15, "snapToGround": false}
+          ],
+          "animation": {
+            "clip": "Take 001",
+            "speed": 1,
+            "vary": 0.1
+          },
+          "render": "solid",
+          "exposure": 0.85
+        }
       },
       {
         "id": "molten-channel",
@@ -298,6 +339,10 @@
         "id": "embers",
         "type": "particles",
         "params": {
+          "clearWave": {
+            "brightness": 1.4,
+            "stir": 1.8
+          },
           "count": 3500,
           "center": [
             0,
@@ -345,6 +390,10 @@
         "id": "smoke",
         "type": "clouds",
         "params": {
+          "clearWave": {
+            "glow": 0.12,
+            "color": "#ff7a30"
+          },
           "count": 34,
           "center": [
             0,
@@ -377,20 +426,16 @@
   },
   "reactivity": {
     "profiles": [
-      {
-        "name": "mid-architecture",
-        "layers": [
-          "molten-channel"
-        ]
-      },
-      {
-        "name": "transient-strike",
-        "layers": [
-          "hall"
-        ]
-      }
+      {"name": "mid-architecture", "layers": ["molten-channel"]},
+      {"name": "transient-strike", "layers": ["hall"]},
+      {"name": "clear-gust", "layers": ["embers", "smoke"]}
     ],
-    "bindings": []
+    "bindings": [
+      {"layer": "molten-channel", "target": "heat", "feature": "game.clearWave", "amount": 0.3, "attackMs": 300, "releaseMs": 3000},
+      {"layer": "pour-sparks", "target": "amount", "feature": "game.clearWave", "amount": 1.0, "category": "particles", "attackMs": 150, "releaseMs": 2500},
+      {"layer": "robot-arms", "target": "pace", "feature": "game.heat", "amount": 0.35, "attackMs": 2000, "releaseMs": 6000},
+      {"layer": "embers", "target": "brightness", "feature": "game.clearWave", "amount": 0.4, "category": "particles", "attackMs": 200, "releaseMs": 2600}
+    ]
   },
   "effects": {
     "lineClear": {
