@@ -123,6 +123,7 @@ For every world, check a fresh board and a **tall stack** (15+ rows) under the d
   Silhouettes are recognisable, motion is not jittery, and nothing crosses in front of the playfield.
 - [ ] **Music reactivity:** bass, treble and beats produce distinguishable, intentional responses, never random flashing. Quiet passages still look alive. Reactivity presets and the strength sliders change the response live.
 - [ ] **Reduced motion and Reduce flashing:** camera motion and shake stop, transitions thin out, and no bright full-screen flashes remain.
+- [ ] **Dark Storm by ear and eye (headphones and speakers):** the rain never stops and never audibly loops; thunder rolls rather than repeats, nearby claps crack before the boom, distant thunder is low and late; the delay between flash and thunder grows with distance; thunder rises over the music without the mix turning harsh. Settings → Audio → Weather: each slider (rain, wind, distant thunder, nearby thunder, lightning crack) changes only its own sound, and Storm intensity Subtle and Extreme are clearly calmer and wilder. With Reduce flashing on, every strike is one slow, dimmer flash; with World events Calm the lightning stays far away. The storm crystal blocks read clearly in a tall stack during a nearby strike.
 - [ ] **Quality presets:** Low to Ultra changes detail without changing the art direction. Dynamic resolution and FSR 1 at lower render scales look acceptable on the 2560×1080 display.
 - [ ] **WebGL 2** (Graphics → Graphics API → WebGL 2, then reload): every world still looks correct.
 

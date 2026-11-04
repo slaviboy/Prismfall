@@ -172,7 +172,7 @@ export function buildChannel(spec: ChannelSpec): Channel {
     else bdir = norm([bdir[0], Math.min(bdir[1], -0.5 - rand() * 0.4), bdir[2]]);
     const blen = span * (horizontal ? 0.12 + rand() * 0.3 : (0.1 + rand() * 0.32) * (1 - t * 0.7));
     const end = add(start, mul(bdir, blen));
-    const pts = roughen(rand, walk(rand, start, end, 10 + Math.floor(rand() * 9), 1.05, false), 2, 0.3);
+    const pts = roughen(rand, walk(rand, start, end, 10 + Math.floor(rand() * 9), 0.8, false), 2, 0.3);
     const bs = arcLengths(pts);
     const bl = bs[bs.length - 1]! || 1;
     const glow = 0.35 + rand() * 0.4;

@@ -41,21 +41,26 @@ function arcPoints(x0: number, x1: number, y: number, jag: number, levels: numbe
 
 /** Emits a crackling arc along a row: bright points that light in a quick sweep, then die. */
 function arc(ctx: EffectContext, clear: ClearInfo, row: number, x0: number, x1: number, bright: number, sweep: number): void {
-  const pts = arcPoints(x0, x1, row, 1.1, 5);
-  const per = ctx.reducedMotion ? 1 : 2;
+  const pts = arcPoints(x0, x1, row, 1.5, 5);
+  const per = ctx.reducedMotion ? 4 : 9;
   for (let i = 0; i < pts.length - 1; i++) {
     const [ax, ay] = pts[i]!;
     const [bx, by] = pts[i + 1]!;
-    const steps = Math.max(1, Math.round(Math.hypot(bx - ax, by - ay) * 3 * per));
+    const len = Math.hypot(bx - ax, by - ay) || 1;
+    const steps = Math.max(1, Math.round(len * per));
     const n = ctx.bursts.budget(steps);
+    // Sparks streak along the arc's own direction, so the points join into a crackling line.
+    const dx = (bx - ax) / len;
+    const dy = (by - ay) / len;
     for (let k = 0; k < n; k++) {
       const t = (k + Math.random()) / Math.max(1, n);
       const cx = ax + (bx - ax) * t;
       const cy = ay + (by - ay) * t;
       const p = ctx.cellToWorld(cx, cy);
       const along = (cx - x0) / Math.max(0.001, x1 - x0);
-      const b = bright * (0.7 + Math.random() * 0.6);
-      ctx.bursts.emit({ x: p.x, y: p.y, z: p.z + 0.55, vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4, vz: 0.2, r: ARC[0] * b, g: ARC[1] * b, b: ARC[2] * b, size: 0.09 + Math.random() * 0.07, life: 0.16 + Math.random() * 0.14, delay: Math.abs(along) * sweep, gravity: 0, drag: 2, shape: 'spark', swirl: 0 }, clear.time);
+      const b = bright * (0.8 + Math.random() * 0.6);
+      const sp = 1.2 + Math.random() * 1.2;
+      ctx.bursts.emit({ x: p.x, y: p.y, z: p.z + 0.55, vx: dx * sp, vy: dy * sp, vz: 0, r: ARC[0] * b, g: ARC[1] * b, b: ARC[2] * b, size: 0.07 + Math.random() * 0.05, life: 0.14 + Math.random() * 0.12, delay: Math.abs(along) * sweep, gravity: 0, drag: 3, shape: 'spark', swirl: 0 }, clear.time);
     }
   }
 }
@@ -68,8 +73,8 @@ function sparks(ctx: EffectContext, clear: ClearInfo, strength: number): void {
     const away = cell.x < 4.5 ? -1 : 1;
     for (let i = 0; i < n; i++) {
       const tint = mixc(cell.color, ARC, 0.45 + Math.random() * 0.4);
-      const b = 0.9 + Math.random() * 0.7;
-      const speed = 3 + Math.random() * 5 * strength;
+      const b = 0.55 + Math.random() * 0.5;
+      const speed = 4 + Math.random() * 6 * strength;
       ctx.bursts.emit(
         {
           x: p.x + (Math.random() - 0.5) * 0.8,
@@ -81,21 +86,16 @@ function sparks(ctx: EffectContext, clear: ClearInfo, strength: number): void {
           r: tint[0] * b,
           g: tint[1] * b,
           b: tint[2] * b,
-          size: 0.06 + Math.random() * 0.07,
-          life: 0.35 + Math.random() * 0.45,
+          size: 0.07 + Math.random() * 0.07,
+          life: 0.45 + Math.random() * 0.5,
           delay: Math.random() * 0.08,
-          gravity: 3.5,
-          drag: 1.8,
+          gravity: 6,
+          drag: 1.2,
           shape: 'spark',
           swirl: 0.3,
         },
         clear.time,
       );
-    }
-    // A faint cold glow left behind where the block was.
-    if (ctx.bursts.budget(1) > 0) {
-      const c = mixc(cell.color, ARC, 0.6);
-      ctx.bursts.emit({ x: p.x, y: p.y, z: p.z + 0.3, vx: 0, vy: 0.2, vz: 0, r: c[0] * 0.25, g: c[1] * 0.25, b: c[2] * 0.25, size: 1.1, life: 0.45, delay: 0, gravity: 0, drag: 1, shape: 'soft', swirl: 0 }, clear.time);
     }
   }
 }
@@ -120,7 +120,7 @@ export const stormSurge: LineClearEffect = {
     const combo = Math.max(0, clear.combo);
     const build = 1 + Math.min(1, combo / 8) * 0.6;
     const quad = clear.lines >= 4 || clear.perfectClear;
-    const bright = (0.9 + clear.lines * 0.25) * build * ctx.intensityScale;
+    const bright = (0.55 + clear.lines * 0.15) * build * ctx.intensityScale;
     for (const row of clear.rows) {
       const reach = clear.lines >= 2 ? 2.5 + clear.lines * 1.6 * build : 0;
       arc(ctx, clear, row, -0.4 - reach, 9.4 + reach, bright, 0.07);
