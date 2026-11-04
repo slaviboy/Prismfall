@@ -35,7 +35,7 @@ import {
   vec3,
   vec4,
 } from 'three/tsl';
-import { floatUniform, z, type ComponentFactory } from '@prismfall/sdk';
+import { clearFront, colorUniform, floatUniform, z, zColor, type ComponentFactory } from '@prismfall/sdk';
 import { castWorldShadows, frontier, FrontierMaterial, haze, lampLight, releaseFrontier, tickFrontier, type F, type V3 } from './shared';
 
 const zXZ = z.tuple([z.number(), z.number()]);
@@ -151,6 +151,11 @@ const schema = z.object({
     .optional(),
   seed: z.number().default(7),
   debug: z.number().int().default(0),
+  /**
+   * The world clear wave (SDK 1.5): a band of low sunlight runs out over the plain as a front passes
+   * (`sheen`, in `color` by day and `night` after dark). Light only; 0 (off) by default.
+   */
+  clearWave: z.object({ sheen: z.number().min(0).default(0), color: zColor.default('#ffd49a'), night: zColor.default('#a8bce8') }).prefault({}),
 });
 
 type Params = z.infer<typeof schema>;
@@ -527,7 +532,13 @@ export const frontierGround: ComponentFactory<Params> = {
     material.metalness = 0;
     material.fog = false;
     material.lightsNode = s.lightsNode;
-    let finalColor: V3 = haze(s, (output.rgb as unknown as V3).add(lampLight(s, wp as unknown as V3, nWorld).mul(albedo)) as V3);
+    let lit: V3 = (output.rgb as unknown as V3).add(lampLight(s, wp as unknown as V3, nWorld).mul(albedo)) as V3;
+    if (p.clearWave.sheen > 0) {
+      // The clear front: the sand catches a passing band of light, warm by day, moonlit after dark.
+      const waveColor = mix(colorUniform(p.clearWave.color), colorUniform(p.clearWave.night), s.u.night);
+      lit = lit.add(albedo.mul(waveColor).mul(clearFront(wp as unknown as V3).mul(p.clearWave.sheen))) as V3;
+    }
+    let finalColor: V3 = haze(s, lit);
     if (p.photo) {
       // Far away the ground becomes the photograph itself (graded like the sky), so it meets the
       // photo's own plain and mountain foot without a seam.

@@ -5,6 +5,10 @@ import { PuffSystem } from './puffs';
 import { frontier, releaseFrontier, tickFrontier } from './shared';
 
 const zXZ = z.tuple([z.number(), z.number()]);
+const smoothstep = (a: number, b: number, x: number): number => {
+  const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
+  return t * t * (3 - 2 * t);
+};
 
 const schema = z.object({
   /** Areas where low dust drifts along the ground (centre x, z; half sizes). */
@@ -24,6 +28,22 @@ const schema = z.object({
       amount: z.number().default(1),
     })
     .prefault({}),
+  /**
+   * The world clear wave (SDK 1.5): as each front rolls out from the board, a low skirt of dust lifts
+   * off the plain along it and drifts outward (`rate`: puffs per second along the front at full
+   * strength; `reach`: the farthest distance where it still raises dust). 0 (off) by default. It
+   * follows the front's motion channel, so reduced motion and calm world events thin it.
+   */
+  front: z
+    .object({
+      rate: z.number().min(0).default(0),
+      reach: z.number().positive().default(160),
+      size: z.number().positive().default(6),
+      opacity: z.number().min(0).max(1).default(0.07),
+    })
+    .prefault({}),
+  /** Bindable as `drift`: scales the low drifts (section states thicken them in drops). */
+  drift: z.number().min(0).default(1),
   /** Dust colour (sRGB-ish, linear values). */
   color: z.tuple([z.number(), z.number(), z.number()]).default([0.66, 0.5, 0.36]),
   seed: z.number().default(9),
@@ -49,6 +69,10 @@ export const frontierDust: ComponentFactory<Params> = {
     const reduced = ctx.quality.reducedMotion;
     const density = Math.min(1.5, Math.max(0.25, ctx.quality.particles)) * (ctx.quality.detail === 'low' ? 0.5 : 1) * (reduced ? 0.6 : 1);
     const puffs = new PuffSystem(ctx, s, ctx.quality.detail === 'low' ? 2000 : 6000, presence, { renderOrder: 2 });
+    const drift = floatUniform(p.drift);
+    const fu = ctx.uniforms;
+    const fronts = [fu.wave0, fu.wave1, fu.wave2, fu.wave3];
+    const view = new Vector3();
     const group = new Group();
     group.add(puffs.object);
     const [cr, cg, cb] = p.color;
@@ -72,6 +96,7 @@ export const frontierDust: ComponentFactory<Params> = {
 
     return {
       object: group,
+      reactive: { drift },
       update(frame) {
         tickFrontier(s, frame);
         const dt = Math.min(0.1, frame.dt);
@@ -87,7 +112,7 @@ export const frontierDust: ComponentFactory<Params> = {
 
         // Low drifts over the ground.
         for (const d of p.drifts) {
-          const n = d.rate * density * dt * (1 - night * 0.6);
+          const n = d.rate * density * dt * (1 - night * 0.6) * Math.max(0, drift.value);
           let k = Math.floor(n) + (rand() < n % 1 ? 1 : 0);
           while (k-- > 0) {
             const x = d.center[0] + (rand() * 2 - 1) * d.size[0];
@@ -211,6 +236,61 @@ export const frontierDust: ComponentFactory<Params> = {
             );
           }
           if (devil.t > devil.life) devil = null;
+        }
+
+        // The clear fronts: dust lifts off the plain along each front as it rolls outward.
+        const motion = fu.waveMotion.value;
+        if (p.front.rate > 0 && motion > 0.01) {
+          const shape = fu.waveShape.value;
+          const origin = fu.waveOrigin.value;
+          ctx.view?.cameraPosition(view);
+          for (const slot of fronts) {
+            const w = slot.value;
+            const age = now - w.x;
+            if (age < 0 || w.y <= 0) continue;
+            const f = age * shape.z;
+            if (f >= w.z) continue;
+            const dist = shape.x * Math.exp(f / Math.max(1e-4, shape.y));
+            if (dist < 14 || dist > p.front.reach) continue;
+            const alive = 1 - smoothstep(w.z * 0.55, w.z, f);
+            // Longer arcs farther out get more puffs, so the skirt keeps its density.
+            const n = p.front.rate * Math.min(1.5, w.y) * alive * motion * density * dt * (1 - night * 0.5) * Math.min(3, dist / 40);
+            let k = Math.floor(n) + (rand() < n % 1 ? 1 : 0);
+            while (k-- > 0) {
+              const az = (rand() * 2 - 1) * 1.3;
+              const ux = Math.sin(az);
+              const uz = -Math.cos(az);
+              const x = origin.x + ux * dist;
+              const zz = origin.z + uz * dist;
+              // Never in front of or behind the board on screen: skip the cone around the view axis.
+              const toX = x - view.x;
+              const toZ = zz - view.z;
+              if (toZ < 0 && Math.abs(toX / toZ) < 0.26) continue;
+              const y = ctx.ground.height(x, zz);
+              const sp = 2 + rand() * 2.5;
+              puffs.emit(
+                {
+                  x,
+                  y: y + 0.3,
+                  z: zz,
+                  vx: ux * sp,
+                  vy: 0.35 + rand() * 0.5,
+                  vz: uz * sp,
+                  life: 3.5 + rand() * 2.5,
+                  size0: p.front.size * 0.4,
+                  size1: p.front.size * (1 + rand()),
+                  opacity: p.front.opacity * (0.7 + rand() * 0.6),
+                  r: cr,
+                  g: cg,
+                  b: cb,
+                  rise: 0.05,
+                  drag: 0.7,
+                  windy: 0.5,
+                },
+                now,
+              );
+            }
+          }
         }
 
         // Hooves and wheels: anything of the other layers that walks along the ground.

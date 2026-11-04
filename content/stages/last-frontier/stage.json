@@ -15,7 +15,7 @@
   "recommendedQuality": "high",
   "module": "stage.ts",
   "requires": {
-    "sdk": "^1.2.0"
+    "sdk": "^1.5.0"
   },
   "palette": {
     "accent": "#e8a451",
@@ -101,6 +101,28 @@
       "L": "#d6702a"
     }
   },
+  "clearWave": {
+    "far": 900,
+    "travel": 3.4
+  },
+  "sectionStates": {
+    "fade": 4,
+    "states": [
+      {"section": ["drop"], "layer": "motes-town", "target": "brightness", "scale": 1.35, "anticipate": 0.5},
+      {"section": ["drop"], "layer": "motes-right", "target": "brightness", "scale": 1.35, "anticipate": 0.5},
+      {"section": ["drop"], "layer": "dust", "target": "drift", "scale": 1.6, "anticipate": 0.4},
+      {"section": ["drop"], "layer": "riders", "target": "pace", "scale": 1.15},
+      {"section": ["drop"], "layer": "riders-b", "target": "pace", "scale": 1.15},
+      {"section": ["break"], "layer": "motes-town", "target": "brightness", "scale": 0.7},
+      {"section": ["break"], "layer": "motes-right", "target": "brightness", "scale": 0.7},
+      {"section": ["break"], "layer": "dust", "target": "drift", "scale": 0.55}
+    ]
+  },
+  "events": [
+    {"layer": "stallion", "on": "clear>=4", "quantize": "beat", "cooldown": 12, "action": "pass"},
+    {"layer": "stallion", "on": "combo>=4", "quantize": "beat", "cooldown": 18, "action": "pass"},
+    {"layer": "donkey", "on": "b2b", "quantize": "beat", "cooldown": 20, "action": "clip", "params": {"clip": "H_Neigh", "speed": 1}}
+  ],
   "environment": {
     "layers": [
       {
@@ -131,6 +153,11 @@
         "id": "ground",
         "type": "frontierGround",
         "params": {
+          "clearWave": {
+            "sheen": 0.38,
+            "color": "#ffd49a",
+            "night": "#a8bce8"
+          },
           "town": {
             "origin": [
               -47,
@@ -1685,6 +1712,7 @@
           "src": "models/horse-rider-a.glb",
           "render": "particles",
           "particles": {
+            "clearWave": 0.4,
             "count": 12000,
             "size": 0.09,
             "blend": "normal",
@@ -1808,6 +1836,7 @@
           "src": "models/horse-rider-b.glb",
           "render": "particles",
           "particles": {
+            "clearWave": 0.4,
             "count": 12000,
             "size": 0.09,
             "blend": "normal",
@@ -2012,6 +2041,7 @@
           "src": "/content/shared/creatures/horse-saddled.glb",
           "render": "particles",
           "particles": {
+            "clearWave": 0.4,
             "count": 14000,
             "size": 0.075,
             "blend": "normal",
@@ -2092,6 +2122,7 @@
           "src": "/content/shared/creatures/horse-saddled.glb",
           "render": "particles",
           "particles": {
+            "clearWave": 0.4,
             "count": 14000,
             "size": 0.075,
             "blend": "normal",
@@ -2181,6 +2212,172 @@
             "attackMs": 12000,
             "releaseMs": 6000
           }
+        ]
+      },
+      {
+        "id": "donkey",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/donkey.glb",
+          "render": "particles",
+          "particles": {
+            "count": 9000,
+            "size": 0.075,
+            "blend": "normal",
+            "bloom": 0,
+            "brightness": 0.92,
+            "shading": 0.5,
+            "light": [0.945, 0.113, 0.307],
+            "jitter": 0.003,
+            "seed": 3,
+            "colorMix": 0.3,
+            "tint": "#7a5236",
+            "style": "glowEdges",
+            "glow": {
+              "color": "#ffd9a6",
+              "textureMix": 0.5,
+              "core": 0,
+              "edge": 1.3,
+              "twinkle": 0.5,
+              "sparkle": 0.15,
+              "drift": 0.02,
+              "flow": 0.25,
+              "flowRate": 0.1,
+              "shed": 0.12,
+              "shedLife": 2.2,
+              "shedSpread": 0.8,
+              "breathe": 0.25,
+              "shimmer": 0.4,
+              "overlay": 0.2,
+              "size": 1.1,
+              "brightness": 0.2
+            },
+            "clearWave": 0.4
+          },
+          "animation": {
+            "clip": "H_Walk",
+            "inPlace": true,
+            "vary": 0
+          },
+          "instances": [
+            {"position": [-19, 0, -26], "scale": 0.8, "walk": {"via": [[-17, 0, -33], [-23, 0, -38], [-29, 0, -32]], "to": [-24, 0, -25], "closed": true, "smooth": true, "speed": 0.9, "fade": 0, "stops": [{"at": 0.3, "for": 9, "clip": "H_Eat"}, {"at": 0.75, "for": 6, "clip": "H_Idle03_Look"}]}}
+          ]
+        },
+        "bind": [
+          {"target": "brightness", "feature": "game.progress", "mode": "mul", "amount": -0.97, "attackMs": 12000, "releaseMs": 6000}
+        ]
+      },
+      {
+        "id": "cow",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/cow.glb",
+          "render": "particles",
+          "particles": {
+            "count": 9000,
+            "size": 0.075,
+            "blend": "normal",
+            "bloom": 0,
+            "brightness": 0.92,
+            "shading": 0.5,
+            "light": [0.945, 0.113, 0.307],
+            "jitter": 0.003,
+            "seed": 3,
+            "colorMix": 0.3,
+            "tint": "#7a5236",
+            "style": "glowEdges",
+            "glow": {
+              "color": "#ffd9a6",
+              "textureMix": 0.5,
+              "core": 0,
+              "edge": 1.3,
+              "twinkle": 0.5,
+              "sparkle": 0.15,
+              "drift": 0.02,
+              "flow": 0.25,
+              "flowRate": 0.1,
+              "shed": 0.12,
+              "shedLife": 2.2,
+              "shedSpread": 0.8,
+              "breathe": 0.25,
+              "shimmer": 0.4,
+              "overlay": 0.2,
+              "size": 1.1,
+              "brightness": 0.2
+            },
+            "clearWave": 0.4
+          },
+          "animation": {
+            "clip": "Armature|idle1",
+            "vary": 0.15
+          },
+          "instances": [
+            {"position": [33, 0, -17], "yaw": -115, "scale": 2.4}
+          ]
+        },
+        "bind": [
+          {"target": "brightness", "feature": "game.progress", "mode": "mul", "amount": -0.97, "attackMs": 12000, "releaseMs": 6000}
+        ]
+      },
+      {
+        "id": "stallion",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/akhal-teke.glb",
+          "render": "particles",
+          "particles": {
+            "count": 16000,
+            "size": 0.06,
+            "blend": "normal",
+            "bloom": 0,
+            "brightness": 0.92,
+            "shading": 0.5,
+            "light": [0.945, 0.113, 0.307],
+            "jitter": 0.003,
+            "seed": 3,
+            "colorMix": 0.15,
+            "tint": "#c89a5a",
+            "style": "glowEdges",
+            "glow": {
+              "color": "#ffd9a6",
+              "textureMix": 0.5,
+              "core": 0,
+              "edge": 1.3,
+              "twinkle": 0.5,
+              "sparkle": 0.15,
+              "drift": 0.02,
+              "flow": 0.25,
+              "flowRate": 0.1,
+              "shed": 0.3,
+              "shedLife": 1.4,
+              "shedSpread": 0.8,
+              "breathe": 0.25,
+              "shimmer": 0.4,
+              "overlay": 0.2,
+              "size": 1.1,
+              "brightness": 0.3
+            },
+            "clearWave": 0.4
+          },
+          "animation": {
+            "clip": "Run_Gallop",
+            "inPlace": true,
+            "vary": 0
+          },
+          "instances": [
+            {"position": [-60, 0, -40], "scale": 1.15, "pass": true}
+          ],
+          "pass": {
+            "duration": 4.6,
+            "distance": [22, 30],
+            "height": -0.25,
+            "margin": 0.2,
+            "side": "alternate",
+            "direction": "in"
+          }
+        },
+        "bind": [
+          {"target": "brightness", "feature": "game.progress", "mode": "mul", "amount": -0.97, "attackMs": 12000, "releaseMs": 6000}
         ]
       },
       {
@@ -2301,6 +2498,7 @@
           "src": "/content/shared/creatures/horse-saddled.glb",
           "render": "particles",
           "particles": {
+            "clearWave": 0.4,
             "count": 9000,
             "size": 0.1,
             "blend": "normal",
@@ -2567,6 +2765,7 @@
           "src": "/content/shared/creatures/horse-saddled.glb",
           "render": "particles",
           "particles": {
+            "clearWave": 0.4,
             "count": 9000,
             "size": 0.15,
             "blend": "normal",
@@ -2704,6 +2903,10 @@
         "id": "motes-town",
         "type": "particles",
         "params": {
+          "clearWave": {
+            "brightness": 1.4,
+            "stir": 1.6
+          },
           "count": 1400,
           "center": [
             -36,
@@ -2758,6 +2961,10 @@
         "id": "motes-right",
         "type": "particles",
         "params": {
+          "clearWave": {
+            "brightness": 1.4,
+            "stir": 1.6
+          },
           "count": 1400,
           "center": [
             62,
@@ -2812,6 +3019,12 @@
         "id": "dust",
         "type": "frontierDust",
         "params": {
+          "front": {
+            "rate": 60,
+            "reach": 170,
+            "size": 6,
+            "opacity": 0.08
+          },
           "drifts": [
             {
               "center": [
@@ -2862,8 +3075,14 @@
     ]
   },
   "reactivity": {
-    "profiles": [],
-    "bindings": []
+    "profiles": [
+      {"name": "clear-gust", "layers": ["motes-town", "motes-right"]}
+    ],
+    "bindings": [
+      {"layer": "motes-town", "target": "brightness", "feature": "game.clearWave", "amount": 0.5, "category": "particles", "attackMs": 200, "releaseMs": 2600},
+      {"layer": "motes-right", "target": "brightness", "feature": "game.clearWave", "amount": 0.5, "category": "particles", "attackMs": 200, "releaseMs": 2600},
+      {"layer": "dust", "target": "drift", "feature": "game.heat", "amount": 0.6, "attackMs": 1500, "releaseMs": 6000}
+    ]
   },
   "effects": {
     "lineClear": {
