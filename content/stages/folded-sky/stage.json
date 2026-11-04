@@ -97,6 +97,102 @@
       "L": "#e8904a"
     }
   },
+  "requires": {
+    "sdk": "^1.5.0"
+  },
+  "clearWave": {
+    "far": 900,
+    "travel": 3.4
+  },
+  "sectionStates": {
+    "fade": 5,
+    "states": [
+      {
+        "section": [
+          "drop"
+        ],
+        "layer": "murmuration",
+        "target": "agitation",
+        "scale": 1.6,
+        "anticipate": 0.5
+      },
+      {
+        "section": [
+          "drop"
+        ],
+        "layer": "murmuration",
+        "target": "tempo",
+        "scale": 1.1,
+        "anticipate": 0.5
+      },
+      {
+        "section": [
+          "drop"
+        ],
+        "layer": "seeds",
+        "target": "speed",
+        "scale": 1.35,
+        "anticipate": 0.5
+      },
+      {
+        "section": [
+          "drop"
+        ],
+        "layer": "seeds",
+        "target": "turbulence",
+        "scale": 1.4,
+        "anticipate": 0.4
+      },
+      {
+        "section": [
+          "break"
+        ],
+        "layer": "murmuration",
+        "target": "tempo",
+        "scale": 0.85
+      },
+      {
+        "section": [
+          "break"
+        ],
+        "layer": "murmuration",
+        "target": "agitation",
+        "scale": 0.5
+      },
+      {
+        "section": [
+          "break"
+        ],
+        "layer": "seeds",
+        "target": "speed",
+        "scale": 0.6
+      },
+      {
+        "section": [
+          "break"
+        ],
+        "layer": "seeds",
+        "target": "density",
+        "scale": 0.6
+      }
+    ]
+  },
+  "events": [
+    {
+      "layer": "gull",
+      "on": "clear>=4",
+      "quantize": "bar",
+      "cooldown": 14,
+      "action": "pass"
+    },
+    {
+      "layer": "gull",
+      "on": "combo>=4",
+      "quantize": "bar",
+      "cooldown": 22,
+      "action": "pass"
+    }
+  ],
   "environment": {
     "layers": [
       {
@@ -127,6 +223,10 @@
                 0.9977
               ]
             }
+          },
+          "clearWave": {
+            "glow": 0.2,
+            "color": "#fff1dc"
           }
         },
         "bind": []
@@ -135,7 +235,7 @@
         "id": "seeds",
         "type": "particles",
         "params": {
-          "count": 420,
+          "count": 560,
           "center": [
             0,
             6,
@@ -161,7 +261,11 @@
           "shape": "soft",
           "additive": false,
           "seed": 13,
-          "bloom": 0.1
+          "bloom": 0.1,
+          "clearWave": {
+            "brightness": 1.6,
+            "stir": 2.2
+          }
         },
         "bind": [
           {
@@ -234,6 +338,44 @@
             "releaseMs": 6000
           }
         ]
+      },
+      {
+        "id": "gull",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/seagull.glb",
+          "render": "solid",
+          "animation": {
+            "clip": "ArmatureAction.006",
+            "speed": 0.9,
+            "vary": 0
+          },
+          "instances": [
+            {
+              "position": [
+                0,
+                20,
+                -200
+              ],
+              "yaw": 90,
+              "scale": 2.4,
+              "snapToGround": false,
+              "pass": true
+            }
+          ],
+          "pass": {
+            "duration": 7,
+            "distance": [
+              22,
+              36
+            ],
+            "height": 0.4,
+            "margin": 0.2,
+            "side": "alternate",
+            "direction": "in"
+          }
+        },
+        "bind": []
       }
     ]
   },
@@ -244,9 +386,41 @@
         "layers": [
           "seeds"
         ]
+      },
+      {
+        "name": "clear-gust",
+        "layers": [
+          "seeds"
+        ]
       }
     ],
-    "bindings": []
+    "bindings": [
+      {
+        "layer": "murmuration",
+        "target": "agitation",
+        "feature": "game.clearWave",
+        "amount": 2.5,
+        "attackMs": 200,
+        "releaseMs": 3500
+      },
+      {
+        "layer": "murmuration",
+        "target": "tempo",
+        "feature": "game.heat",
+        "amount": 0.15,
+        "attackMs": 2000,
+        "releaseMs": 6000
+      },
+      {
+        "layer": "seeds",
+        "target": "brightness",
+        "feature": "game.heat",
+        "amount": 0.3,
+        "category": "particles",
+        "attackMs": 2000,
+        "releaseMs": 6000
+      }
+    ]
   },
   "effects": {
     "lineClear": {
@@ -291,9 +465,6 @@
   },
   "unlock": {
     "type": "always"
-  },
-  "requires": {
-    "sdk": "^1.1.0"
   },
   "thumbnail": "previews/thumb.jpg"
 }
