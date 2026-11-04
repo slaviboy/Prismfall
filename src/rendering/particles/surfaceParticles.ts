@@ -4,6 +4,7 @@ import {
   BufferGeometry,
   DataTexture,
   DataUtils,
+  DoubleSide,
   HalfFloatType,
   Matrix3,
   Matrix4,
@@ -441,6 +442,9 @@ export function createSurfaceParticles(sets: readonly SurfaceSampleSet[], opts: 
     }
     material.transparent = true;
     material.depthWrite = false;
+    // The quads hang under the source mesh: a mirrored mesh (negative scale, e.g. doe.glb) flips
+    // their winding, and front-face culling then dropped every point.
+    material.side = DoubleSide;
     return material;
   };
 
@@ -505,6 +509,7 @@ export function createSurfaceParticles(sets: readonly SurfaceSampleSet[], opts: 
     material.mrtNode = mrt({ emissive: vec4(glowLight.mul(opts.bloom), 1) });
     material.transparent = true;
     material.depthWrite = false;
+    material.side = DoubleSide;
     return material;
   };
 
