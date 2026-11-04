@@ -51,7 +51,7 @@ import {
   vec3,
   vec4,
 } from 'three/tsl';
-import { additiveFog, colorUniform, seeded, z, zColor, type ComponentFactory, type EnvironmentContext } from '@prismfall/sdk';
+import { additiveFog, clearFront, colorUniform, seeded, z, zColor, type ComponentFactory, type EnvironmentContext } from '@prismfall/sdk';
 import {
   COLORS,
   duskLight,
@@ -760,9 +760,12 @@ export const landComponent: ComponentFactory<Params> = {
     const lit = spireLight(s, wp, nWorld, { core: 0.25, beam: 1, bolt: 0.6 });
     // Storm light from above and the horizon's glow on crests (rim), so the forms separate.
     const dusk = duskLight(wp, nWorld, { glint: glassy.mul(float(1).sub(ash)).mul(float(1).sub(lavaMask)), back: 1.25, k: 1.3 });
+    // A clear's front runs out along the lava, the fissures and the crust as a surge of heat (light
+    // only; the bloom keeps the steady glow).
+    const surge = clearFront(wp as unknown as V3).min(1.2).mul(0.6).add(1);
     let col: V3 = albedo
       .mul(lit.add(bankLight).add(dusk).mul(calm))
-      .add(lavaGlow.add(fissGlow).add(crustHeat.mul(calm)).mul(mask.mul(0.85).add(0.15))) as V3;
+      .add(lavaGlow.add(fissGlow).add(crustHeat.mul(calm)).mul(surge).mul(mask.mul(0.85).add(0.15))) as V3;
     // The land fogs itself (as the scene fog would), then dissolves into the photo's own far
     // land towards its edge, so it never ends at a hard line.
     const fogT = exp(camDist.mul(ctx.uniforms.fogDensity).pow(2).negate());
@@ -974,7 +977,7 @@ export const landComponent: ComponentFactory<Params> = {
 
     return {
       object: group,
-      reactive: { heat: s.u.lavaHeat },
+      reactive: { heat: s.u.heatScale },
       update(frame) {
         u.music.value = frame.audio.bass * 0.7 + frame.audio.subBass * 0.3;
       },

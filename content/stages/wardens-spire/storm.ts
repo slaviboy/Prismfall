@@ -341,6 +341,13 @@ export const stormComponent: ComponentFactory<Params> = {
         boltGlow.value = clock < boltUntil + 0.25 && !flashSafe ? power : 0;
         bolt.visible = boltGlow.value > 0.002;
       },
+      onCall(call) {
+        // Manifest call-ins (a back-to-back): the next strike comes now, a moment later (never on
+        // the beat); its brightness, flash reduction and the clear zone are as for any other.
+        if (call.action !== 'burst') return;
+        if (clock - glowStart < 6) return;
+        next = Math.min(next, clock + 0.3 + rand() * 0.9);
+      },
       setPresence(v) {
         presence.value = v;
       },

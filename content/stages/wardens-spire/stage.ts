@@ -16,7 +16,7 @@ import { wardenComponent } from './warden';
  * land and lights the storm. Everything goes through the public SDK.
  */
 export default defineStage({
-  sdkVersion: '1.2.0',
+  sdkVersion: '1.5.0',
   register(sdk) {
     sdk.components.register(landComponent as unknown as ComponentFactory);
     sdk.components.register(rocksComponent as unknown as ComponentFactory);

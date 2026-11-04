@@ -507,7 +507,7 @@ export const wardenComponent: ComponentFactory<Params> = {
         // Lava heat: a big moment (QUAD, awakening) brightens it, then it settles.
         const since = clock - s.events.volcano;
         const volcano = since < 0 ? 0 : since < 1.2 ? since / 1.2 : Math.exp(-(since - 1.2) / 5);
-        bu.lavaHeat.value = 1 + volcano * 0.45 + o.awaken * 0.35;
+        bu.lavaHeat.value = bu.heatScale.value * (1 + volcano * 0.45 + o.awaken * 0.35);
         // The Warden's own sound: a low hum while it scans, a rising tone as it focuses, a deeper
         // swell when it wakes (the host's world drone; silent where unsupported).
         const pan = Math.max(-1, Math.min(1, Math.sin(Math.atan2(W[0] - EYE[0], -(W[2] - EYE[2]))) * 1.1));
@@ -538,6 +538,13 @@ export const wardenComponent: ComponentFactory<Params> = {
             controller.awaken(event.perfectClear ? 1 : 0.6);
           }
         }
+      },
+      onCall(call) {
+        // Manifest call-ins (a drop): the Warden may wake, under the same rest as a QUAD's stir.
+        if (call.action !== 'show') return;
+        if (clock - lastStir <= p.stir.cooldown) return;
+        lastStir = clock;
+        controller.awaken(Math.min(1, 0.6 * call.strength));
       },
       setPresence(v) {
         presence.value = v;

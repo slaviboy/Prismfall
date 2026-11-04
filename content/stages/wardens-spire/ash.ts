@@ -1,6 +1,6 @@
 import { AdditiveBlending, InstancedBufferAttribute, Sprite, SpriteNodeMaterial } from 'three/webgpu';
-import { float, fract, instancedBufferAttribute, length, mix, mrt, sin, smoothstep, uniform, uv, vec3, vec4 } from 'three/tsl';
-import { additiveFog, colorUniform, seeded, z, zColor, type ComponentFactory, type EnvironmentContext } from '@prismfall/sdk';
+import { float, fract, instancedBufferAttribute, length, mix, mrt, normalize, sin, smoothstep, uniform, uv, vec3, vec4 } from 'three/tsl';
+import { additiveFog, clearFront, clearFrontMotion, colorUniform, frameUniforms, seeded, z, zColor, type ComponentFactory, type EnvironmentContext } from '@prismfall/sdk';
 import { COLORS, DEG, EYE, beamField, clearMask, release, shared } from './shared';
 
 /**
@@ -69,7 +69,13 @@ export const ashComponent: ComponentFactory<Params> = {
     const turb = float(1).add(treble.mul(0.8));
     const drift = vec3(sin(loopT).mul(p.wind[0] * 6), 0, sin(loopT.mul(0.7).add(1.3)).mul(p.wind[1] * 6));
     const flutter = vec3(sin(time.mul(a1.z.mul(1.4).add(0.6)).add(a1.w.mul(30))).mul(2.5), sin(time.mul(0.9).add(a1.x.mul(20))).mul(1.2), sin(time.mul(a1.w.add(0.7)).add(a1.z.mul(25))).mul(2.5)).mul(turb);
-    const pos = vec3(a0.x, yy, a0.z).add(drift).add(flutter);
+    const pos0 = vec3(a0.x, yy, a0.z).add(drift).add(flutter);
+    // A clear's front lifts the embers and the ash in its band and throws them out from the board
+    // (motion), and they catch its light as it passes (light).
+    const away = normalize(vec3(pos0.x.sub(frameUniforms.waveOrigin.x), 0, pos0.z.sub(frameUniforms.waveOrigin.z)).add(vec3(0.0001, 0, 0)));
+    const gust = clearFrontMotion(pos0).min(1.2);
+    const pos = pos0.add(away.mul(gust.mul(5))).add(vec3(0, gust.mul(p.kind === 'embers' ? 6 : 3), 0));
+    const flare = clearFront(pos0).min(1.2);
     const q = uv().sub(0.5).mul(2);
     const shape = smoothstep(1, 0, length(q)).pow(p.kind === 'embers' ? 2.2 : 1.2);
     const fadeY = smoothstep(0, 0.08, yy.sub(p.height[0]).div(span)).mul(smoothstep(1, 0.85, yy.sub(p.height[0]).div(span)));
@@ -78,10 +84,10 @@ export const ashComponent: ComponentFactory<Params> = {
     if (p.kind === 'embers') {
       const heat = sin(time.mul(a1.z.mul(3).add(1)).add(a1.w.mul(40))).mul(0.3).add(0.7);
       const cool = yy.sub(p.height[0]).div(span);
-      color = mix(vec3(1.0, 0.55, 0.18), COLORS.lava, cool).mul(heat.mul(p.brightness).mul(float(1).add(treble.mul(0.5)))).mul(s.u.lavaHeat);
+      color = mix(vec3(1.0, 0.55, 0.18), COLORS.lava, cool).mul(heat.mul(p.brightness).mul(float(1).add(treble.mul(0.5)))).mul(s.u.lavaHeat).mul(flare.mul(1.4).add(1));
     } else {
       const lit = beamField(s, pos).mul(p.beamLit);
-      color = base.mul(p.brightness).add(COLORS.beam.mul(lit.mul(0.6))).add(COLORS.bolt.mul(s.u.boltPower.mul(0.02)));
+      color = base.mul(p.brightness).add(COLORS.beam.mul(lit.mul(0.6))).add(COLORS.bolt.mul(s.u.boltPower.mul(0.02))).add(COLORS.lava.mul(flare.mul(0.05)));
     }
     const out = color.mul(shape).mul(fadeY).mul(presence).mul(clearMask(pos, 22, 27));
     const material = new SpriteNodeMaterial();
