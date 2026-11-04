@@ -24,7 +24,7 @@ import {
   vec3,
   vec4,
 } from 'three/tsl';
-import { noBloom, z, type ComponentFactory } from '@prismfall/sdk';
+import { clearFront, noBloom, z, type ComponentFactory } from '@prismfall/sdk';
 import { EYE, LOCH, terrainHeight, standingHeight } from './terrain';
 import { StormMaterial, boltReflection, cast, haze, noisePlane, releaseStorm, ripples, sat, skyRadiance, storm, surfaceMap, surfaceUV, tickStorm, type F, type V2, type V3, type V4 } from './shared';
 
@@ -167,7 +167,12 @@ export const landComponent: ComponentFactory<Params> = {
     const gloss = cast<F>(mix(float(0.4), float(1), water).mul(float(1).sub(rough).pow(1.5)));
     const env = cast<V3>(skyRadiance(s, r, rough.mul(3)).add(boltReflection(s, world, r, rough)));
     const sheen = cast<V3>(env.mul(fres).mul(gloss));
-    m.emissiveNode = sheen;
+    // A clear's front runs out over the ledge as a glint on the wet ground: sparkles on soaked rock
+    // and peat, a cold sheen across the puddles and the stream, only while the front passes.
+    const front = cast<F>(clearFront(world));
+    const sparkle = cast<F>(smoothstep(0.62, 0.9, nC).mul(nearK.mul(0.7).add(0.3)));
+    const wetGlint = cast<F>(mix(sparkle.mul(gloss.mul(0.8).add(0.2)), fres.mul(4).add(0.25).min(1), water));
+    m.emissiveNode = sheen.add(vec3(0.5, 0.6, 0.8).mul(front.mul(wetGlint).mul(0.045)));
     m.outputNode = Fn(() => vec4(haze(s, cast<V3>(output.rgb), world), 1))();
     m.opacityNode = reveal(u.presence, p.reach);
     m.alphaTest = 0.5;
@@ -203,6 +208,8 @@ export const landComponent: ComponentFactory<Params> = {
     // The water body takes a little of the flash light (stirred, aerated surface).
     let body: V3 = cast<V3>(vec3(0.0025, 0.003, 0.0035).add(vec3(0.02, 0.024, 0.03).mul(u.skyFlash)));
     body = cast<V3>(body.add(reflected.mul(lfres)));
+    // The front glitters on the chop as it runs out over the loch.
+    body = cast<V3>(body.add(vec3(0.5, 0.6, 0.8).mul(clearFront(lw).mul(smoothstep(0.15, 0.45, chopB)).mul(lfres.mul(3).add(0.2).min(1)).mul(0.035))));
     lm.colorNode = Fn(() => vec4(haze(s, body, lw).mul(1), 1))();
     lm.opacityNode = reveal(u.presence, p.reach);
     lm.alphaTest = 0.5;

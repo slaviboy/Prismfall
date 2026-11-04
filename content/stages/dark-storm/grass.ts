@@ -1,6 +1,6 @@
 import { BufferAttribute, BufferGeometry, DoubleSide, InstancedBufferAttribute, InstancedBufferGeometry, Mesh } from 'three/webgpu';
 import { Fn, attribute, cameraPosition, cameraViewMatrix, cos, float, instancedBufferAttribute, length, mix, normalize, output, positionWorld, sin, smoothstep, vec3, vec4 } from 'three/tsl';
-import { noBloom, z, type ComponentFactory } from '@prismfall/sdk';
+import { clearFrontMotion, frameUniforms, noBloom, z, type ComponentFactory } from '@prismfall/sdk';
 import { EYE, boardLimit, ledgeMask, pointAt, puddle, rockiness, streamDistance, terrainHeight } from './terrain';
 import { StormMaterial, castFlashShadows, cast, haze, releaseStorm, rng, storm, tickStorm, type F, type V3, type V4 } from './shared';
 import { reveal } from './land';
@@ -104,7 +104,10 @@ export const grassComponent: ComponentFactory<Params> = {
       const dir = cast<V3>(normalize(vec3(wind.x, 0, wind.z).add(vec3(0.0001, 0, 0))));
       const sway = sin(u.time.mul(float(2.2).add(u.gust.mul(3))).add(phase)).mul(0.25).add(sin(u.time.mul(5.3).add(phase.mul(2.1))).mul(0.12)).add(1);
       const bend = speed.mul(0.035).mul(sway).mul(along.mul(along)).mul(scale);
-      const bent = cast<V3>(local.mul(scale).add(dir.mul(bend.mul(0.6))).sub(vec3(0, bend.mul(0.25), 0)));
+      // A clear's front passes as a gust: the tufts in its band bow away from the board and spring back.
+      const away = cast<V3>(normalize(vec3(base.x.sub(frameUniforms.waveOrigin.x), 0, base.z.sub(frameUniforms.waveOrigin.z)).add(vec3(0.0001, 0, 0))));
+      const gust = cast<F>(clearFrontMotion(base).min(1).mul(along.mul(along)).mul(scale).mul(0.32));
+      const bent = cast<V3>(local.mul(scale).add(dir.mul(bend.mul(0.6))).add(away.mul(gust)).sub(vec3(0, bend.mul(0.25).add(gust.mul(0.3)), 0)));
       return base.add(bent);
     })();
     const shade = cast<F>(cos(T.x.mul(1.7).add(T.z.mul(2.3))).mul(0.5).add(0.5));

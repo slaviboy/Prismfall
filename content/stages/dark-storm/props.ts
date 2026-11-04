@@ -31,7 +31,7 @@ import {
   vec4,
 } from 'three/tsl';
 import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
-import { noBloom, z, type ComponentFactory } from '@prismfall/sdk';
+import { clearFront, noBloom, z, type ComponentFactory } from '@prismfall/sdk';
 import { EYE, boardLimit, ledgeMask, pointAt, puddle, streamDistance, terrainHeight, vnoise } from './terrain';
 import { StormMaterial, boltReflection, castFlashShadows, cast, haze, hash2, releaseStorm, rng, sat, skyRadiance, storm, tickStorm, FLASH_COLOR, MAX_FLASH, HAZE_DENSITY, type F, type V2, type V3, type V4 } from './shared';
 import { reveal } from './land';
@@ -307,7 +307,9 @@ export const propsComponent: ComponentFactory<Params> = {
     const fres = cast<F>(float(0.03).add(float(0.97).mul(pow(float(1).sub(ndv), 5))));
     const wet = cast<F>(float(0.35).add(rivulet.mul(0.5)));
     const env = cast<V3>(skyRadiance(s, r, rough.mul(3)).add(boltReflection(s, world, r, rough)));
-    m.emissiveNode = env.mul(fres).mul(wet).add(vec3(...FLASH_COLOR).mul(drop.mul(u.skyFlash).mul(0.6)));
+    // A clear's front catches the wet stone as it passes: the rivulets and their sliding drops glint.
+    const glint = cast<F>(clearFront(world).mul(wet.mul(0.6).add(drop.mul(2)).add(fres.mul(2))).mul(isStone.mul(0.7).add(0.3)));
+    m.emissiveNode = env.mul(fres).mul(wet).add(vec3(...FLASH_COLOR).mul(drop.mul(u.skyFlash).mul(0.6))).add(vec3(0.5, 0.6, 0.8).mul(glint.mul(0.025)));
     m.outputNode = Fn(() => vec4(haze(s, cast<V3>(output.rgb), world), 1))();
     m.opacityNode = reveal(u.presence);
     m.alphaTest = 0.5;

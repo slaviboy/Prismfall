@@ -32,7 +32,7 @@ import {
   vec3,
   vec4,
 } from 'three/tsl';
-import { noBloom, z, type ComponentFactory } from '@prismfall/sdk';
+import { clearFront, clearFrontMotion, frameUniforms, noBloom, z, type ComponentFactory } from '@prismfall/sdk';
 import { EYE, pointAt, terrainHeight } from './terrain';
 import { CLOUD_BASE, FLASH_COLOR, HAZE_DENSITY, MAX_FLASH, cast, hash2, releaseStorm, skyRadiance, storm, surfaceMap, surfaceUV, tickStorm, type F, type Storm, type V2, type V3, type V4 } from './shared';
 
@@ -141,8 +141,13 @@ export const rainComponent: ComponentFactory<Params> = {
         // Each drop drifts with the integrated wind (gusts swing the whole rain together) and falls.
         const k = S.x.mul(0.3).add(0.85);
         const raw = vec3(S.x, S.y, S.z).mul(size).add(vec3(u.windOffset.x.mul(k), fall.mul(t).negate(), u.windOffset.z.mul(k)));
-        const wrapped = cast<V3>(origin.add(fract(raw.div(size)).mul(size)));
-        const vel = cast<V3>(vec3(u.wind.x.mul(k), fall.negate(), u.wind.z.mul(k)));
+        const home = cast<V3>(origin.add(fract(raw.div(size)).mul(size)));
+        // A clear's front runs through the rain as a gust: drops in its band are shoved out from the
+        // board and slant with it, settling in its tail (accessibility-scaled motion).
+        const outward = cast<V3>(normalize(vec3(home.x.sub(frameUniforms.waveOrigin.x), 0, home.z.sub(frameUniforms.waveOrigin.z)).add(vec3(0.0001, 0, 0))));
+        const shove = cast<F>(clearFrontMotion(home).min(1));
+        const wrapped = cast<V3>(home.add(outward.mul(shove.mul(1.4))));
+        const vel = cast<V3>(vec3(u.wind.x.mul(k).add(outward.x.mul(shove.mul(9))), fall.negate(), u.wind.z.mul(k).add(outward.z.mul(shove.mul(9)))));
         const dir = cast<V3>(normalize(vel));
         const toCam = cast<V3>(cameraPosition.sub(wrapped));
         const dist = length(toCam);
@@ -167,7 +172,8 @@ export const rainComponent: ComponentFactory<Params> = {
         vAcross.assign(positionGeometry.x.mul(2));
         vAlong.assign(positionGeometry.y.add(0.5));
         vCover.assign(trueW.div(drawW).mul(keep).mul(haze));
-        vColor.assign(dropLight(s, wrapped, view));
+        // ...and the drops in the band catch a little cold light as it passes.
+        vColor.assign(dropLight(s, wrapped, view).add(vec3(...FLASH_COLOR).mul(clearFront(home).mul(0.028))));
         const corner = across.mul(positionGeometry.x.mul(drawW).mul(2)).add(dir.mul(positionGeometry.y.mul(len)));
         return wrapped.add(corner.mul(step(0.001, keep)));
       })();

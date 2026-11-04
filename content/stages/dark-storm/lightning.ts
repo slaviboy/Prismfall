@@ -195,6 +195,17 @@ export const lightningComponent: ComponentFactory<Params> = {
         if (e.lines >= 4 || e.perfectClear) s.director.accent();
         else if (e.lines >= 2) s.director.flicker();
       },
+      onSection(info) {
+        // The song steers the storm (build: active, drop: intense, break: calm or distant), by the
+        // director's own rules and comfort limits.
+        s.director.followSection(info.kind);
+      },
+      onCall(call) {
+        // Manifest call-ins (a drop opening, a long combo): one accent strike of the asked level.
+        if (call.action !== 'burst') return;
+        const asked = typeof call.params.level === 'number' ? Math.round(call.params.level) : 3;
+        s.director.accent(Math.min(4, Math.max(1, asked)) as 1 | 2 | 3 | 4);
+      },
       setPresence() {
         // Brightness already follows the storm's presence.
       },
