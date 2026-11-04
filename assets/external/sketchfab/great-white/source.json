@@ -1,0 +1,25 @@
+{
+  "uid": "9f61db4db17b4d14918d25c404af01fb",
+  "name": "Female Great White Shark - Rigged, 9 Animations",
+  "page": "https://sketchfab.com/3d-models/female-great-white-shark-rigged-9-animations-9f61db4db17b4d14918d25c404af01fb",
+  "author": {
+    "name": "Animal Animator",
+    "username": "animalanimator",
+    "profile": "https://sketchfab.com/animalanimator"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Female Great White Shark - Rigged, 9 Animations\" by Animal Animator (https://sketchfab.com/3d-models/female-great-white-shark-rigged-9-animations-9f61db4db17b4d14918d25c404af01fb), CC Attribution",
+  "downloaded": "2026-11-04",
+  "faces": 63028,
+  "vertices": 31516,
+  "animations": 9,
+  "files": [
+    {
+      "path": "great-white.gltf.zip",
+      "md5": "18d05296e9d61ac430d8f031e87bef97",
+      "size": 5139733,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "uid": "dc42ffc81c86480e9e7f7752fa134174",
+  "name": "Seagull",
+  "page": "https://sketchfab.com/3d-models/seagull-dc42ffc81c86480e9e7f7752fa134174",
+  "author": {
+    "name": "Dayvable",
+    "username": "Dayvable",
+    "profile": "https://sketchfab.com/Dayvable"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Seagull\" by Dayvable (https://sketchfab.com/3d-models/seagull-dc42ffc81c86480e9e7f7752fa134174), CC Attribution",
+  "downloaded": "2026-11-04",
+  "faces": 4352,
+  "vertices": 2180,
+  "animations": 1,
+  "files": [
+    {
+      "path": "seagull.gltf.zip",
+      "md5": "bf9018008da93c1369554f8362029dc2",
+      "size": 280448,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

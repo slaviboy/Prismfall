@@ -111,6 +111,9 @@ SKETCHFAB_TOKEN=... node scripts/fetch-sketchfab.ts <uid> <name>
 - It refuses licences other than CC0, CC BY and CC BY-SA.
 - It records the author, page, licence and file MD5 in `assets/external/sketchfab/<name>/source.json`.
 - It packs the glTF into a GLB with its skeleton and clips, optimises it into `content/shared/creatures/<name>.glb`, and prints the clip names and the ASSET_LICENSES.md row.
+- `--zip <archive>` uses a glTF archive downloaded from the model page instead of the API (no token).
+- `--max-triangles <n>` (default 60,000) simplifies heavier models with meshoptimizer: first with open borders locked (collapsing along an open UV seam smears the texture), then with them free, and, for scans whose split normals block the simplifier, without normals (welded, then smooth normals rebuilt). `--max-texture <px>` caps the WebP textures (default 1024).
+- `--clips a,b,...` keeps only the named clips (rigs that ship a library of a hundred), `--drop-tracks <node>` removes every clip's tracks on a node (a stray root key that turns the model over in one clip), and `--rest-pose <clip>` makes that clip's first frame the nodes' own pose (rigs exported in a stray pose).
 
 The token is sent only to api.sketchfab.com and never stored.
 

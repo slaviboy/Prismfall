@@ -1,0 +1,25 @@
+{
+  "uid": "b2c70a0821ef4c6ca0c096e33bc97593",
+  "name": "Gazella",
+  "page": "https://sketchfab.com/3d-models/gazella-b2c70a0821ef4c6ca0c096e33bc97593",
+  "author": {
+    "name": "kenchoo",
+    "username": "kenchoo",
+    "profile": "https://sketchfab.com/kenchoo"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Gazella\" by kenchoo (https://sketchfab.com/3d-models/gazella-b2c70a0821ef4c6ca0c096e33bc97593), CC Attribution",
+  "downloaded": "2026-11-04",
+  "faces": 8652,
+  "vertices": 4378,
+  "animations": 1,
+  "files": [
+    {
+      "path": "gazelle.gltf.zip",
+      "md5": "54f5624995a46bd70c0e1106b9d3478d",
+      "size": 8304125,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

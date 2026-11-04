@@ -1,0 +1,25 @@
+{
+  "uid": "194775ef066e41cf8f4e6f69608f3310",
+  "name": "Jaguarsf",
+  "page": "https://sketchfab.com/3d-models/jaguarsf-194775ef066e41cf8f4e6f69608f3310",
+  "author": {
+    "name": "kenchoo",
+    "username": "kenchoo",
+    "profile": "https://sketchfab.com/kenchoo"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Jaguarsf\" by kenchoo (https://sketchfab.com/3d-models/jaguarsf-194775ef066e41cf8f4e6f69608f3310), CC Attribution",
+  "downloaded": "2026-11-04",
+  "faces": 15999,
+  "vertices": 7902,
+  "animations": 1,
+  "files": [
+    {
+      "path": "jaguar.gltf.zip",
+      "md5": "ce68b86b40eb38c894e5be80286e4068",
+      "size": 10075336,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

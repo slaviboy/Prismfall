@@ -1,0 +1,25 @@
+{
+  "uid": "1e3177972173413c9533f59395bd4910",
+  "name": "Flamingosf",
+  "page": "https://sketchfab.com/3d-models/flamingosf-1e3177972173413c9533f59395bd4910",
+  "author": {
+    "name": "kenchoo",
+    "username": "kenchoo",
+    "profile": "https://sketchfab.com/kenchoo"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Flamingosf\" by kenchoo (https://sketchfab.com/3d-models/flamingosf-1e3177972173413c9533f59395bd4910), CC Attribution",
+  "downloaded": "2026-11-04",
+  "faces": 13588,
+  "vertices": 6800,
+  "animations": 1,
+  "files": [
+    {
+      "path": "flamingo.gltf.zip",
+      "md5": "cebee3c3846534b93db319edae2e1ea5",
+      "size": 8229252,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

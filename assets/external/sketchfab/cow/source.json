@@ -1,0 +1,25 @@
+{
+  "uid": "0e780cb5ab6d457198ded7d4e191a03e",
+  "name": "Farm Cow Animated Dairy cattle",
+  "page": "https://sketchfab.com/3d-models/farm-cow-animated-dairy-cattle-0e780cb5ab6d457198ded7d4e191a03e",
+  "author": {
+    "name": "Rukh3D",
+    "username": "rukh3d",
+    "profile": "https://sketchfab.com/rukh3d"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Farm Cow Animated Dairy cattle\" by Rukh3D (https://sketchfab.com/3d-models/farm-cow-animated-dairy-cattle-0e780cb5ab6d457198ded7d4e191a03e), CC Attribution",
+  "downloaded": "2026-11-04",
+  "faces": 9546,
+  "vertices": 4798,
+  "animations": 5,
+  "files": [
+    {
+      "path": "cow.gltf.zip",
+      "md5": "7bbca56ad1e5f3a509f5a594f3b33336",
+      "size": 532088,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

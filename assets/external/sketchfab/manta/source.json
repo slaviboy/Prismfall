@@ -1,0 +1,25 @@
+{
+  "uid": "a87dcc1af76a464892c60540979274b5",
+  "name": "Manta_new",
+  "page": "https://sketchfab.com/3d-models/manta-new-a87dcc1af76a464892c60540979274b5",
+  "author": {
+    "name": "yaniu03",
+    "username": "yaniu03",
+    "profile": "https://sketchfab.com/yaniu03"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Manta_new\" by yaniu03 (https://sketchfab.com/3d-models/manta-new-a87dcc1af76a464892c60540979274b5), CC Attribution",
+  "downloaded": "2026-11-04",
+  "faces": 8588,
+  "vertices": 4296,
+  "animations": 1,
+  "files": [
+    {
+      "path": "manta.gltf.zip",
+      "md5": "5fbed510f8aaa68cf92f45e6f7c082e8",
+      "size": 7753938,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

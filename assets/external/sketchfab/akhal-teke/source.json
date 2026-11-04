@@ -1,0 +1,25 @@
+{
+  "uid": "3d6e93ffd4154c308ee2e35cfde3bc42",
+  "name": "Akhal-Teke Stallion — Rigged & Animated 3D Model",
+  "page": "https://sketchfab.com/3d-models/akhal-teke-stallion-rigged-animated-3d-model-3d6e93ffd4154c308ee2e35cfde3bc42",
+  "author": {
+    "name": "Animal Animator",
+    "username": "animalanimator",
+    "profile": "https://sketchfab.com/animalanimator"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Akhal-Teke Stallion — Rigged & Animated 3D Model\" by Animal Animator (https://sketchfab.com/3d-models/akhal-teke-stallion-rigged-animated-3d-model-3d6e93ffd4154c308ee2e35cfde3bc42), CC Attribution",
+  "downloaded": "2026-11-04",
+  "faces": 162188,
+  "vertices": 82110,
+  "animations": 3,
+  "files": [
+    {
+      "path": "akhal-teke.gltf.zip",
+      "md5": "63ded528a3af08d93917ff6db832f42d",
+      "size": 29887127,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

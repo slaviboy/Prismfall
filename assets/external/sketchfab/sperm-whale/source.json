@@ -1,0 +1,25 @@
+{
+  "uid": "3076676b30294c119ec2065c3bf3dc47",
+  "name": "Animated Sperm Whale",
+  "page": "https://sketchfab.com/3d-models/animated-sperm-whale-3076676b30294c119ec2065c3bf3dc47",
+  "author": {
+    "name": "Anees Animates",
+    "username": "AneesAnimates",
+    "profile": "https://sketchfab.com/AneesAnimates"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Animated Sperm Whale\" by Anees Animates (https://sketchfab.com/3d-models/animated-sperm-whale-3076676b30294c119ec2065c3bf3dc47), CC Attribution",
+  "downloaded": "2026-11-04",
+  "faces": 83986,
+  "vertices": 41995,
+  "animations": 2,
+  "files": [
+    {
+      "path": "sperm-whale.gltf.zip",
+      "md5": "59a286aa01cd17775fb0d4b765c0eac0",
+      "size": 9578272,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}
