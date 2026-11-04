@@ -95,6 +95,80 @@
       "L": "#ff9a4a"
     }
   },
+  "requires": {
+    "sdk": "^1.5.0"
+  },
+  "clearWave": {
+    "far": 900,
+    "travel": 3.6
+  },
+  "sectionStates": {
+    "fade": 5,
+    "states": [
+      {
+        "section": [
+          "drop"
+        ],
+        "layer": "star-dust",
+        "target": "brightness",
+        "scale": 1.35,
+        "anticipate": 0.5
+      },
+      {
+        "section": [
+          "drop"
+        ],
+        "layer": "giant",
+        "target": "atmosphere",
+        "scale": 1.25,
+        "anticipate": 0.5
+      },
+      {
+        "section": [
+          "break"
+        ],
+        "layer": "star-dust",
+        "target": "brightness",
+        "scale": 0.7
+      },
+      {
+        "section": [
+          "break"
+        ],
+        "layer": "star-dust",
+        "target": "speed",
+        "scale": 0.6
+      },
+      {
+        "section": [
+          "intro",
+          "verse",
+          "break",
+          "bridge",
+          "outro"
+        ],
+        "layer": "leviathan",
+        "target": "visible",
+        "scale": 0
+      }
+    ]
+  },
+  "events": [
+    {
+      "layer": "leviathan-pass",
+      "on": "clear>=4",
+      "quantize": "bar",
+      "cooldown": 16,
+      "action": "pass"
+    },
+    {
+      "layer": "leviathan-pass",
+      "on": "combo>=4",
+      "quantize": "bar",
+      "cooldown": 24,
+      "action": "pass"
+    }
+  ],
   "environment": {
     "layers": [
       {
@@ -118,6 +192,9 @@
             "exposure": 0.36,
             "fade": 0.5,
             "kind": "space"
+          },
+          "clearWave": {
+            "stars": 0.6
           }
         },
         "bind": [
@@ -268,6 +345,251 @@
           ]
         },
         "bind": []
+      },
+      {
+        "id": "nebula-haze",
+        "type": "clouds",
+        "params": {
+          "clearWave": {
+            "glow": 0.5,
+            "color": "#7088c8"
+          },
+          "count": 26,
+          "center": [
+            0,
+            6,
+            -130
+          ],
+          "spread": [
+            420,
+            110,
+            160
+          ],
+          "size": [
+            70,
+            150
+          ],
+          "color": "#0b1226",
+          "colorB": "#1c1610",
+          "opacity": 0.2,
+          "drift": [
+            0.4,
+            0,
+            0
+          ],
+          "additive": true,
+          "seed": 29
+        },
+        "minDetail": "medium",
+        "bind": []
+      },
+      {
+        "id": "star-dust",
+        "type": "particles",
+        "params": {
+          "clearWave": {
+            "brightness": 6.0,
+            "stir": 1.4
+          },
+          "count": 4200,
+          "center": [
+            0,
+            2,
+            -45
+          ],
+          "size": [
+            170,
+            70,
+            90
+          ],
+          "color": "#dfe8ff",
+          "colorB": "#f2d9b0",
+          "minSize": 0.08,
+          "maxSize": 0.26,
+          "velocity": [
+            0.25,
+            0.05,
+            0.15
+          ],
+          "turbulence": 0.25,
+          "twinkle": 0.4,
+          "brightness": 0.45,
+          "shape": "soft",
+          "seed": 17,
+          "bloom": 0.25
+        },
+        "bind": []
+      },
+      {
+        "id": "leviathan",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/sperm-whale.glb",
+          "render": "particles",
+          "animation": {
+            "clip": "Armature|ArmatureAction",
+            "speed": 0.55,
+            "vary": 0
+          },
+          "instances": [
+            {
+              "position": [
+                520,
+                95,
+                -420
+              ],
+              "scale": 6,
+              "snapToGround": false,
+              "walk": {
+                "to": [
+                  150,
+                  60,
+                  -400
+                ],
+                "via": [
+                  [
+                    400,
+                    88,
+                    -428
+                  ],
+                  [
+                    270,
+                    74,
+                    -416
+                  ]
+                ],
+                "smooth": true,
+                "speed": 7,
+                "fade": 0.14,
+                "bank": 4
+              }
+            }
+          ],
+          "particles": {
+            "tint": "#dfe8ff",
+            "colorMix": 0.0,
+            "saturation": 0.2,
+            "blend": "additive",
+            "jitter": 0.02,
+            "wind": [
+              0.3,
+              0.4,
+              0.2
+            ],
+            "bloom": 0.1,
+            "shading": 0.55,
+            "light": [
+              0.8,
+              0.4,
+              -0.4
+            ],
+            "style": "glow",
+            "clearWave": 0.8,
+            "count": 22000,
+            "size": 0.5,
+            "brightness": 0.6,
+            "spread": 24,
+            "seed": 41,
+            "glow": {
+              "color": "#d8e4ff",
+              "textureMix": 0.0,
+              "core": 0.35,
+              "edge": 1.1,
+              "twinkle": 0.7,
+              "sparkle": 0.25,
+              "drift": 0.06,
+              "flow": 2.4,
+              "flowRate": 0.06,
+              "shed": 0.22,
+              "shedLife": 6,
+              "shedSpread": 14,
+              "breathe": 0.3,
+              "shimmer": 0.5,
+              "size": 1.1
+            }
+          }
+        },
+        "bind": []
+      },
+      {
+        "id": "leviathan-pass",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/sperm-whale.glb",
+          "render": "particles",
+          "animation": {
+            "clip": "Armature|ArmatureAction",
+            "speed": 0.7,
+            "vary": 0
+          },
+          "instances": [
+            {
+              "position": [
+                0,
+                0,
+                -300
+              ],
+              "scale": 2.8,
+              "snapToGround": false,
+              "pass": true
+            }
+          ],
+          "pass": {
+            "duration": 16,
+            "distance": [
+              52,
+              68
+            ],
+            "height": 0.3,
+            "margin": 0.24,
+            "side": "alternate",
+            "direction": "in"
+          },
+          "particles": {
+            "tint": "#dfe8ff",
+            "colorMix": 0.0,
+            "saturation": 0.2,
+            "blend": "additive",
+            "jitter": 0.02,
+            "wind": [
+              0.3,
+              0.4,
+              0.2
+            ],
+            "bloom": 0.1,
+            "shading": 0.55,
+            "light": [
+              0.8,
+              0.4,
+              -0.4
+            ],
+            "style": "glow",
+            "clearWave": 0.8,
+            "count": 14000,
+            "size": 0.1,
+            "brightness": 0.7,
+            "spread": 6,
+            "seed": 43,
+            "glow": {
+              "color": "#d8e4ff",
+              "textureMix": 0.0,
+              "core": 0.25,
+              "edge": 1.1,
+              "twinkle": 0.8,
+              "sparkle": 0.25,
+              "drift": 0.06,
+              "flow": 0.8,
+              "flowRate": 0.06,
+              "shed": 0.22,
+              "shedLife": 6,
+              "shedSpread": 5,
+              "breathe": 0.3,
+              "shimmer": 0.5,
+              "size": 1.1
+            }
+          }
+        },
+        "bind": []
       }
     ]
   },
@@ -282,11 +604,39 @@
       {
         "name": "treble-sparkle",
         "layers": [
-          "sky"
+          "sky",
+          "star-dust"
         ]
+      },
+      {
+        "name": "clear-glow",
+        "layers": [
+          "star-dust",
+          "leviathan"
+        ],
+        "amount": 0.8
+      },
+      {
+        "name": "combo-heat",
+        "layers": [
+          "star-dust",
+          "sky",
+          "leviathan"
+        ],
+        "amount": 0.6
       }
     ],
-    "bindings": []
+    "bindings": [
+      {
+        "layer": "giant",
+        "target": "atmosphere",
+        "feature": "game.clearWave",
+        "amount": 0.35,
+        "category": "lighting",
+        "attackMs": 600,
+        "releaseMs": 3500
+      }
+    ]
   },
   "effects": {
     "lineClear": {
