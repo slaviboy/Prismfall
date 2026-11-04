@@ -1,0 +1,1060 @@
+{
+ "luminous-tide": {
+  "0.0-0.32": {
+   "frames": 1669,
+   "slow_brightness": 0.333,
+   "slow_motion": 0.386,
+   "beat_motion": -0.008,
+   "brightness_shares": {
+    "fast": 0.04,
+    "medium": 0.307,
+    "slow": 0.653
+   },
+   "motion_shares": {
+    "fast": 0.49,
+    "medium": 0.172,
+    "slow": 0.338
+   },
+   "best": {
+    "r": 0.168,
+    "feature": "brightness",
+    "band": "treble",
+    "lag_ms": -500
+   }
+  },
+  "0.68-1.0": {
+   "frames": 1669,
+   "slow_brightness": -0.216,
+   "slow_motion": 0.071,
+   "beat_motion": -0.02,
+   "brightness_shares": {
+    "fast": 0.007,
+    "medium": 0.109,
+    "slow": 0.884
+   },
+   "motion_shares": {
+    "fast": 0.771,
+    "medium": 0.145,
+    "slow": 0.084
+   },
+   "best": {
+    "r": 0.116,
+    "feature": "brightness",
+    "band": "mid",
+    "lag_ms": 500
+   }
+  }
+ },
+ "frozen-kingdom": {
+  "0.0-0.32": {
+   "frames": 1665,
+   "slow_brightness": -0.262,
+   "slow_motion": -0.012,
+   "beat_motion": 0.047,
+   "brightness_shares": {
+    "fast": 0.0,
+    "medium": 0.007,
+    "slow": 0.993
+   },
+   "motion_shares": {
+    "fast": 0.529,
+    "medium": 0.252,
+    "slow": 0.219
+   },
+   "best": {
+    "r": 0.068,
+    "feature": "motion",
+    "band": "mid",
+    "lag_ms": 433
+   }
+  },
+  "0.68-1.0": {
+   "frames": 1665,
+   "slow_brightness": -0.093,
+   "slow_motion": 0.255,
+   "beat_motion": 0.034,
+   "brightness_shares": {
+    "fast": 0.001,
+    "medium": 0.018,
+    "slow": 0.982
+   },
+   "motion_shares": {
+    "fast": 0.445,
+    "medium": 0.335,
+    "slow": 0.22
+   },
+   "best": {
+    "r": 0.157,
+    "feature": "motion",
+    "band": "mid",
+    "lag_ms": 467
+   }
+  }
+ },
+ "moving-sands": {
+  "0.0-0.32": {
+   "frames": 1671,
+   "slow_brightness": 0.269,
+   "slow_motion": 0.044,
+   "beat_motion": 0.001,
+   "brightness_shares": {
+    "fast": 0.017,
+    "medium": 0.314,
+    "slow": 0.669
+   },
+   "motion_shares": {
+    "fast": 0.402,
+    "medium": 0.438,
+    "slow": 0.159
+   },
+   "best": {
+    "r": 0.25,
+    "feature": "brightness",
+    "band": "mid",
+    "lag_ms": -133
+   }
+  },
+  "0.68-1.0": {
+   "frames": 1671,
+   "slow_brightness": -0.085,
+   "slow_motion": -0.174,
+   "beat_motion": 0.007,
+   "brightness_shares": {
+    "fast": 0.008,
+    "medium": 0.646,
+    "slow": 0.346
+   },
+   "motion_shares": {
+    "fast": 0.701,
+    "medium": 0.184,
+    "slow": 0.115
+   },
+   "best": {
+    "r": 0.081,
+    "feature": "brightness",
+    "band": "treble",
+    "lag_ms": -300
+   }
+  }
+ },
+ "last-frontier": {
+  "0.0-0.32": {
+   "frames": 1663,
+   "slow_brightness": -0.693,
+   "slow_motion": 0.356,
+   "beat_motion": 0.086,
+   "brightness_shares": {
+    "fast": 0.0,
+    "medium": 0.007,
+    "slow": 0.993
+   },
+   "motion_shares": {
+    "fast": 0.837,
+    "medium": 0.112,
+    "slow": 0.051
+   },
+   "best": {
+    "r": 0.144,
+    "feature": "brightness",
+    "band": "treble",
+    "lag_ms": 500
+   }
+  },
+  "0.68-1.0": {
+   "frames": 1663,
+   "slow_brightness": -0.734,
+   "slow_motion": -0.212,
+   "beat_motion": 0.002,
+   "brightness_shares": {
+    "fast": 0.0,
+    "medium": 0.011,
+    "slow": 0.989
+   },
+   "motion_shares": {
+    "fast": 0.738,
+    "medium": 0.114,
+    "slow": 0.147
+   },
+   "best": {
+    "r": 0.065,
+    "feature": "brightness",
+    "band": "treble",
+    "lag_ms": 500
+   }
+  }
+ },
+ "tradewind-cove": {
+  "0.0-0.32": {
+   "frames": 1659,
+   "slow_brightness": -0.206,
+   "slow_motion": 0.56,
+   "beat_motion": 0.029,
+   "brightness_shares": {
+    "fast": 0.073,
+    "medium": 0.271,
+    "slow": 0.656
+   },
+   "motion_shares": {
+    "fast": 0.896,
+    "medium": 0.079,
+    "slow": 0.026
+   },
+   "best": {
+    "r": 0.289,
+    "feature": "brightness",
+    "band": "treble",
+    "lag_ms": 400
+   }
+  },
+  "0.68-1.0": {
+   "frames": 1659,
+   "slow_brightness": -0.776,
+   "slow_motion": 0.663,
+   "beat_motion": 0.037,
+   "brightness_shares": {
+    "fast": 0.013,
+    "medium": 0.047,
+    "slow": 0.94
+   },
+   "motion_shares": {
+    "fast": 0.906,
+    "medium": 0.059,
+    "slow": 0.035
+   },
+   "best": {
+    "r": 0.081,
+    "feature": "motion",
+    "band": "bass",
+    "lag_ms": -467
+   }
+  }
+ },
+ "ancient-garden": {
+  "0.0-0.32": {
+   "frames": 1659,
+   "slow_brightness": 0.446,
+   "slow_motion": 0.013,
+   "beat_motion": 0.008,
+   "brightness_shares": {
+    "fast": 0.0,
+    "medium": 0.009,
+    "slow": 0.991
+   },
+   "motion_shares": {
+    "fast": 0.515,
+    "medium": 0.152,
+    "slow": 0.334
+   },
+   "best": {
+    "r": 0.276,
+    "feature": "brightness",
+    "band": "bass",
+    "lag_ms": -300
+   }
+  },
+  "0.68-1.0": {
+   "frames": 1659,
+   "slow_brightness": 0.442,
+   "slow_motion": 0.276,
+   "beat_motion": -0.001,
+   "brightness_shares": {
+    "fast": 0.0,
+    "medium": 0.007,
+    "slow": 0.993
+   },
+   "motion_shares": {
+    "fast": 0.852,
+    "medium": 0.082,
+    "slow": 0.066
+   },
+   "best": {
+    "r": 0.277,
+    "feature": "brightness",
+    "band": "bass",
+    "lag_ms": -300
+   }
+  }
+ },
+ "lost-kingdom": {
+  "0.0-0.32": {
+   "frames": 1667,
+   "slow_brightness": 0.849,
+   "slow_motion": 0.663,
+   "beat_motion": 0.036,
+   "brightness_shares": {
+    "fast": 0.009,
+    "medium": 0.138,
+    "slow": 0.853
+   },
+   "motion_shares": {
+    "fast": 0.825,
+    "medium": 0.143,
+    "slow": 0.032
+   },
+   "best": {
+    "r": 0.589,
+    "feature": "brightness",
+    "band": "bass",
+    "lag_ms": -267
+   }
+  },
+  "0.68-1.0": {
+   "frames": 1667,
+   "slow_brightness": 0.821,
+   "slow_motion": 0.353,
+   "beat_motion": 0.047,
+   "brightness_shares": {
+    "fast": 0.042,
+    "medium": 0.275,
+    "slow": 0.683
+   },
+   "motion_shares": {
+    "fast": 0.82,
+    "medium": 0.126,
+    "slow": 0.054
+   },
+   "best": {
+    "r": 0.512,
+    "feature": "brightness",
+    "band": "bass",
+    "lag_ms": 33
+   }
+  }
+ },
+ "celestial-drift": {
+  "0.0-0.32": {
+   "frames": 1655,
+   "slow_brightness": 0.411,
+   "slow_motion": -0.015,
+   "beat_motion": -0.008,
+   "brightness_shares": {
+    "fast": 0.0,
+    "medium": 0.005,
+    "slow": 0.995
+   },
+   "motion_shares": {
+    "fast": 0.757,
+    "medium": 0.104,
+    "slow": 0.139
+   },
+   "best": {
+    "r": 0.247,
+    "feature": "brightness",
+    "band": "bass",
+    "lag_ms": -500
+   }
+  },
+  "0.68-1.0": {
+   "frames": 1655,
+   "slow_brightness": 0.035,
+   "slow_motion": -0.141,
+   "beat_motion": -0.034,
+   "brightness_shares": {
+    "fast": 0.002,
+    "medium": 0.013,
+    "slow": 0.985
+   },
+   "motion_shares": {
+    "fast": 0.659,
+    "medium": 0.125,
+    "slow": 0.216
+   },
+   "best": {
+    "r": 0.204,
+    "feature": "brightness",
+    "band": "mid",
+    "lag_ms": 267
+   }
+  }
+ },
+ "alpine-horizon": {
+  "0.0-0.32": {
+   "frames": 1657,
+   "slow_brightness": 0.928,
+   "slow_motion": 0.485,
+   "beat_motion": -0.005,
+   "brightness_shares": {
+    "fast": 0.001,
+    "medium": 0.007,
+    "slow": 0.992
+   },
+   "motion_shares": {
+    "fast": 0.72,
+    "medium": 0.091,
+    "slow": 0.189
+   },
+   "best": {
+    "r": 0.703,
+    "feature": "brightness",
+    "band": "bass",
+    "lag_ms": 500
+   }
+  },
+  "0.68-1.0": {
+   "frames": 1657,
+   "slow_brightness": 0.923,
+   "slow_motion": 0.161,
+   "beat_motion": -0.001,
+   "brightness_shares": {
+    "fast": 0.0,
+    "medium": 0.003,
+    "slow": 0.997
+   },
+   "motion_shares": {
+    "fast": 0.843,
+    "medium": 0.079,
+    "slow": 0.078
+   },
+   "best": {
+    "r": 0.703,
+    "feature": "brightness",
+    "band": "bass",
+    "lag_ms": 500
+   }
+  }
+ },
+ "the-abyss": {
+  "0.0-0.32": {
+   "frames": 1669,
+   "slow_brightness": 0.028,
+   "slow_motion": -0.155,
+   "beat_motion": 0.034,
+   "brightness_shares": {
+    "fast": 0.011,
+    "medium": 0.65,
+    "slow": 0.339
+   },
+   "motion_shares": {
+    "fast": 0.558,
+    "medium": 0.19,
+    "slow": 0.252
+   },
+   "best": {
+    "r": 0.101,
+    "feature": "motion",
+    "band": "mid",
+    "lag_ms": 367
+   }
+  },
+  "0.68-1.0": {
+   "frames": 1669,
+   "slow_brightness": -0.074,
+   "slow_motion": 0.043,
+   "beat_motion": -0.001,
+   "brightness_shares": {
+    "fast": 0.006,
+    "medium": 0.594,
+    "slow": 0.401
+   },
+   "motion_shares": {
+    "fast": 0.805,
+    "medium": 0.116,
+    "slow": 0.079
+   },
+   "best": {
+    "r": 0.107,
+    "feature": "brightness",
+    "band": "treble",
+    "lag_ms": 500
+   }
+  }
+ },
+ "enchanted-wilderness": {
+  "0.0-0.32": {
+   "frames": 1659,
+   "slow_brightness": 0.356,
+   "slow_motion": 0.25,
+   "beat_motion": -0.05,
+   "brightness_shares": {
+    "fast": 0.003,
+    "medium": 0.004,
+    "slow": 0.993
+   },
+   "motion_shares": {
+    "fast": 0.578,
+    "medium": 0.132,
+    "slow": 0.29
+   },
+   "best": {
+    "r": 0.292,
+    "feature": "brightness",
+    "band": "bass",
+    "lag_ms": -500
+   }
+  },
+  "0.68-1.0": {
+   "frames": 1659,
+   "slow_brightness": 0.341,
+   "slow_motion": 0.029,
+   "beat_motion": -0.024,
+   "brightness_shares": {
+    "fast": 0.044,
+    "medium": 0.013,
+    "slow": 0.943
+   },
+   "motion_shares": {
+    "fast": 0.82,
+    "medium": 0.082,
+    "slow": 0.098
+   },
+   "best": {
+    "r": 0.276,
+    "feature": "brightness",
+    "band": "bass",
+    "lag_ms": -500
+   }
+  }
+ },
+ "ember-foundry": {
+  "0.0-0.32": {
+   "frames": 1675,
+   "slow_brightness": 0.207,
+   "slow_motion": -0.127,
+   "beat_motion": -0.05,
+   "brightness_shares": {
+    "fast": 0.196,
+    "medium": 0.05,
+    "slow": 0.754
+   },
+   "motion_shares": {
+    "fast": 0.953,
+    "medium": 0.03,
+    "slow": 0.017
+   },
+   "best": {
+    "r": 0.141,
+    "feature": "brightness",
+    "band": "bass",
+    "lag_ms": 167
+   }
+  },
+  "0.68-1.0": {
+   "frames": 1675,
+   "slow_brightness": 0.203,
+   "slow_motion": 0.18,
+   "beat_motion": -0.015,
+   "brightness_shares": {
+    "fast": 0.229,
+    "medium": 0.255,
+    "slow": 0.515
+   },
+   "motion_shares": {
+    "fast": 0.936,
+    "medium": 0.058,
+    "slow": 0.006
+   },
+   "best": {
+    "r": 0.156,
+    "feature": "brightness",
+    "band": "bass",
+    "lag_ms": 167
+   }
+  }
+ },
+ "ember-core": {
+  "0.0-0.32": {
+   "frames": 1669,
+   "slow_brightness": -0.01,
+   "slow_motion": 0.327,
+   "beat_motion": -0.005,
+   "brightness_shares": {
+    "fast": 0.007,
+    "medium": 0.525,
+    "slow": 0.468
+   },
+   "motion_shares": {
+    "fast": 0.426,
+    "medium": 0.279,
+    "slow": 0.295
+   },
+   "best": {
+    "r": 0.163,
+    "feature": "motion",
+    "band": "mid",
+    "lag_ms": 400
+   }
+  },
+  "0.68-1.0": {
+   "frames": 1669,
+   "slow_brightness": 0.33,
+   "slow_motion": 0.354,
+   "beat_motion": -0.006,
+   "brightness_shares": {
+    "fast": 0.009,
+    "medium": 0.448,
+    "slow": 0.543
+   },
+   "motion_shares": {
+    "fast": 0.512,
+    "medium": 0.223,
+    "slow": 0.265
+   },
+   "best": {
+    "r": 0.195,
+    "feature": "motion",
+    "band": "mid",
+    "lag_ms": 400
+   }
+  }
+ },
+ "northern-lights": {
+  "0.0-0.32": {
+   "frames": 1665,
+   "slow_brightness": 0.573,
+   "slow_motion": -0.664,
+   "beat_motion": 0.029,
+   "brightness_shares": {
+    "fast": 0.001,
+    "medium": 0.064,
+    "slow": 0.935
+   },
+   "motion_shares": {
+    "fast": 0.517,
+    "medium": 0.223,
+    "slow": 0.259
+   },
+   "best": {
+    "r": 0.42,
+    "feature": "brightness",
+    "band": "bass",
+    "lag_ms": 333
+   }
+  },
+  "0.68-1.0": {
+   "frames": 1665,
+   "slow_brightness": 0.54,
+   "slow_motion": 0.172,
+   "beat_motion": 0.019,
+   "brightness_shares": {
+    "fast": 0.0,
+    "medium": 0.022,
+    "slow": 0.977
+   },
+   "motion_shares": {
+    "fast": 0.557,
+    "medium": 0.323,
+    "slow": 0.119
+   },
+   "best": {
+    "r": 0.377,
+    "feature": "brightness",
+    "band": "bass",
+    "lag_ms": 300
+   }
+  }
+ },
+ "future-nights": {
+  "0.0-0.32": {
+   "frames": 1667,
+   "slow_brightness": 0.865,
+   "slow_motion": 0.772,
+   "beat_motion": 0.013,
+   "brightness_shares": {
+    "fast": 0.002,
+    "medium": 0.022,
+    "slow": 0.975
+   },
+   "motion_shares": {
+    "fast": 0.859,
+    "medium": 0.075,
+    "slow": 0.066
+   },
+   "best": {
+    "r": 0.353,
+    "feature": "brightness",
+    "band": "bass",
+    "lag_ms": -167
+   }
+  },
+  "0.68-1.0": {
+   "frames": 1667,
+   "slow_brightness": 0.872,
+   "slow_motion": 0.787,
+   "beat_motion": 0.03,
+   "brightness_shares": {
+    "fast": 0.004,
+    "medium": 0.02,
+    "slow": 0.976
+   },
+   "motion_shares": {
+    "fast": 0.905,
+    "medium": 0.065,
+    "slow": 0.03
+   },
+   "best": {
+    "r": 0.357,
+    "feature": "brightness",
+    "band": "bass",
+    "lag_ms": -200
+   }
+  }
+ },
+ "dead-acre": {
+  "0.0-0.32": {
+   "frames": 1665,
+   "slow_brightness": -0.425,
+   "slow_motion": 0.243,
+   "beat_motion": 0.01,
+   "brightness_shares": {
+    "fast": 0.018,
+    "medium": 0.153,
+    "slow": 0.828
+   },
+   "motion_shares": {
+    "fast": 0.505,
+    "medium": 0.224,
+    "slow": 0.271
+   },
+   "best": {
+    "r": 0.095,
+    "feature": "brightness",
+    "band": "mid",
+    "lag_ms": 500
+   }
+  },
+  "0.68-1.0": {
+   "frames": 1665,
+   "slow_brightness": -0.339,
+   "slow_motion": 0.225,
+   "beat_motion": 0.006,
+   "brightness_shares": {
+    "fast": 0.021,
+    "medium": 0.084,
+    "slow": 0.896
+   },
+   "motion_shares": {
+    "fast": 0.459,
+    "medium": 0.271,
+    "slow": 0.269
+   },
+   "best": {
+    "r": 0.095,
+    "feature": "brightness",
+    "band": "treble",
+    "lag_ms": -367
+   }
+  }
+ },
+ "the-veil": {
+  "0.0-0.32": {
+   "frames": 1663,
+   "slow_brightness": -0.118,
+   "slow_motion": -0.522,
+   "beat_motion": -0.005,
+   "brightness_shares": {
+    "fast": 0.004,
+    "medium": 0.037,
+    "slow": 0.959
+   },
+   "motion_shares": {
+    "fast": 0.934,
+    "medium": 0.05,
+    "slow": 0.017
+   },
+   "best": {
+    "r": 0.107,
+    "feature": "brightness",
+    "band": "mid",
+    "lag_ms": 500
+   }
+  },
+  "0.68-1.0": {
+   "frames": 1663,
+   "slow_brightness": -0.439,
+   "slow_motion": -0.518,
+   "beat_motion": -0.007,
+   "brightness_shares": {
+    "fast": 0.003,
+    "medium": 0.042,
+    "slow": 0.955
+   },
+   "motion_shares": {
+    "fast": 0.901,
+    "medium": 0.07,
+    "slow": 0.029
+   },
+   "best": {
+    "r": 0.139,
+    "feature": "brightness",
+    "band": "mid",
+    "lag_ms": 500
+   }
+  }
+ },
+ "ashen-vigil": {
+  "0.0-0.32": {
+   "frames": 1665,
+   "slow_brightness": -0.148,
+   "slow_motion": -0.09,
+   "beat_motion": -0.01,
+   "brightness_shares": {
+    "fast": 0.005,
+    "medium": 0.042,
+    "slow": 0.952
+   },
+   "motion_shares": {
+    "fast": 0.616,
+    "medium": 0.224,
+    "slow": 0.16
+   },
+   "best": {
+    "r": 0.248,
+    "feature": "motion",
+    "band": "mid",
+    "lag_ms": 500
+   }
+  },
+  "0.68-1.0": {
+   "frames": 1665,
+   "slow_brightness": -0.123,
+   "slow_motion": -0.032,
+   "beat_motion": -0.02,
+   "brightness_shares": {
+    "fast": 0.006,
+    "medium": 0.062,
+    "slow": 0.932
+   },
+   "motion_shares": {
+    "fast": 0.533,
+    "medium": 0.327,
+    "slow": 0.14
+   },
+   "best": {
+    "r": 0.308,
+    "feature": "motion",
+    "band": "mid",
+    "lag_ms": 500
+   }
+  }
+ },
+ "wardens-spire": {
+  "0.0-0.32": {
+   "frames": 1663,
+   "slow_brightness": 0.409,
+   "slow_motion": -0.433,
+   "beat_motion": -0.007,
+   "brightness_shares": {
+    "fast": 0.047,
+    "medium": 0.277,
+    "slow": 0.677
+   },
+   "motion_shares": {
+    "fast": 0.819,
+    "medium": 0.088,
+    "slow": 0.094
+   },
+   "best": {
+    "r": 0.225,
+    "feature": "brightness",
+    "band": "bass",
+    "lag_ms": 167
+   }
+  },
+  "0.68-1.0": {
+   "frames": 1663,
+   "slow_brightness": -0.292,
+   "slow_motion": -0.097,
+   "beat_motion": -0.004,
+   "brightness_shares": {
+    "fast": 0.018,
+    "medium": 0.109,
+    "slow": 0.873
+   },
+   "motion_shares": {
+    "fast": 0.608,
+    "medium": 0.332,
+    "slow": 0.06
+   },
+   "best": {
+    "r": 0.059,
+    "feature": "brightness",
+    "band": "mid",
+    "lag_ms": 133
+   }
+  }
+ },
+ "red-horizon": {
+  "0.0-0.32": {
+   "frames": 1669,
+   "slow_brightness": -0.093,
+   "slow_motion": -0.212,
+   "beat_motion": -0.018,
+   "brightness_shares": {
+    "fast": 0.091,
+    "medium": 0.571,
+    "slow": 0.338
+   },
+   "motion_shares": {
+    "fast": 0.572,
+    "medium": 0.317,
+    "slow": 0.111
+   },
+   "best": {
+    "r": 0.303,
+    "feature": "motion",
+    "band": "treble",
+    "lag_ms": 167
+   }
+  },
+  "0.68-1.0": {
+   "frames": 1669,
+   "slow_brightness": 0.12,
+   "slow_motion": -0.12,
+   "beat_motion": -0.037,
+   "brightness_shares": {
+    "fast": 0.087,
+    "medium": 0.665,
+    "slow": 0.247
+   },
+   "motion_shares": {
+    "fast": 0.538,
+    "medium": 0.357,
+    "slow": 0.106
+   },
+   "best": {
+    "r": 0.284,
+    "feature": "motion",
+    "band": "treble",
+    "lag_ms": 133
+   }
+  }
+ },
+ "folded-sky": {
+  "0.0-0.32": {
+   "frames": 1665,
+   "slow_brightness": 0.45,
+   "slow_motion": 0.583,
+   "beat_motion": 0.01,
+   "brightness_shares": {
+    "fast": 0.001,
+    "medium": 0.044,
+    "slow": 0.955
+   },
+   "motion_shares": {
+    "fast": 0.355,
+    "medium": 0.174,
+    "slow": 0.471
+   },
+   "best": {
+    "r": 0.363,
+    "feature": "brightness",
+    "band": "bass",
+    "lag_ms": 500
+   }
+  },
+  "0.68-1.0": {
+   "frames": 1665,
+   "slow_brightness": 0.598,
+   "slow_motion": -0.352,
+   "beat_motion": -0.009,
+   "brightness_shares": {
+    "fast": 0.0,
+    "medium": 0.003,
+    "slow": 0.997
+   },
+   "motion_shares": {
+    "fast": 0.911,
+    "medium": 0.066,
+    "slow": 0.024
+   },
+   "best": {
+    "r": 0.476,
+    "feature": "brightness",
+    "band": "bass",
+    "lag_ms": 500
+   }
+  }
+ },
+ "the-web": {
+  "0.0-0.32": {
+   "frames": 1668,
+   "slow_brightness": 0.856,
+   "slow_motion": 0.614,
+   "beat_motion": 0.181,
+   "brightness_shares": {
+    "fast": 0.492,
+    "medium": 0.231,
+    "slow": 0.277
+   },
+   "motion_shares": {
+    "fast": 0.872,
+    "medium": 0.109,
+    "slow": 0.019
+   },
+   "best": {
+    "r": 0.4,
+    "feature": "brightness",
+    "band": "mid",
+    "lag_ms": -33
+   }
+  },
+  "0.68-1.0": {
+   "frames": 1668,
+   "slow_brightness": 0.787,
+   "slow_motion": 0.764,
+   "beat_motion": 0.212,
+   "brightness_shares": {
+    "fast": 0.543,
+    "medium": 0.299,
+    "slow": 0.159
+   },
+   "motion_shares": {
+    "fast": 0.854,
+    "medium": 0.125,
+    "slow": 0.021
+   },
+   "best": {
+    "r": 0.388,
+    "feature": "brightness",
+    "band": "mid",
+    "lag_ms": -33
+   }
+  }
+ },
+ "dark-storm": {
+  "0.0-0.32": {
+   "frames": 1663,
+   "slow_brightness": 0.277,
+   "slow_motion": 0.307,
+   "beat_motion": -0.027,
+   "brightness_shares": {
+    "fast": 0.154,
+    "medium": 0.699,
+    "slow": 0.148
+   },
+   "motion_shares": {
+    "fast": 0.502,
+    "medium": 0.418,
+    "slow": 0.08
+   },
+   "best": {
+    "r": 0.322,
+    "feature": "brightness",
+    "band": "mid",
+    "lag_ms": 267
+   }
+  },
+  "0.68-1.0": {
+   "frames": 1663,
+   "slow_brightness": 0.339,
+   "slow_motion": 0.301,
+   "beat_motion": -0.016,
+   "brightness_shares": {
+    "fast": 0.204,
+    "medium": 0.656,
+    "slow": 0.14
+   },
+   "motion_shares": {
+    "fast": 0.573,
+    "medium": 0.358,
+    "slow": 0.069
+   },
+   "best": {
+    "r": 0.268,
+    "feature": "brightness",
+    "band": "mid",
+    "lag_ms": 267
+   }
+  }
+ }
+}

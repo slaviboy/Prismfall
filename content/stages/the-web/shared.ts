@@ -1,6 +1,6 @@
 import { Color, DirectionalLight, HemisphereLight, MeshStandardNodeMaterial, Vector3, Vector4, type Material, type MeshStandardMaterial, type Node, type Object3D, type Texture } from 'three/webgpu';
 import { cameraPosition, exp, float, length, lights, mix, mx_noise_float, normalize, output, positionWorld, pow, smoothstep, step, uniform, uniformArray, vec3, vec4 } from 'three/tsl';
-import { floatUniform, type EnvironmentContext, type GroundField } from '@prismfall/sdk';
+import { floatUniform, type EnvFrame, type EnvironmentContext, type GroundField } from '@prismfall/sdk';
 
 export type F = Node<'float'>;
 export type V2 = Node<'vec2'>;
@@ -146,6 +146,23 @@ export function release(w: WebWorld): void {
   store.delete(w.ctx.ground);
 }
 
+const musicScratch = { bass: 0, mid: 0, treble: 0, sectionIntensity: 0.5 };
+
+/**
+ * The music for tick, from the Environment Music Director's drives (SDK 1.7), scaled by the
+ * Background intensity music level: the bass from `body`, the mids from `motion`, the treble from
+ * the slew-limited `detail` (raw bands made the treble-lit details follow every hi-hat).
+ */
+export function musicOf(frame: EnvFrame): { bass: number; mid: number; treble: number; sectionIntensity: number } {
+  const m = frame.music;
+  const level = frame.levels.music;
+  musicScratch.bass = m.body * level;
+  musicScratch.mid = m.motion * level;
+  musicScratch.treble = m.detail * level;
+  musicScratch.sectionIntensity = frame.audio.sectionIntensity;
+  return musicScratch;
+}
+
 /** Once per frame (whichever component updates first): clock and smoothed music features. */
 export function tick(w: WebWorld, time: number, dt: number, audio: { bass: number; mid: number; treble: number; sectionIntensity: number }): void {
   if (w.lastTick === time) return;
@@ -155,7 +172,7 @@ export function tick(w: WebWorld, time: number, dt: number, audio: { bass: numbe
   const k = Math.min(1, dt * 4);
   w.u.bass.value += (audio.bass - w.u.bass.value) * k;
   w.u.mid.value += (audio.mid - w.u.mid.value) * k;
-  w.u.treble.value += (audio.treble - w.u.treble.value) * Math.min(1, dt * 8);
+  w.u.treble.value += (audio.treble - w.u.treble.value) * Math.min(1, dt * 4);
   w.u.section.value += (audio.sectionIntensity - w.u.section.value) * Math.min(1, dt * 0.5);
   w.u.clear.value = Math.max(0, w.u.clear.value - dt * 0.9);
 }

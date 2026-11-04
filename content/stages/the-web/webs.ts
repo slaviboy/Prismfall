@@ -25,7 +25,7 @@ import {
   vec4,
 } from 'three/tsl';
 import { clearFront, floatUniform, seeded, z, zVec3, type ComponentFactory } from '@prismfall/sdk';
-import { MAX_IMPULSES, MOON_DIR, fogDepth, frontCrossing, release, revealMask, tick, world, type F, type V3, type V4, type WebWorld } from './shared';
+import { MAX_IMPULSES, MOON_DIR, fogDepth, frontCrossing, release, revealMask, tick, world, type F, type V3, type V4, type WebWorld, musicOf } from './shared';
 
 const zWeb = z.object({
   center: zVec3,
@@ -416,7 +416,7 @@ export const webWebs: ComponentFactory<Params> = {
       object: group,
       reactive: { breathe },
       update(frame) {
-        tick(w, frame.time, frame.dt, frame.audio);
+        tick(w, frame.time, frame.dt, musicOf(frame));
         // A clear's front plucks each web as it reaches it (bigger clears harder), so the shiver
         // runs out from the board through the webs; it hums now and then.
         const o = ctx.uniforms.waveOrigin.value;

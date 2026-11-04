@@ -1,7 +1,7 @@
 import { AdditiveBlending, CylinderGeometry, DoubleSide, Group, Mesh, MeshBasicNodeMaterial, NormalBlending, PlaneGeometry, Vector3 } from 'three/webgpu';
 import { abs, cameraPosition, dot, exp, float, length, mx_noise_float, normalWorld, normalize, positionWorld, smoothstep, uv, vec3, vec4 } from 'three/tsl';
 import { clearFront, clearFrontRaw, floatUniform, frameUniforms, z, zVec3, type ComponentFactory } from '@prismfall/sdk';
-import { FLOOR, MOON_DIR, comfortOf, fogDepth, fogTint, release, revealMask, tick, world, type F, type V3 } from './shared';
+import { FLOOR, MOON_DIR, comfortOf, fogDepth, fogTint, release, revealMask, tick, world, type F, type V3, musicOf } from './shared';
 
 const schema = z.object({
   /** Horizontal mist banks over the floor: centre, size (x, z), height above the floor, density. */
@@ -177,7 +177,7 @@ export const webMist: ComponentFactory<Params> = {
       object: group,
       reactive: { density },
       update(frame) {
-        tick(w, frame.time, frame.dt, frame.audio);
+        tick(w, frame.time, frame.dt, musicOf(frame));
       },
       setPresence(v) {
         presence.value = v;

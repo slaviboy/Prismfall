@@ -93,14 +93,18 @@ const AUDIO_STOP = `async () => {
 /** Logs the music director's drives, section and cues at 10 Hz into window.__drives. */
 const DRIVES_START = `(s) => {
   const host = s.renderSystem.environments;
-  const t0 = performance.now();
+  window.__t0 = performance.now();
   window.__drives = [];
   window.__cues = [];
-  const orig = host.music.update.bind(host.music);
-  host.music.update = (...a) => { const cues = orig(...a); for (const c of cues) if (c.kind !== 'downbeat') window.__cues.push({ t: (performance.now() - t0) / 1000, kind: c.kind, strength: Math.round(c.strength * 100) / 100 }); return cues; };
+  // Wrapped once per page: every clip logs against its own start time.
+  if (!host.music.__logged) {
+    const orig = host.music.update.bind(host.music);
+    host.music.update = (...a) => { const cues = orig(...a); for (const c of cues) if (c.kind !== 'downbeat') window.__cues.push({ t: (performance.now() - window.__t0) / 1000, kind: c.kind, strength: Math.round(c.strength * 100) / 100 }); return cues; };
+    host.music.__logged = true;
+  }
   window.__driveTimer = setInterval(() => {
     const d = host.music.drive;
-    window.__drives.push({ t: Math.round((performance.now() - t0) / 100) / 10, section: d.sectionKind, body: d.body, motion: d.motion, detail: d.detail, intensity: d.intensity, tension: d.tension, calm: d.calm, accent: d.accent });
+    window.__drives.push({ t: Math.round((performance.now() - window.__t0) / 100) / 10, section: d.sectionKind, body: d.body, motion: d.motion, detail: d.detail, intensity: d.intensity, tension: d.tension, calm: d.calm, accent: d.accent });
   }, 100);
   return Date.now();
 }`;

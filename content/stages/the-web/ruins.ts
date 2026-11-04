@@ -1,7 +1,7 @@
 import { Box3, BoxGeometry, Group, Mesh, MeshStandardNodeMaterial, NoColorSpace, PlaneGeometry, RepeatWrapping, SRGBColorSpace, TextureLoader, Vector3, type Material, type Object3D, type Texture } from 'three/webgpu';
 import { abs, float, mix, mx_noise_float, normalMap, normalWorld, output, positionWorld, pow, smoothstep, texture, vec2, vec3, vec4 } from 'three/tsl';
 import { floatUniform, z, zVec3, type ComponentFactory } from '@prismfall/sdk';
-import { FLOOR, castMoonShadows, fogged, litMaterial, release, revealMask, tick, world, type F, type V3, type WebWorld } from './shared';
+import { FLOOR, castMoonShadows, fogged, litMaterial, release, revealMask, tick, world, type F, type V3, type WebWorld, musicOf } from './shared';
 
 const schema = z.object({
   /** Placed models: the chapel, the gate, rock walls, statues, trees and roots. */
@@ -214,7 +214,7 @@ export const webRuins: ComponentFactory<Params> = {
     return {
       object: group,
       update(frame) {
-        tick(w, frame.time, frame.dt, frame.audio);
+        tick(w, frame.time, frame.dt, musicOf(frame));
       },
       setPresence(v) {
         presence.value = v;

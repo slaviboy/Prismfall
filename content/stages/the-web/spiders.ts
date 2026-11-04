@@ -24,7 +24,7 @@ import { abs, cameraViewMatrix, dot, exp, float, lights, mx_noise_float, normalV
 import { floatUniform, linear, seeded, z, zColor, zVec3, type ComponentFactory } from '@prismfall/sdk';
 import { Director, type SetpieceKind, type SetpieceSpec } from './director';
 import { EIGHT_EYES, EyeField } from './eyes';
-import { EYE, castMoonShadows, comfortOf, fogDepth, litMaterial, pluck, release, revealMask, tick, world, type F, type V3, type WebWorld } from './shared';
+import { EYE, castMoonShadows, comfortOf, fogDepth, litMaterial, pluck, release, revealMask, tick, world, type F, type V3, type WebWorld, musicOf } from './shared';
 import { websOf } from './webs';
 
 /** Layer of the creatures that cast onto the fog screen. */
@@ -821,7 +821,7 @@ export const webSpiders: ComponentFactory<Params> = {
     return {
       object: group,
       update(frame) {
-        tick(w, frame.time, frame.dt, frame.audio);
+        tick(w, frame.time, frame.dt, musicOf(frame));
         update(Math.min(0.1, frame.dt), frame.time, frame.audio);
       },
       onGameEvent(e) {
