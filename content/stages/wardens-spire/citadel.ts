@@ -1,19 +1,25 @@
 import { Group, InstancedBufferAttribute, Mesh, MeshBasicNodeMaterial, Sprite, SpriteNodeMaterial, type Material, type Object3D } from 'three/webgpu';
 import { cameraPosition, clamp, dot, exp, float, fract, instancedBufferAttribute, length, mix, mrt, mx_noise_float, normalWorldGeometry, normalize, positionWorld, sin, smoothstep, texture3D, uniform, uv, vec3, vec4 } from 'three/tsl';
 import { seeded, z, type ComponentFactory, type EnvironmentContext } from '@prismfall/sdk';
-import { COLORS, WARDEN_HEIGHT, beamField, clearMask, duskLight, lavaUplight, macro, noise3D, release, revealMask, shared, siteCentre, siteYaw, spireLight, stageTexture, triplanar, zSite } from './shared';
+import { CITADEL_FIT, COLORS, beamField, clearMask, duskLight, lavaUplight, macro, noise3D, release, revealMask, shared, siteCentre, siteYaw, spireLight, stageTexture, towerFit, triplanar, zSite, type TowerFit } from './shared';
 
 /**
- * The black citadel (Blender, assets/blender/scripts/spire_kit.py): photographed dark rock mapped
- * triplanar at architectural scale, rain streaks, molten seams low on its flanks and in its
- * recesses, iron cornices, glowing slits that flicker like fire behind them. Lit by the Warden's
- * core (the crown burns from inside), the beam when it turns down on the fortress, the lava
- * below and the lightning behind (which outlines it). A ring of storm cloud wraps the spire's
- * waist so the tower vanishes into it, with its summit clear above.
+ * The black citadel: photographed dark rock mapped triplanar at architectural scale, rain streaks,
+ * molten seams low on its flanks and in its recesses, iron cornices, glowing slits that flicker
+ * like fire behind them. Lit by the Warden's core (the crown burns from inside), the beam when it
+ * turns down on the fortress, the lava below and the lightning behind (which outlines it). A ring
+ * of storm cloud wraps the spire's waist so the tower vanishes into it, with its summit clear above.
+ *
+ * The model is a parameter (`src`, `lod`). The default is the original Blender citadel
+ * (assets/blender/scripts/spire_kit.py); stage.json currently sets a placeholder tower built from
+ * a Sketchfab scan by scripts/build-spire-tower.ts, whose scene extras say where the Warden sits
+ * (TowerFit). Materials are picked by name: spireStone (default), spireMetal, spireGlow and
+ * spireRock (the crag the tower stands on). The shading uses only world position and normals.
  */
 
 const schema = z.object({
   site: zSite,
+  /** The model and its low-detail version (models/citadel.glb is the original Blender citadel). */
   src: z.string().default('models/citadel.glb'),
   lod: z.string().default('models/citadel_lod1.glb'),
   rock: z.string().default('textures/dark_rock_02_diff.webp'),
@@ -45,6 +51,8 @@ export const citadelComponent: ComponentFactory<Params> = {
     const group = new Group();
     group.name = 'wardens-spire-citadel';
     const centre = siteCentre(p.site);
+    // Where this model holds the Warden: the Warden's layer reads it (it is built after this one).
+    s.tower = towerFit(gltf.scene.userData) ?? CITADEL_FIT;
     const root = gltf.scene.clone(true);
     root.position.set(centre[0], centre[1], centre[2]);
     root.rotation.y = siteYaw(p.site);
@@ -110,10 +118,23 @@ export const citadelComponent: ComponentFactory<Params> = {
     glow.alphaTest = 0.5;
     disposables.push(glow);
 
+    // Crag (the rock mass a tower stands on): the same basalt at a coarser scale, no rain
+    // streaks, a little lighter so it separates from the masonry; heat in its cracks low down.
+    const rockTex = rock ? triplanar(rock, wp, n, 1 / 9).mul(0.55).add(triplanar(rock, wp, n, 1 / 38).mul(0.45)) : vec3(0.3, 0.3, 0.3);
+    const rockGrey = dot(rockTex, vec3(0.3, 0.55, 0.15));
+    const rockAlb = mix(vec3(rockGrey, rockGrey, rockGrey), rockTex, 0.3).mul(p.albedo * 1.15).mul(macro(wp, 0.012));
+    const crag = new MeshBasicNodeMaterial();
+    crag.colorNode = vec4(rockAlb.mul(light(1)).add(seamGlow.mul(1.2)).mul(presence), 1);
+    crag.mrtNode = mrt({ emissive: vec4(seamGlow.mul(p.bloom * 1.2), 1) });
+    crag.fog = true;
+    crag.opacityNode = revealMask(presence);
+    crag.alphaTest = 0.5;
+    disposables.push(crag);
+
     root.traverse((o: Object3D) => {
       if (!(o instanceof Mesh)) return;
       const name = (o.material as Material).name;
-      o.material = name === 'spireMetal' ? metal : name === 'spireGlow' ? glow : stone;
+      o.material = name === 'spireMetal' ? metal : name === 'spireGlow' ? glow : name === 'spireRock' ? crag : stone;
       o.frustumCulled = false;
     });
 
@@ -185,8 +206,8 @@ export const citadelComponent: ComponentFactory<Params> = {
   },
 };
 
-/** World position of the Warden's cage centre for a site. */
-export function wardenPosition(site: z.infer<typeof zSite>): [number, number, number] {
+/** World position of the Warden's cage centre for a site and the tower standing on it. */
+export function wardenPosition(site: z.infer<typeof zSite>, fit: TowerFit = CITADEL_FIT): [number, number, number] {
   const c = siteCentre(site);
-  return [c[0], c[1] + WARDEN_HEIGHT * site.scale, c[2]];
+  return [c[0], c[1] + fit.summit * site.scale, c[2]];
 }

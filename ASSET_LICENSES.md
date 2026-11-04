@@ -89,6 +89,15 @@ Imported from the owner's download with `scripts/fetch-sketchfab.ts 1fe1a7b91acf
 | `content/stages/red-horizon/textures/robot_head_albedo.webp` | The model's head base colour (2048 px, reduced to 1024), WebP | CC BY 4.0 (attribution: rendysix) |
 | `content/stages/red-horizon/textures/robot_head_normal.webp` | The model's head normal map, WebP at 512 px | CC BY 4.0 (attribution: rendysix) |
 
+### Sketchfab tower used by The Warden's Spire
+
+Imported from the owner's download with `scripts/fetch-sketchfab.ts b31c712a66d446b8880188c5f8047748 barad-dur --zip <zip> --source-only` (`assets/external/sketchfab/barad-dur/source.json` records the author, page, licence and archive MD5) and prepared by `scripts/build-spire-tower.ts`. It is a placeholder tower, to be replaced: the model is a fan-made recreation of Barad-dûr, the Dark Tower of the *Lord of the Rings* films. Its CC BY licence covers the uploader's mesh, not the films' design, so it must not ship beyond this personal build. The original Blender citadel (`content/stages/wardens-spire/models/citadel.glb`, section 4) stays in the world's folder; removing the citadel layer's `src`/`lod` line in `stage.json` brings it back.
+
+| File | Source | Licence |
+| --- | --- | --- |
+| `content/stages/wardens-spire/models/tower.glb` | Sketchfab "Barad Dur_ No Base" by phillipRivers (https://sketchfab.com/3d-models/barad-dur--no-base-b31c712a66d446b8880188c5f8047748); no textures (shaded triplanar with the world's basalt); the crag of boulders above the curtain wall removed, rock sorted from the masonry, scaled and centred on the tower's axis, simplified from 1,570,590 to about 190,000 triangles with meshoptimizer, normals rebuilt with crease angles, quantised and meshopt-compressed; the Warden's place and a height grid stored in the scene extras | CC BY 4.0 (attribution: phillipRivers) |
+| `content/stages/wardens-spire/models/tower_lod1.glb` | The same, simplified to about 41,000 triangles (low detail settings) | CC BY 4.0 (attribution: phillipRivers) |
+
 ### Sketchfab animals drawn as particles (Northern Lights, Moving Sands, The Abyss, Frozen Kingdom, Dead Acre, Alpine Horizon, Enchanted Wilderness, Tradewind Cove)
 
 Imported from the owner's downloads with `scripts/fetch-sketchfab.ts --zip` (packed to GLB, optimised with glTF-Transform: meshopt, WebP textures at most 1024 px); `source.json` in `assets/external/sketchfab/<name>/` records the author, page, licence and archive MD5. Each animal is drawn only as particles sampled from its real surface, coloured by its own textures and moved by its own skeleton or morph animation (the `model` component, `render: "particles"`); the solid mesh is never shown.

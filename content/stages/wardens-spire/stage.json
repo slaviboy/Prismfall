@@ -179,7 +179,7 @@
       {
         "id": "citadel",
         "type": "wardenSpireCitadel",
-        "params": {}
+        "params": { "src": "models/tower.glb", "lod": "models/tower_lod1.glb" }
       },
       {
         "id": "warden",

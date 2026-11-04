@@ -1,0 +1,25 @@
+{
+  "uid": "b31c712a66d446b8880188c5f8047748",
+  "name": "Barad Dur_ No Base",
+  "page": "https://sketchfab.com/3d-models/barad-dur--no-base-b31c712a66d446b8880188c5f8047748",
+  "author": {
+    "name": "phillipRivers",
+    "username": "phillipRivers",
+    "profile": "https://sketchfab.com/phillipRivers"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Barad Dur_ No Base\" by phillipRivers (https://sketchfab.com/3d-models/barad-dur--no-base-b31c712a66d446b8880188c5f8047748), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 1889801,
+  "vertices": 1262919,
+  "animations": 0,
+  "files": [
+    {
+      "path": "barad-dur.gltf.zip",
+      "md5": "2448ed4c85080c8391f38ac2d3cfd384",
+      "size": 52793572,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}
