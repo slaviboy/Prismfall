@@ -13,7 +13,7 @@ import { webWebs } from './webs';
  * in this folder.
  */
 export default defineStage({
-  sdkVersion: '1.4.0',
+  sdkVersion: '1.5.0',
   register(sdk) {
     const components = [webRuins, webWebs, webSpiders, webMist];
     for (const c of components) sdk.components.register(c as unknown as ComponentFactory);

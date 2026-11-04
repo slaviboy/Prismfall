@@ -830,6 +830,15 @@ export const webSpiders: ComponentFactory<Params> = {
           onClear(e.lines);
         }
       },
+      onCall(call) {
+        // Manifest call-ins (a drop, a build, a back-to-back): the director brings in a setpiece of
+        // the asked kinds if one may run now (its comfort rules, rests and limits apply).
+        if (call.action !== 'show' && call.action !== 'reveal') return;
+        const kinds = Array.isArray(call.params.kinds) ? call.params.kinds.filter((k): k is SetpieceKind => typeof k === 'string') : [];
+        const id = director.call(kinds, clock);
+        const a = id ? agents.find((x) => x.spec.id === id) : undefined;
+        if (a && !a.running) start(a);
+      },
       setPresence(v) {
         presence.value = v;
       },
