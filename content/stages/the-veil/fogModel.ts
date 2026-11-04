@@ -1,5 +1,6 @@
 import { Vector3, type Data3DTexture, type DataTexture } from 'three/webgpu';
 import { cameraPosition, dot, exp, float, floor, fract, int, length, log, max, mix, pow, screenCoordinate, sin, smoothstep, texture3D, uniform, vec2, vec3 } from 'three/tsl';
+import { clearFront } from '@prismfall/sdk';
 import { EYE, FLOOR } from './terrain';
 import { backdropSampler, cast, MAX_LIGHTS, MAX_POCKETS, moonDirection, type F, type V3, type V4, type VeilShared } from './shared';
 import type { ShadowMaps } from './shadow';
@@ -72,6 +73,10 @@ export interface FogModel {
   /** Transmittance only (for additive light that should fade into the fog). */
   transmittanceTo(world: V3): F;
 }
+
+/** How much the clear wave lifts the fog's light where it passes, and its slightly cool, silvery tint. */
+const WAVE_LIGHT = 0.55;
+const WAVE_TINT = vec3(0.95, 1.0, 1.08);
 
 /** Interleaved gradient noise in 0..1 from the pixel position (a fixed dither for the march). */
 function ign(): F {
@@ -224,7 +229,10 @@ export function createFogModel(s: VeilShared, noise: Data3DTexture, backdropTex:
       const p = cast<V3>(o.add(d.mul(t)));
       const m = sample(p);
       const ti = cast<F>(exp(m.sigma.mul(dt).negate()));
-      color = cast<V3>(color.add(radiance(p, d, base, m.edge, t, m.sheet).mul(trans.mul(float(1).sub(ti)))));
+      // A clear's front runs out through the mist as a band of pale light: the fog it passes
+      // through scatters a little more of its own (moon-silvered) colour.
+      const wave = cast<V3>(base.mul(WAVE_TINT).mul(clearFront(p).min(1.2).mul(WAVE_LIGHT)));
+      color = cast<V3>(color.add(radiance(p, d, base, m.edge, t, m.sheet).add(wave).mul(trans.mul(float(1).sub(ti)))));
       trans = cast<F>(trans.mul(ti));
     }
     return { color, trans };

@@ -151,6 +151,8 @@ export interface Storm {
   shadowSize: number;
   users: number;
   lastTime: number;
+  /** A drop is coming (the music's anticipation): the director was asked once for it. */
+  anticipating: boolean;
   /** Debug log: every strike with its frame time and the thunder delay it scheduled. */
   readonly log: { id: number; level: number; kind: string; distance: number; apparent: number; delay: number; perf: number; frameTime: number; crack: boolean }[];
 }
@@ -220,6 +222,7 @@ export function storm(ctx: EnvironmentContext): Storm {
       shadowSize,
       users: 0,
       lastTime: -1,
+      anticipating: false,
       log: [],
     };
     store.set(ctx.ground, s);
@@ -420,18 +423,30 @@ export function tickStorm(s: Storm, ctx: EnvironmentContext, frame: EnvFrame): v
   sun.target.updateMatrixWorld(true);
   s.hemi.updateMatrixWorld(true);
 
-  // Wind: a westerly pushing the rain across the view, swinging and strengthening in gusts.
+  // The last bars before a drop: the storm starts to gather towards its intense core (the director
+  // still decides when, by its own rules).
+  const audio = frame.audio;
+  if (audio.nextEvent === 'drop' && audio.anticipation > 0.55) {
+    if (!s.anticipating) d.followSection('drop');
+    s.anticipating = true;
+  } else s.anticipating = false;
+
+  // Wind: a westerly pushing the rain across the view, swinging and strengthening in gusts. A clear
+  // sends a gust of its own out with its front (scaled like every clear-wave motion: less under
+  // reduced motion and calm world events, none with world events off).
   const L = d.levels;
-  const strength = 2.5 + L.wind * 7 + L.gust * 6;
+  const clearGust = Math.min(1, frame.game.clearWave) * 0.5 * ctx.uniforms.waveMotion.value;
+  const gust = Math.max(L.gust, clearGust);
+  const strength = 2.5 + L.wind * 7 + gust * 6;
   const swing = Math.sin(u.time.value * 0.05) * 0.35 + Math.sin(u.time.value * 0.013 + 1.7) * 0.25;
   u.wind.value.set(-Math.cos(swing) * strength, 0, -Math.sin(swing) * strength * 0.6 - 1);
   u.windOffset.value.addScaledVector(u.wind.value, dt * slow);
   u.cloudOffset.value.x += (-6 - L.cloudSpeed * 9) * dt * slow;
   u.cloudOffset.value.z += (-2 - L.cloudSpeed * 3) * dt * slow;
-  u.gust.value = L.gust;
+  u.gust.value = gust;
   u.rain.value = L.rain * Math.max(0.35, Math.min(1.5, 0.6 + 0.4 * comfort.intensity));
   if (frame.presence > 0.02) {
-    ctx.sounds.weather?.({ rain: u.rain.value * frame.presence, wind: (L.wind * 0.85 + 0.15) * frame.presence, gust: L.gust * frame.presence, surfaces: { water: 0.7, rock: 0.55, wood: 0.15, foliage: 0.5 } });
+    ctx.sounds.weather?.({ rain: u.rain.value * frame.presence, wind: (L.wind * 0.85 + 0.15) * frame.presence, gust: gust * frame.presence, surfaces: { water: 0.7, rock: 0.55, wood: 0.15, foliage: 0.5 } });
   }
 }
 

@@ -120,6 +120,21 @@ export const STATES: Readonly<Record<StormState, StateSpec>> = {
   },
 };
 
+/**
+ * What the music's sections ask of the storm (StormDirector.followSection): a build stirs it up, a
+ * drop brings the intense core, a break lets it ease off or draw away, an outro carries it into the
+ * distance. Intros, verses and bridges leave the storm to its own course.
+ */
+export const SECTION_STATES: Readonly<Record<string, readonly StormState[]>> = {
+  build: ['active'],
+  drop: ['intense'],
+  break: ['calm', 'distant'],
+  outro: ['distant', 'calm'],
+};
+
+/** A state lasts at least this long (s) before a section of the music may move the storm on. */
+export const SECTION_HOLD = 16;
+
 /** Distance range (world metres) of each level. */
 export const LEVEL_DISTANCE: Readonly<Record<StrikeLevel, readonly [number, number]>> = {
   1: [1600, 3400],
@@ -315,7 +330,10 @@ export class StormDirector {
     if (weights.intense !== undefined) weights.intense *= 1 + push * 1.5;
     if (weights.active !== undefined) weights.active *= 1 + push * 0.6;
     if (weights.distant !== undefined) weights.distant *= Math.max(0.2, 1 - push);
-    const next = this.pickWeighted(weights);
+    // A section of the music asked for a state: go there (among its choices, by the same weights).
+    const wanted = this.wanted?.filter((st) => st !== this.state) ?? [];
+    this.wanted = null;
+    const next = wanted.length > 0 ? this.pickWeighted(Object.fromEntries(wanted.map((st) => [st, weights[st] ?? 0.5])) as Partial<Record<StormState, number>>) : this.pickWeighted(weights);
     const intoIntense = next === 'intense';
     this.state = next;
     this.stateTime = 0;
@@ -333,12 +351,43 @@ export class StormDirector {
     this.gustTime = 0;
   }
 
-  /** A controlled answer to a QUAD: one strike soon (rate-limited, comfort and governor apply). */
-  accent(): void {
+  /**
+   * A controlled answer to a QUAD (or a call-in from the manifest): one strike soon, of `level` (3 by
+   * default; calm comfort keeps it at 2). Rate-limited to one every eight seconds; comfort and the
+   * flash governor apply.
+   */
+  accent(level: StrikeLevel = 3): void {
     if (this.comfort.mode === 'off') return;
     if (this.time - this.lastAccent < 8) return;
     this.lastAccent = this.time;
+    this.accentLevel = level;
     this.pendingAccent = this.time + 0.3 + this.rng() * 0.6;
+  }
+
+  private accentLevel: StrikeLevel = 3;
+  /** States a section of the music asked for, taken at the next change of state. */
+  private wanted: readonly StormState[] | null = null;
+
+  /**
+   * The music entered a section of `kind` (SECTION_STATES): the storm moves towards the state that
+   * section asks for, by its own rules. The current state still runs at least SECTION_HOLD seconds
+   * and the move comes a moment after the section starts (never on the beat); every level then eases
+   * there over many seconds as usual. Already in that state, it stays for the section. Sections that
+   * ask for nothing leave the storm to its own course.
+   */
+  followSection(kind: string): void {
+    const want = SECTION_STATES[kind];
+    if (!want) {
+      this.wanted = null;
+      return;
+    }
+    if (want.includes(this.state)) {
+      this.wanted = null;
+      this.dwell = Math.max(this.dwell, this.stateTime + 25);
+      return;
+    }
+    this.wanted = want;
+    this.dwell = Math.min(this.dwell, Math.max(SECTION_HOLD, this.stateTime + 1 + this.rng() * 3));
   }
 
   private readonly forced: { level: StrikeLevel; azimuth?: number; distance?: number }[] = [];
@@ -478,7 +527,7 @@ export class StormDirector {
     }
 
     if (this.pendingAccent !== null && this.time >= this.pendingAccent) {
-      const level: StrikeLevel = this.comfort.mode === 'calm' ? 2 : 3;
+      const level = Math.min(this.accentLevel, this.comfort.mode === 'calm' ? 2 : this.maxLevel()) as StrikeLevel;
       const s = this.makeStrike(level, true);
       // Held back by the governor: try again shortly, for up to three seconds.
       this.pendingAccent = s || this.time - this.lastAccent > 3 ? null : this.time + 0.3;

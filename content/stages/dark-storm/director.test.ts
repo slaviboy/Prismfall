@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { FlashGovernor, MAX_FLASHES_PER_SECOND, MAX_THUNDER_DELAY, REDUCED_FLASH_GAP, StormDirector, flashEnvelope, thunderDelay, type StormComfort, type Strike } from './director';
+import { FlashGovernor, MAX_FLASHES_PER_SECOND, MAX_THUNDER_DELAY, REDUCED_FLASH_GAP, SECTION_HOLD, StormDirector, flashEnvelope, thunderDelay, type StormComfort, type Strike } from './director';
 
 /** Runs a director for `seconds` in `step` s steps and collects every strike it starts. */
 function run(seed: number, seconds: number, comfort: Partial<StormComfort> = {}, opts: { step?: number; section?: (t: number) => number; accentEvery?: number } = {}) {
@@ -123,6 +123,71 @@ describe('the Dark Storm director', () => {
     d.accent();
     for (let t = 0; t < 2; t += 0.05) got.push(...d.update(0.05));
     expect(got.filter((s) => s.accent).length).toBe(1);
+  });
+
+  it('follows the song: builds stir it, drops bring the intense core, breaks let it ease off', () => {
+    const d = new StormDirector(91);
+    const step = (seconds: number) => {
+      for (let t = 0; t < seconds; t += 0.05) d.update(0.05);
+    };
+    step(20);
+    expect(d.state).toBe('active');
+    const before = d.visited.length;
+    d.followSection('drop');
+    // Not on the section's downbeat: a moment later, and never before the state has held 16 s.
+    step(0.9);
+    expect(d.visited.length).toBe(before);
+    step(6);
+    expect(d.state).toBe('intense');
+    const into = d.visited[d.visited.length - 1]!;
+    expect(into.at - d.visited[d.visited.length - 2]!.at).toBeGreaterThanOrEqual(SECTION_HOLD);
+    // Already intense when the drop goes on: it stays for the section.
+    d.followSection('drop');
+    step(24);
+    expect(d.state).toBe('intense');
+    d.followSection('break');
+    step(SECTION_HOLD + 5);
+    expect(['calm', 'distant']).toContain(d.state);
+    // A verse asks for nothing: the storm keeps its own course (no immediate change).
+    const held = d.visited.length;
+    d.followSection('verse');
+    step(5);
+    expect(d.visited.length).toBe(held);
+  });
+
+  it('never cuts a state short when the music asks, and levels still ease', () => {
+    const d = new StormDirector(92);
+    for (let t = 0; t < 30; t += 0.05) d.update(0.05);
+    d.followSection('build');
+    d.followSection('drop');
+    const rains: number[] = [];
+    for (let t = 0; t < 60; t += 0.05) {
+      d.update(0.05);
+      rains.push(d.levels.rain);
+      if (Math.floor(t / 3) !== Math.floor((t + 0.05) / 3)) d.followSection(['drop', 'break', 'build'][Math.floor(t / 3) % 3]!);
+    }
+    for (let i = 1; i < d.visited.length; i++) expect(d.visited[i]!.at - d.visited[i - 1]!.at).toBeGreaterThanOrEqual(SECTION_HOLD - 1e-9);
+    for (let i = 1; i < rains.length; i++) expect(Math.abs(rains[i]! - rains[i - 1]!)).toBeLessThan(0.02);
+  });
+
+  it('keeps the flash ceiling and the comfort limits while following the song', () => {
+    const kinds = ['verse', 'build', 'drop', 'break', 'drop', 'outro'];
+    const drive = (comfort: Partial<StormComfort>) => {
+      const d = new StormDirector(93);
+      d.comfort = { mode: 'full', flashReduced: false, intensity: 1.7, ...comfort };
+      const strikes: Strike[] = [];
+      for (let t = 0; t < 1800; t += 0.05) {
+        if (Math.floor(t / 20) !== Math.floor((t + 0.05) / 20)) d.followSection(kinds[Math.floor(t / 20) % kinds.length]!);
+        if (Math.floor(t / 9) !== Math.floor((t + 0.05) / 9)) d.accent(4);
+        strikes.push(...d.update(0.05, { section: 0.9, progress: 0 }));
+      }
+      return strikes;
+    };
+    expect(peakPerSecond(onsets(drive({})))).toBeLessThanOrEqual(MAX_FLASHES_PER_SECOND);
+    const calm = drive({ mode: 'calm' });
+    expect(calm.every((s) => s.level <= 3 && s.distance >= 1000)).toBe(true);
+    expect(calm.filter((s) => s.accent).every((s) => s.level <= 2)).toBe(true);
+    expect(drive({ mode: 'off' }).every((s) => s.level <= 2 && !s.accent)).toBe(true);
   });
 
   it('the music pushes the storm towards its stormier states', () => {

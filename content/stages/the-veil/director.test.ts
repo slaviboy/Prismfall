@@ -62,6 +62,36 @@ describe('the Veil event director', () => {
     expect(d.force('silhouette')).toBeNull();
   });
 
+  it('answers call-ins by its own rules', () => {
+    const d = new Director(51);
+    // Quiet opening: nothing of its own yet, but a call brings an asked-for event in.
+    for (let t = 0; t < 5; t += 0.1) d.update(0.1);
+    expect(d.active).toEqual([]);
+    const e = d.call(['silhouette', 'swarm']);
+    expect(['silhouette', 'swarm']).toContain(e!.kind);
+    // Creature events never overlap: another creature call is not answered, a fog one is.
+    expect(d.call(['treeWalker'])).toBeNull();
+    expect(d.call(['treeWalker', 'reveal'])!.kind).toBe('reveal');
+    // One of a kind at a time.
+    expect(d.call(['reveal'])).toBeNull();
+    // After it ends, the kind rests for its cooldown.
+    for (let t = 0; t < e!.duration + 1; t += 0.1) d.update(0.1);
+    expect(d.call([e!.kind])).toBeNull();
+    // The timer waits its usual gap after a called creature.
+    for (let t = 0; t < 15; t += 0.1) d.update(0.1);
+    expect(d.active.filter((x) => CREATURE_EVENTS.includes(x.kind)).length).toBe(0);
+  });
+
+  it('call-ins keep the comfort limits', () => {
+    const calm = new Director(52);
+    calm.comfort = 'calm';
+    expect(calm.call(['giantShadow', 'shadowRuin'])).toBeNull();
+    const off = new Director(53);
+    off.comfort = 'off';
+    expect(off.call(['silhouette', 'swarm', 'treeWalker'])).toBeNull();
+    expect(off.call(['bankRoll'])!.kind).toBe('bankRoll');
+  });
+
   it('a sustained rise in the music brings the next creature forward', () => {
     let t = 0;
     const lift = () => ((t += 0.1) > 20 ? 0.95 : 0.3);

@@ -237,3 +237,25 @@ export function hash(seed: F, k: number): F {
 }
 
 export const ORIGIN_Z = 32;
+
+/**
+ * The world clear wave on the CPU (the same maths as the SDK's `clearFront()` shader helper): the
+ * strength (0..1.5, unscaled) of the fronts whose leading edge crossed a point `distance` from the
+ * board between frame times `t0` and `t1`, 0 if none. Multiply by `ctx.uniforms.waveLight` or
+ * `waveMotion` for the accessibility scaling of a light or a motion use.
+ */
+export function frontCrossing(ctx: EnvironmentContext, distance: number, t0: number, t1: number): number {
+  const u = ctx.uniforms;
+  const shape = u.waveShape.value;
+  const x = Math.log(Math.max(distance, shape.x) / shape.x) * shape.y;
+  let sum = 0;
+  for (const slot of [u.wave0, u.wave1, u.wave2, u.wave3]) {
+    const s = slot.value;
+    const f0 = (t0 - s.x) * shape.z;
+    const f1 = (t1 - s.x) * shape.z;
+    if (f1 < 0 || f0 >= x || f1 < x || x >= s.z) continue;
+    const fade = Math.min(1, Math.max(0, (x - s.z * 0.55) / (s.z * 0.45)));
+    sum += s.y * (1 - fade * fade * (3 - 2 * fade));
+  }
+  return Math.min(1.5, sum);
+}

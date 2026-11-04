@@ -77,6 +77,36 @@ describe('the web director', () => {
     expect(a).toEqual(b);
   });
 
+  it('answers a call with a setpiece of the asked kinds, by its own rules', () => {
+    const d = new Director(SPECS, { seed: 13, comfort: 'full', gap: [9, 24] });
+    // During the quiet opening the timer starts nothing, but a call does.
+    expect(d.update(1)).toEqual([]);
+    const id = d.call(['emerge', 'wall'], 2);
+    expect(['emerge-gate', 'wall-chapel']).toContain(id);
+    // Never two of a kind, never the same one twice, never more than allowed at once.
+    const second = d.call(['emerge', 'wall'], 3);
+    expect(second).not.toBe(id);
+    expect(d.call(['eyes', 'emerge', 'wall'], 4)).toBeNull();
+    // The timer does not pile a start on top of the call.
+    for (let t = 4; t < 2 + 9; t += 0.25) expect(d.update(t)).toEqual([]);
+    // Resting after it ran: the same setpiece cannot be called again until its cooldown passed.
+    d.finish(id!, 20);
+    d.finish(second!, 20);
+    expect(d.call([SPECS.find((s) => s.id === id)!.kind], 21)).toBeNull();
+    // A kind with nothing ready is simply not answered.
+    expect(d.call(['silhouette'], 200)).toBeNull();
+  });
+
+  it('calm and off comfort limit what a call may bring', () => {
+    const calm = new Director(SPECS, { seed: 14, comfort: 'calm' });
+    expect(calm.call(['emerge'], 5)).toBeNull();
+    expect(calm.call(['wall'], 5)).toBe('wall-chapel');
+    expect(calm.call(['eyes'], 6)).toBeNull();
+    const off = new Director(SPECS, { seed: 15, comfort: 'off' });
+    expect(off.call(['wall', 'hang', 'emerge'], 5)).toBeNull();
+    expect(off.call(['tremble'], 5)).toBe('tremble');
+  });
+
   it('a rise in the music brings the next setpiece forward', () => {
     const flat = run(new Director(SPECS, { seed: 7, comfort: 'full', gap: [30, 30] }), 200);
     const rising = run(new Director(SPECS, { seed: 7, comfort: 'full', gap: [30, 30] }), 200, 12, (t) => (t > 40 ? 1 : 0));

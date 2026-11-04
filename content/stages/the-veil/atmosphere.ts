@@ -2,7 +2,7 @@ import { BackSide, CustomBlending, InstancedBufferAttribute, InstancedMesh, Mesh
 import type { vec2} from 'three/tsl';
 import { cameraPosition, float, instancedBufferAttribute, mrt, normalize, positionGeometry, positionWorld, vec3, vec4 } from 'three/tsl';
 import { floatUniform, z, type ComponentFactory, type EnvironmentContext } from '@prismfall/sdk';
-import { Director, type Comfort, type EventKind } from './director';
+import { Director, KINDS, type Comfort, type EventKind } from './director';
 import { createFogModel, fogQuality, type FogModel } from './fogModel';
 import { backdropTexture, cast, MAX_POCKETS, moonDirection, noiseVolume, release, shared, type F, type V3, type VeilShared } from './shared';
 import { ShadowMaps } from './shadow';
@@ -250,6 +250,14 @@ export const atmosphereComponent: ComponentFactory<Params> = {
       onGameEvent(e) {
         if (e.kind === 'clear' && e.lines >= 4) flare = Math.min(1.4, flare + 1.1);
         else if (e.kind === 'clear' && e.lines >= 2) flare = Math.min(1.4, flare + 0.25);
+      },
+      onCall(call) {
+        // Manifest call-ins (a drop, a QUAD, a break): the director starts one of the asked events
+        // if its own rules allow it now (comfort, cooldowns, creatures never overlapping).
+        if (call.action !== 'show' && call.action !== 'reveal') return;
+        const kinds = Array.isArray(call.params.kinds) ? call.params.kinds.filter((k): k is EventKind => typeof k === 'string' && k in KINDS) : [];
+        director.comfort = comfortOf(ctx);
+        director.call(kinds);
       },
       setPresence(v) {
         u.presence.value = v;

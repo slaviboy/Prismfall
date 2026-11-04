@@ -15,7 +15,7 @@ import { sceneryComponent } from './scenery';
  * public SDK; the components live in this folder.
  */
 export default defineStage({
-  sdkVersion: '1.2.0',
+  sdkVersion: '1.5.0',
   register(sdk) {
     sdk.components.register(atmosphereComponent as unknown as ComponentFactory);
     sdk.components.register(landComponent as unknown as ComponentFactory);

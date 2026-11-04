@@ -14,7 +14,7 @@
   "recommendedQuality": "high",
   "module": "stage.ts",
   "requires": {
-    "sdk": "^1.2.0"
+    "sdk": "^1.5.0"
   },
   "palette": {
     "accent": "#ff5a22",
@@ -211,6 +211,12 @@
         }
       },
       {
+        "id": "sentinels",
+        "type": "model",
+        "params": {"src": "/content/shared/creatures/bat.glb", "render": "solid", "animation": {"clip": "ArmatureAction", "speed": 0.32, "vary": 0.1}, "exposure": 0.35, "tint": "#a08a80", "instances": [{"position": [894.6, 283.0, -1117.1], "scale": 23, "snapToGround": false, "walk": {"via": [[774.5, 265.9, -1037.0], [634.3, 227.0, -1059.3], [531.6, 244.1, -1128.1], [505.4, 283.0, -1246.9], [625.5, 265.9, -1327.0], [765.7, 227.0, -1304.7]], "to": [868.4, 244.1, -1235.9], "closed": true, "smooth": true, "speed": 24, "phase": 0, "fade": 0, "tilt": true, "bank": 28}}, {"position": [589.2, 275.5, -1228.9], "scale": 20, "snapToGround": false, "walk": {"via": [[564.3, 304.9, -1142.6], [630.8, 324.5, -1061.7], [743.9, 295.1, -1071.0], [810.8, 275.5, -1135.1], [835.7, 304.9, -1221.4], [769.2, 324.5, -1302.3]], "to": [656.1, 295.1, -1293.0], "closed": true, "smooth": true, "speed": 20, "phase": 0, "fade": 0, "tilt": true, "bank": 28}}]},
+        "minDetail": "medium"
+      },
+      {
         "id": "storm",
         "type": "wardenSpireStorm",
         "params": {}
@@ -240,6 +246,9 @@
       }
     ]
   },
+  "clearWave": {"near": 6, "far": 1700, "travel": 3.6},
+  "sectionStates": {"fade": 5, "states": [{"section": ["drop"], "layer": "land", "target": "heat", "scale": 1.25, "anticipate": 0.5}, {"section": ["break", "outro"], "layer": "land", "target": "heat", "scale": 0.85}, {"section": ["drop"], "layer": "sentinels", "target": "pace", "scale": 1.35, "anticipate": 0.5}, {"section": ["break", "outro"], "layer": "sentinels", "target": "visible", "scale": 0.5}]},
+  "events": [{"layer": "warden", "on": "section:drop", "quantize": "bar", "cooldown": 120, "chance": 0.6, "action": "show"}, {"layer": "storm", "on": "b2b", "quantize": "beat", "cooldown": 14, "action": "burst"}, {"layer": "storm", "on": "section:build", "quantize": "bar", "cooldown": 30, "action": "burst"}],
   "reactivity": {
     "profiles": [],
     "bindings": []

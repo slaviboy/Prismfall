@@ -24,8 +24,8 @@ import {
   vec3,
   vec4,
 } from 'three/tsl';
-import { floatUniform, seeded, z, zVec3, type ComponentFactory } from '@prismfall/sdk';
-import { MAX_IMPULSES, MOON_DIR, fogDepth, release, revealMask, tick, world, type F, type V3, type V4, type WebWorld } from './shared';
+import { clearFront, floatUniform, seeded, z, zVec3, type ComponentFactory } from '@prismfall/sdk';
+import { MAX_IMPULSES, MOON_DIR, fogDepth, frontCrossing, release, revealMask, tick, world, type F, type V3, type V4, type WebWorld } from './shared';
 
 const zWeb = z.object({
   center: zVec3,
@@ -389,7 +389,11 @@ export const webWebs: ComponentFactory<Params> = {
     const dewLight = twinkle.mul(0.9).add(0.12);
     const moonCol = vec3(0.62, 0.7, 0.82);
     const silk = moonCol.mul(spec.add(diffuse)).add(vec3(0.03, 0.034, 0.042));
-    const light = isDew.select(moonCol.mul(dewLight), silk).add(vec3(0.05, 0.05, 0.065).mul(w.u.clear as unknown as F));
+    // A clear's front runs out through the webs: the dew beads in its band glint and the silk
+    // catches a pale sheen as it passes (light only, the beads' own size).
+    const front = clearFront(vW);
+    const glint = isDew.select(front.mul(sin(vSeed.mul(91).add(time.mul(1.3))).mul(0.5).add(0.5).mul(1.2).add(0.4)), front.mul(spec.mul(0.35).add(0.08)));
+    const light = isDew.select(moonCol.mul(dewLight), silk).add(vec3(0.05, 0.05, 0.065).mul(w.u.clear as unknown as F)).add(vec3(0.7, 0.78, 0.9).mul(glint));
     const keep = exp(fogDepth(w, vW).negate());
     const alpha = round.mul(vCover).mul(keep).mul(revealMask(presence as unknown as F, 900)).mul(float(p.webs[0]?.sheen ?? 1));
     const col = light.mul(alpha);
@@ -407,18 +411,24 @@ export const webWebs: ComponentFactory<Params> = {
     mesh.renderOrder = 3;
     const group = new Group();
     group.add(mesh);
+    let lastFrame = -1;
     return {
       object: group,
       reactive: { breathe },
       update(frame) {
         tick(w, frame.time, frame.dt, frame.audio);
-      },
-      onGameEvent(e) {
-        // A line clear shivers every web a little, more for bigger clears.
-        if (e.kind === 'clear') {
-          const k = Math.min(1, 0.25 + e.lines * 0.18);
-          for (const s of reg) pluckAt(w, s.center, k * 0.6);
+        // A clear's front plucks each web as it reaches it (bigger clears harder), so the shiver
+        // runs out from the board through the webs; it hums now and then.
+        const o = ctx.uniforms.waveOrigin.value;
+        if (lastFrame >= 0) {
+          for (const s of reg) {
+            const k = frontCrossing(ctx, s.center.distanceTo(o), lastFrame, frame.time);
+            if (k <= 0.01) continue;
+            pluckAt(w, s.center, Math.min(1, 0.2 + k * 0.55));
+            if (k > 0.5 && frame.presence > 0.5) ctx.sounds.emit('webHum', s.center.x, s.center.y, s.center.z, Math.min(0.6, k * 0.4));
+          }
         }
+        lastFrame = frame.time;
       },
       setPresence(v) {
         presence.value = v;

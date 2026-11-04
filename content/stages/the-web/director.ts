@@ -86,6 +86,35 @@ export class Director {
   }
 
   /**
+   * A section of the music or a big moment calls a setpiece in (manifest call-ins): one of `kinds`
+   * that may run now starts, by the same rules as the timer (comfort, its rest after it last ran,
+   * at most `concurrent` at once, one at a time in calm comfort, never two of a kind), weighted as
+   * usual. The timer's next start is pushed back by at least the shortest gap, so a call never piles
+   * up on it. Returns the id to start, or null when nothing fits (the call is simply not answered).
+   */
+  call(kinds: readonly SetpieceKind[], now: number): string | null {
+    const calm = this.comfort !== 'full';
+    const limit = calm ? 1 : this.concurrent;
+    if (this.running.size >= limit) return null;
+    const busyKinds = new Set(this.running.values());
+    const pool = this.specs.filter((s) => kinds.includes(s.kind) && this.allowed(s) && !this.running.has(s.id) && !busyKinds.has(s.kind) && (this.restUntil.get(s.id) ?? -1) <= now);
+    if (pool.length === 0) return null;
+    const total = pool.reduce((t, s) => t + s.weight, 0);
+    let r = this.rand() * total;
+    let pick = pool[pool.length - 1]!;
+    for (const s of pool) {
+      r -= s.weight;
+      if (r <= 0) {
+        pick = s;
+        break;
+      }
+    }
+    this.running.set(pick.id, pick.kind);
+    this.next = Math.max(this.next, now + this.gap[0] * (calm ? 2 : 1));
+    return pick.id;
+  }
+
+  /**
    * Advances to `now` (seconds); returns the ids of setpieces to start. `section` is the music's
    * section intensity (0..1): a clear rise pulls the next start forward a little.
    */

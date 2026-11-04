@@ -131,6 +131,11 @@ export interface SpireShared {
     readonly boltPower: U1;
     /** Lava heat multiplier (about 1; brighter during big events). */
     readonly lavaHeat: U1;
+    /**
+     * The land's bindable heat (its `heat` reactive target: section states, bindings), which the
+     * Warden's per-frame lava heat is scaled by; 1 at rest.
+     */
+    readonly heatScale: U1;
   };
   /** CPU copies the Warden publishes for other components (sound, events). */
   readonly state: { heading: number; pitch: number; intensity: number; awaken: number; focus: number };
@@ -169,6 +174,7 @@ export function shared(ctx: EnvironmentContext): SpireShared {
         boltPos: uniform(new Vector3(0, 600, -3000)),
         boltPower: uniform(0),
         lavaHeat: uniform(1),
+        heatScale: uniform(1),
       },
       state: { heading: 0, pitch: 0, intensity: 1, awaken: 0, focus: 0 },
       events: { volcano: -1e9, stir: -1e9 },

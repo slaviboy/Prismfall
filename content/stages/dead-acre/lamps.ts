@@ -15,7 +15,7 @@ import {
 } from 'three/webgpu';
 import { abs, cameraPosition, dot, exp, float, instancedBufferAttribute, int, length, mix, mrt, normalize, normalWorld, positionLocal, positionWorld, pow, smoothstep, step, uv, vec3, vec4 } from 'three/tsl';
 import { additiveFog, floatUniform, seeded, z, zColor, type ComponentFactory } from '@prismfall/sdk';
-import { backdropSampler, backdropTexture, fogDepth, lampLight, release, revealMask, shared, zBackdrop, zFog, MAX_LAMPS, type F, type V3, type V4 } from './shared';
+import { backdropSampler, backdropTexture, fogDepth, frontCrossing, lampLight, release, revealMask, shared, zBackdrop, zFog, MAX_LAMPS, type F, type V3, type V4 } from './shared';
 
 const lampSchema = z.object({
   /** Ground position (world x, z) of the pole. */
@@ -322,11 +322,17 @@ export const lampsComponent: ComponentFactory<Params> = {
     });
 
     const states = lamps.map((l, i) => new LampState(l, p.seed * 977 + i * 131));
+    // A clear's front surges through the yard's power as it passes each lamp: the arc swells and
+    // settles over a second (one smooth swell, never a flicker; slower and softer with flash
+    // reduction), and a dead lamp's ballast glows dimly for a moment.
+    const surges = lamps.map(() => ({ at: -1e9, k: 0 }));
+    let lastTime = -1;
     return {
       object: group,
       reactive: { tension: u.tension, dusk: u.dusk, glow: u.glow },
       update(frame) {
         const flashSafe = ctx.uniforms.flashLimit.value < 0.99;
+        const origin = ctx.uniforms.waveOrigin.value;
         lamps.forEach((l, i) => {
           const st = states[i]!;
           const { died } = st.update(frame.time, Math.min(0.1, frame.dt), u.tension.value, flashSafe);
@@ -334,10 +340,22 @@ export const lampsComponent: ComponentFactory<Params> = {
             s.startle.at = frame.time;
             s.startle.side = Math.sign(l.at[0]);
           }
+          const sg = surges[i]!;
+          if (lastTime >= 0) {
+            const k = frontCrossing(ctx, Math.hypot(heads[i]!.x - origin.x, heads[i]!.y - origin.y, heads[i]!.z - origin.z), lastTime, frame.time) * ctx.uniforms.waveLight.value;
+            if (k > 0.02) {
+              sg.at = frame.time;
+              sg.k = Math.min(1, k);
+            }
+          }
+          const age = frame.time - sg.at;
+          const rise = flashSafe ? 0.6 : 0.14;
+          const env = age < 0 ? 0 : sg.k * (1 - Math.exp(-age / rise)) * Math.exp(-age / (flashSafe ? 1.6 : 1.0)) * (flashSafe ? 0.5 : 1);
           // Warm-up: dim and red at first, full orange after a few seconds.
           const warm = 0.25 + 0.75 * st.warm;
-          s.lampValues[i]!.w = l.intensity * st.level * warm * frame.presence;
+          s.lampValues[i]!.w = l.intensity * (st.level * warm * (1 + 0.55 * env) + 0.12 * env * (1 - st.level)) * frame.presence;
         });
+        lastTime = frame.time;
       },
       setPresence(v) {
         u.presence.value = v;
