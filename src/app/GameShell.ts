@@ -1118,6 +1118,7 @@ export class GameShell {
         audio: this.features.features,
         beats: this.pendingBeats.length > 0 ? this.pendingBeats.splice(0) : [],
         progress: this.goalProgress(engine),
+        musicActive: this.audio.hub.playing,
       });
       this.pendingEvents.length = 0;
       this.lastRender = t;

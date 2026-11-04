@@ -141,6 +141,21 @@ export class WorldSignals {
     return strength;
   }
 
+  /**
+   * A front sent by the music (the `wave` call-in action, SDK 1.7): it rolls out through the world
+   * like a clear's front, without heating the run or raising the clear wave. It never takes the slot
+   * of a front less than a second old, so clears keep theirs.
+   */
+  musicFront(strength: number, time: number): boolean {
+    const scaled = Math.min(1.2, strength) * this.worldStrength;
+    if (scaled <= 0.01) return false;
+    let slot = 0;
+    for (let i = 1; i < FRONT_SLOTS; i++) if ((this.fronts[i] as FrontSlot).start < (this.fronts[slot] as FrontSlot).start) slot = i;
+    if (time - (this.fronts[slot] as FrontSlot).start < 1) return false;
+    Object.assign(this.fronts[slot] as FrontSlot, frontFor(scaled, time));
+    return true;
+  }
+
   update(dt: number, time: number): void {
     if (time - this.lastClear > HEAT.hold) this.heat *= Math.exp(-dt / HEAT.tau);
     if (this.heat < 1e-4) this.heat = 0;

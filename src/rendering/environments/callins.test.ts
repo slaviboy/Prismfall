@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { stageManifestSchema } from '../../stages/schema';
-import { CallInDispatcher, maxWait, parseTrigger, type CallInSpec } from './callins';
+import { CallInDispatcher, EnvironmentEventDirector, maxWait, parseTrigger, type CallInSpec } from './callins';
 
 const spec = (over: Partial<CallInSpec>): CallInSpec => ({ layer: 'herd', on: 'clear>=4', quantize: 'none', cooldown: 0, chance: 1, action: 'pass', params: {}, ...over });
 const clear = (lines: number, extra: Partial<{ combo: number; backToBack: boolean; perfectClear: boolean; spin: boolean }> = {}) =>
@@ -145,5 +145,110 @@ describe('call-in dispatcher', () => {
     const d = new CallInDispatcher([spec({ on: 'nope' }), spec({})]);
     expect(d.size).toBe(1);
     expect(d.errors[0]).toMatch(/nope/);
+  });
+});
+
+/** A seeded generator so timer intervals and picks are reproducible. */
+function seeded(seed: number): () => number {
+  let s = seed >>> 0;
+  return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296);
+}
+
+describe('event director (SDK 1.7)', () => {
+  it('parses music cue and ambient triggers', () => {
+    expect(parseTrigger('music:drop')).toEqual({ kind: 'music', cue: 'drop' });
+    expect(parseTrigger('music:phrase')).toEqual({ kind: 'music', cue: 'phrase' });
+    expect(parseTrigger('music:wobble')).toBeNull();
+    expect(parseTrigger('ambient')).toEqual({ kind: 'ambient' });
+  });
+
+  it('fires on music cues with their strength', () => {
+    const d = new EnvironmentEventDirector([spec({ layer: 'aurora', on: 'music:drop', action: 'pulse' }), spec({ layer: 'owl', on: 'music:phrase' })]);
+    d.onMusicCue('drop', 1.3, 2);
+    const calls = d.update(2);
+    expect(calls).toHaveLength(1);
+    expect(calls[0]).toMatchObject({ layer: 'aurora', action: 'pulse', trigger: 'music:drop', strength: 1.3 });
+  });
+
+  it('ambient timers call within their interval, more often at a higher frequency, never at 0', () => {
+    const count = (frequency: number) => {
+      const d = new EnvironmentEventDirector([spec({ layer: 'owl', on: 'ambient', every: [20, 40] })], 4, seeded(7));
+      d.frequency = frequency;
+      d.onMusicState({ section: '', sectionKind: '', intensity: 0.5, calm: 0.5 });
+      let n = 0;
+      for (let t = 0; t < 600; t += 0.1) n += d.update(t).length;
+      return n;
+    };
+    const normal = count(1);
+    // About one call per 30 s over 10 minutes (minus the delayed first call).
+    expect(normal).toBeGreaterThanOrEqual(14);
+    expect(normal).toBeLessThanOrEqual(26);
+    expect(count(1.8)).toBeGreaterThan(normal);
+    expect(count(0)).toBe(0);
+  });
+
+  it('a group takes turns: never the same entry twice in a row', () => {
+    const d = new EnvironmentEventDirector(
+      [spec({ layer: 'a', on: 'ambient', every: [5, 5], group: 'g' }), spec({ layer: 'b', on: 'ambient', every: [5, 5], group: 'g' }), spec({ layer: 'c', on: 'ambient', every: [5, 5], group: 'g', weight: 3 })],
+      4,
+      seeded(3),
+    );
+    d.onMusicState({ section: '', sectionKind: '', intensity: 0.5, calm: 0.5 });
+    const picks: string[] = [];
+    for (let t = 0; t < 300; t += 0.1) for (const c of d.update(t)) picks.push(c.layer);
+    expect(picks.length).toBeGreaterThan(30);
+    for (let i = 1; i < picks.length; i++) expect(picks[i]).not.toBe(picks[i - 1]);
+    // The heavier entry is picked most, and the others still appear.
+    expect(new Set(picks)).toEqual(new Set(['a', 'b', 'c']));
+    expect(picks.filter((p) => p === 'c').length).toBeGreaterThan(picks.filter((p) => p === 'a').length);
+  });
+
+  it('a trigger shared by a group calls one of its entries', () => {
+    const d = new EnvironmentEventDirector([spec({ layer: 'x', on: 'clear>=4', group: 'quad' }), spec({ layer: 'y', on: 'clear>=4', group: 'quad' }), spec({ layer: 'z', on: 'clear>=4' })], 4, seeded(1));
+    d.onGameEvent(clear(4), 0);
+    const layers = d.update(0).map((c) => c.layer);
+    expect(layers).toContain('z');
+    expect(layers.filter((l) => l === 'x' || l === 'y')).toHaveLength(1);
+  });
+
+  it('when limits calls to sections, intensity and calm', () => {
+    const d = new EnvironmentEventDirector([
+      spec({ layer: 'drop-only', on: 'music:accent', when: { section: ['drop'] } }),
+      spec({ layer: 'loud', on: 'music:accent', when: { minIntensity: 0.6 } }),
+      spec({ layer: 'quiet', on: 'music:accent', when: { calm: true } }),
+    ]);
+    d.onMusicState({ section: 'v1', sectionKind: 'verse', intensity: 0.3, calm: 0.8 });
+    d.onMusicCue('accent', 1, 0);
+    expect(d.update(0).map((c) => c.layer)).toEqual(['quiet']);
+    d.onMusicState({ section: 'd1', sectionKind: 'drop', intensity: 0.9, calm: 0.1 });
+    d.onMusicCue('accent', 1, 1);
+    expect(d.update(1).map((c) => c.layer).sort()).toEqual(['drop-only', 'loud']);
+  });
+
+  it('vary spreads the strength', () => {
+    const d = new EnvironmentEventDirector([spec({ on: 'music:peak', vary: 0.4 })], 4, seeded(9));
+    const seen = new Set<number>();
+    for (let i = 0; i < 20; i++) {
+      d.onMusicCue('peak', 1, i * 10);
+      for (const c of d.update(i * 10)) {
+        expect(c.strength).toBeGreaterThanOrEqual(0.6 - 1e-9);
+        expect(c.strength).toBeLessThanOrEqual(1.4 + 1e-9);
+        seen.add(Math.round(c.strength * 100));
+      }
+    }
+    expect(seen.size).toBeGreaterThan(5);
+  });
+
+  it('the schema needs every on ambient calls', () => {
+    const base = {
+      schemaVersion: 1, id: 't', name: 'T', description: '',
+      palette: { accent: '#ffffff', secondary: '#ffffff', highlight: '#ffffff', fog: '#000000' },
+      lighting: { key: { color: '#ffffff', intensity: 1, azimuth: 0, elevation: 30 }, rim: { color: '#ffffff', intensity: 1 }, ambient: { sky: '#ffffff', ground: '#000000', intensity: 1 }, accents: [] },
+      environment: { layers: [{ type: 'sky' }] },
+      music: { bpm: 100 },
+    };
+    expect(stageManifestSchema.safeParse({ ...base, events: [{ layer: 'x', on: 'ambient', action: 'pass' }] }).success).toBe(false);
+    const ok = stageManifestSchema.parse({ ...base, events: [{ layer: 'x', on: 'ambient', every: [30, 60], action: 'pulse' }] });
+    expect(ok.events[0]).toMatchObject({ weight: 1, vary: 0 });
   });
 });

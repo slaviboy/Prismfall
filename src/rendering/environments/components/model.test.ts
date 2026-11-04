@@ -22,6 +22,8 @@ import {
 } from 'three/webgpu';
 import type { GLTF } from 'three/addons/loaders/GLTFLoader.js';
 import type { CallInfo, EnvFrame, EnvironmentContext, ViewInfo } from '../../../sdk/types';
+import { NEUTRAL_LEVELS } from '../living/intensity';
+import { createMusicDrive } from '../living/musicDirector';
 import { frameUniforms } from '../../shaders/uniforms';
 import { createSurfaceParticles } from '../../particles/surfaceParticles';
 import type * as SurfaceParticlesModule from '../../particles/surfaceParticles';
@@ -82,7 +84,7 @@ function context(gltf: GLTF): EnvironmentContext {
   };
 }
 
-const frame = (time: number, dt = 1 / 60): EnvFrame => ({ time, dt, audio: {} as EnvFrame['audio'], game: {} as EnvFrame['game'], presence: 1 });
+const frame = (time: number, dt = 1 / 60): EnvFrame => ({ time, dt, audio: {} as EnvFrame['audio'], game: {} as EnvFrame['game'], presence: 1, music: createMusicDrive(), levels: NEUTRAL_LEVELS });
 
 const bone = (root: Object3D, name: string): Bone => {
   let found: Bone | null = null;

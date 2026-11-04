@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest';
+import { NEUTRAL_LEVELS } from './living/intensity';
+import { createMusicDrive } from './living/musicDirector';
 import { Group, Scene } from 'three/webgpu';
 import { z } from 'zod';
 import { createAudioFeatures } from '../../audio/analysis/features';
@@ -76,7 +78,7 @@ describe('stage environment: sections, section states and call-ins', () => {
     probes.clear();
     const env = await StageEnvironment.build(manifest, context());
     const audio = createAudioFeatures();
-    const frame = (time: number, g: Partial<GameSignals> = {}): EnvFrame => ({ time, dt: 1 / 60, audio, game: { ...game, ...g }, presence: 1 });
+    const frame = (time: number, g: Partial<GameSignals> = {}): EnvFrame => ({ time, dt: 1 / 60, audio, game: { ...game, ...g }, presence: 1, music: createMusicDrive(), levels: NEUTRAL_LEVELS });
     env.update(frame(0), settings);
     env.onGameEvent({ kind: 'clear', lines: 4, intensity: 1, spin: false, perfectClear: false, combo: -1, backToBack: false });
     env.update(frame(0.1), settings);
@@ -101,7 +103,7 @@ describe('stage environment: sections, section states and call-ins', () => {
     audio.sectionKind = 'intro';
     let t = 0;
     const step = (n: number, g: Partial<GameSignals> = {}) => {
-      for (let i = 0; i < n; i++) env.update({ time: (t += 1 / 60), dt: 1 / 60, audio, game: { ...game, ...g }, presence: 1 }, settings);
+      for (let i = 0; i < n; i++) env.update({ time: (t += 1 / 60), dt: 1 / 60, audio, game: { ...game, ...g }, presence: 1, music: createMusicDrive(), levels: NEUTRAL_LEVELS }, settings);
     };
     step(1);
     const b = probes.get('b')!;

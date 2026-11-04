@@ -6,8 +6,11 @@ import type { WorldSoundId } from '../audio/worldSounds';
 import type { FrameUniforms } from '../rendering/shaders/uniforms';
 import type { BurstSystem } from '../rendering/particles/BurstSystem';
 import type { StormSound, WeatherSound } from '../audio/worldSounds';
+import type { MusicCue, MusicDrive } from '../rendering/environments/living/musicDirector';
+import type { BackgroundLevels } from '../rendering/environments/living/intensity';
+import type { CallAction as StageCallAction } from '../stages/triggers';
 
-export type { StormSound, WeatherSound };
+export type { StormSound, WeatherSound, MusicCue, MusicDrive, BackgroundLevels };
 
 export type QualityLevel = 'low' | 'medium' | 'high' | 'ultra';
 
@@ -76,8 +79,11 @@ export interface SectionInfo {
   readonly time: number;
 }
 
-/** What an event call-in asks a layer to do (EnvironmentComponent.onCall, since SDK 1.5). */
-export type CallAction = 'pass' | 'clip' | 'burst' | 'show' | 'hide' | 'reveal';
+/**
+ * What an event call-in asks a layer to do (EnvironmentComponent.onCall, since SDK 1.5). Components
+ * receive the first six; `pulse` and `wave` (SDK 1.7) are carried out by the environment itself.
+ */
+export type CallAction = StageCallAction;
 
 export interface CallInfo {
   readonly action: CallAction;
@@ -116,6 +122,15 @@ export interface EnvFrame {
   readonly game: GameSignals;
   /** Fade weight while this environment is transitioning in/out (0..1). */
   readonly presence: number;
+  /**
+   * The Environment Music Director's interpretation of the music (since SDK 1.7): drives at
+   * distinct time scales (`body`, `motion`, `detail`, `intensity`, `tension`...) and the section.
+   * Use these instead of raw audio features; they are not yet scaled by the Background intensity
+   * music level, which is `levels.music`.
+   */
+  readonly music: Readonly<MusicDrive>;
+  /** Background intensity levels (since SDK 1.7): 1 = as authored. */
+  readonly levels: BackgroundLevels;
 }
 
 /** Resolves and loads files that live inside the stage folder. */
@@ -228,6 +243,11 @@ export interface EnvironmentComponent {
   onSection?(info: SectionInfo): void;
   /** A manifest event call-in addressed to this layer (since SDK 1.5). */
   onCall?(call: CallInfo): void;
+  /**
+   * A cue of the Environment Music Director (since SDK 1.7): accent, downbeat, phrase, build, drop,
+   * break, peak, calm or section. Most worlds react to cues through `events` instead.
+   */
+  onMusicCue?(cue: MusicCue): void;
   /** Called when the environment fades (0..1) during transitions. */
   setPresence?(presence: number): void;
   dispose(): void;

@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { createAudioFeatures } from '../../audio/analysis/features';
 import type { GameSignals } from '../../sdk/types';
 import { bindingSchema, sectionStateSchema } from '../../stages/schema';
-import { crossfade, readFeature, ReactivityLayer, sectionStateTarget, type ReactivitySettings } from './reactivity';
+import { crossfade, pulseEnvelope, readFeature, ReactivityLayer, sectionStateTarget, type ReactivitySettings } from './reactivity';
+import { NEUTRAL_LEVELS } from './living/intensity';
+import { createMusicDrive } from './living/musicDirector';
 
 const settings: ReactivitySettings = {
   enabled: true,
@@ -157,5 +159,70 @@ describe('section gating and section states', () => {
     expect(readFeature('game.backToBack', audio, { ...game, backToBack: 0 })).toBeCloseTo(0.25);
     expect(readFeature('game.backToBack', audio, { ...game, backToBack: 5 })).toBe(1);
     expect(readFeature('game.stackHeight', audio, { ...game, stackHeight: 0.3 })).toBeCloseTo(0.3);
+  });
+});
+
+describe('reactivity with the music drives and Background intensity (SDK 1.7)', () => {
+  const drive = { ...createMusicDrive(), body: 0.8, detail: 0.2, active: true };
+
+  it('reads music.* features from the drives', () => {
+    const audio = createAudioFeatures();
+    expect(readFeature('music.body', audio, game, drive)).toBe(0.8);
+    expect(readFeature('music.detail', audio, game, drive)).toBe(0.2);
+    expect(readFeature('music.body', audio, game)).toBe(0);
+  });
+
+  it('a music binding follows its drive, scaled by the music level', () => {
+    const run = (music: number) => {
+      const layer = new ReactivityLayer();
+      const target = { value: 1 };
+      layer.add(bindingSchema.parse({ target: 'glow', feature: 'music.body', amount: 0.5, curve: 'linear', attackMs: 0, releaseMs: 0 }), target, 'light');
+      layer.update(1 / 60, createAudioFeatures(), game, settings, { music: drive, levels: { ...NEUTRAL_LEVELS, music } });
+      return target.value;
+    };
+    expect(run(1)).toBeCloseTo(1 + 0.5 * 0.8);
+    expect(run(0)).toBeCloseTo(1);
+    expect(run(1.5)).toBeCloseTo(1 + 0.5 * 0.8 * 1.5);
+  });
+
+  it('Balanced leaves bases alone; other levels scale them by class', () => {
+    const layer = new ReactivityLayer();
+    const glow = { value: 2 };
+    const density = { value: 1 };
+    const size = { value: 3 };
+    const dusk = { value: 0.4 };
+    layer.track(glow, 'light', 'glow');
+    layer.track(density, 'particles', 'density');
+    layer.track(size, 'particles', 'size');
+    layer.track(dusk, 'none', 'dusk');
+    const audio = createAudioFeatures();
+    layer.update(1 / 60, audio, game, settings, { levels: NEUTRAL_LEVELS });
+    expect([glow.value, density.value, size.value, dusk.value]).toEqual([2, 1, 3, 0.4]);
+    layer.update(1 / 60, audio, game, settings, { levels: { ...NEUTRAL_LEVELS, lighting: 0.5, particles: 1.5 } });
+    expect(glow.value).toBeCloseTo(1);
+    expect(density.value).toBeCloseTo(1.5);
+    expect(size.value).toBe(3);
+    expect(dusk.value).toBe(0.4);
+  });
+
+  it('a pulse rises, holds and falls back to the base', () => {
+    const layer = new ReactivityLayer();
+    const target = { value: 1 };
+    layer.addPulse(target, { mode: 'mul', amount: 1, attack: 1, hold: 1, release: 1 }, 1, 'light', 'intensity');
+    const audio = createAudioFeatures();
+    const at: number[] = [];
+    for (let i = 1; i <= 240; i++) {
+      layer.update(1 / 60, audio, game, settings);
+      if (i % 30 === 0) at.push(target.value);
+    }
+    // 0.5 s: rising; 1.5 s: holding at 2; 2.5 s: falling; 3.5 s: back to 1 and gone.
+    expect(at[0]).toBeGreaterThan(1.2);
+    expect(at[0]).toBeLessThan(1.8);
+    expect(at[2]).toBeCloseTo(2);
+    expect(at[4]).toBeLessThan(2);
+    expect(at[4]).toBeGreaterThan(1);
+    expect(at[6]).toBeCloseTo(1);
+    expect(layer.pulseCount).toBe(0);
+    expect(pulseEnvelope({ attack: 1, hold: 1, release: 1 }, 1.5)).toBe(1);
   });
 });

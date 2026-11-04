@@ -17,6 +17,7 @@ import { BurstSystem } from '../particles/BurstSystem';
 import { FeedbackDirector } from '../fx/FeedbackDirector';
 import { EnvironmentHost } from '../environments/EnvironmentHost';
 import { WorldSignals } from '../environments/worldSignals';
+import { resolveBackground } from '../environments/living/intensity';
 import { createAudioFeatures, type AudioFeatures } from '../../audio/analysis/features';
 import type { GameSignals, QualityInfo } from '../../sdk/types';
 import { loadBlockGeometry } from '../board/blockLibrary';
@@ -287,6 +288,9 @@ export class RenderSystem implements GameView {
     this.bursts.density = Math.max(0.05, g.particleDensity);
     this.boardBursts.density = this.bursts.density;
     this.environments.reactivity = { ...s.reactivity };
+    // Background intensity: the world around the board only (never the board, its lights or the grade).
+    const comfort = { reducedMotion: reducedMotion(s), flashReduction: s.accessibility.flashReduction };
+    this.environments.setBackground(resolveBackground(s.background, comfort), comfort);
     this.board.setGlyphs(s.accessibility.pieceGlyphs);
     this.board.showGhost = s.gameplay.ghost;
     this.board.setGhostOpacity(s.gameplay.ghostOpacity);
@@ -425,7 +429,7 @@ export class RenderSystem implements GameView {
     ws.fronts.forEach((f, i) => slots[i]?.value.set(f.start, f.strength, f.reach, f.width));
     this.boardRoot.getWorldPosition(this.boardOrigin);
     frameUniforms.waveOrigin.value.copy(this.boardOrigin);
-    this.environments.update(frame.dt, time, audio, frame.beats ?? [], sig as GameSignals);
+    this.environments.update(frame.dt, time, audio, frame.beats ?? [], sig as GameSignals, frame.musicActive ?? frame.audio !== undefined);
     // Environment emitters write world bursts during their update; upload the new spawns once.
     this.bursts.flush();
     for (const hook of this.hooks) hook.update(frame);

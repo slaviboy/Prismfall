@@ -34,10 +34,15 @@ export type {
   WorldSoundName,
   TransitionContext,
   TransitionEffect,
+  MusicCue,
+  MusicDrive,
+  BackgroundLevels,
 } from './types';
 export type { AudioFeatures } from '../audio/analysis/features';
 export type { BurstParticle, ParticleShape } from '../rendering/particles/BurstSystem';
 export { frameUniforms, noBloom, additiveFog } from '../rendering/shaders/uniforms';
+export { environmentUniforms } from '../rendering/shaders/environmentUniforms';
+export { MUSIC_DRIVES, MUSIC_CUES, type MusicDriveName, type MusicCueKind } from '../stages/music';
 export { clearFront, clearFrontMotion, clearFrontRaw } from '../rendering/shaders/clearFront';
 export { colorUniform, floatUniform, linear, seeded, scaledCount, zColor, zVec3 } from '../rendering/environments/components/common';
 export { runRecipe, makeRecipeEffect, BASE_RECIPE, type ClearRecipe } from '../rendering/fx/lineClearEffects';

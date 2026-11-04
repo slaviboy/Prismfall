@@ -1,8 +1,15 @@
 /**
- * Triggers and actions of event call-ins (manifest `events`), shared by the manifest schema and the
- * runtime dispatcher (src/rendering/environments/callins.ts). Pure TypeScript.
+ * Triggers and actions of event call-ins (manifest `events` and living.json `events`), shared by the
+ * schemas and the runtime event director (src/rendering/environments/callins.ts). Pure TypeScript.
  */
-export const CALL_ACTIONS = ['pass', 'clip', 'burst', 'show', 'hide', 'reveal'] as const;
+import { MUSIC_CUES, type MusicCueKind } from './music';
+
+/**
+ * What a call asks for. Components answer the first six (`onCall`); the environment itself answers
+ * `pulse` (a reactive target swells and settles, SDK 1.7) and `wave` (a front of light and motion
+ * rolls out through the world from the board, like a clear's, SDK 1.7).
+ */
+export const CALL_ACTIONS = ['pass', 'clip', 'burst', 'show', 'hide', 'reveal', 'pulse', 'wave'] as const;
 export type CallAction = (typeof CALL_ACTIONS)[number];
 export type Quantize = 'none' | 'beat' | 'bar' | 'phrase';
 
@@ -17,12 +24,17 @@ export type CallTrigger =
   | { readonly kind: 'danger' }
   | { readonly kind: 'section'; readonly section: string }
   | { readonly kind: 'progress'; readonly min: number }
-  | { readonly kind: 'heat'; readonly min: number };
+  | { readonly kind: 'heat'; readonly min: number }
+  | { readonly kind: 'music'; readonly cue: MusicCueKind }
+  | { readonly kind: 'ambient' };
 
 /**
  * Parses a trigger: `clear>=N` (lines, a perfect clear counts as 4), `combo>=N`, `b2b`, `perfect`,
  * `spin`, `levelUp`, `danger` (the stack enters the danger zone), `section:<kind or name>` (the
- * music enters that section), `progress>=x` and `heat>=x` (crossing upwards, 0..1). Null if invalid.
+ * music enters that section), `progress>=x` and `heat>=x` (crossing upwards, 0..1), and since SDK
+ * 1.7 `music:<cue>` (a cue of the Environment Music Director: accent, downbeat, phrase, build, drop,
+ * break, peak, calm, section) and `ambient` (a timer: the entry's `every` gives the interval).
+ * Null if invalid.
  */
 export function parseTrigger(on: string): CallTrigger | null {
   const s = on.trim();
@@ -35,7 +47,9 @@ export function parseTrigger(on: string): CallTrigger | null {
   }
   const sec = /^section:([A-Za-z0-9_-]+)$/.exec(s);
   if (sec) return { kind: 'section', section: sec[1] as string };
+  const music = /^music:([a-z]+)$/.exec(s);
+  if (music) return (MUSIC_CUES as readonly string[]).includes(music[1] as string) ? { kind: 'music', cue: music[1] as MusicCueKind } : null;
+  if (s === 'ambient') return { kind: 'ambient' };
   if (s === 'b2b' || s === 'perfect' || s === 'spin' || s === 'levelUp' || s === 'danger') return { kind: s };
   return null;
 }
-

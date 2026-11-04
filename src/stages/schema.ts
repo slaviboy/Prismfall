@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { MUSIC_DRIVES } from './music';
 import { CALL_ACTIONS, parseTrigger } from './triggers';
 
 export const STAGE_SCHEMA_VERSION = 1;
@@ -14,6 +15,8 @@ export const BINDABLE_FEATURES = [
   'game.danger', 'game.clearPulse', 'game.combo', 'game.level', 'game.progress',
   // Since SDK 1.5: long-lived signals (see src/rendering/environments/worldSignals.ts).
   'game.heat', 'game.clearWave', 'game.backToBack', 'game.stackHeight',
+  // Since SDK 1.7: the Environment Music Director's drives (src/rendering/environments/living/musicDirector.ts).
+  ...MUSIC_DRIVES.map((d) => `music.${d}` as const),
 ] as const;
 
 export const bindingSchema = z.object({
@@ -56,16 +59,37 @@ export const sectionStateSchema = z.object({
 export type SectionState = z.infer<typeof sectionStateSchema>;
 
 /** Event call-ins (since SDK 1.5): see src/rendering/environments/callins.ts and CONTENT_GUIDE.md. */
-export const callInSchema = z.object({
-  /** Layer id, `type:<componentType>`, or `*`. */
-  layer: z.string(),
-  on: z.string().refine((on) => parseTrigger(on) !== null, { message: 'unknown trigger (clear>=N, combo>=N, b2b, perfect, spin, levelUp, danger, section:<kind>, progress>=x, heat>=x)' }),
-  quantize: z.enum(['none', 'beat', 'bar', 'phrase']).default('bar'),
-  cooldown: z.number().min(0).default(8),
-  chance: z.number().min(0).max(1).default(1),
-  action: z.enum(CALL_ACTIONS),
-  params: z.record(z.string(), z.unknown()).default({}),
-});
+export const callInSchema = z
+  .object({
+    /** Layer id, `type:<componentType>`, or `*`. */
+    layer: z.string(),
+    on: z.string().refine((on) => parseTrigger(on) !== null, { message: 'unknown trigger (clear>=N, combo>=N, b2b, perfect, spin, levelUp, danger, section:<kind>, progress>=x, heat>=x, music:<cue>, ambient)' }),
+    quantize: z.enum(['none', 'beat', 'bar', 'phrase']).default('bar'),
+    cooldown: z.number().min(0).default(8),
+    chance: z.number().min(0).max(1).default(1),
+    action: z.enum(CALL_ACTIONS),
+    params: z.record(z.string(), z.unknown()).default({}),
+    /**
+     * Since SDK 1.7. `every`: seconds between `ambient` calls, a random interval in [min, max]
+     * (scaled by the Background intensity event frequency and a little by how busy the music is).
+     */
+    every: z.tuple([z.number().positive(), z.number().positive()]).optional(),
+    /** Since SDK 1.7: entries in one group take turns (one is picked by weight, never the same one twice in a row). */
+    group: z.string().optional(),
+    weight: z.number().min(0).default(1),
+    /** Since SDK 1.7: random variation of the call's strength, ±share (0..1). */
+    vary: z.number().min(0).max(1).default(0),
+    /** Since SDK 1.7: the call only happens in these sections, at this music intensity, or only when the music is calm. */
+    when: z
+      .object({
+        section: z.array(z.string()).min(1).optional(),
+        minIntensity: z.number().min(0).max(1).optional(),
+        maxIntensity: z.number().min(0).max(1).optional(),
+        calm: z.boolean().optional(),
+      })
+      .optional(),
+  })
+  .refine((e) => e.on.trim() !== 'ambient' || (e.every !== undefined && e.every[0] <= e.every[1]), { message: 'an ambient call needs every: [min, max] seconds', path: ['every'] });
 export type CallInEntry = z.infer<typeof callInSchema>;
 
 /**

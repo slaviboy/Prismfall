@@ -28,7 +28,7 @@ export type SettingDef =
   | { kind: 'group'; label: string }
   | { kind: 'custom'; id: string };
 
-export type TabId = 'gameplay' | 'controls' | 'controller' | 'vr' | 'graphics' | 'audio' | 'reactivity' | 'camera' | 'interface' | 'accessibility' | 'data' | 'developer';
+export type TabId = 'gameplay' | 'controls' | 'controller' | 'vr' | 'graphics' | 'world' | 'audio' | 'reactivity' | 'camera' | 'interface' | 'accessibility' | 'data' | 'developer';
 
 export interface TabDef {
   readonly id: TabId;
@@ -391,7 +391,68 @@ export const REACTIVITY_TAB: TabDef = {
   ],
 };
 
+const custom = (s: Settings): boolean => s.background.preset === 'custom';
+
+/** Background intensity: how much the world around the board does (never the board itself). */
+export const WORLD_TAB: TabDef = {
+  id: 'world',
+  label: 'World',
+  inGame: true,
+  resets: ['background'],
+  rows: [
+    {
+      kind: 'choice',
+      section: 'background',
+      key: 'preset',
+      label: 'Background intensity',
+      description: 'How alive the world around the board is: its motion, music response, particles, light, events and creatures. The board and blocks never change.',
+      options: [
+        { value: 'subtle', label: 'Subtle' },
+        { value: 'balanced', label: 'Balanced' },
+        { value: 'immersive', label: 'Immersive' },
+        { value: 'cinematic', label: 'Cinematic' },
+        { value: 'custom', label: 'Custom' },
+      ],
+    },
+    { kind: 'group', label: 'Custom levels' },
+    { kind: 'slider', section: 'background', key: 'animation', label: 'Environmental animation', description: 'Wind, sway, drift and other motion that runs all the time.', min: 0, max: 2, step: 0.05, format: percent, when: custom },
+    { kind: 'slider', section: 'background', key: 'music', label: 'Music reactivity', description: 'How strongly the world follows the music.', min: 0, max: 2, step: 0.05, format: percent, when: custom },
+    { kind: 'slider', section: 'background', key: 'particles', label: 'Particle intensity', description: 'Density and brightness of dust, snow, petals, embers and sparks.', min: 0, max: 2, step: 0.05, format: percent, when: custom },
+    { kind: 'slider', section: 'background', key: 'lighting', label: 'Lighting intensity', description: 'Glow and light out in the world (sky, lamps, lava, windows).', min: 0, max: 2, step: 0.05, format: percent, when: custom },
+    { kind: 'slider', section: 'background', key: 'events', label: 'Event frequency', description: 'How often creatures pass, lightning strikes and other world events happen.', min: 0, max: 2, step: 0.05, format: percent, when: custom },
+    { kind: 'slider', section: 'background', key: 'creatures', label: 'Creature activity', description: 'How lively animals and machines are.', min: 0, max: 2, step: 0.05, format: percent, when: custom },
+    { kind: 'slider', section: 'background', key: 'atmosphere', label: 'Atmospheric density', description: 'Fog, mist, haze and smoke in the world.', min: 0, max: 2, step: 0.05, format: percent, when: custom },
+    { kind: 'group', label: 'Comfort' },
+    {
+      kind: 'choice',
+      section: 'accessibility',
+      key: 'reducedMotion',
+      label: 'Reduced motion',
+      description: 'Halves ambient animation and calms creatures and camera motion.',
+      options: [
+        { value: 'system', label: 'Follow system' },
+        { value: 'on', label: 'On' },
+        { value: 'off', label: 'Off' },
+      ],
+    },
+    { kind: 'toggle', section: 'accessibility', key: 'flashReduction', label: 'Reduce flashing', description: 'Softer, rarer light accents in the world; caps bright flashes and bloom surges.' },
+    {
+      kind: 'choice',
+      section: 'accessibility',
+      key: 'worldEvents',
+      label: 'World events',
+      description: 'Creatures and sudden events: calm keeps them rarer, further away and gentler; off leaves only the weather.',
+      options: [
+        { value: 'full', label: 'Full' },
+        { value: 'calm', label: 'Calm' },
+        { value: 'off', label: 'Off' },
+      ],
+    },
+  ],
+};
+
 registerTab(GRAPHICS_TAB, 'interface');
+registerTab(WORLD_TAB, 'interface');
 registerTab(CAMERA_TAB, 'interface');
 registerTab(AUDIO_TAB, 'interface');
 registerTab(REACTIVITY_TAB, 'interface');

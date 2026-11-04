@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { SDK_VERSION } from '../sdk/version';
 import { registries } from '../sdk/registry';
 import type { StageModule } from '../sdk/types';
+import { EMPTY_LIVING, validateLiving, type LivingProfile } from './living';
 import { satisfiesRange, type Binding, type StageManifest } from './schema';
 import { validateManifest } from './validate';
 
@@ -17,6 +18,8 @@ const JSON_FILES = import.meta.glob('/content/**/music/*.json', { eager: true, i
 const PROFILES = import.meta.glob('/content/shared/reactivity/*.json', { eager: true, import: 'default' }) as Record<string, unknown>;
 const CAMPAIGNS = import.meta.glob('/content/campaigns/*.json', { eager: true, import: 'default' }) as Record<string, unknown>;
 const DATA_FILES = import.meta.glob('/content/**/*.rig.json', { eager: true, import: 'default' }) as Record<string, unknown>;
+// Since SDK 1.7: each world's living profile (music reactions, intensity classes, ambient events).
+const LIVING_FILES = import.meta.glob(['/content/stages/*/living.json', '/content/packs/*/stages/*/living.json'], { eager: true, import: 'default' }) as Record<string, unknown>;
 
 export const ENGINE_VERSION_STRING = '1.0.0';
 
@@ -31,6 +34,8 @@ export interface StageInfo {
   readonly warnings: readonly string[];
   readonly source: string;
   readonly available: boolean;
+  /** The world's living profile (living.json, since SDK 1.7); empty when it has none. */
+  readonly living: LivingProfile;
 }
 
 function folderOf(path: string): string {
@@ -91,7 +96,13 @@ export function discoverStages(): StageInfo[] {
     const id = result.manifest?.id ?? folder;
     if (seen.has(id)) errors.push(`duplicate stage id "${id}"`);
     seen.add(id);
-    infos.push({ id, dir, manifest: result.manifest, errors, warnings: result.warnings, source, available: errors.length === 0 && result.manifest !== null });
+    let living = EMPTY_LIVING;
+    if (result.manifest) {
+      const checked = validateLiving(LIVING_FILES[`${dir}/living.json`], result.manifest);
+      living = checked.profile;
+      errors.push(...checked.errors);
+    }
+    infos.push({ id, dir, manifest: result.manifest, errors, warnings: result.warnings, source, available: errors.length === 0 && result.manifest !== null, living });
   }
   infos.sort((a, b) => (a.manifest?.order ?? 1e9) - (b.manifest?.order ?? 1e9) || a.id.localeCompare(b.id));
   for (const s of infos) if (!s.available) console.warn(`[stages] "${s.id}" unavailable:`, s.errors.join('; '));
@@ -101,6 +112,16 @@ export function discoverStages(): StageInfo[] {
 
 export function getStage(id: string): StageInfo | undefined {
   return discoverStages().find((s) => s.id === id);
+}
+
+/** A world's living profile, or null for an unknown world. */
+export function livingProfile(id: string): LivingProfile | null {
+  return getStage(id)?.living ?? null;
+}
+
+/** Every living.json file found (for validation). */
+export function livingFiles(): Record<string, unknown> {
+  return LIVING_FILES;
 }
 
 export function availableStages(): StageInfo[] {

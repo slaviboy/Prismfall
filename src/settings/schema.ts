@@ -275,6 +275,23 @@ export const settingsSchema = z.object({
       fftSize: z.union([z.literal(2048), z.literal(4096)]).catch(4096).default(4096),
     })
     .prefault({}),
+  /**
+   * Background intensity (Settings → World): how much the world around the board does. A preset,
+   * or custom levels (1 = as authored) for ambient animation, music reactivity, particles,
+   * lighting, event frequency, creature activity and atmospheric density. Never the board.
+   */
+  background: z
+    .object({
+      preset: e(['subtle', 'balanced', 'immersive', 'cinematic', 'custom'] as const, 'balanced'),
+      animation: n(0, 2, 1),
+      music: n(0, 2, 1),
+      particles: n(0, 2, 1),
+      lighting: n(0, 2, 1),
+      events: n(0, 2, 1),
+      creatures: n(0, 2, 1),
+      atmosphere: n(0, 2, 1),
+    })
+    .prefault({}),
   interface: z
     .object({
       hudScale: n(0.75, 1.5, 1),

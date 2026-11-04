@@ -7,7 +7,10 @@ import { frameUniforms } from '../shaders/uniforms';
 import type { RenderSystem } from '../renderer/RenderSystem';
 import { reducedMotion } from '../../settings/store';
 import { emitStormSound, emitWeather, emitWorldSound, setWorldDrone } from '../../audio/worldSounds';
+import { environmentUniforms } from '../shaders/environmentUniforms';
 import { createGround } from './ground';
+import { NEUTRAL_LEVELS, type BackgroundLevels } from './living/intensity';
+import { EnvironmentMusicDirector, MUSIC_DRIVES } from './living/musicDirector';
 import { StageEnvironment } from './StageEnvironment';
 import type { ReactivitySettings } from './reactivity';
 
@@ -48,6 +51,12 @@ export class EnvironmentHost {
   /** World tremors requested by stage components (ctx.shakeWorld), in frame-clock seconds. */
   private readonly shakes: { start: number; strength: number; seconds: number; phase: number }[] = [];
   private clock = 0;
+  /** The Environment Music Director: one interpretation of the music shared by every world (SDK 1.7). */
+  readonly music = new EnvironmentMusicDirector();
+  /** Background intensity levels (Settings → World), set with setBackground. */
+  levels: BackgroundLevels = NEUTRAL_LEVELS;
+  /** Comfort settings the music director follows. */
+  private comfort = { flashReduction: false, reducedMotion: false };
 
   constructor(private readonly render: RenderSystem) {
     render.scene.fog = this.fog;
@@ -87,6 +96,20 @@ export class EnvironmentHost {
     };
   }
 
+  /** Applies Background intensity levels and the comfort settings the music director follows. */
+  setBackground(levels: BackgroundLevels, comfort: { flashReduction: boolean; reducedMotion: boolean }): void {
+    this.levels = levels;
+    this.comfort = comfort;
+    const u = environmentUniforms.level;
+    u.animation.value = levels.animation;
+    u.music.value = levels.music;
+    u.particles.value = levels.particles;
+    u.lighting.value = levels.lighting;
+    u.events.value = levels.events;
+    u.creatures.value = levels.creatures;
+    u.atmosphere.value = levels.atmosphere;
+  }
+
   /** Builds a stage environment off-scene and precompiles its shaders. Cached by stage id. */
   async prepare(manifest: StageManifest, assets: StageAssets, quality: QualityInfo, onProgress?: (fraction: number) => void): Promise<StageEnvironment> {
     const cached = this.prepared.get(manifest.id);
@@ -107,6 +130,10 @@ export class EnvironmentHost {
       view: this.view,
     };
     const env = await StageEnvironment.build(manifest, ctx, (f) => onProgress?.(f * 0.85));
+    // The `wave` action: a front from the music, only for the world on screen.
+    env.onWave = (strength) => {
+      if (this.current === env) this.render.worldSignals.musicFront(strength, this.clock);
+    };
     // Compile its shaders in the background before it is ever shown (the group stays at
     // near-zero presence; precompile ignores visibility).
     env.setPresence(0.0001);
@@ -220,7 +247,23 @@ export class EnvironmentHost {
     this.current = null;
   }
 
-  update(dt: number, time: number, audio: Readonly<AudioFeatures>, beats: readonly BeatEvent[], game: GameSignals): void {
+  /**
+   * One frame of every world on screen. `musicActive`: real music is playing (not the silent
+   * metronome stand-in), so the music director interprets it; otherwise the worlds rest calmly.
+   */
+  update(dt: number, time: number, audio: Readonly<AudioFeatures>, beats: readonly BeatEvent[], game: GameSignals, musicActive = true): void {
+    const lead = this.current;
+    const cues = this.music.update(dt, time, audio, beats, {
+      active: musicActive && this.reactivity.enabled,
+      flashReduction: this.comfort.flashReduction,
+      reducedMotion: this.comfort.reducedMotion,
+      beatsPerBar: lead?.manifest.music.beatsPerBar ?? 4,
+      phraseBars: lead?.living.phraseBars ?? lead?.manifest.phraseBars ?? 4,
+    });
+    const drive = this.music.drive;
+    const mu = environmentUniforms.music;
+    const level = this.levels.music;
+    for (const k of MUSIC_DRIVES) (mu[k] as { value: number }).value = k === 'phrase' || k === 'calm' ? drive[k] : drive[k] * level;
     const step = dt / this.transitionSeconds;
     for (let i = this.active.length - 1; i >= 0; i--) {
       const a = this.active[i] as Active;
@@ -234,7 +277,8 @@ export class EnvironmentHost {
           continue;
         }
       }
-      const frame = { time, dt, audio, game, presence: a.env.presence };
+      const frame = { time, dt, audio, game, presence: a.env.presence, music: drive, levels: this.levels };
+      for (const c of cues) a.env.onMusicCue(c);
       a.env.update(frame, this.reactivity);
       for (const b of beats) a.env.onBeat({ beat: b.beat, bar: b.bar, beatInBar: b.beatInBar, downbeat: b.downbeat, time: b.time });
     }

@@ -14,6 +14,8 @@ export interface ViewFrame {
   readonly beats?: readonly BeatEvent[];
   /** 0..1 progress toward the current goal (Voyage leg, Sprint lines), if any. */
   readonly progress?: number;
+  /** Real music is playing (the worlds' music director interprets it); default true. */
+  readonly musicActive?: boolean;
 }
 
 export interface BoardRect {
