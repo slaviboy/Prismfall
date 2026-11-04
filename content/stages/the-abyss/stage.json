@@ -96,6 +96,120 @@
       "L": "#ffa45a"
     }
   },
+  "requires": {
+    "sdk": "^1.5.0"
+  },
+  "clearWave": {
+    "far": 520,
+    "travel": 3.8
+  },
+  "sectionStates": {
+    "fade": 5,
+    "states": [
+      {
+        "section": [
+          "drop"
+        ],
+        "layer": "light-shafts",
+        "target": "intensity",
+        "scale": 1.35,
+        "anticipate": 0.5
+      },
+      {
+        "section": [
+          "drop"
+        ],
+        "layer": "plankton",
+        "target": "brightness",
+        "scale": 1.3,
+        "anticipate": 0.5
+      },
+      {
+        "section": [
+          "drop"
+        ],
+        "layer": "marine-snow",
+        "target": "turbulence",
+        "scale": 1.4,
+        "anticipate": 0.4
+      },
+      {
+        "section": [
+          "break"
+        ],
+        "layer": "light-shafts",
+        "target": "intensity",
+        "scale": 0.55
+      },
+      {
+        "section": [
+          "break"
+        ],
+        "layer": "plankton",
+        "target": "brightness",
+        "scale": 0.7
+      },
+      {
+        "section": [
+          "break"
+        ],
+        "layer": "jellyfish",
+        "target": "glow",
+        "scale": 1.35
+      },
+      {
+        "section": [
+          "intro",
+          "verse",
+          "break",
+          "bridge",
+          "outro"
+        ],
+        "layer": "sperm-whale",
+        "target": "visible",
+        "scale": 0
+      },
+      {
+        "section": [
+          "intro",
+          "verse",
+          "build",
+          "drop",
+          "outro"
+        ],
+        "layer": "eagle-rays",
+        "target": "visible",
+        "scale": 0
+      }
+    ]
+  },
+  "events": [
+    {
+      "layer": "great-white",
+      "on": "clear>=4",
+      "quantize": "bar",
+      "cooldown": 14,
+      "action": "pass"
+    },
+    {
+      "layer": "great-white",
+      "on": "combo>=4",
+      "quantize": "bar",
+      "cooldown": 20,
+      "action": "pass"
+    },
+    {
+      "layer": "eagle-rays",
+      "on": "b2b",
+      "quantize": "bar",
+      "cooldown": 30,
+      "action": "show",
+      "params": {
+        "seconds": 2.5,
+        "hold": 22
+      }
+    }
+  ],
   "environment": {
     "layers": [
       {
@@ -227,6 +341,11 @@
           "glow": {
             "color": "#2ad8ff",
             "strength": 0.0
+          },
+          "clearWave": {
+            "glint": 1.1,
+            "sheen": 0.55,
+            "color": "#9ff6ff"
           }
         },
         "bind": [
@@ -511,7 +630,8 @@
               "shimmer": 0.45,
               "size": 1.15
             },
-            "style": "glow"
+            "style": "glow",
+            "clearWave": 0.6
           },
           "reveal": {
             "from": 0.6,
@@ -617,7 +737,8 @@
               "shimmer": 0.45,
               "size": 1.15
             },
-            "style": "glow"
+            "style": "glow",
+            "clearWave": 0.6
           },
           "reveal": {
             "from": 0.42,
@@ -832,13 +953,382 @@
               "shimmer": 0.45,
               "size": 1.35
             },
-            "style": "glow"
+            "style": "glow",
+            "clearWave": 0.6
           },
           "reveal": {
             "from": 0.25,
             "to": 0.4,
             "unlock": 2.0,
             "hold": 28
+          }
+        },
+        "bind": []
+      },
+      {
+        "id": "sperm-whale",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/sperm-whale.glb",
+          "render": "particles",
+          "animation": {
+            "clip": "Armature|ArmatureAction",
+            "speed": 0.8,
+            "vary": 0
+          },
+          "instances": [
+            {
+              "position": [
+                175,
+                -2,
+                -112
+              ],
+              "yaw": 0,
+              "scale": 2.3,
+              "snapToGround": false,
+              "walk": {
+                "to": [
+                  104,
+                  4,
+                  -165
+                ],
+                "via": [
+                  [
+                    112,
+                    -5,
+                    -84
+                  ],
+                  [
+                    64,
+                    -6,
+                    -70
+                  ],
+                  [
+                    44,
+                    -4,
+                    -84
+                  ],
+                  [
+                    58,
+                    -1,
+                    -114
+                  ]
+                ],
+                "smooth": true,
+                "speed": 3.4,
+                "phase": 0.35,
+                "fade": 0.08,
+                "bank": 12
+              }
+            }
+          ],
+          "particles": {
+            "tint": "#9fe0ff",
+            "blend": "additive",
+            "jitter": 0.02,
+            "wind": [
+              0.6,
+              1.2,
+              0.3
+            ],
+            "bloom": 0.12,
+            "shading": 0.8,
+            "light": [
+              -0.25,
+              1,
+              0.2
+            ],
+            "style": "glow",
+            "clearWave": 0.6,
+            "count": 16000,
+            "size": 0.34,
+            "brightness": 0.8,
+            "colorMix": 0.2,
+            "spread": 12,
+            "seed": 31,
+            "glow": {
+              "textureMix": 0.15,
+              "core": 0.3,
+              "edge": 1.3,
+              "twinkle": 0.55,
+              "sparkle": 0.12,
+              "breathe": 0.35,
+              "shimmer": 0.45,
+              "color": "#52c4ff",
+              "drift": 0.08,
+              "flow": 1.2,
+              "flowRate": 0.08,
+              "shed": 0.14,
+              "shedLife": 4.5,
+              "shedSpread": 4,
+              "size": 1.15
+            }
+          }
+        },
+        "bind": []
+      },
+      {
+        "id": "eagle-rays",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/eagle-ray.glb",
+          "render": "particles",
+          "animation": {
+            "clip": "Swim cycle",
+            "speed": 0.45,
+            "vary": 0.1
+          },
+          "instances": [
+            {
+              "position": [
+                -25.0,
+                7.0,
+                -32.0
+              ],
+              "yaw": 90,
+              "scale": 0.72,
+              "snapToGround": false,
+              "walk": {
+                "to": [
+                  -27.5,
+                  5.1,
+                  -36.7
+                ],
+                "via": [
+                  [
+                    -27.5,
+                    8.9,
+                    -27.3
+                  ],
+                  [
+                    -34.0,
+                    8.2,
+                    -24.4
+                  ],
+                  [
+                    -42.0,
+                    5.8,
+                    -24.4
+                  ],
+                  [
+                    -48.5,
+                    5.1,
+                    -27.3
+                  ],
+                  [
+                    -51.0,
+                    7.0,
+                    -32.0
+                  ],
+                  [
+                    -48.5,
+                    8.9,
+                    -36.7
+                  ],
+                  [
+                    -42.0,
+                    8.2,
+                    -39.6
+                  ],
+                  [
+                    -34.0,
+                    5.8,
+                    -39.6
+                  ]
+                ],
+                "closed": true,
+                "smooth": true,
+                "speed": 4.2,
+                "phase": 0.0,
+                "bank": 38
+              }
+            },
+            {
+              "position": [
+                -56.9,
+                0.2,
+                -35.4
+              ],
+              "yaw": 90,
+              "scale": 0.62,
+              "snapToGround": false,
+              "walk": {
+                "to": [
+                  -49.9,
+                  0.6,
+                  -31.7
+                ],
+                "via": [
+                  [
+                    -58.9,
+                    2.3,
+                    -40.8
+                  ],
+                  [
+                    -55.3,
+                    4.0,
+                    -45.9
+                  ],
+                  [
+                    -47.4,
+                    2.9,
+                    -48.8
+                  ],
+                  [
+                    -38.1,
+                    0.6,
+                    -48.3
+                  ],
+                  [
+                    -31.1,
+                    0.2,
+                    -44.6
+                  ],
+                  [
+                    -29.1,
+                    2.3,
+                    -39.2
+                  ],
+                  [
+                    -32.7,
+                    4.0,
+                    -34.1
+                  ],
+                  [
+                    -40.6,
+                    2.9,
+                    -31.2
+                  ]
+                ],
+                "closed": true,
+                "smooth": true,
+                "speed": 4.6,
+                "phase": 0.3,
+                "bank": 38
+              }
+            }
+          ],
+          "particles": {
+            "tint": "#9fe0ff",
+            "blend": "additive",
+            "jitter": 0.02,
+            "wind": [
+              0.6,
+              1.2,
+              0.3
+            ],
+            "bloom": 0.12,
+            "shading": 0.8,
+            "light": [
+              -0.25,
+              1,
+              0.2
+            ],
+            "style": "glow",
+            "clearWave": 0.6,
+            "count": 7000,
+            "size": 0.06,
+            "brightness": 1.0,
+            "colorMix": 0.15,
+            "spread": 2.0,
+            "seed": 39,
+            "glow": {
+              "textureMix": 0.15,
+              "core": 0.3,
+              "edge": 1.3,
+              "twinkle": 0.55,
+              "sparkle": 0.12,
+              "breathe": 0.35,
+              "shimmer": 0.45,
+              "color": "#6ae8ff",
+              "drift": 0.03,
+              "flow": 0.3,
+              "flowRate": 0.12,
+              "shed": 0.2,
+              "shedLife": 2.4,
+              "shedSpread": 1.2,
+              "size": 1.1
+            }
+          }
+        },
+        "bind": []
+      },
+      {
+        "id": "great-white",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/great-white.glb",
+          "render": "particles",
+          "animation": {
+            "clip": "WS_Swim_Cruise_MouthClosed_Loop",
+            "speed": 1,
+            "vary": 0
+          },
+          "instances": [
+            {
+              "position": [
+                60,
+                0,
+                -150
+              ],
+              "yaw": 180,
+              "scale": 1.4,
+              "snapToGround": false,
+              "pass": true
+            }
+          ],
+          "particles": {
+            "tint": "#9fe0ff",
+            "blend": "additive",
+            "jitter": 0.02,
+            "wind": [
+              0.6,
+              1.2,
+              0.3
+            ],
+            "bloom": 0.12,
+            "shading": 0.8,
+            "light": [
+              -0.25,
+              1,
+              0.2
+            ],
+            "style": "glow",
+            "clearWave": 0.6,
+            "count": 9000,
+            "size": 0.07,
+            "brightness": 1.0,
+            "colorMix": 0.15,
+            "spread": 2.5,
+            "seed": 35,
+            "glow": {
+              "textureMix": 0.15,
+              "core": 0.3,
+              "edge": 1.3,
+              "twinkle": 0.55,
+              "sparkle": 0.12,
+              "breathe": 0.35,
+              "shimmer": 0.45,
+              "color": "#7adcff",
+              "drift": 0.03,
+              "flow": 0.35,
+              "flowRate": 0.12,
+              "shed": 0.22,
+              "shedLife": 2.2,
+              "shedSpread": 1.2,
+              "size": 1.1
+            }
+          },
+          "pass": {
+            "duration": 8,
+            "distance": [
+              22,
+              100
+            ],
+            "height": -0.25,
+            "margin": 0.22,
+            "side": "alternate",
+            "direction": "in"
           }
         },
         "bind": []
@@ -968,7 +1458,8 @@
               "shimmer": 0.45,
               "size": 1.15
             },
-            "style": "glow"
+            "style": "glow",
+            "clearWave": 0.6
           },
           "reveal": {
             "from": 0.86,
@@ -1049,7 +1540,11 @@
           "shape": "soft",
           "seed": 61,
           "bloom": 0.3,
-          "density": 0.16
+          "density": 0.16,
+          "clearWave": {
+            "brightness": 1.8,
+            "stir": 1.6
+          }
         },
         "bind": [
           {
@@ -1102,7 +1597,11 @@
           "shape": "soft",
           "seed": 65,
           "bloom": 0.6,
-          "density": 0.05
+          "density": 0.05,
+          "clearWave": {
+            "brightness": 1.6,
+            "stir": 1.2
+          }
         },
         "bind": [
           {
@@ -1141,9 +1640,58 @@
           "marine-snow",
           "plankton"
         ]
+      },
+      {
+        "name": "clear-gust",
+        "layers": [
+          "marine-snow",
+          "plankton"
+        ]
+      },
+      {
+        "name": "clear-glow",
+        "layers": [
+          "seafloor",
+          "plankton",
+          "blue-whale",
+          "humpback-whale",
+          "sea-turtles",
+          "climax-whale",
+          "sperm-whale"
+        ],
+        "amount": 0.8
+      },
+      {
+        "name": "combo-heat",
+        "layers": [
+          "plankton",
+          "blue-whale",
+          "humpback-whale",
+          "sea-turtles"
+        ],
+        "amount": 0.6
       }
     ],
-    "bindings": []
+    "bindings": [
+      {
+        "layer": "light-shafts",
+        "target": "intensity",
+        "feature": "game.clearWave",
+        "amount": 0.8,
+        "category": "lighting",
+        "attackMs": 400,
+        "releaseMs": 3500
+      },
+      {
+        "layer": "jellyfish",
+        "target": "glow",
+        "feature": "game.clearWave",
+        "amount": 0.5,
+        "category": "lighting",
+        "attackMs": 400,
+        "releaseMs": 3000
+      }
+    ]
   },
   "effects": {
     "lineClear": {
