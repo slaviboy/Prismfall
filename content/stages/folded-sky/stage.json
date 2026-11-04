@@ -191,6 +191,23 @@
       "quantize": "bar",
       "cooldown": 22,
       "action": "pass"
+    },
+    {
+      "layer": "murmuration",
+      "on": "clear>=3",
+      "quantize": "beat",
+      "cooldown": 12,
+      "action": "burst",
+      "params": {
+        "falcon": false
+      }
+    },
+    {
+      "layer": "murmuration",
+      "on": "b2b",
+      "quantize": "beat",
+      "cooldown": 20,
+      "action": "burst"
     }
   ],
   "environment": {

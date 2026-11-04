@@ -1,4 +1,7 @@
 import { describe, expect, it } from 'vitest';
+import { Scene } from 'three/webgpu';
+import type { CallInfo, EnvFrame, EnvironmentContext } from '../../../sdk/types';
+import { frameUniforms } from '../../shaders/uniforms';
 import { Boids } from '../flocking/boids';
 import { Falcon } from '../flocking/falcon';
 import {
@@ -238,5 +241,48 @@ describe('schema', () => {
     const s = birdFlockComponent.schema.safeParse({ kind: 'soaring', birds: [{ at: { azimuth: -30, elevation: 15, distance: 120 } }] });
     expect(s.success).toBe(true);
     expect(birdFlockComponent.schema.safeParse({ kind: 'parrots' }).success).toBe(false);
+  });
+});
+
+describe('murmuration call-ins', () => {
+  const context = (reducedMotion = false): EnvironmentContext => ({
+    stageId: 'test',
+    scene: new Scene(),
+    quality: { detail: 'low', particles: 0.2, reflections: 'off', reducedMotion },
+    uniforms: frameUniforms,
+    assets: {} as EnvironmentContext['assets'],
+    bursts: {} as EnvironmentContext['bursts'],
+    palette: {} as EnvironmentContext['palette'],
+    ground: { height: () => 0, provide: () => undefined, surface: () => 0, setWaterLevel: () => undefined },
+    sounds: { emit: () => undefined },
+  });
+  const call = (params: Record<string, unknown> = {}): CallInfo => ({ action: 'burst', params, trigger: 'clear>=4', strength: 1, time: 0 });
+  const frame = { time: 0, dt: 1 / 30 } as EnvFrame;
+  const flock = (reduced = false) => {
+    const p = birdFlockComponent.schema.parse({ kind: 'murmuration', roost: { at: { azimuth: 30, elevation: 12, distance: 200 } }, count: 300, falcon: { every: 600 } });
+    const c = birdFlockComponent.create(context(reduced), p) as unknown as { object: { userData: { sim: { falcon: Falcon } } }; onCall(c: CallInfo): void; update(f: EnvFrame): void; dispose(): void };
+    return c;
+  };
+
+  it('a burst calls the falcon now instead of after its long wait', () => {
+    const quiet = flock();
+    const called = flock();
+    called.onCall(call());
+    for (let i = 0; i < 30; i++) {
+      quiet.update(frame);
+      called.update(frame);
+    }
+    expect(quiet.object.userData.sim.falcon.phase).toBe('away');
+    expect(called.object.userData.sim.falcon.phase).not.toBe('away');
+    quiet.dispose();
+    called.dispose();
+  });
+
+  it('can startle the flock without the falcon', () => {
+    const c = flock();
+    c.onCall(call({ falcon: false, turns: 3 }));
+    for (let i = 0; i < 30; i++) c.update(frame);
+    expect(c.object.userData.sim.falcon.phase).toBe('away');
+    c.dispose();
   });
 });

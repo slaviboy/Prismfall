@@ -432,6 +432,7 @@ A component opts in with `onCall(call)`, where `call` is `{ action, params, trig
 | `model` | `clip`: plays `params.clip` once over the walk or idle clip (`instances`: indices, `"random"` or all shown; `speed`, `fade`, `stagger`). `pass`: sends the next instance marked `pass` close past the camera (below). `show` / `hide`: fades instances in or out (`instances`, `seconds`, `hold`: then back to the bindable share). `reveal`: calls `reveal` creatures in for `params.hold` seconds whatever the progress. `burst`: dissolving models break apart; others flare their particles. |
 | `glowSchool` | `reveal` (as for `model`). |
 | `meteors` | `burst` or `show`: `params.count` meteors (1..6) a moment apart; `params.shower` starts a shower. |
+| `birdFlock` (murmuration) | `burst` or `show`: startles the flock, sending `params.turns` waves of turns through it (default 2, plus one per strength above 1; at most 4, one under reduced motion), and calls the falcon's stoop now unless `params.falcon` is `false` (only if the layer has a falcon). |
 
 `model` also has bindable `pace` (walking and clip speed; legs still follow the ground) and `visible` (the share of its regular instances shown, fading in and out in order).
 

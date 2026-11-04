@@ -31,7 +31,7 @@ import {
   vec4,
 } from 'three/tsl';
 import { z } from 'zod';
-import type { ComponentFactory, EnvironmentContext } from '../../../sdk/types';
+import type { CallInfo, ComponentFactory, EnvironmentContext } from '../../../sdk/types';
 import { Boids, DEFAULT_WEIGHTS, type BoidsConfig } from '../flocking/boids';
 import { Falcon } from '../flocking/falcon';
 import { noBloom } from '../../shaders/uniforms';
@@ -758,6 +758,9 @@ function createMurmuration(ctx: EnvironmentContext, p: Murmuration) {
     const turn = rand() < 0.5 ? -1 : 1;
     boids.startle(lead, [-vz * turn, (rand() - 0.5) * 3, vx * turn], reduced ? 0.25 : 0.45);
   };
+  // Turns queued by a call-in (a startled flock), each a short while after the last.
+  let calledTurns = 0;
+  let calledTurnIn = 0;
   const step = () => {
     boids.centroid(centroid, flockVel);
     const rate = reactive.agitation.value * (reduced ? 0.35 : 1);
@@ -766,6 +769,14 @@ function createMurmuration(ctx: EnvironmentContext, p: Murmuration) {
     if (nextTurn <= 0) {
       startleTurn();
       nextTurn = 5 + rand() * 9;
+    }
+    if (calledTurns > 0) {
+      calledTurnIn -= SIM_STEP;
+      if (calledTurnIn <= 0) {
+        startleTurn();
+        calledTurns--;
+        calledTurnIn = 0.45 + rand() * 0.4;
+      }
     }
     boids.step(SIM_STEP);
     if (passing) {
@@ -800,6 +811,18 @@ function createMurmuration(ctx: EnvironmentContext, p: Murmuration) {
   return {
     object: mesh,
     reactive,
+    /**
+     * Event call-ins (since SDK 1.5): `burst` startles the flock, sending waves of turns through it
+     * (`params.turns`, default 2 plus one per strength above 1, at most 4; one under reduced motion)
+     * and, with `params.falcon` (default true) and a falcon configured, calls the falcon's stoop now.
+     */
+    onCall(call: CallInfo) {
+      if (call.action !== 'burst' && call.action !== 'show') return;
+      const asked = typeof call.params.turns === 'number' ? call.params.turns : 2 + Math.max(0, Math.round((call.strength - 1) * 2));
+      calledTurns = Math.max(calledTurns, reduced ? 1 : Math.max(0, Math.min(4, Math.round(asked))));
+      calledTurnIn = 0;
+      if (call.params.falcon !== false) falcon.trigger();
+    },
     update(frame: { dt: number }) {
       acc += Math.min(0.1, frame.dt) * reactive.tempo.value * (reduced ? 0.6 : 1);
       let steps = 0;
