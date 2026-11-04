@@ -23,7 +23,7 @@ export const environmentUniforms = {
     intensity: uniform(0),
     tension: uniform(0),
     release: uniform(0),
-    calm: uniform(1),
+    calm: uniform(0),
     accent: uniform(0),
     beat: uniform(0),
     downbeat: uniform(0),

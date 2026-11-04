@@ -34,7 +34,7 @@ export type MusicDrive = {
    * - `intensity`: the section's composed intensity with energy and onset density (about 3 s).
    * - `tension`: rises through builds and the last bars before a drop; falls at the drop.
    * - `release`: the aftermath of a drop or peak, fading over about 6 s.
-   * - `calm`: quiet passages, breaks and intros (1) versus dense sections (0).
+   * - `calm`: quiet passages, breaks and intros (1) versus dense sections (0); 0 without music.
    * - `accent`: governed transient pulses (at most a few per second, never every hit).
    * - `beat`: soft pulses on selected beats only (downbeats, accented or busy beats).
    * - `downbeat`: a pulse on the first beat of each bar.
@@ -114,7 +114,7 @@ const clamp01 = (v: number): number => (v < 0 ? 0 : v > 1 ? 1 : v);
 
 export function createMusicDrive(): MusicDrive {
   const d = Object.fromEntries(MUSIC_DRIVES.map((k) => [k, 0])) as Record<MusicDriveName, number>;
-  return { ...d, calm: 1, section: '', sectionKind: '', beatPhase: 0, barPhase: 0, active: false };
+  return { ...d, section: '', sectionKind: '', beatPhase: 0, barPhase: 0, active: false };
 }
 
 export class EnvironmentMusicDirector {
@@ -222,7 +222,8 @@ export class EnvironmentMusicDirector {
     const tensionTarget = live ? Math.max(buildRamp, f.anticipation) : 0;
     d.tension = env(d.tension, tensionTarget, dt, T.tension.attack, T.tension.release);
     d.release *= Math.exp(-dt / T.release.decay);
-    const calmTarget = !input.active ? 1 : f.quiet ? 1 : Math.max(BREAKS.has(f.sectionKind) ? 0.7 : 0, clamp01(1 - (d.intensity - 0.2) / 0.45));
+    // Without music every drive rests at 0, calm included, so the world is exactly as authored.
+    const calmTarget = !input.active ? 0 : f.quiet ? 1 : Math.max(BREAKS.has(f.sectionKind) ? 0.7 : 0, clamp01(1 - (d.intensity - 0.2) / 0.45));
     d.calm = env(d.calm, calmTarget, dt, T.calm.attack, T.calm.release);
     if (d.intensity > PEAK.on && this.peakArmed && live) {
       this.peakArmed = false;

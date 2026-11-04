@@ -503,7 +503,7 @@ A world's `living.json`, beside its `stage.json`, says how the world lives with 
 | `intensity` | the section's intensity, energy and onset density | about 3 s | density, creature activity, set pieces |
 | `tension` | builds and the bars before a drop | rises over seconds, falls at the drop | wind-up: churn, gathering clouds |
 | `release` | the aftermath of a drop or peak | decays over about 6 s | lingering light after a drop |
-| `calm` | quiet passages, breaks, intros | about 2 s | quiet-time details (fireflies, birds) |
+| `calm` | quiet passages, breaks, intros (0 without music) | about 2 s | quiet-time details (fireflies, birds); thinning things in quiet passages |
 | `accent` | governed onsets (about 15–40 a minute in dense music) | quick decay | small flares, never global light |
 | `beat` | selected beats only (downbeats, accented or busy beats) | quick decay | lantern pulses, small rhythmic accents |
 | `downbeat` | the first beat of each bar | 0.4 s decay | slow rhythmic accents |

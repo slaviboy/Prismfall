@@ -110,7 +110,7 @@ export class EnvironmentEventDirector {
   frequency = 1;
   bpm = 120;
   beatsPerBar = 4;
-  private music: MusicState = { section: '', sectionKind: '', intensity: 0, calm: 1 };
+  private music: MusicState = { section: '', sectionKind: '', intensity: 0, calm: 0 };
   readonly errors: string[] = [];
 
   constructor(

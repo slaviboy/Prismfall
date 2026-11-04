@@ -53,4 +53,5 @@ Each verification run is recorded here. See also BACKGROUND_VISUAL_QUALITY_REPOR
 
 | Date | Build | Snapshot test | Pixel comparison |
 |---|---|---|---|
-| 2026-11-04 | `bg-baseline` | passes (written) | baseline captured |
+| 2026-11-04 | `bg-baseline` | passes (written) | baseline captured; a second capture of the same build matches it exactly in 22 worlds and within 1 level in Luminous Tide (the noise floor) |
+| 2026-11-04 | `01c45b0` (living worlds: music director, event director, Background intensity, 23 profiles, sky exposure, phase-continuous rates) | passes | identical in 22 worlds, Luminous Tide within noise (max 1 level, same hash as the noise-floor run): **playfield unchanged** |

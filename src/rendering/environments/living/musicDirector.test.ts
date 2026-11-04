@@ -52,7 +52,7 @@ describe('AudioFeatureNormalizer', () => {
 });
 
 describe('EnvironmentMusicDirector', () => {
-  it('rests without music: drives fall to zero and the world reads calm', () => {
+  it('rests without music: every drive falls to zero, so the world is as authored', () => {
     const { director } = run(6, (_, f) => {
       f.bass = 0.9;
       f.treble = 0.9;
@@ -62,7 +62,7 @@ describe('EnvironmentMusicDirector', () => {
     expect(d.body).toBeLessThan(0.01);
     expect(d.detail).toBeLessThan(0.01);
     expect(d.intensity).toBeLessThan(0.05);
-    expect(d.calm).toBeGreaterThan(0.95);
+    expect(d.calm).toBeLessThan(0.05);
     expect(d.active).toBe(false);
   });
 
