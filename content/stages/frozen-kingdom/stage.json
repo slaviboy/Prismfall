@@ -96,6 +96,108 @@
       "L": "#ffb36b"
     }
   },
+  "requires": {
+    "sdk": "^1.5.0"
+  },
+  "clearWave": {
+    "far": 900,
+    "travel": 3.4
+  },
+  "sectionStates": {
+    "fade": 5,
+    "states": [
+      {
+        "section": [
+          "drop"
+        ],
+        "layer": "dusk-aurora",
+        "target": "intensity",
+        "scale": 1.35,
+        "anticipate": 0.6
+      },
+      {
+        "section": [
+          "drop"
+        ],
+        "layer": "snowfall",
+        "target": "turbulence",
+        "scale": 1.5,
+        "anticipate": 0.4
+      },
+      {
+        "section": [
+          "drop"
+        ],
+        "layer": "snowfall",
+        "target": "speed",
+        "scale": 1.3,
+        "anticipate": 0.4
+      },
+      {
+        "section": [
+          "break"
+        ],
+        "layer": "dusk-aurora",
+        "target": "intensity",
+        "scale": 0.75
+      },
+      {
+        "section": [
+          "break"
+        ],
+        "layer": "snowfall",
+        "target": "density",
+        "scale": 0.55
+      },
+      {
+        "section": [
+          "break"
+        ],
+        "layer": "snowfall",
+        "target": "speed",
+        "scale": 0.6
+      },
+      {
+        "section": [
+          "intro",
+          "verse",
+          "build",
+          "drop",
+          "outro"
+        ],
+        "layer": "elk",
+        "target": "visible",
+        "scale": 0
+      }
+    ]
+  },
+  "events": [
+    {
+      "layer": "snowy-owl",
+      "on": "clear>=4",
+      "quantize": "bar",
+      "cooldown": 14,
+      "action": "pass"
+    },
+    {
+      "layer": "snowy-owl",
+      "on": "combo>=4",
+      "quantize": "bar",
+      "cooldown": 22,
+      "action": "pass"
+    },
+    {
+      "layer": "elk",
+      "on": "b2b",
+      "quantize": "bar",
+      "cooldown": 30,
+      "action": "show",
+      "params": {
+        "seconds": 2.5,
+        "hold": 24
+      }
+    }
+  ],
   "environment": {
     "layers": [
       {
@@ -203,7 +305,10 @@
           "rays": 0.7,
           "rayScale": 95,
           "gaps": 0.6,
-          "edge": 0.04
+          "edge": 0.04,
+          "clearWave": {
+            "surge": 1.1
+          }
         },
         "bind": [
           {
@@ -278,6 +383,11 @@
           "glow": {
             "color": "#7fe8ff",
             "strength": 0.0
+          },
+          "clearWave": {
+            "glint": 1.3,
+            "sheen": 0.25,
+            "color": "#eef9ff"
           }
         },
         "bind": [
@@ -318,6 +428,10 @@
             "resolution": 0.5,
             "distortion": 0.003,
             "tint": "#e8f2fa"
+          },
+          "clearWave": {
+            "glitter": 1.0,
+            "color": "#e2f6ff"
           }
         },
         "bind": [
@@ -421,7 +535,214 @@
               "overlay": 0.3,
               "size": 1.1,
               "brightness": 0.9
+            },
+            "clearWave": 0.6
+          }
+        },
+        "bind": []
+      },
+      {
+        "id": "elk",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/elk.glb",
+          "render": "particles",
+          "animation": {
+            "clip": "WalkSlow",
+            "inPlace": true
+          },
+          "instances": [
+            {
+              "position": [
+                66,
+                0,
+                -38
+              ],
+              "scale": 2.6,
+              "walk": {
+                "to": [
+                  27,
+                  0,
+                  -48
+                ],
+                "via": [
+                  [
+                    54,
+                    0,
+                    -41
+                  ],
+                  [
+                    40,
+                    0,
+                    -44
+                  ]
+                ],
+                "smooth": true,
+                "speed": 2.2,
+                "fade": 0.12,
+                "ease": 1.4,
+                "stops": [
+                  {
+                    "at": 0.55,
+                    "for": 9,
+                    "clip": "Stand_Eating_01"
+                  }
+                ]
+              }
+            },
+            {
+              "position": [
+                72,
+                0,
+                -44
+              ],
+              "scale": 2.4,
+              "walk": {
+                "to": [
+                  33,
+                  0,
+                  -54
+                ],
+                "via": [
+                  [
+                    60,
+                    0,
+                    -47
+                  ],
+                  [
+                    46,
+                    0,
+                    -50
+                  ]
+                ],
+                "smooth": true,
+                "speed": 2.1,
+                "phase": 0.08,
+                "fade": 0.12,
+                "ease": 1.4
+              }
             }
+          ],
+          "particles": {
+            "count": 10000,
+            "size": 0.09,
+            "brightness": 2.5,
+            "tint": "#8f877d",
+            "colorMix": 0.45,
+            "blend": "normal",
+            "jitter": 0.01,
+            "spread": 5,
+            "wind": [
+              1.2,
+              0.8,
+              0.2
+            ],
+            "bloom": 0.02,
+            "shading": 0.6,
+            "light": [
+              -0.3,
+              0.9,
+              0.8
+            ],
+            "seed": 35,
+            "style": "glowEdges",
+            "glow": {
+              "color": "#d6efff",
+              "textureMix": 0.1,
+              "core": 0.06,
+              "edge": 1.7,
+              "twinkle": 0.5,
+              "sparkle": 0.15,
+              "drift": 0.02,
+              "flow": 0.2,
+              "flowRate": 0.1,
+              "shed": 0.22,
+              "shedLife": 2,
+              "shedSpread": 0.8,
+              "breathe": 0.25,
+              "shimmer": 0.4,
+              "overlay": 0.3,
+              "size": 1.1,
+              "brightness": 0.9
+            },
+            "clearWave": 0.6
+          }
+        },
+        "bind": []
+      },
+      {
+        "id": "snowy-owl",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/snowy-owl.glb",
+          "render": "particles",
+          "instances": [
+            {
+              "position": [
+                0,
+                0,
+                -200
+              ],
+              "yaw": 0,
+              "scale": 1.8,
+              "snapToGround": false,
+              "pass": true
+            }
+          ],
+          "pass": {
+            "duration": 7,
+            "distance": [
+              20,
+              90
+            ],
+            "height": 0.3,
+            "margin": 0.22,
+            "side": "alternate",
+            "direction": "in"
+          },
+          "particles": {
+            "count": 9000,
+            "size": 0.04,
+            "brightness": 2.4,
+            "tint": "#f4f6f8",
+            "colorMix": 0.5,
+            "blend": "normal",
+            "jitter": 0.01,
+            "spread": 1.5,
+            "wind": [
+              0.6,
+              0.4,
+              0.1
+            ],
+            "bloom": 0.02,
+            "shading": 0.6,
+            "light": [
+              -0.3,
+              0.9,
+              0.8
+            ],
+            "seed": 33,
+            "style": "glowEdges",
+            "glow": {
+              "color": "#e6f6ff",
+              "textureMix": 0.1,
+              "core": 0.06,
+              "edge": 1.7,
+              "twinkle": 0.5,
+              "sparkle": 0.15,
+              "drift": 0.02,
+              "flow": 0.2,
+              "flowRate": 0.1,
+              "shed": 0.25,
+              "shedLife": 1.6,
+              "shedSpread": 0.6,
+              "breathe": 0.25,
+              "shimmer": 0.4,
+              "overlay": 0.3,
+              "size": 1.1,
+              "brightness": 0.9
+            },
+            "clearWave": 0.6
           }
         },
         "bind": []
@@ -455,7 +776,11 @@
           "brightness": 0.6,
           "shape": "snow",
           "seed": 13,
-          "bloom": 0.25
+          "bloom": 0.25,
+          "clearWave": {
+            "brightness": 0.9,
+            "stir": 1.6
+          }
         },
         "bind": [
           {
@@ -517,6 +842,28 @@
         "layers": [
           "snowfall"
         ]
+      },
+      {
+        "name": "clear-gust",
+        "layers": [
+          "snowfall"
+        ]
+      },
+      {
+        "name": "clear-glow",
+        "layers": [
+          "dusk-aurora"
+        ],
+        "amount": 0.7
+      },
+      {
+        "name": "combo-heat",
+        "layers": [
+          "dusk-aurora",
+          "wolf",
+          "elk"
+        ],
+        "amount": 0.6
       }
     ],
     "bindings": []
