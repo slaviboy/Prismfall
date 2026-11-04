@@ -57,14 +57,16 @@ export class FeedbackDirector {
     const age = frameUniforms.time.sub(a0.w);
     const k = clamp(age.div(max(a1.w, 0.01)), 0, 1);
     const alive = smoothstep(0, 0.001, age).mul(float(1).sub(smoothstep(0.98, 1, k)));
-    // Flash to white, then shrink away while glowing in the piece colour.
+    // Flash bright in the piece colour (only a hint of white), then shrink away glowing. A flash to
+    // white (colour x3.7 + 1.5) washed a QUAD's rows out to pastels and bloomed into a white halo
+    // over the board; the blocks should read as lit, saturated cubes at the clear.
     const scale = float(1).sub(k.pow(1.6)).mul(alive).add(k.mul(0.15).mul(alive));
-    const flash = exp(k.mul(-6)).mul(2.5);
-    const color = a1.xyz.mul(float(1.2).add(flash)).add(flash.mul(0.6)).mul(alive).mul(float(1).sub(k.mul(0.6)));
+    const flash = exp(k.mul(-7)).mul(1.1);
+    const color = a1.xyz.mul(float(1.1).add(flash)).add(flash.mul(0.1)).mul(alive).mul(float(1).sub(k.mul(0.6)));
     const material = new MeshBasicNodeMaterial();
     material.positionNode = positionGeometry.mul(scale).add(a0.xyz);
     material.colorNode = vec4(color, 1);
-    material.mrtNode = mrt({ emissive: vec4(color.mul(0.9), 1) });
+    material.mrtNode = mrt({ emissive: vec4(color.mul(0.35), 1) });
     material.transparent = true;
     material.depthWrite = false;
     material.blending = AdditiveBlending;
