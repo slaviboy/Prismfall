@@ -2,7 +2,7 @@
  * Performance benchmark: plays Zen with the built-in AI in Chrome (real GPU) across resolutions,
  * quality presets, backends and stages, recording frame time, GPU time and renderer counters.
  *
- * Usage: npm run perf -- [--quick] [--stages a,b] [--presets high,ultra] [--backends webgpu,webgl2] [--seconds 8]
+ * Usage: npm run perf -- [--quick] [--stages a,b] [--presets high,ultra] [--backends webgpu,webgl2] [--seconds 8] [--settle 2500]
  *   [--resolutions 2560x1440,3840x2160] [--port 4174 --dist dist-test]
  * Requires a test build (npm run build:test); started automatically if dist-test is missing.
  * --port and --dist measure a private test build instead (as in stage-shots.ts); --resolutions picks
@@ -21,6 +21,8 @@ const opt = (name: string, def: string): string => {
 };
 const quick = args.includes('--quick');
 const seconds = Number(opt('seconds', quick ? '5' : '8'));
+/** Milliseconds between starting the game and measuring (heavy worlds finish building in this time). */
+const settleMs = Number(opt('settle', '2500'));
 const presets = opt('presets', quick ? 'high,ultra' : 'low,medium,high,ultra').split(',');
 const backends = opt('backends', 'webgpu,webgl2').split(',');
 const stages = opt('stages', '').split(',').filter(Boolean);
@@ -140,7 +142,7 @@ try {
             const h = (window as unknown as { __PRISMFALL__: Hooks }).__PRISMFALL__;
             h.shell.startGame({ modeId: 'zen', variantId: 'still', stageId: h.getSettings().setup.stageId });
           });
-          await page.waitForTimeout(2500);
+          await page.waitForTimeout(settleMs);
           const m = await measure(page);
           const row: Result = { stage, backend, preset, resolution: res.name, ...m };
           results.push(row);

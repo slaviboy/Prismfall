@@ -15,6 +15,10 @@ All numbers here are measured with `npm run perf`, never estimated.
 
 **Test system:** AMD Radeon RX 9070 XT (RDNA 4), Ryzen 7 5800X3D, 32 GB RAM, Windows 10, Chrome 156, three r187.
 
+**All 23 worlds after the living-environment work (2026-11-04):** see [BACKGROUND_PERFORMANCE_REPORT.md](BACKGROUND_PERFORMANCE_REPORT.md).
+- It has a back-to-back before-and-after comparison (equal within noise) and a settled per-world matrix (`--settle 8000`).
+- The tables below were measured with the old fixed 2.5 s settle. For a world measured right after a heavy one, that can include part of the previous world's crossfade.
+
 ## Baseline — Milestone 3 (board only, before stage environments)
 
 Measured 2026-11-02 with `npm run perf -- --quick --seconds 6`.
