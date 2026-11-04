@@ -1,0 +1,25 @@
+{
+  "uid": "b4b5931851754747a734f72234c87e38",
+  "name": "Industrial robot arm",
+  "page": "https://sketchfab.com/3d-models/industrial-robot-arm-b4b5931851754747a734f72234c87e38",
+  "author": {
+    "name": "olofunot",
+    "username": "olofunot",
+    "profile": "https://sketchfab.com/olofunot"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Industrial robot arm\" by olofunot (https://sketchfab.com/3d-models/industrial-robot-arm-b4b5931851754747a734f72234c87e38), CC Attribution",
+  "downloaded": "2026-11-04",
+  "faces": 85156,
+  "vertices": 42989,
+  "animations": 1,
+  "files": [
+    {
+      "path": "robot-arm.gltf.zip",
+      "md5": "5eff9822e71631ac9fd8e74ca5f1129b",
+      "size": 105765247,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

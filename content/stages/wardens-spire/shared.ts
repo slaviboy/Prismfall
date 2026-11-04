@@ -52,6 +52,52 @@ export function siteYaw(s: Site): number {
 /** Height of the Warden's cage centre above the plateau (assets/blender/scripts/spire_kit.py WARDEN_Z). */
 export const WARDEN_HEIGHT = 395;
 
+/**
+ * How the site's tower model holds the Warden, in site units (the site `scale` turns them into
+ * metres) in the model's own frame (origin at the centre of its base, gate towards +Z). The
+ * citadel component publishes it for the Warden (its layer comes first in stage.json).
+ */
+export interface TowerFit {
+  /** Height of the Warden's cage centre above the plateau. */
+  readonly summit: number;
+  /** Free radius around that point (the cage is shrunk to fit; Infinity = any size). */
+  readonly cageRoom: number;
+  /** Top of the tower's mass above a model-space ground point (-Infinity = open ground); for the beam's reach. */
+  height(x: number, z: number): number;
+}
+
+/** The Blender citadel (spire_kit.py): the Warden in the open lantern, a stepped silhouette. */
+export const CITADEL_FIT: TowerFit = {
+  summit: WARDEN_HEIGHT,
+  cageRoom: Infinity,
+  height(x, z) {
+    const r = Math.hypot(x, z);
+    return r < 40 ? 358 : r < 95 ? 300 : r < 140 ? 96 : r < 230 ? 40 : -Infinity;
+  },
+};
+
+/** A tower's fit from its GLB scene extras (`prismfall`, written by scripts/build-spire-tower.ts); null when it has none. */
+export function towerFit(extras: unknown): TowerFit | null {
+  const e = (extras as { prismfall?: { summit?: unknown; cageRoom?: unknown; heights?: { half?: unknown; n?: unknown; h?: unknown } } } | null)?.prismfall;
+  if (!e || typeof e.summit !== 'number') return null;
+  const g = e.heights;
+  const half = typeof g?.half === 'number' ? g.half : 0;
+  const n = typeof g?.n === 'number' ? g.n : 0;
+  const h = Array.isArray(g?.h) && g.h.length === n * n ? (g.h as number[]) : null;
+  return {
+    summit: e.summit,
+    cageRoom: typeof e.cageRoom === 'number' ? e.cageRoom : Infinity,
+    height(x, z) {
+      if (!h || half <= 0) return -Infinity;
+      const i = Math.floor(((x + half) / (2 * half)) * n);
+      const j = Math.floor(((z + half) / (2 * half)) * n);
+      if (i < 0 || j < 0 || i >= n || j >= n) return -Infinity;
+      const v = h[j * n + i] ?? 0;
+      return v > 0 ? v : -Infinity;
+    },
+  };
+}
+
 /** A point at a view azimuth (degrees) and ground distance from the eye. */
 export function polar(azimuth: number, distance: number): [number, number] {
   const a = azimuth * DEG;
@@ -76,6 +122,8 @@ export interface SpireShared {
     readonly beamReach: U1;
     /** The core's glow (about 1; higher focusing and awake). */
     readonly coreGlow: U1;
+    /** Softening of the core's point light (m^2, about its radius squared): a smaller cage's fire lights what is close to it harder. */
+    readonly coreSoft: U1;
     /** 0..1 awakening: the summit and the clouds light up. */
     readonly awaken: U1;
     /** Current lightning flash position and power. */
@@ -95,6 +143,8 @@ export interface SpireShared {
   /** The lava channels as a texture over the land (distance, flow, half-width) and its extent. */
   river: { tex: Texture; x0: number; z0: number; w: number; h: number } | null;
   noise: Promise<Data3DTexture> | null;
+  /** The tower's fit (set by the citadel; the Warden falls back to CITADEL_FIT without one). */
+  tower: TowerFit | null;
   readonly textures: Map<string, Promise<Texture | null>>;
   users: number;
 }
@@ -114,6 +164,7 @@ export function shared(ctx: EnvironmentContext): SpireShared {
         beamPower: uniform(0),
         beamReach: uniform(1500),
         coreGlow: uniform(1),
+        coreSoft: uniform(900),
         awaken: uniform(0),
         boltPos: uniform(new Vector3(0, 600, -3000)),
         boltPower: uniform(0),
@@ -125,6 +176,7 @@ export function shared(ctx: EnvironmentContext): SpireShared {
       riverDistance: null,
       river: null,
       noise: null,
+      tower: null,
       textures: new Map(),
       users: 0,
     };
@@ -221,7 +273,7 @@ export function spireLight(s: SpireShared, world: V3, n: V3, opts: { core?: numb
   const lc = u.core.sub(world);
   const dc2 = dot(lc, lc);
   const wc = clamp(dot(n, normalize(lc)).add(0.3).div(1.3), 0, 1);
-  const coreAmount = u.coreGlow.mul(float(1).add(u.awaken.mul(1.6))).mul(9000 * kc).div(dc2.add(900));
+  const coreAmount = u.coreGlow.mul(float(1).add(u.awaken.mul(1.6))).mul(9000 * kc).div(dc2.add(u.coreSoft));
   let light: V3 = COLORS.core.mul(coreAmount.mul(wc)) as V3;
   // Beam: a searchlight cone.
   const toOrigin = normalize(u.beamOrigin.sub(world));

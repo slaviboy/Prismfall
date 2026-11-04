@@ -1,0 +1,25 @@
+{
+  "uid": "4d615971858940f38703a1f1ffb370be",
+  "name": "Eagle stingray",
+  "page": "https://sketchfab.com/3d-models/eagle-stingray-4d615971858940f38703a1f1ffb370be",
+  "author": {
+    "name": "kenchoo",
+    "username": "kenchoo",
+    "profile": "https://sketchfab.com/kenchoo"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Eagle stingray\" by kenchoo (https://sketchfab.com/3d-models/eagle-stingray-4d615971858940f38703a1f1ffb370be), CC Attribution",
+  "downloaded": "2026-11-04",
+  "faces": 13122,
+  "vertices": 6572,
+  "animations": 1,
+  "files": [
+    {
+      "path": "eagle-ray.gltf.zip",
+      "md5": "2277ebd4c056faef449af70a85c80ba7",
+      "size": 2108953,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

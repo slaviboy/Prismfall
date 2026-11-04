@@ -1,0 +1,25 @@
+{
+  "uid": "b6172618aa304473a4cf7b9246c0a218",
+  "name": "Realistic Animated Doe 3D Model",
+  "page": "https://sketchfab.com/3d-models/realistic-animated-doe-3d-model-b6172618aa304473a4cf7b9246c0a218",
+  "author": {
+    "name": "WildMesh 3D",
+    "username": "WildMesh_3D",
+    "profile": "https://sketchfab.com/WildMesh_3D"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Realistic Animated Doe 3D Model\" by WildMesh 3D (https://sketchfab.com/3d-models/realistic-animated-doe-3d-model-b6172618aa304473a4cf7b9246c0a218), CC Attribution",
+  "downloaded": "2026-11-04",
+  "faces": 5216,
+  "vertices": 2646,
+  "animations": 55,
+  "files": [
+    {
+      "path": "doe.gltf.zip",
+      "md5": "ac9caa245b7d3d0783d148417495ce96",
+      "size": 4332404,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

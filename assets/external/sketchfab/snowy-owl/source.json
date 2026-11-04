@@ -1,0 +1,25 @@
+{
+  "uid": "22ccf3e782484f968e4c1be1e78deffa",
+  "name": "Snowy Owl - Gliding 3D Bird Model",
+  "page": "https://sketchfab.com/3d-models/snowy-owl-gliding-3d-bird-model-22ccf3e782484f968e4c1be1e78deffa",
+  "author": {
+    "name": "Pigcraft",
+    "username": "s8819296",
+    "profile": "https://sketchfab.com/s8819296"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Snowy Owl - Gliding 3D Bird Model\" by Pigcraft (https://sketchfab.com/3d-models/snowy-owl-gliding-3d-bird-model-22ccf3e782484f968e4c1be1e78deffa), CC Attribution",
+  "downloaded": "2026-11-04",
+  "faces": 1898520,
+  "vertices": 949193,
+  "animations": 0,
+  "files": [
+    {
+      "path": "snowy-owl.gltf.zip",
+      "md5": "0ddcd0327e753b4ab7ff7b903fe04274",
+      "size": 73097482,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

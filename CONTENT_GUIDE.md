@@ -110,6 +110,7 @@ The SDK exports:
 | 1.1 | themed transitions (`TransitionEffect`, `sdk.transitions`), `WorldSounds` (`ctx.sounds.emit('footstep', …)`), `additiveFog` |
 | 1.2 | `GroundField.surface(x, z)` and `GroundField.setWaterLevel(y)` (the water component declares its surface so a VR viewer stands on it) |
 | 1.3 | `ctx.shakeWorld(strength, seconds)`: a decaying tremor of the world root only (never the board, HUD or camera; off under reduced motion and in VR, scaled by the screen-effects setting), and `frameUniforms.screenEffects` (the screen-effects setting, 0 in VR) for screen-space world effects. Ashen Vigil uses both |
+| 1.4 | creature world sounds: `ctx.sounds.emit()` accepts `skitter`, `crawl`, `silk` and `webHum` (see "World sounds" in section 9), and the `WorldSoundName` type |
 | 1.5 | Weather (Dark Storm): `ctx.sounds.weather?.(state)` keeps rain and wind beds sounding (call it every frame or so with `rain` 0..1.5, `wind`, `gust` and an optional `surfaces` mix of water, rock, wood and foliage; the beds fade out soon after the calls stop), `ctx.sounds.storm?.(sound)` schedules a thunder `delay` seconds ahead on the audio clock or a lightning crack (`{ kind, x, y, z, distance, energy, delay, seed, strokes, channel, tag }`; `distance` is the apparent distance that shapes the sound and picks the near or distant thunder bus), and `frameUniforms.weatherIntensity` (the Storm intensity setting: 0.55 subtle, 1 normal, 1.35 heavy, 1.7 extreme). Rain, wind, distant thunder, nearby thunder and the crack each have their own bus and volume setting (Settings → Audio → Weather). 1.4 is reserved for parallel work and may land with other additions |
 
 Two version checks exist:
@@ -438,8 +439,8 @@ For recorded or produced music, use `kind: "file"` with an audio file and a `tra
 
 | Field | Values |
 |---|---|
-| `ambience.preset` | `ocean`, `foundry`, `space`, `forest`, `wind`, `rain`, `underwater`, `city`, `cathedral`, `arctic`, `horizon`, `desert`, `ice`, `garden`, `cosmos`, `alpine`, `abyss`, `wilderness`, `volcanic`, `aurora`, `neon`, `veil`, `storm` (`src/audio/sound-effects/Ambience.ts`). Each preset is filtered noise layers with slow LFOs, plus occasional synthesised events. An unknown name plays silence. |
-| `sfx.preset` | The tonal family for gameplay sounds: `glass`, `metal`, `crystal`, `organic`, `neon`, `paper`, `stone`, `ice`, `oasis`, `koto`, `void` (`SFX_PRESETS` in `SfxBank.ts`). Unknown names fail `npm run content:validate`. |
+| `ambience.preset` | `ocean`, `foundry`, `space`, `forest`, `wind`, `rain`, `underwater`, `city`, `cathedral`, `arctic`, `horizon`, `desert`, `ice`, `garden`, `cosmos`, `alpine`, `abyss`, `wilderness`, `volcanic`, `aurora`, `neon`, `veil`, `web`, `storm` (`src/audio/sound-effects/Ambience.ts`). Each preset is filtered noise layers with slow LFOs, plus occasional synthesised events. An unknown name plays silence. |
+| `sfx.preset` | The tonal family for gameplay sounds: `glass`, `metal`, `crystal`, `organic`, `neon`, `paper`, `stone`, `ice`, `oasis`, `koto`, `gossamer`, `void` (`SFX_PRESETS` in `SfxBank.ts`). Unknown names fail `npm run content:validate`. |
 | `sfx.material` | The block impact sound: a built-in `MaterialAudioProfile` name (`glass`, `pearl`, `metal`, `sandstone`, `ice`, `wood`, `cosmic`, `mineral`, `water`, `organic`, `obsidian`, `aurora`, `neon`, `paper`) or an inline profile. Unknown names fail `npm run content:validate`; an invalid inline profile falls back to `glass` at runtime. |
 | `sfx.overrides` | A map from sound id (`SFX_IDS` in `SfxBank.ts`, e.g. `lock`, `hardDrop`, `clear4`) to a stage audio file. The file replaces the generated sound for that id (no variations). Validation checks that the files exist; unknown ids are skipped with a console warning. |
 
@@ -521,6 +522,16 @@ The manifest then uses these names like built-ins: `"type": "paperCranes"`, `"ef
 Things to know:
 
 - **Components.** `create(ctx, params)` may be async. `ctx` provides `scene`, `quality` (detail, particle density, reflections, reduced motion), `uniforms` (`frameUniforms`), `assets` (`url`, `loadGLTF`/`release`, `json`), `bursts`, `palette`, `ground` and `sounds`. The returned component has `object` and `dispose()`. Optional members are `reactive`, `update(frame)`, `onBeat(beat)`, `onGameEvent(event)` (clear, levelUp, hardDrop, lock, danger, gameOver) and `setPresence(0..1)` for crossfades. Scale costs with `ctx.quality`, never gameplay.
+- **World sounds.** `ctx.sounds.emit(id, x, y, z, gain?)` plays a one-shot at a world position, panned for the listener (HRTF when Spatial audio is on).
+  - **Ids.** `footstep` is a footfall made from the world's block material. Since SDK 1.4 there are also:
+    - `skitter`: a small spider's dash. Emit one per dash, not one per leg.
+    - `crawl`: one step of a large spider. Emit one each time a set of legs lands, about every half gait cycle.
+    - `silk`: a thread stretching or creaking.
+    - `webHum`: a web vibrating, played in the music's key.
+  - **Gain.** The gain is the loudness; distance attenuation comes on top. For `skitter` and `crawl` it is also the weight: 0.2 sounds like a lighter, smaller animal and 1 the heaviest.
+  - **Rate limits.** Each sound has its own limit per second: footstep 6, skitter 3, crawl 4, silk 2 and webHum 2. All of them share a limit of 10 per second, and at most 12 sound at once. Requests over a limit are dropped, so emit only what should be heard, and keep skitters occasional.
+  - **SDK version.** A stage that uses the 1.4 sounds sets `requires.sdk` to `^1.4.0`.
+  - See "Creature sounds" in `AUDIO_ASSETS.md`.
 - **World drones.** `ctx.sounds.drone?.(id, level, hz, brightness, pan)` keeps a sustained world voice (a hum or drone, on the ambience bus) sounding while you call it every frame or so; it fades out by itself soon after the calls stop. The Warden's Spire uses it for the Warden's hum. It is optional on `WorldSounds`, so call it with `?.`.
 - **Registry keys are global.** A later registration with the same key replaces the earlier one for every stage, so a module that registers `sky` would replace the built-in sky for every stage loaded after it. Use names of your own.
 - **Validation cannot run the module.** For a stage with a `module`, the validator accepts any layer type, and the content test accepts any line-clear effect name and skips parameter checks for module-provided layers. If the module does not actually register a type, the layer is skipped with a warning when the stage builds.

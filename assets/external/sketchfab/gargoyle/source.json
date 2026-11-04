@@ -1,0 +1,25 @@
+{
+  "uid": "2581387ab6454f1787e50d5909b325aa",
+  "name": "Gargoyle #3DST27",
+  "page": "https://sketchfab.com/3d-models/gargoyle-3dst27-2581387ab6454f1787e50d5909b325aa",
+  "author": {
+    "name": "alban",
+    "username": "alban",
+    "profile": "https://sketchfab.com/alban"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Gargoyle #3DST27\" by alban (https://sketchfab.com/3d-models/gargoyle-3dst27-2581387ab6454f1787e50d5909b325aa), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 71817,
+  "vertices": 36106,
+  "animations": 0,
+  "files": [
+    {
+      "path": "gargoyle.gltf.zip",
+      "md5": "312bb63fbe3a196175623efb685a63b1",
+      "size": 8389399,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

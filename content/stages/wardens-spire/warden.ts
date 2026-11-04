@@ -47,7 +47,7 @@ import { additiveFog, seeded, z, type ComponentFactory, type EnvironmentContext,
 import { WardenController, type WardenOutput } from './controller';
 import { beamDirection, gazeRules, gazeTowards } from './gaze';
 import { wardenPosition } from './citadel';
-import { COLORS, DEG, EYE, clearMask, duskLight, macro, noise3D, polar, release, revealMask, shared, siteCentre, spireLight, stageTexture, triplanar, zSite } from './shared';
+import { CITADEL_FIT, COLORS, DEG, EYE, clearMask, duskLight, macro, noise3D, polar, release, revealMask, shared, siteCentre, siteYaw, spireLight, stageTexture, triplanar, zSite } from './shared';
 
 /**
  * The Warden: a churning molten core held in a cage of three carved stone rings at the summit of
@@ -98,16 +98,25 @@ export const wardenComponent: ComponentFactory<Params> = {
     const [gltf, rock, noise] = await Promise.all([ctx.assets.loadGLTF(p.src), stageTexture(ctx, s, p.rock, 'color'), noise3D(s)]);
     const group = new Group();
     group.name = 'wardens-spire-warden';
-    const W = wardenPosition(p.site);
+    // The tower on the site says where the Warden sits and how much room it has there (the
+    // citadel's layer is built first); the cage, its fire and the beam's mouth shrink to fit.
+    const fit = s.tower ?? CITADEL_FIT;
+    const W = wardenPosition(p.site, fit);
+    const size = Math.min(1, (fit.cageRoom * p.site.scale * 0.92) / cageRadius(gltf.scene));
     const presence = uniform(1);
     const time = ctx.uniforms.time;
     const disposables: { dispose(): void }[] = [];
     s.u.core.value.set(W[0], W[1], W[2]);
+    // A smaller fire sits closer to what it lights (the horns of a tower's crown): soften its
+    // light by its own size, and keep the cage's look by scaling its share the same way.
+    s.u.coreSoft.value = 900 * size * size;
+    const cageLight = size * size;
 
     // --- The cage: ring A turns on its own, ring B follows the heading, ring C, the collar and
     // the shutters follow the full aim. Nested lag makes them swing after one another.
     const root = new Group();
     root.position.set(W[0], W[1], W[2]);
+    root.scale.setScalar(size);
     group.add(root);
     const ringAHolder = new Group();
     const yawG = new Group();
@@ -156,7 +165,7 @@ export const wardenComponent: ComponentFactory<Params> = {
     const grey = dot(tex, vec3(0.3, 0.55, 0.15));
     const alb = mix(vec3(grey, grey, grey), tex, 0.2).mul(0.3).mul(macro(wp, 0.05));
     const cageStone = new MeshBasicNodeMaterial();
-    cageStone.colorNode = vec4(alb.mul(spireLight(s, wp, n, { core: 1.4, beam: 0, bolt: 1, rim: 1 }).add(duskLight(wp, n, { back: 0.8, k: 0.45 }))).mul(presence), 1);
+    cageStone.colorNode = vec4(alb.mul(spireLight(s, wp, n, { core: 1.4 * cageLight, beam: 0, bolt: 1, rim: 1 }).add(duskLight(wp, n, { back: 0.8, k: 0.45 }))).mul(presence), 1);
     cageStone.mrtNode = mrt({ emissive: vec4(0, 0, 0, 1) });
     cageStone.fog = true;
     cageStone.opacityNode = revealMask(presence);
@@ -166,7 +175,7 @@ export const wardenComponent: ComponentFactory<Params> = {
     const toCore = normalize(s.u.core.sub(wp));
     const sheen = clamp(dot(normalize(toCore.sub(view)), n), 0, 1).pow(14).mul(s.u.coreGlow);
     const cageIron = new MeshBasicNodeMaterial();
-    cageIron.colorNode = vec4(ironAlb.mul(spireLight(s, wp, n, { core: 1.6, beam: 0, bolt: 1, rim: 1 }).add(duskLight(wp, n, { k: 0.45 }))).add(COLORS.coreHot.mul(sheen.mul(1.2))).mul(presence), 1);
+    cageIron.colorNode = vec4(ironAlb.mul(spireLight(s, wp, n, { core: 1.6 * cageLight, beam: 0, bolt: 1, rim: 1 }).add(duskLight(wp, n, { k: 0.45 }))).add(COLORS.coreHot.mul(sheen.mul(1.2))).mul(presence), 1);
     cageIron.mrtNode = mrt({ emissive: vec4(0, 0, 0, 1) });
     cageIron.fog = true;
     cageIron.opacityNode = revealMask(presence);
@@ -220,7 +229,7 @@ export const wardenComponent: ComponentFactory<Params> = {
     }
     const fa = instancedBufferAttribute<'vec4'>(new InstancedBufferAttribute(fd, 4), 'vec4');
     const fAge = fract(time.mul(fa.z.mul(0.32)).add(fa.w));
-    const fPos = vec3(W[0], W[1], W[2]).add(vec3(sin(fa.x).mul(coreR * 0.5), fAge.mul(38).sub(2), sin(fa.x.add(1.57)).mul(coreR * 0.5)));
+    const fPos = vec3(W[0], W[1], W[2]).add(vec3(sin(fa.x).mul(coreR * 0.5 * size), fAge.mul(38 * size).sub(2 * size), sin(fa.x.add(1.57)).mul(coreR * 0.5 * size)));
     const fq = uv().sub(0.5).mul(2);
     const fn = texture3D(noise, vec3(uv().x.mul(0.6).add(fa.y), uv().y.mul(0.3).sub(fAge.mul(0.6)), fa.w.add(time.mul(0.05)))).r;
     const tongue = smoothstep(1, 0, length(vec3(fq.x.mul(1.6), fq.y, 0))).mul(smoothstep(0.35, 0.7, fn.add(fq.y.mul(-0.2)).add(0.15)));
@@ -228,7 +237,7 @@ export const wardenComponent: ComponentFactory<Params> = {
     const flameE = mix(COLORS.coreHot, COLORS.core, fAge).mul(tongue.mul(fLife).mul(u.glow).mul(1.25));
     const flameMat = new SpriteNodeMaterial();
     flameMat.positionNode = fPos;
-    flameMat.scaleNode = float(20).add(fAge.mul(18)).mul(fa.z);
+    flameMat.scaleNode = float(20).add(fAge.mul(18)).mul(fa.z).mul(size);
     flameMat.colorNode = vec4(additiveFog(flameE.mul(presence)), 1);
     flameMat.blending = AdditiveBlending;
     flameMat.transparent = true;
@@ -252,8 +261,8 @@ export const wardenComponent: ComponentFactory<Params> = {
     const rag = texture3D(noise, vec3(cq.x.mul(0.6).add(0.5), cq.y.mul(0.35).sub(time.mul(0.05)), time.mul(0.013))).r;
     const corona = exp(cr2.mul(cr2).mul(-4.2)).mul(smoothstep(0.25, 0.75, rag.add(cq.y.mul(-0.15)).add(0.2))).mul(smoothstep(1, 0.5, cr)).mul(cn.mul(0.3).add(0.85));
     const coronaE = COLORS.core.mul(corona.mul(u.glow).mul(float(0.32).add(s.u.awaken.mul(1.1))));
-    coronaMat.positionNode = vec3(W[0], W[1] + 22, W[2]);
-    coronaMat.scaleNode = float(96).mul(float(1).add(s.u.awaken.mul(0.4)));
+    coronaMat.positionNode = vec3(W[0], W[1] + 22 * size, W[2]);
+    coronaMat.scaleNode = float(96 * size).mul(float(1).add(s.u.awaken.mul(0.4)));
     coronaMat.colorNode = vec4(additiveFog(coronaE.mul(presence)), 1);
     coronaMat.blending = AdditiveBlending;
     coronaMat.transparent = true;
@@ -271,7 +280,7 @@ export const wardenComponent: ComponentFactory<Params> = {
     const sd = new Float32Array(sparkCount * 4);
     for (let i = 0; i < sparkCount; i++) {
       sd[i * 4] = frand() * Math.PI * 2;
-      sd[i * 4 + 1] = 14 + frand() * 34;
+      sd[i * 4 + 1] = (14 + frand() * 34) * size;
       sd[i * 4 + 2] = frand();
       sd[i * 4 + 3] = 0.5 + frand();
     }
@@ -279,12 +288,12 @@ export const wardenComponent: ComponentFactory<Params> = {
     const sAge = fract(time.mul(0.11).mul(sa.w).add(sa.z));
     const sAng = sa.x.add(time.mul(0.12).mul(sa.w)).add(sAge.mul(1.4));
     const sR = sa.y.mul(float(0.6).add(sAge.mul(0.8)));
-    const sPos = vec3(W[0], W[1], W[2]).add(vec3(sin(sAng).mul(sR), sAge.mul(110).sub(10).add(sin(sAng.mul(3)).mul(4)), sin(sAng.add(1.57)).mul(sR)));
+    const sPos = vec3(W[0], W[1], W[2]).add(vec3(sin(sAng).mul(sR), sAge.mul(110 * size).sub(10 * size).add(sin(sAng.mul(3)).mul(4 * size)), sin(sAng.add(1.57)).mul(sR)));
     const sShape = smoothstep(1, 0, length(uv().sub(0.5).mul(2))).pow(2.2);
     const sE = vec3(1.0, 0.5, 0.15).mul(sShape.mul(float(1).sub(sAge)).mul(smoothstep(0, 0.06, sAge)).mul(2.6).mul(u.glow).mul(float(0.8).add(u.stir.mul(0.6))));
     const sparkMat = new SpriteNodeMaterial();
     sparkMat.positionNode = sPos;
-    sparkMat.scaleNode = float(2.4).mul(float(1).sub(sAge.mul(0.5)));
+    sparkMat.scaleNode = float(2.4 * Math.sqrt(size)).mul(float(1).sub(sAge.mul(0.5)));
     sparkMat.colorNode = vec4(additiveFog(sE.mul(presence)), 1);
     sparkMat.blending = AdditiveBlending;
     sparkMat.transparent = true;
@@ -404,10 +413,20 @@ export const wardenComponent: ComponentFactory<Params> = {
     });
     s.wake = (k) => controller.awaken(k);
 
-    // Where the beam meets the land (or the fortress), marched on the CPU each frame.
+    // Where the beam meets the land (or the fortress), marched on the CPU each frame. The
+    // beam leaves the cage's collar, 20 m out at full size.
+    const mouth = 20 * size;
+    const sc = p.site.scale;
+    const turnC = Math.cos(siteYaw(p.site));
+    const turnS = Math.sin(siteYaw(p.site));
+    const towerTop = (x: number, zz: number): number => {
+      const dx = (x - site[0]) / sc;
+      const dz = (zz - site[2]) / sc;
+      return site[1] + fit.height(dx * turnC - dz * turnS, dx * turnS + dz * turnC) * sc;
+    };
     const reachOf = (h: number, pt: number): number => {
       const d = beamDirection(h, pt);
-      const o = [W[0] + d[0] * 20, W[1] + d[1] * 20, W[2] + d[2] * 20];
+      const o = [W[0] + d[0] * mouth, W[1] + d[1] * mouth, W[2] + d[2] * mouth];
       let t = 0;
       const stepLen = 14;
       while (t < 3000) {
@@ -415,11 +434,7 @@ export const wardenComponent: ComponentFactory<Params> = {
         const x = o[0]! + d[0] * t;
         const y = o[1]! + d[1] * t;
         const zz = o[2]! + d[2] * t;
-        const sc = p.site.scale;
-        const rs = Math.hypot(x - site[0], zz - site[2]) / sc;
-        const fortress = rs < 140 ? site[1] + 96 * sc : rs < 230 ? site[1] + 40 * sc : -1e9;
-        const spire = rs < 40 ? site[1] + 358 * sc : rs < 95 ? site[1] + 300 * sc : -1e9;
-        if (y < Math.max(ctx.ground.height(x, zz), fortress, spire)) return t;
+        if (y < Math.max(ctx.ground.height(x, zz), towerTop(x, zz))) return t;
       }
       return 3000;
     };
@@ -474,7 +489,7 @@ export const wardenComponent: ComponentFactory<Params> = {
         const tanA = (tanOpen + (tanFocus - tanOpen) * Math.max(0, Math.min(1, o.aperture))) * (1 + Math.max(0, -o.aperture) * 0.6);
         const reach = reachOf(o.heading, o.pitch);
         bu.beamDir.value.copy(dir);
-        bu.beamOrigin.value.set(W[0] + d[0] * 20, W[1] + d[1] * 20, W[2] + d[2] * 20);
+        bu.beamOrigin.value.set(W[0] + d[0] * mouth, W[1] + d[1] * mouth, W[2] + d[2] * mouth);
         bu.beamTan.value = tanA;
         bu.beamReach.value = reach;
         // Focusing pours the same light into a narrower cone: brighter per area.
@@ -537,3 +552,15 @@ export const wardenComponent: ComponentFactory<Params> = {
   },
 };
 
+/** Radius of the cage model around its centre (it turns, so its whole sphere must fit). */
+function cageRadius(scene: Object3D): number {
+  scene.updateMatrixWorld(true);
+  const v = new Vector3();
+  let r = 0;
+  scene.traverse((o) => {
+    if (!(o instanceof Mesh)) return;
+    const pos = o.geometry.getAttribute('position');
+    for (let i = 0; i < pos.count; i++) r = Math.max(r, v.fromBufferAttribute(pos, i).applyMatrix4(o.matrixWorld).length());
+  });
+  return r || 1;
+}

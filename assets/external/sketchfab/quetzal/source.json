@@ -1,0 +1,25 @@
+{
+  "uid": "b55517c209d74762b371bc6ce0d1e56f",
+  "name": "Quetzal Animation & Texture Test",
+  "page": "https://sketchfab.com/3d-models/quetzal-animation-texture-test-b55517c209d74762b371bc6ce0d1e56f",
+  "author": {
+    "name": "Christian-Gomez",
+    "username": "Christian-Gomez",
+    "profile": "https://sketchfab.com/Christian-Gomez"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Quetzal Animation & Texture Test\" by Christian-Gomez (https://sketchfab.com/3d-models/quetzal-animation-texture-test-b55517c209d74762b371bc6ce0d1e56f), CC Attribution",
+  "downloaded": "2026-11-04",
+  "faces": 10708,
+  "vertices": 5496,
+  "animations": 1,
+  "files": [
+    {
+      "path": "quetzal.gltf.zip",
+      "md5": "9a7b079f9259d2c54ce884ea41811aba",
+      "size": 4451698,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

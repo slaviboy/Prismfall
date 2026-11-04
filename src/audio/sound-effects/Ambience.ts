@@ -1,25 +1,49 @@
 import { playNote } from '../synth/instruments';
-import { noiseBuffers } from '../synth/resources';
+import { longPinkNoise, noiseBuffers } from '../synth/resources';
+import { localCreatureSample, webEvent, type AmbienceEnv } from './ambienceVoices';
 
 /**
  * Procedural ambience beds per world: filtered noise layers with slow LFO motion plus sparse
  * scheduled events (wave crashes, clanks, bubbles, chirps). Crossfades between presets.
  */
 interface Layer {
-  readonly noise: 'white' | 'pink';
+  /** `longPink` is an 11 s loop for quiet narrow bands, where the shared 2 s loop would be heard repeating. */
+  readonly noise: 'white' | 'pink' | 'longPink';
+  /** Playback rate of the noise (layers sharing the long loop at different rates never line up). */
+  readonly rate?: number;
   readonly filter: BiquadFilterType;
   readonly freq: number;
   readonly q: number;
   readonly gain: number;
   /** LFO rate (Hz) and depth (0..1) on the layer gain: swells, wind gusts. */
   readonly lfo?: readonly [number, number];
-  /** Slow filter sweep depth in Hz. */
+  /** Slow filter sweep depth in Hz, and its rate (Hz, default 0.031). */
   readonly sweep?: number;
+  readonly sweepRate?: number;
+}
+
+/** An echo for a preset's events (a cave, a hall): parallel feedback delays, darker on each repeat. */
+interface Space {
+  /** Delay times (s); alternate taps are panned left and right. */
+  readonly delays: readonly number[];
+  readonly feedback: number;
+  /** Low-pass on the way in and inside each loop (Hz). */
+  readonly cutoff: number;
+  readonly level: number;
+}
+
+interface AmbienceEvent {
+  readonly every: readonly [number, number];
+  /** Chance of a longer silence after an event, and its length range (s). */
+  readonly rest?: readonly [number, number, number];
+  /** Plays one event at `t` into `out`; `env` holds the echo send and the world's creature sounds. */
+  readonly play: (ctx: BaseAudioContext, out: AudioNode, t: number, env: AmbienceEnv) => void;
 }
 
 interface Preset {
   readonly layers: readonly Layer[];
-  readonly event?: { readonly every: readonly [number, number]; readonly play: (ctx: AudioContext, out: AudioNode, t: number) => void };
+  readonly space?: Space;
+  readonly event?: AmbienceEvent;
 }
 
 const PRESETS: Record<string, Preset> = {
@@ -224,6 +248,21 @@ const PRESETS: Record<string, Preset> = {
       },
     },
   },
+  // The Web: still cave air and a low room tone under a ruin, wind moaning faintly through two
+  // stone arches, a fine hiss of moving air. Events (ambienceVoices.webEvent) are sparse and varied
+  // and often nothing at all: far drips in the cave's echo, a small insect, a silk creak, a rustle,
+  // a pebble; rarely a far skitter, something large crawling far off, a web humming.
+  web: {
+    layers: [
+      { noise: 'longPink', filter: 'lowpass', freq: 120, q: 0.7, gain: 0.3, lfo: [0.021, 0.35] },
+      { noise: 'longPink', rate: 0.96, filter: 'bandpass', freq: 420, q: 0.5, gain: 0.06, lfo: [0.037, 0.5] },
+      { noise: 'longPink', rate: 1.05, filter: 'bandpass', freq: 310, q: 5, gain: 0.2, lfo: [0.047, 0.92], sweep: 70, sweepRate: 0.023 },
+      { noise: 'longPink', rate: 0.93, filter: 'bandpass', freq: 540, q: 7, gain: 0.16, lfo: [0.029, 0.95], sweep: 110, sweepRate: 0.041 },
+      { noise: 'white', filter: 'bandpass', freq: 5200, q: 0.8, gain: 0.006, lfo: [0.07, 0.8] },
+    ],
+    space: { delays: [0.137, 0.191, 0.263, 0.347], feedback: 0.52, cutoff: 2600, level: 0.55 },
+    event: { every: [2.2, 6.5], rest: [0.2, 7, 15], play: webEvent },
+  },
 };
 
 // Dark Storm: the low base under the world's live weather (its rain, wind and thunder come from the
@@ -238,11 +277,123 @@ PRESETS.storm = {
 
 export const AMBIENCE_PRESETS = Object.keys(PRESETS);
 
+/** Where a bed's events find the world's creature sounds and the music's key (the audio system). */
+export type AmbienceSource = Pick<AmbienceEnv, 'sample' | 'keyShift'>;
+
+/** Without a sound bank (offline renders), creature sounds are rendered here and the key is C. */
+const LOCAL_SOURCE = (ctx: BaseAudioContext): AmbienceSource => ({ sample: (id, weight) => localCreatureSample(ctx, id, weight), keyShift: () => 0 });
+
 interface Bed {
   readonly output: GainNode;
+  /** Where events send their echo (the output itself for a preset without a space). */
+  readonly space: AudioNode;
   readonly nodes: AudioNode[];
   readonly sources: AudioScheduledSourceNode[];
   timer: ReturnType<typeof setTimeout> | null;
+}
+
+/** Seconds until a bed's next event: its interval, sometimes followed by a longer rest. */
+function nextWait(event: AmbienceEvent): number {
+  const wait = event.every[0] + Math.random() * (event.every[1] - event.every[0]);
+  const rest = event.rest;
+  return rest && Math.random() < rest[0] ? wait + rest[1] + Math.random() * (rest[2] - rest[1]) : wait;
+}
+
+/** The echo network: a send into parallel feedback delays with a low-pass in each loop. */
+function buildSpace(ctx: BaseAudioContext, output: AudioNode, def: Space, nodes: AudioNode[]): AudioNode {
+  const send = ctx.createGain();
+  const pre = ctx.createBiquadFilter();
+  pre.type = 'lowpass';
+  pre.frequency.value = def.cutoff;
+  send.connect(pre);
+  const wet = ctx.createGain();
+  wet.gain.value = def.level / Math.sqrt(def.delays.length);
+  wet.connect(output);
+  nodes.push(send, pre, wet);
+  def.delays.forEach((seconds, i) => {
+    const delay = ctx.createDelay(Math.max(1, seconds + 0.1));
+    delay.delayTime.value = seconds;
+    const damp = ctx.createBiquadFilter();
+    damp.type = 'lowpass';
+    damp.frequency.value = def.cutoff * 0.8;
+    const fb = ctx.createGain();
+    fb.gain.value = def.feedback;
+    const pan = ctx.createStereoPanner();
+    pan.pan.value = i % 2 ? 0.7 : -0.7;
+    pre.connect(delay);
+    delay.connect(damp).connect(fb).connect(delay);
+    delay.connect(pan).connect(wet);
+    nodes.push(delay, damp, fb, pan);
+  });
+  return send;
+}
+
+/** A preset's looping layers (and echo) into `bus`, fading in over `fade` seconds (0 = at once). */
+function buildBed(ctx: BaseAudioContext, bus: AudioNode, def: Preset, level: number, fade: number): Bed {
+  const output = ctx.createGain();
+  if (fade > 0) {
+    output.gain.value = 0;
+    output.gain.setTargetAtTime(level, ctx.currentTime, fade / 3);
+  } else output.gain.value = level;
+  output.connect(bus);
+  const nodes: AudioNode[] = [output];
+  const sources: AudioScheduledSourceNode[] = [];
+  const { white, pink } = noiseBuffers(ctx);
+  for (const layer of def.layers) {
+    const src = ctx.createBufferSource();
+    const long = layer.noise === 'longPink' ? longPinkNoise(ctx) : null;
+    src.buffer = long ?? (layer.noise === 'pink' ? pink : white);
+    src.loop = true;
+    if (layer.rate) src.playbackRate.value = layer.rate;
+    const filter = ctx.createBiquadFilter();
+    filter.type = layer.filter;
+    filter.frequency.value = layer.freq;
+    filter.Q.value = layer.q;
+    const g = ctx.createGain();
+    g.gain.value = layer.gain;
+    src.connect(filter).connect(g).connect(output);
+    nodes.push(src, filter, g);
+    sources.push(src);
+    if (layer.lfo) {
+      const lfo = ctx.createOscillator();
+      lfo.frequency.value = layer.lfo[0];
+      const depth = ctx.createGain();
+      depth.gain.value = layer.gain * layer.lfo[1] * 0.5;
+      lfo.connect(depth).connect(g.gain);
+      g.gain.value = layer.gain * (1 - layer.lfo[1] * 0.5);
+      lfo.start();
+      nodes.push(lfo, depth);
+      sources.push(lfo);
+    }
+    if (layer.sweep) {
+      const lfo2 = ctx.createOscillator();
+      lfo2.frequency.value = layer.sweepRate ?? 0.031;
+      const depth2 = ctx.createGain();
+      depth2.gain.value = layer.sweep;
+      lfo2.connect(depth2).connect(filter.frequency);
+      lfo2.start();
+      nodes.push(lfo2, depth2);
+      sources.push(lfo2);
+    }
+    src.start(0, Math.random() * (long ? long.duration - 0.5 : 1.5));
+  }
+  const space = def.space ? buildSpace(ctx, output, def.space, nodes) : output;
+  return { output, space, nodes, sources, timer: null };
+}
+
+/**
+ * Renders `seconds` of a preset offline: its layers, echo and events at times drawn the way a live
+ * bed draws them (audio lab level checks). Null for an unknown preset or without Web Audio.
+ */
+export async function renderAmbience(preset: string, seconds: number, sampleRate = 48000, level = 1): Promise<AudioBuffer | null> {
+  const def = PRESETS[preset];
+  if (!def || typeof OfflineAudioContext === 'undefined') return null;
+  const ctx = new OfflineAudioContext(2, Math.ceil(seconds * sampleRate), sampleRate);
+  const bed = buildBed(ctx, ctx.destination, def, level, 0);
+  const event = def.event;
+  const env: AmbienceEnv = { space: bed.space, ...LOCAL_SOURCE(ctx) };
+  if (event) for (let t = nextWait(event); t < seconds - 0.1; t += nextWait(event)) event.play(ctx, bed.output, t, env);
+  return ctx.startRendering();
 }
 
 export class Ambience {
@@ -252,6 +403,8 @@ export class Ambience {
   constructor(
     private readonly getContext: () => AudioContext | null,
     private readonly bus: () => AudioNode | null,
+    /** The world's rendered creature sounds and key (so no event synthesises on the main thread). */
+    private readonly source?: AmbienceSource,
   ) {}
 
   /** Crossfades to a preset (empty string = silence). */
@@ -271,58 +424,15 @@ export class Ambience {
   }
 
   private createBed(ctx: AudioContext, bus: AudioNode, def: Preset, level: number, fade: number): Bed {
-    const output = ctx.createGain();
-    output.gain.value = 0;
-    output.gain.setTargetAtTime(level, ctx.currentTime, fade / 3);
-    output.connect(bus);
-    const nodes: AudioNode[] = [output];
-    const sources: AudioScheduledSourceNode[] = [];
-    const { white, pink } = noiseBuffers(ctx);
-    for (const layer of def.layers) {
-      const src = ctx.createBufferSource();
-      src.buffer = layer.noise === 'pink' ? pink : white;
-      src.loop = true;
-      const filter = ctx.createBiquadFilter();
-      filter.type = layer.filter;
-      filter.frequency.value = layer.freq;
-      filter.Q.value = layer.q;
-      const g = ctx.createGain();
-      g.gain.value = layer.gain;
-      src.connect(filter).connect(g).connect(output);
-      nodes.push(src, filter, g);
-      sources.push(src);
-      if (layer.lfo) {
-        const lfo = ctx.createOscillator();
-        lfo.frequency.value = layer.lfo[0];
-        const depth = ctx.createGain();
-        depth.gain.value = layer.gain * layer.lfo[1] * 0.5;
-        lfo.connect(depth).connect(g.gain);
-        g.gain.value = layer.gain * (1 - layer.lfo[1] * 0.5);
-        lfo.start();
-        nodes.push(lfo, depth);
-        sources.push(lfo);
-      }
-      if (layer.sweep) {
-        const lfo2 = ctx.createOscillator();
-        lfo2.frequency.value = 0.031;
-        const depth2 = ctx.createGain();
-        depth2.gain.value = layer.sweep;
-        lfo2.connect(depth2).connect(filter.frequency);
-        lfo2.start();
-        nodes.push(lfo2, depth2);
-        sources.push(lfo2);
-      }
-      src.start(0, Math.random() * 1.5);
-    }
-    const bed: Bed = { output, nodes, sources, timer: null };
+    const bed = buildBed(ctx, bus, def, level, fade);
     if (def.event) {
       const event = def.event;
+      const env: AmbienceEnv = { space: bed.space, ...(this.source ?? LOCAL_SOURCE(ctx)) };
       const loop = (): void => {
-        const wait = event.every[0] + Math.random() * (event.every[1] - event.every[0]);
         bed.timer = setTimeout(() => {
-          if (ctx.state === 'running') event.play(ctx, output, ctx.currentTime + 0.05);
+          if (ctx.state === 'running') event.play(ctx, bed.output, ctx.currentTime + 0.05, env);
           loop();
-        }, wait * 1000);
+        }, nextWait(event) * 1000);
       };
       loop();
     }

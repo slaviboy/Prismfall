@@ -1,0 +1,25 @@
+{
+  "uid": "c207f839b5ad4f8eb5605c166fe6d790",
+  "name": "Whooping Crane – Flying Rigged Bird",
+  "page": "https://sketchfab.com/3d-models/whooping-crane-flying-rigged-bird-c207f839b5ad4f8eb5605c166fe6d790",
+  "author": {
+    "name": "Pigcraft",
+    "username": "s8819296",
+    "profile": "https://sketchfab.com/s8819296"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Whooping Crane – Flying Rigged Bird\" by Pigcraft (https://sketchfab.com/3d-models/whooping-crane-flying-rigged-bird-c207f839b5ad4f8eb5605c166fe6d790), CC Attribution",
+  "downloaded": "2026-11-04",
+  "faces": 1983590,
+  "vertices": 991780,
+  "animations": 0,
+  "files": [
+    {
+      "path": "whooping-crane.gltf.zip",
+      "md5": "9dcd25aabf693bb6bee00a232094e274",
+      "size": 70033456,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

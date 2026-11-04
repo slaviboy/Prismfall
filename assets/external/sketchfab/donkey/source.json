@@ -1,0 +1,25 @@
+{
+  "uid": "2b4086035df94d9e88fd0f18d34b3872",
+  "name": "Realistic Animated Donkey 3D Model",
+  "page": "https://sketchfab.com/3d-models/realistic-animated-donkey-3d-model-2b4086035df94d9e88fd0f18d34b3872",
+  "author": {
+    "name": "WildMesh 3D",
+    "username": "WildMesh_3D",
+    "profile": "https://sketchfab.com/WildMesh_3D"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Realistic Animated Donkey 3D Model\" by WildMesh 3D (https://sketchfab.com/3d-models/realistic-animated-donkey-3d-model-2b4086035df94d9e88fd0f18d34b3872), CC Attribution",
+  "downloaded": "2026-11-04",
+  "faces": 19399,
+  "vertices": 11853,
+  "animations": 117,
+  "files": [
+    {
+      "path": "donkey.gltf.zip",
+      "md5": "3895bb925c5e5febf72be76ac71e1d59",
+      "size": 12455862,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

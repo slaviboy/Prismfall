@@ -1,0 +1,215 @@
+{
+  "stage": "the-web",
+  "files": [
+    {
+      "path": "stage.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "SDK module: registers the ruins, webs, spiders and mist, the line-clear effect and the entrance"
+    },
+    {
+      "path": "shared.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "shared world state: moon with shadow map, fog model, reveal mask, the lit material, web impulses, comfort"
+    },
+    {
+      "path": "ruins.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "the floor (flags, mud, puddles), placed models and kit parts, masonry"
+    },
+    {
+      "path": "webs.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "procedural orb webs and silk lines: thread shading, dew, plucked vibration"
+    },
+    {
+      "path": "spiders.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "species calibration, setpiece behaviours (walls, ceilings, silk, webs, emerging, silhouettes), eyes visibility, the fog screen"
+    },
+    {
+      "path": "eyes.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "spider eyes as depth-tested lit points, the eight-eye layout"
+    },
+    {
+      "path": "director.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "the pure seeded setpiece director"
+    },
+    {
+      "path": "director.test.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "tests for the director"
+    },
+    {
+      "path": "mist.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "ground mist banks, fog veils, moon shafts and pools"
+    },
+    {
+      "path": "effects.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "line-clear effect and entrance transition"
+    },
+    {
+      "path": "music/silk-and-shadow.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "Silk and Shadow composition"
+    },
+    {
+      "path": "music/eyes-in-the-dark.ts",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "Eyes in the Dark composition"
+    },
+    {
+      "path": "stage.json",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "authored",
+      "purpose": "manifest"
+    },
+    {
+      "path": "models/goliath.glb",
+      "license": "CC Attribution",
+      "author": "Nikita2013 (Sketchfab)",
+      "source": "https://sketchfab.com/3d-models/goliath-birdeater-5ee6243c9f2e4d48b013755fa70f19d7",
+      "purpose": "the giant tarantula (rigged, walk cycle); optimised by scripts/build-web-assets.ts"
+    },
+    {
+      "path": "models/widow.glb",
+      "license": "CC Attribution",
+      "author": "Andrey (Sketchfab)",
+      "source": "https://sketchfab.com/3d-models/black-widow-animated-downloadable-2429ae17b56241cd9c24a954b77443e2",
+      "purpose": "the widow (rigged; the original leaf-and-web set removed); optimised by scripts/build-web-assets.ts"
+    },
+    {
+      "path": "models/wolf.glb",
+      "license": "CC Attribution",
+      "author": "Dreaming In Alternation 27 (Sketchfab)",
+      "source": "https://sketchfab.com/3d-models/wolf-spider-rigged-rabidosa-rabida-6392e4cfb64d407182fdad2cea9e0abe",
+      "purpose": "the small fast spider (rigged, walk clips); optimised by scripts/build-web-assets.ts"
+    },
+    {
+      "path": "models/huntsman.glb",
+      "license": "CC Attribution-ShareAlike",
+      "author": "SpiderBight [ArachnoBoy] (Sketchfab)",
+      "source": "https://sketchfab.com/3d-models/giant-huntsman-spider-6b46820aba4e4f7f82c1fa534e61724f",
+      "purpose": "the wall crawler and the giant silhouette (rigged; simplified to 18,000 triangles); optimised by scripts/build-web-assets.ts"
+    },
+    {
+      "path": "models/chapel.glb",
+      "license": "CC Attribution",
+      "author": "Pigcraft (Sketchfab)",
+      "source": "https://sketchfab.com/3d-models/collapsed-gothic-chapel-ruin-993a5bada2bd4f34846051f497eb38b3",
+      "purpose": "the collapsed chapel (simplified from 1.82 M to 240,000 triangles); optimised by scripts/build-web-assets.ts"
+    },
+    {
+      "path": "models/gate.glb",
+      "license": "CC Attribution",
+      "author": "Pigcraft (Sketchfab)",
+      "source": "https://sketchfab.com/3d-models/ancient-stone-gate-ruin-moss-covered-bb1b8cefb79b45b3b3c771cc0c61bcd7",
+      "purpose": "the moss-covered gate (simplified from 1.92 M to 183,000 triangles); optimised by scripts/build-web-assets.ts"
+    },
+    {
+      "path": "models/cave.glb",
+      "license": "CC Attribution",
+      "author": "DJMaesen (Sketchfab)",
+      "source": "https://sketchfab.com/3d-models/cave-rocks-ea11069c86ce410d8c8e7423d87344de",
+      "purpose": "the cave kit: cliffs, stalactites, rocks and the rock ceiling; optimised by scripts/build-web-assets.ts"
+    },
+    {
+      "path": "models/gargoyle.glb",
+      "license": "CC Attribution",
+      "author": "alban (Sketchfab)",
+      "source": "https://sketchfab.com/3d-models/gargoyle-3dst27-2581387ab6454f1787e50d5909b325aa",
+      "purpose": "the gargoyle on its column (simplified to 32,000 triangles); optimised by scripts/build-web-assets.ts"
+    },
+    {
+      "path": "models/cobwebs.glb",
+      "license": "CC Attribution",
+      "author": "Em Marshall (Sketchfab)",
+      "source": "https://sketchfab.com/3d-models/cobwebs-asset-pack-2dd4798676d84bc7af5d2a8f5834563a",
+      "purpose": "cobwebs in the corners of the chapel and the gate; optimised by scripts/build-web-assets.ts"
+    },
+    {
+      "path": "textures/flags_diff.webp",
+      "license": "CC0 1.0",
+      "author": "Poly Haven",
+      "source": "https://polyhaven.com/a/castle_wall_varriation",
+      "purpose": "floor flags (diff), WebP 1024"
+    },
+    {
+      "path": "textures/flags_nor.webp",
+      "license": "CC0 1.0",
+      "author": "Poly Haven",
+      "source": "https://polyhaven.com/a/castle_wall_varriation",
+      "purpose": "floor flags (nor), WebP 1024"
+    },
+    {
+      "path": "textures/flags_arm.webp",
+      "license": "CC0 1.0",
+      "author": "Poly Haven",
+      "source": "https://polyhaven.com/a/castle_wall_varriation",
+      "purpose": "floor flags (arm), WebP 1024"
+    },
+    {
+      "path": "textures/mud_diff.webp",
+      "license": "CC0 1.0",
+      "author": "Poly Haven",
+      "source": "https://polyhaven.com/a/brown_mud_leaves_01",
+      "purpose": "floor mud (diff), WebP 1024"
+    },
+    {
+      "path": "textures/mud_nor.webp",
+      "license": "CC0 1.0",
+      "author": "Poly Haven",
+      "source": "https://polyhaven.com/a/brown_mud_leaves_01",
+      "purpose": "floor mud (nor), WebP 1024"
+    },
+    {
+      "path": "textures/mud_arm.webp",
+      "license": "CC0 1.0",
+      "author": "Poly Haven",
+      "source": "https://polyhaven.com/a/brown_mud_leaves_01",
+      "purpose": "floor mud (arm), WebP 1024"
+    },
+    {
+      "path": "previews/thumb.jpg",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "scripts/thumbnails.ts",
+      "purpose": "world select picture"
+    },
+    {
+      "path": "previews/backdrop.jpg",
+      "license": "Original work for Prismfall",
+      "author": "Prismfall",
+      "source": "scripts/thumbnails.ts",
+      "purpose": "world select picture"
+    }
+  ]
+}

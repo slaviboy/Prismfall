@@ -14,7 +14,7 @@ import { Ambience } from './sound-effects/Ambience';
 import { resolveMaterialAudio, type MaterialAudioProfile } from './sound-effects/materialAudio';
 import { SFX_IDS, SfxBank, type SfxId } from './sound-effects/SfxBank';
 import { StormAudio } from './weather/StormAudio';
-import type { StormSound, WeatherSound } from './worldSounds';
+import { MAX_WORLD_VOICES, WORLD_SOUND_SPECS, WorldSoundBudget, type StormSound, type WeatherSound, type WorldSoundId } from './worldSounds';
 
 /** Publishes AudioFeatures: real analysis + music timeline while music plays, metronome otherwise. */
 class FeaturesHub implements AudioFeatureSource {
@@ -85,6 +85,7 @@ export class AudioSystem {
   readonly ambience = new Ambience(
     () => this.engine.ctx,
     () => (this.engine.ctx ? this.engine.ambience : null),
+    { sample: (id, weight) => this.sfx.buffer(id, weight), keyShift: () => this.keyShift() },
   );
   readonly hub = new FeaturesHub(this);
   /** Weather worlds' rain, wind, thunder and lightning cracks (SDK 1.5). */
@@ -291,16 +292,35 @@ export class AudioSystem {
     this.storm.schedule(s);
   }
 
-  /** A world sound requested by an environment component (rate-limited token bucket). */
-  private spatialBudget = 6;
-  private spatialStamp = 0;
-  playWorldSound(id: SfxId, x: number, y: number, z: number, gain = 1): void {
-    const now = performance.now();
-    this.spatialBudget = Math.min(6, this.spatialBudget + ((now - this.spatialStamp) / 1000) * 6);
-    this.spatialStamp = now;
-    if (this.spatialBudget < 1 || !this.sfx.has(id)) return;
-    this.spatialBudget--;
-    this.sfx.playAt(id, x, y, z, { gain });
+  /**
+   * A world sound requested by an environment component. Each sound has its own rate limit and all
+   * share another (WORLD_SOUND_SPECS), and at most MAX_WORLD_VOICES play at once; extra requests
+   * are dropped. For weighted sounds (skitter, crawl) the gain also picks how heavy the variant
+   * is; tonal ones (webHum) are transposed into the music's key.
+   */
+  private readonly worldBudget = new WorldSoundBudget();
+  playWorldSound(id: WorldSoundId, x: number, y: number, z: number, gain = 1): void {
+    if (!this.sfx.has(id) || this.sfx.spatialVoices >= MAX_WORLD_VOICES || !this.worldBudget.take(id, performance.now())) return;
+    const spec = WORLD_SOUND_SPECS[id];
+    this.sfx.playAt(id, x, y, z, {
+      gain,
+      refDistance: spec.refDistance,
+      weight: spec.weighted ? gain : undefined,
+      semitones: spec.keyed ? this.inKey() : undefined,
+    });
+  }
+
+  /** Semitones from C to the music's key root, the nearer way (-5..+6); 0 without a composition. */
+  private keyShift(): number {
+    const key = this.stage?.composition?.key;
+    const root = key ? keyRoot(key) : 0;
+    return root > 6 ? root - 12 : root;
+  }
+
+  /** A transposition of a C-pitched tonal sound onto the root, fifth or lower fourth of the music's key. */
+  private inKey(): number {
+    const degrees = [0, 0, 7, -5] as const;
+    return this.keyShift() + degrees[Math.floor(Math.random() * degrees.length)]!;
   }
 
   /**

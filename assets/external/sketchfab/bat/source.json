@@ -1,0 +1,25 @@
+{
+  "uid": "8719886cf8f645ca9d53d766976baf9c",
+  "name": "Bat",
+  "page": "https://sketchfab.com/3d-models/bat-8719886cf8f645ca9d53d766976baf9c",
+  "author": {
+    "name": "ice9",
+    "username": "theice9",
+    "profile": "https://sketchfab.com/theice9"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Bat\" by ice9 (https://sketchfab.com/3d-models/bat-8719886cf8f645ca9d53d766976baf9c), CC Attribution",
+  "downloaded": "2026-11-04",
+  "faces": 131692,
+  "vertices": 66437,
+  "animations": 1,
+  "files": [
+    {
+      "path": "bat.gltf.zip",
+      "md5": "542e5330a21fe882a26a6039b075d23d",
+      "size": 8996135,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

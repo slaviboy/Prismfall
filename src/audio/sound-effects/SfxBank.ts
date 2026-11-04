@@ -1,7 +1,7 @@
 import type { InstrumentSpec } from '../sequencer/composition';
 import { playNote } from '../synth/instruments';
 import { resolveMaterialAudio, type MaterialAudioProfile } from './materialAudio';
-import { MATERIAL_JOBS, renderMaterialSet, type MaterialRenderResult } from './materialJobs';
+import { MATERIAL_JOBS, renderMaterialSet, SHARED_JOB_IDS, type MaterialRenderResult } from './materialJobs';
 import type { MaterialWorkerRequest, MaterialWorkerResponse } from './materialRender.worker';
 import MaterialWorker from './materialRender.worker.ts?worker';
 
@@ -45,6 +45,10 @@ export const SFX_IDS = [
   'signature',
   'impactResponse',
   'footstep',
+  'skitter',
+  'crawl',
+  'silk',
+  'webHum',
 ] as const;
 export type SfxId = (typeof SFX_IDS)[number];
 
@@ -60,6 +64,10 @@ const BUS: Partial<Record<SfxId, SfxBus>> = {
   signature: 'stage',
   impactResponse: 'stage',
   footstep: 'stage',
+  skitter: 'stage',
+  crawl: 'stage',
+  silk: 'stage',
+  webHum: 'stage',
   menuMove: 'ui',
   menuSelect: 'ui',
   menuConfirm: 'ui',
@@ -98,6 +106,8 @@ export const SFX_PRESETS: Record<string, SfxPreset> = {
   oasis: { tick: p({ kind: 'pluck', wave: 'triangle', cutoff: 2200, envAmount: 1.4, decay: 0.08 }), tone: p({ kind: 'pluck', wave: 'sawtooth', cutoff: 1600, envAmount: 2.2, decay: 0.45 }), chord: p({ kind: 'pluck', wave: 'triangle', cutoff: 2000, envAmount: 1.8, decay: 1.2 }), thud: p({ kind: 'tom', tone: 80, decay: 0.3 }), shimmer: p({ kind: 'bell', ratio: 3.5, index: 1.2, decay: 2 }), brightness: 0.9 },
   /** Koto-like plucks and wooden mallets (Japan). */
   koto: { tick: p({ kind: 'mallet', ratio: 2.01, index: 0.8, decay: 0.1 }), tone: p({ kind: 'pluck', wave: 'triangle', cutoff: 2600, envAmount: 2, decay: 0.6 }), chord: p({ kind: 'pluck', wave: 'triangle', cutoff: 2400, envAmount: 2, decay: 1.4 }), thud: p({ kind: 'tom', tone: 140, decay: 0.2 }), shimmer: p({ kind: 'bell', ratio: 2.76, index: 1, decay: 2.6 }), brightness: 0.85 },
+  /** Dark glass bells and a pure, glass-harmonica shimmer over a deep thud (caves, webs, moonlight). */
+  gossamer: { tick: p({ kind: 'mallet', ratio: 2.76, index: 0.7, decay: 0.08 }), tone: p({ kind: 'bell', ratio: 2.76, index: 1.1, decay: 0.6 }), chord: p({ kind: 'bell', ratio: 3.5, index: 0.95, decay: 1.9 }), thud: p({ kind: 'kick', tone: 72, decay: 0.36 }), shimmer: p({ kind: 'bell', ratio: 4, index: 0.5, decay: 2.6 }), brightness: 0.7 },
   /** Deep synth tones (space, abyss). */
   void: { tick: p({ kind: 'bell', ratio: 1.5, index: 0.8, decay: 0.12 }), tone: p({ kind: 'epiano', ratio: 1, index: 0.8, decay: 0.9 }), chord: p({ kind: 'pad', wave: 'sawtooth', voices: 3, detune: 12, cutoff: 1200, attack: 0.02, release: 1.6 }), thud: p({ kind: 'kick', tone: 70, decay: 0.4 }), shimmer: p({ kind: 'bell', ratio: 4.5, index: 1, decay: 3 }), brightness: 0.85 },
 };
@@ -229,6 +239,11 @@ const RECIPES: Record<SfxId, Recipe> = {
   signature: materialOnly(0),
   impactResponse: materialOnly(0.5),
   footstep: materialOnly(1.2),
+  skitter: materialOnly(1.5),
+  crawl: materialOnly(1),
+  silk: materialOnly(1.5),
+  // In the music's key (the world-sound player transposes it): only a natural waver.
+  webHum: materialOnly(0.12),
 };
 
 /** Peak ceiling of every rendered effect (dBFS): layered transients never clip before the mix. */
@@ -278,8 +293,8 @@ function combine(tonal: AudioBuffer | null, material: MaterialRenderResult | und
   return buffer;
 }
 
-function renderMaterialAsync(profile: MaterialAudioProfile, sampleRate: number): Promise<MaterialRenderResult[]> {
-  if (typeof Worker === 'undefined') return Promise.resolve(renderMaterialSet(profile, sampleRate));
+function renderMaterialAsync(profile: MaterialAudioProfile, sampleRate: number, includeShared: boolean): Promise<MaterialRenderResult[]> {
+  if (typeof Worker === 'undefined') return Promise.resolve(renderMaterialSet(profile, sampleRate, includeShared));
   return new Promise((resolve) => {
     const worker = new MaterialWorker();
     worker.onmessage = (e: MessageEvent<MaterialWorkerResponse>) => {
@@ -287,14 +302,14 @@ function renderMaterialAsync(profile: MaterialAudioProfile, sampleRate: number):
       if ('results' in e.data) resolve(e.data.results);
       else {
         console.warn('[sfx] material worker failed, rendering on the main thread', e.data.error);
-        resolve(renderMaterialSet(profile, sampleRate));
+        resolve(renderMaterialSet(profile, sampleRate, includeShared));
       }
     };
     worker.onerror = () => {
       worker.terminate();
-      resolve(renderMaterialSet(profile, sampleRate));
+      resolve(renderMaterialSet(profile, sampleRate, includeShared));
     };
-    worker.postMessage({ profile, sampleRate } satisfies MaterialWorkerRequest);
+    worker.postMessage({ profile, sampleRate, includeShared } satisfies MaterialWorkerRequest);
   });
 }
 
@@ -305,6 +320,28 @@ export interface PlayOptions {
   minGapMs?: number;
   /** Force a variant (tests, audio test screen). */
   variant?: number;
+  /** 0..1: chooses among variants ordered light to heavy (creature contacts) instead of at random. */
+  weight?: number;
+  /** playAt: distance within which the sound plays at full level (default 30 world units). */
+  refDistance?: number;
+}
+
+/**
+ * The variant to play next: at random but never `last` again or, with a `weight` (0..1), one of
+ * the variants nearest that weight in a list ordered light to heavy, again avoiding `last`.
+ */
+export function pickVariant(count: number, last: number, weight?: number, random: () => number = Math.random): number {
+  if (count <= 1) return 0;
+  if (weight === undefined) {
+    let v = Math.floor(random() * (count - 1));
+    if (v >= last) v++;
+    return v;
+  }
+  const centre = Math.max(0, Math.min(1, weight)) * (count - 1);
+  const near: number[] = [];
+  for (let i = 0; i < count; i++) if (Math.abs(i - centre) <= 1 && i !== last) near.push(i);
+  if (near.length === 0) return Math.round(centre);
+  return near[Math.min(near.length - 1, Math.floor(random() * near.length))]!;
 }
 
 /** Renders and plays gameplay/UI sounds. Buffers (with variants) are cached per preset, key and material. */
@@ -318,6 +355,8 @@ export class SfxBank {
   variation = 0.5;
   /** HRTF panning for spatial sounds when true, equal-power stereo otherwise. */
   spatial = true;
+  /** Material-independent renders (creature sounds), kept across worlds so a stage change skips them. */
+  private shared: { readonly sampleRate: number; readonly results: readonly MaterialRenderResult[] } | null = null;
 
   constructor(
     private readonly getContext: () => AudioContext | null,
@@ -340,10 +379,13 @@ export class SfxBank {
     this.currentKey = key;
     const task = (async () => {
       const preset = SFX_PRESETS[presetName] ?? (SFX_PRESETS.glass as SfxPreset);
-      const [materials, tonal] = await Promise.all([
-        renderMaterialAsync(material, ctx.sampleRate),
+      const cached = this.shared?.sampleRate === ctx.sampleRate ? this.shared.results : null;
+      const [rendered, tonal] = await Promise.all([
+        renderMaterialAsync(material, ctx.sampleRate, !cached),
         Promise.all(SFX_IDS.map(async (id) => [id, await renderTonal(id, preset, keyRoot, ctx.sampleRate)] as const)),
       ]);
+      if (!cached) this.shared = { sampleRate: ctx.sampleRate, results: rendered.filter((m) => SHARED_JOB_IDS.has(m.id)) };
+      const materials = cached ? [...rendered, ...cached] : rendered;
       if (this.currentKey !== key) return;
       const next = new Map<SfxId, AudioBuffer[]>();
       for (const [id, tonalBuf] of tonal) {
@@ -374,15 +416,20 @@ export class SfxBank {
     return (this.buffers.get(id)?.length ?? 0) > 0;
   }
 
-  private pick(id: SfxId, forced?: number): AudioBuffer | null {
+  /** One rendered variant of an effect (light to heavy by `weight`), or null: ambience reuses the creature sounds. */
+  buffer(id: SfxId, weight?: number): AudioBuffer | null {
+    const list = this.buffers.get(id);
+    if (!list || list.length === 0) return null;
+    return list[pickVariant(list.length, -1, weight)] ?? null;
+  }
+
+  private pick(id: SfxId, forced?: number, weight?: number): AudioBuffer | null {
     const list = this.buffers.get(id);
     if (!list || list.length === 0) return null;
     if (forced !== undefined) return list[forced % list.length] ?? null;
     if (list.length === 1) return list[0]!;
     // Round-robin with a random step, never the same variant twice in a row.
-    const last = this.lastVariant.get(id) ?? -1;
-    let v = Math.floor(Math.random() * (list.length - 1));
-    if (v >= last) v++;
+    const v = pickVariant(list.length, this.lastVariant.get(id) ?? -1, weight);
     this.lastVariant.set(id, v);
     return list[v] ?? list[0]!;
   }
@@ -428,17 +475,20 @@ export class SfxBank {
     src.start();
   }
 
+  /** Positional sounds sounding right now (the world-sound budget caps them). */
+  spatialVoices = 0;
+
   /** Plays an effect from a world position (creatures, environment), relative to the audio listener. */
   playAt(id: SfxId, x: number, y: number, z: number, options: PlayOptions = {}): void {
     const ctx = this.getContext();
-    const buffer = this.pick(id, options.variant);
+    const buffer = this.pick(id, options.variant, options.weight);
     const bus = this.bus(busOf(id));
     if (!ctx || !buffer || !bus || ctx.state !== 'running') return;
     const { src, gain: g } = this.source(ctx, id, buffer, options);
     const panner = new PannerNode(ctx, {
       panningModel: this.spatial ? 'HRTF' : 'equalpower',
       distanceModel: 'inverse',
-      refDistance: 30,
+      refDistance: options.refDistance ?? 30,
       maxDistance: 600,
       rolloffFactor: 1.1,
       positionX: x,
@@ -446,7 +496,9 @@ export class SfxBank {
       positionZ: z,
     });
     g.connect(panner).connect(bus);
+    this.spatialVoices++;
     src.onended = () => {
+      this.spatialVoices = Math.max(0, this.spatialVoices - 1);
       src.disconnect();
       g.disconnect();
       panner.disconnect();

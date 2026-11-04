@@ -1,0 +1,25 @@
+{
+  "uid": "bffc3c87d2d148ff8533e1cc8a11c9f1",
+  "name": "Realistic Animated Bear 3D Model",
+  "page": "https://sketchfab.com/3d-models/realistic-animated-bear-3d-model-bffc3c87d2d148ff8533e1cc8a11c9f1",
+  "author": {
+    "name": "WildMesh 3D",
+    "username": "WildMesh_3D",
+    "profile": "https://sketchfab.com/WildMesh_3D"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Realistic Animated Bear 3D Model\" by WildMesh 3D (https://sketchfab.com/3d-models/realistic-animated-bear-3d-model-bffc3c87d2d148ff8533e1cc8a11c9f1), CC Attribution",
+  "downloaded": "2026-11-04",
+  "faces": 7508,
+  "vertices": 3799,
+  "animations": 81,
+  "files": [
+    {
+      "path": "bear.gltf.zip",
+      "md5": "9b20ecfe32ff82e7ad7a5050f0f08c69",
+      "size": 7047978,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

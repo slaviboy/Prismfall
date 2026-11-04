@@ -27,6 +27,7 @@ export type {
   WorldSounds,
   WeatherSound,
   StormSound,
+  WorldSoundName,
   TransitionContext,
   TransitionEffect,
 } from './types';

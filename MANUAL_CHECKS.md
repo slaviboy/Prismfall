@@ -86,6 +86,12 @@ Use headphones first, then speakers. Play each world for several minutes: in men
 - [ ] **Repetition:** with "Sound variation" at its default, fast repeated moves and rotations do not sound machine-gun identical. At 0 they repeat exactly, as intended.
 - [ ] **Ambience:** each world's bed fits it (waves, desert wind, garden, ice, cosmos, alpine, abyss, forest, foundry, volcano, aurora, city rain). It is audible in quiet passages and never masks the music. The Ambience slider controls it.
 - [ ] **Spatial footsteps** (Audio → Spatial audio): on headphones, walking creatures (camels in Moving Sands, deer and spirits, the whales) are placed where they are seen. "Creature passing (spatial)" in the sound test moves left to right. With the setting off, sounds fall back to plain stereo.
+- [ ] **Spider sounds** ("Spiders in the dark (spatial)" in the sound test):
+  - the skitters are quick, light and irregular, never a click track;
+  - the large spider's steps are slower and heavier, with a low thud;
+  - the silk creak is soft and airy;
+  - the web hum is a soft plucked shimmer in the music's key;
+  - on headphones, each sound is placed where it is played.
 - [ ] **Pause audio:** "Quieter and muffled" ducks smoothly, and "Stop" freezes the music, which resumes in place.
 - [ ] **Transitions:** world changes in Voyage crossfade the music on a bar line without a gap or a tempo jolt.
 - [ ] **Your own music:** a file added in the Music Room plays, gets a sensible BPM estimate, and drives the world's reactivity in free play.

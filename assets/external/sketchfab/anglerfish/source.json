@@ -1,0 +1,25 @@
+{
+  "uid": "5e2f4b2d2e1a4613a008b6caaf40d50c",
+  "name": "Anglerfish",
+  "page": "https://sketchfab.com/3d-models/anglerfish-5e2f4b2d2e1a4613a008b6caaf40d50c",
+  "author": {
+    "name": "Abby_Holzworth1",
+    "username": "Abby_Holzworth1",
+    "profile": "https://sketchfab.com/Abby_Holzworth1"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Anglerfish\" by Abby_Holzworth1 (https://sketchfab.com/3d-models/anglerfish-5e2f4b2d2e1a4613a008b6caaf40d50c), CC Attribution",
+  "downloaded": "2026-11-04",
+  "faces": 84096,
+  "vertices": 42135,
+  "animations": 1,
+  "files": [
+    {
+      "path": "anglerfish.gltf.zip",
+      "md5": "07d4bb52f6ef2e5b050ccda5050857e6",
+      "size": 12572142,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "uid": "d5a9b0df4da3493688b63ce42c8a83e2",
+  "name": "Crow",
+  "page": "https://sketchfab.com/3d-models/crow-d5a9b0df4da3493688b63ce42c8a83e2",
+  "author": {
+    "name": "Alexei Ostapenko",
+    "username": "alexanders823",
+    "profile": "https://sketchfab.com/alexanders823"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Crow\" by Alexei Ostapenko (https://sketchfab.com/3d-models/crow-d5a9b0df4da3493688b63ce42c8a83e2), CC Attribution",
+  "downloaded": "2026-11-04",
+  "faces": 2208,
+  "vertices": 1216,
+  "animations": 1,
+  "files": [
+    {
+      "path": "crow.gltf.zip",
+      "md5": "7ce41dd69e05446e952bf6bfe5034217",
+      "size": 10870902,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

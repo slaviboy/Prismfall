@@ -7,10 +7,12 @@ import {
   float,
   floor,
   fract,
+  fwidth,
   length,
   max,
   min,
   mix,
+  mod,
   mx_cell_noise_float,
   mx_fractal_noise_float,
   mx_noise_float,
@@ -19,6 +21,7 @@ import {
   sin,
   smoothstep,
   step,
+  vec2,
   vec3,
 } from 'three/tsl';
 import type { Node } from 'three/webgpu';
@@ -27,7 +30,7 @@ import type { Node } from 'three/webgpu';
  * Procedural block surfaces for stage block themes. Every surface keeps the piece colour as its
  * identity (tint, glow or crack colour), so the seven pieces stay distinguishable in any theme.
  */
-export const BLOCK_SURFACES = ['plain', 'wood', 'ice', 'sandstone', 'obsidian', 'emerald', 'cosmic', 'aquatic', 'neon', 'mineral', 'aurora', 'paper', 'lumen', 'dichroic', 'ingot', 'ribbon', 'gel', 'rosette', 'marble', 'lantern', 'basalt', 'veil', 'jade', 'machined', 'frontier', 'storm'] as const;
+export const BLOCK_SURFACES = ['plain', 'wood', 'ice', 'sandstone', 'obsidian', 'emerald', 'cosmic', 'aquatic', 'neon', 'mineral', 'aurora', 'paper', 'lumen', 'dichroic', 'ingot', 'ribbon', 'gel', 'rosette', 'marble', 'lantern', 'basalt', 'veil', 'jade', 'machined', 'frontier', 'storm', 'silk'] as const;
 export type BlockSurface = (typeof BLOCK_SURFACES)[number];
 
 type F = Node<'float'>;
@@ -38,6 +41,11 @@ export interface SurfaceInputs {
   readonly p: V3;
   /** Stable per-cell offset (different blocks get different patterns). */
   readonly seed: V3;
+  /**
+   * Per-cell key that is constant across the whole block. `seed` rounds half-unit cell centres, so
+   * it can flip between neighbouring values from pixel to pixel; hashes of fine detail use this.
+   */
+  readonly cell: V3;
   /** Piece colour (linear). */
   readonly base: V3;
   /** View alignment (1 facing the camera). */
@@ -75,9 +83,27 @@ function borderDistance(p: V3): F {
   return cast<F>(float(HALF).sub(a.x.add(a.y).add(a.z).sub(m1).sub(mn)));
 }
 
+/**
+ * A line of half width `w` at distance `dist`, filtered to the pixel footprint `px`: thinner than
+ * a pixel, it dims instead of breaking up, so fine engraving softens to a sheen at a distance.
+ */
+function fineLine(dist: F, w: number, px: F): F {
+  const hw = max(px.mul(0.5), float(w));
+  return cast<F>(smoothstep(hw.add(px.mul(0.5)), hw.sub(px.mul(0.5)), dist).mul(float(w).div(hw)));
+}
+
+/** Silk threads of half width `w`: radii and capture spiral, faded to their mean where they crowd within a few pixels. */
+function webThreads(spokeDist: F, spokeGap: F, spiralDist: F, spiralGap: number, w: number, px: F): { spokes: F; spiral: F } {
+  const spokeLod = smoothstep(px.mul(2.5), px.mul(5), spokeGap);
+  const spiralLod = smoothstep(px.mul(2.5), px.mul(5), float(spiralGap));
+  const spokes = mix(min(float(2 * w).div(spokeGap.max(1e-4)), 0.3), fineLine(spokeDist, w, px), spokeLod);
+  const spiral = mix(float((2 * w) / spiralGap), fineLine(spiralDist, w, px), spiralLod);
+  return { spokes: cast<F>(spokes), spiral: cast<F>(spiral) };
+}
+
 /** Builds the TSL nodes for one surface kind. */
 export function buildSurface(kind: BlockSurface, i: SurfaceInputs): SurfaceOutputs {
-  const { p, seed, base, ndv, edge, time, music } = i;
+  const { p, seed, cell, base, ndv, edge, time, music } = i;
   const q = p.add(seed.mul(7.31));
   const zero = cast<V3>(vec3(0, 0, 0));
   switch (kind) {
@@ -394,6 +420,77 @@ export function buildSurface(kind: BlockSurface, i: SurfaceInputs): SurfaceOutpu
       const glint = vec3(0.8, 0.86, 1).mul(beadRim.mul(ndv.pow(4)).mul(0.08)).add(vec3(0.6, 0.66, 0.74).mul(silver.mul(0.05)));
       const rough = mix(mix(float(0.13).add(depth.mul(0.05)), float(0.07), silver), float(0.02), bead);
       return { albedo: cast<V3>(albedo), emissive: cast<V3>(inner.add(glint)), roughness: cast<F>(rough) };
+    }
+    case 'silk': {
+      // Silk obsidian (The Web): volcanic glass in a deep jewel tone of the piece colour under a
+      // smoky glass skin, faint crystal cleavage planes and smoke inside, dark violet-metal
+      // chamfers carrying one fine lit line, and an orb web engraved into every face: uneven radii
+      // and a polygonal capture spiral, inlaid with silver-violet silk that catches the light as a
+      // sheen (lit, barely self-lit). Each block turns its web and a few threads are broken. The
+      // threads are filtered to the pixel size, so at a distance the web softens, never shimmers.
+      const uv = faceUV(p);
+      const d = borderDistance(p);
+      const px = max(max(fwidth(uv.x), fwidth(uv.y)), float(1e-4));
+      const h1 = fract(sin(dot(cell, vec3(12.9898, 78.233, 37.719))).mul(43758.5453));
+      const h2 = fract(sin(dot(cell, vec3(39.346, 11.135, 83.155))).mul(24634.6345));
+      const qc = p.add(cell.mul(7.31));
+      const SPOKES = 10;
+      const SECTOR = (Math.PI * 2) / SPOKES;
+      const SPACING = 0.05;
+      const w = uv.sub(vec2(h1.sub(0.5), h2.sub(0.5)).mul(0.07));
+      const r = length(w);
+      const theta0 = atan(w.y, w.x);
+      const theta = theta0.add(h1.mul(Math.PI * 2));
+      // Uneven radii: a periodic warp of the angle (gentle enough to stay monotonic).
+      const ang = theta.add(sin(theta.mul(3).add(h2.mul(6.283))).mul(0.12));
+      const a = ang.div(SECTOR);
+      const spokeDist = abs(fract(a.add(0.5)).sub(0.5)).mul(SECTOR).mul(r);
+      // Straight threads between neighbouring radii, wound as one spiral (continuous across atan's cut).
+      const chord = r.mul(cos(fract(a).sub(0.5).mul(SECTOR)));
+      const turn = chord.div(SPACING).add(ang.div(Math.PI * 2));
+      const spiralDist = abs(fract(turn.add(0.5)).sub(0.5)).mul(SPACING);
+      const ring = floor(turn.add(0.5));
+      const seg = mod(floor(a), SPOKES);
+      const broken = step(0.86, fract(sin(ring.mul(17.31).add(seg.mul(5.17)).add(h1.mul(41.3))).mul(43758.5453)));
+      const inSpiral = smoothstep(0.055, 0.07, chord).mul(smoothstep(0.31, 0.29, chord)).mul(broken.oneMinus());
+      const fromHub = smoothstep(0.008, 0.02, r);
+      const reach = smoothstep(0.06, 0.1, d);
+      const thread = webThreads(spokeDist, r.mul(SECTOR), spiralDist, SPACING, 0.003, px);
+      const channel = webThreads(spokeDist, r.mul(SECTOR), spiralDist, SPACING, 0.0065, px);
+      // The hub reads as a dot only where it is resolved (a bright core at a distance looked lit).
+      const hub = smoothstep(0.016, 0.009, r).mul(0.55).add(fineLine(abs(r.sub(0.03)), 0.0025, px).mul(0.5)).mul(smoothstep(0.012, 0.004, px));
+      // Silk glints where a thread lies across the moonlight (upper left in face space): radii and
+      // spiral catch it in different sectors, so the web reads as lit silk rather than a drawn grid.
+      const across = sin(theta0.sub(2.3));
+      const glintSpoke = mix(float(0.3), float(1), abs(across).pow(2));
+      const glintSpiral = mix(float(0.3), float(1), across.mul(across).oneMinus().pow(1.5));
+      const silk = clamp(max(max(thread.spokes.mul(fromHub).mul(glintSpoke), thread.spiral.mul(inSpiral).mul(glintSpiral)), hub), 0, 1).mul(reach);
+      const groove = clamp(max(channel.spokes.mul(fromHub), channel.spiral.mul(inSpiral)), 0, 1).mul(reach);
+      // Glass body: deep jewel tone, smoke drifting very slowly, soft internal cleavage planes.
+      const smoke = mx_fractal_noise_float(qc.mul(1.5).add(vec3(0, time.mul(0.012), 0)), 3, 2, 0.5).mul(0.5).add(0.5);
+      const cells = mx_worley_noise_vec2(qc.mul(2.2));
+      const plane = smoothstep(0.16, 0.0, cells.y.sub(cells.x));
+      // A slight lift of the weaker channels: dark colours fall into the tone curve's toe, which
+      // otherwise pushes orange to red and yellow to amber.
+      const jewel = base.pow(0.88);
+      const glass = jewel.mul(float(0.6).add(plane.mul(0.08)).sub(smoke.mul(0.12)));
+      const charcoal = vec3(0.018, 0.016, 0.024);
+      // Looking through more smoky glass towards the border: a little deeper there.
+      const body = mix(charcoal, glass, mix(float(0.82), float(0.96), ndv)).mul(mix(float(0.84), float(1), smoothstep(0.06, 0.3, d)));
+      const metal = vec3(0.075, 0.065, 0.1).add(base.mul(0.1));
+      const silkColor = mix(vec3(0.72, 0.68, 0.86), base, 0.2);
+      const carved = mix(body, metal, edge.mul(0.7)).mul(float(1).sub(groove.mul(0.3)));
+      const albedo = mix(carved, silkColor, silk.mul(0.4));
+      // Light: a faint inner glow, the silk's sheen (stronger at grazing angles, with a slow
+      // shimmer sliding out along the threads) and one fine lit line on the chamfer.
+      const inner = base.mul(ndv.pow(2).mul(smoothstep(0.06, 0.3, d)).mul(float(0.04).add(music.mul(0.02))));
+      const shimmer = smoothstep(0.82, 1.0, sin(r.mul(16).sub(time.mul(0.7)).add(h2.mul(6.283))).mul(0.5).add(0.5));
+      const sheen = silkColor.mul(silk.mul(float(0.05).add(ndv.oneMinus().pow(2).mul(0.12)).add(shimmer.mul(0.08)).add(music.mul(0.03))));
+      const lineColor = mix(base, vec3(0.62, 0.45, 1), 0.3);
+      const line = fineLine(abs(d.sub(0.04)), 0.0035, px);
+      const emissive = inner.add(sheen).add(lineColor.mul(line.mul(0.3)));
+      const rough = mix(mix(float(0.26).add(smoke.mul(0.06)), float(0.16), edge), float(0.22), silk);
+      return { albedo: cast<V3>(albedo), emissive: cast<V3>(emissive), roughness: cast<F>(rough) };
     }
     default:
       return { albedo: base, emissive: zero, roughness: null };

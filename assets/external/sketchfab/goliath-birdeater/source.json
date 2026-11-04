@@ -1,0 +1,25 @@
+{
+  "uid": "5ee6243c9f2e4d48b013755fa70f19d7",
+  "name": "Goliath birdeater",
+  "page": "https://sketchfab.com/3d-models/goliath-birdeater-5ee6243c9f2e4d48b013755fa70f19d7",
+  "author": {
+    "name": "Nikita2013",
+    "username": "Nikita2013",
+    "profile": "https://sketchfab.com/Nikita2013"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Goliath birdeater\" by Nikita2013 (https://sketchfab.com/3d-models/goliath-birdeater-5ee6243c9f2e4d48b013755fa70f19d7), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 14258,
+  "vertices": 7467,
+  "animations": 2,
+  "files": [
+    {
+      "path": "goliath-birdeater.gltf.zip",
+      "md5": "4426b86557ad4885c468404b2c43ebf7",
+      "size": 3886482,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

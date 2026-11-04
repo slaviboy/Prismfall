@@ -10,9 +10,10 @@ import { wardenComponent } from './warden';
 /**
  * The Warden's Spire: a content-only world. A real photographic horizon (Poly Haven's Toposcope
  * Sunset, graded to a storm-lit dusk) behind a volcanic land built here: lava rivers in carved
- * channels and a ravine, ruins and a fallen bridge, an original black citadel modelled in
- * Blender, and at its summit the Warden, a molten core in a cage of turning stone rings whose
- * searchlight sweeps the land and lights the storm. Everything goes through the public SDK.
+ * channels and a ravine, ruins and a fallen bridge, a black citadel (for now a placeholder tower
+ * from a Sketchfab model; the original Blender citadel is the citadel layer's default), and at its
+ * summit the Warden, a molten core in a cage of turning stone rings whose searchlight sweeps the
+ * land and lights the storm. Everything goes through the public SDK.
  */
 export default defineStage({
   sdkVersion: '1.2.0',

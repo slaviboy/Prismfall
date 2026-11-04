@@ -333,7 +333,7 @@ How to read the Evidence column:
 | G. VR controller sensitivity; detected-controller status in settings | Done | Settings → VR: stick sensitivity and trigger threshold (`XRControllerInput`, `xrInput.test.ts`); detected controllers are listed (`VRControls.tsx`) |
 | H. VR menus with rays and sticks | Partial | The in-headset panel offers Marathon, Zen, Voyage, world choice, recentre and exit, plus pause and results panels. Sprint, Ultra, Practice and the settings, audio, graphics and controller configuration are not available inside the headset; they are on the desktop VR tab |
 | I. VR HUD | Done | Score, level, lines, time and combo or callout panel, following the Interface tab's visibility toggles; next and hold are 3D pods on the board; distance and scale adjustable |
-| J. Same audio engine and analysis; spatial audio | Partial | Shared engine, and the listener follows the headset. Only creature footsteps are positioned; ambience is stereo |
+| J. Same audio engine and analysis; spatial audio | Partial | Shared engine, and the listener follows the headset. Only creature sounds (footsteps, spider skitters and steps, silk, web hums) are positioned; ambience is stereo |
 | K. VR graphics profiles | Partial | Three profiles (Performance, Balanced, Quality) set framebuffer scale, foveation and the particle cap. There is no Low/Medium/High/Ultra/Custom set and no separate VR render scale, particle, shadow or post-processing controls. VR renders without post-processing (no bloom) and without shadows |
 | L. Comfort: stationary viewpoint, no shake or motion blur, world dimming, fades, exit at any time | Done | Fixed camera rig in `XRManager`, VR tab "Dim the world" |
 | M. Dedicated VR settings category, persisted | Partial | The VR tab has enter and exit, seated and standing, board and HUD placement, remapping, vibration, graphics profile, dimming, rays and reset. Controller sensitivity, render scale and particle density have no VR-specific controls. Reduced motion and audio use the global settings |
@@ -356,7 +356,7 @@ How to read the Evidence column:
 | H. Organised audio asset pipeline (OGG/Opus, stems, masters) | Done | `assets/audio/README.md`, `scripts/encode-audio.ts`. No recorded audio ships: all music and SFX are synthesised |
 | I. Composition and mastering quality | Manual check | No DAW and no recorded masters; the TypeScript compositions are the source. Quality is the owner's judgement |
 | J. Integrated with the analysis engine | Done | One analysis engine on the music bus |
-| K. Spatial audio for VR and creatures | Partial | HRTF panning for creature footsteps (`SfxBank.playAt`, `src/audio/worldSounds.ts`). Birds, marine life and ambience are not positioned |
+| K. Spatial audio for VR and creatures | Partial | HRTF panning for creature footsteps and spider sounds (`skitter`, `crawl`, `silk`, `webHum`; `SfxBank.playAt`, `src/audio/worldSounds.ts`, `creatureSynth.ts`). Birds, marine life and ambience are not positioned |
 | L. Audio settings, persisted, and a sound test screen | Done | Audio tab (hard-drop, world-effects and menu volumes, music intensity, adaptive music, spatial audio, variation, calibration) and Sound test; `e2e/audio-settings.spec.ts` |
 | M. Audio acceptance | Done / Manual check | Automated: headroom, material weight and colour, bus routing, pause, transitions. Listening on headphones and speakers is pending |
 
@@ -371,7 +371,7 @@ How to read the Evidence column:
 5. **Music is synthesised live.** There are no recorded masters, stems or DAW projects. Whether it meets the "commercial soundtrack" bar is the owner's call. The analysis acceptance corpus is synthetic, too.
 6. **Content packs are build-time only.** There is no runtime import. New block surfaces, SFX timbre presets and impact profiles still need code in `src/`.
 7. **Save export leaves out Music Room files.** Settings, progress, stats, high scores and replays are exported; the player's own audio files are not. Every origin and browser profile has its own save (`Play.cmd` uses its own Chrome profile).
-8. **Spatial audio is limited.** Only creature footsteps are positioned in 3D.
+8. **Spatial audio is limited.** Only creature sounds (footsteps and the spider set) are positioned in 3D.
 9. **Some features have no automated test:** fullscreen, GPU device-loss recovery, dynamic resolution, controller rumble and VR haptics, the mapping wizard UI, camera settings.
 10. **Block themes have gaps.** Blocks are opaque (translucency is shader-simulated), and there are no per-theme spawn animations or theme particles.
 11. **Some schema fields are unused:**

@@ -2,6 +2,7 @@ import type { Object3D, Scene } from 'three/webgpu';
 import type { GLTF } from 'three/addons/loaders/GLTFLoader.js';
 import type { ZodType } from 'zod';
 import type { AudioFeatures } from '../audio/analysis/features';
+import type { WorldSoundId } from '../audio/worldSounds';
 import type { FrameUniforms } from '../rendering/shaders/uniforms';
 import type { BurstSystem } from '../rendering/particles/BurstSystem';
 import type { StormSound, WeatherSound } from '../audio/worldSounds';
@@ -103,8 +104,26 @@ export interface EnvironmentContext {
   readonly shakeWorld?: (strength: number, seconds: number) => void;
 }
 
+/**
+ * Positional one-shots a component may emit (`WorldSounds.emit`):
+ * - `footstep` (SDK 1.1): a creature's footfall, made from the world's block material.
+ * - `skitter` (SDK 1.4): a small spider's dash, a quick irregular patter of tiny claw ticks on stone
+ *   (one call per dash, not per leg).
+ * - `crawl` (SDK 1.4): one step of a large spider, two to four legs landing with a low thud (one call
+ *   per half gait cycle, when a set of legs lands).
+ * - `silk` (SDK 1.4): a silk thread stretching or creaking, soft and airy.
+ * - `webHum` (SDK 1.4): a web vibrating, a soft plucked-string shimmer, played in the music's key.
+ */
+export type WorldSoundName = WorldSoundId;
+
 export interface WorldSounds {
-  emit(sound: 'footstep', x: number, y: number, z: number, gain?: number): void;
+  /**
+   * Plays a world sound at a world position, if sound is on and the rate limits allow (each sound
+   * has its own and all share one; extra calls are dropped, so emit only what should be heard).
+   * `gain` is the loudness (default 1, distance comes on top). For `skitter` and `crawl` it is also
+   * the weight: 0.2 a light, quiet contact from a smaller animal, 1 the heaviest and loudest.
+   */
+  emit(sound: WorldSoundName, x: number, y: number, z: number, gain?: number): void;
   /**
    * Keeps a sustained world voice (a hum or drone) sounding: call it every frame or so with its
    * loudness (0..1), pitch (Hz), brightness (0..1) and stereo pan; it fades out by itself soon

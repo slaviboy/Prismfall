@@ -1,0 +1,25 @@
+{
+  "uid": "a2120785dd7e43b797301413ba109c37",
+  "name": "Waltz of the sharks",
+  "page": "https://sketchfab.com/3d-models/waltz-of-the-sharks-a2120785dd7e43b797301413ba109c37",
+  "author": {
+    "name": "Eques_inferno",
+    "username": "Eques_inferno",
+    "profile": "https://sketchfab.com/Eques_inferno"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Waltz of the sharks\" by Eques_inferno (https://sketchfab.com/3d-models/waltz-of-the-sharks-a2120785dd7e43b797301413ba109c37), CC Attribution",
+  "downloaded": "2026-11-04",
+  "faces": 43572,
+  "vertices": 21876,
+  "animations": 1,
+  "files": [
+    {
+      "path": "hammerheads.gltf.zip",
+      "md5": "ebd81fcda90b1a369c68de6fab11b7a1",
+      "size": 5585463,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

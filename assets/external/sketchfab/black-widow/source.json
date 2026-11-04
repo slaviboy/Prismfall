@@ -1,0 +1,25 @@
+{
+  "uid": "2429ae17b56241cd9c24a954b77443e2",
+  "name": "Black widow (Animated, downloadable)",
+  "page": "https://sketchfab.com/3d-models/black-widow-animated-downloadable-2429ae17b56241cd9c24a954b77443e2",
+  "author": {
+    "name": "Andrey",
+    "username": "andrey.",
+    "profile": "https://sketchfab.com/andrey."
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Black widow (Animated, downloadable)\" by Andrey (https://sketchfab.com/3d-models/black-widow-animated-downloadable-2429ae17b56241cd9c24a954b77443e2), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 16573,
+  "vertices": 8457,
+  "animations": 1,
+  "files": [
+    {
+      "path": "black-widow.gltf.zip",
+      "md5": "f136b07157324cdd43d320b792c509fd",
+      "size": 67165819,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}
