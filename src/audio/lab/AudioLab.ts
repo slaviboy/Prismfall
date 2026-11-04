@@ -268,7 +268,7 @@ export async function runCorpus(seconds = 16): Promise<StyleReport[]> {
   return out;
 }
 
-const PRESET_MATERIAL: Record<string, string> = { glass: 'glass', metal: 'metal', crystal: 'cosmic', organic: 'organic', neon: 'neon', paper: 'paper', stone: 'mineral', ice: 'ice', oasis: 'sandstone', koto: 'wood', void: 'water' };
+const PRESET_MATERIAL: Record<string, string> = { glass: 'glass', metal: 'metal', crystal: 'cosmic', organic: 'organic', neon: 'neon', paper: 'paper', stone: 'mineral', ice: 'ice', oasis: 'sandstone', koto: 'wood', gossamer: 'obsidian', void: 'water' };
 const materialFor = (preset: string): string => PRESET_MATERIAL[preset] ?? 'glass';
 
 /** Peak/NaN/DC checks of every SFX in every preset (each with a matching block material). */
@@ -390,6 +390,7 @@ export async function shippedCompositions(): Promise<Composition[]> {
 }
 
 export { measureTrack, renderSpan, sectionTimeline, type TrackReport, type TrackSectionStats } from './trackReport';
+export { renderAmbience } from '../sound-effects/Ambience';
 
 /** Measures shipped composition tracks (all, or those whose id is listed) one after another. */
 export async function measureShippedTracks(ids?: readonly string[], opts: Parameters<typeof measureTrack>[1] = {}): Promise<TrackReport[]> {

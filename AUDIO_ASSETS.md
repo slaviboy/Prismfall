@@ -110,7 +110,7 @@ The instrument names describe the intended character, but each one is one of the
 
 Each gameplay sound (`SFX_IDS` in `src/audio/sound-effects/SfxBank.ts`) can combine two layers, which are mixed into one buffer per variant when a stage loads.
 
-**Tonal layer.** The stage's `sfx.preset` (`glass`, `metal`, `crystal`, `organic`, `neon`, `paper`, `stone`, `ice`, `oasis`, `koto`, `void`) supplies five instrument specs: tick, tone, chord, thud and shimmer. A recipe per sound plays them through the same synthesizer into an `OfflineAudioContext`, transposed to the current composition's key. For example, a single clear is a two-note chord and a quad is an impact plus a six-note chord and a shimmer. Spawn, soft drop and land have no tonal layer.
+**Tonal layer.** The stage's `sfx.preset` (`glass`, `metal`, `crystal`, `organic`, `neon`, `paper`, `stone`, `ice`, `oasis`, `koto`, `gossamer`, `void`) supplies five instrument specs: tick, tone, chord, thud and shimmer. A recipe per sound plays them through the same synthesizer into an `OfflineAudioContext`, transposed to the current composition's key. For example, a single clear is a two-note chord and a quad is an impact plus a six-note chord and a shimmer. Spawn, soft drop and land have no tonal layer.
 
 **Material layer.** The stage's `sfx.material` names a `MaterialAudioProfile` (`src/audio/sound-effects/materialAudio.ts`) or defines one inline. `renderImpact` (`impactSynth.ts`) synthesises a hit sample by sample into `Float32Array`s from these layers:
 
@@ -132,7 +132,9 @@ Each render is high-passed at 22 Hz to remove DC, faded out at the end and scale
 - `signature` is the world's own answer to a four-line clear (the profile's `signature` override), and `impactResponse` is the environment's answer to a hard drop (the `response` override);
 - `footstep` is used for creature footfalls, played positionally.
 
-Each sound has one to four seeded variants, and playback picks one at random, never the same twice in a row. The material set is rendered in a Web Worker (`materialRender.worker.ts`), so a stage change in the middle of a Voyage does not block the main thread. When workers are unavailable, it renders on the main thread.
+`gossamer` (dark glass bells, a pure glass-harmonica shimmer and a deep thud) is the tonal preset for caves, webs and night worlds.
+
+Each sound has one to six seeded variants, and playback picks one at random, never the same twice in a row (skitter and crawl pick by weight, below). The material set is rendered in a Web Worker (`materialRender.worker.ts`), so a stage change in the middle of a Voyage does not block the main thread. When workers are unavailable, it renders on the main thread.
 
 Built-in materials and the stages that use them, with each stage's ambience and tonal preset (from the manifests):
 
@@ -160,9 +162,46 @@ Built-in materials and the stages that use them, with each stage's ambience and 
 
 The `glass` profile is the fallback, and it is used whenever the "classic" block style is selected.
 
+### Creature sounds
+
+Four more positional one-shots are synthesised sample by sample in `creatureSynth.ts`, like the impacts but independent of the block material (a claw on stone sounds the same in any world). They are rendered with the material set the first time, in the same worker, and then kept for every later world. A component plays them with `ctx.sounds.emit(id, x, y, z, gain)` (SDK 1.4):
+
+| Id | Sound | Variants |
+|---|---|---|
+| `skitter` | A small spider's dash: an irregular patter of tiny claw ticks on stone in alternating sets of four legs, which speeds up, may stall and eases off, over the faint brush of the legs. | 6, light to heavy |
+| `crawl` | One step of a large spider: two to four legs landing a beat apart, each a lower claw tap over a modal thud with a short low-mid knock, grit under the foot, now and then a leg dragging and, for the heaviest, a sub swell as the body settles. | 6, light to heavy |
+| `silk` | A thread under tension: an airy stretch, a stick-slip creak whose rate climbs as the strand tightens (or falls as it slackens), a faint singing of the strand. | 3 |
+| `webHum` | A web vibrating: three strands (root, a detuned twin, a fifth or octave) touched softly, ringing as plucked strings that waver as the web sways. Rendered at C3 and transposed onto the root, fifth or lower fourth of the music's key. | 3 |
+
+For `skitter` and `crawl` the gain is also the weight: playback picks among the variants nearest it, so 0.2 is a light, quiet contact and 1 the heaviest and loudest.
+
+Rate limits and range:
+
+- Each world sound has its own rate limit per second, which is also its burst size: footstep 6, skitter 3, crawl 4, silk 2 and webHum 2.
+- All world sounds share a limit of 10 per second, and at most 12 sound at once. Requests over any limit are dropped.
+- Small sounds carry less far. The panner's reference distance is 16 world units for `skitter` and `silk`, 24 for `webHum`, and 30 for `crawl` and `footstep`.
+
+Levels at gain 1, measured as energy above 150 Hz:
+
+| Sound | Level |
+|---|---|
+| footstep (The Veil's material) | about −41 dB |
+| heavy crawl | −38.5 dB |
+| skitter | −43 to −45 dB (peaks −13 to −15 dBFS) |
+| web hum | −43 dB |
+| silk | −46 dB |
+
 ## 4. Ambience
 
-`src/audio/sound-effects/Ambience.ts` defines 22 presets: `ocean`, `foundry`, `space`, `forest`, `wind`, `rain`, `underwater`, `city`, `cathedral`, `arctic`, `horizon`, `desert`, `ice`, `garden`, `cosmos`, `alpine`, `abyss`, `wilderness`, `volcanic`, `aurora`, `neon`, `veil`. Each preset is one to three looping white- or pink-noise layers. The layers are filtered (low-pass, band-pass or high-pass), with an LFO on the gain (swells, gusts) and an optional slow filter sweep. Most presets also schedule sparse synthesised events at random intervals: a far-off caravan bell (desert), a bamboo water knocker or a bird (garden), ice creaks and tinkles (ice), bubbles and a rare deep call (abyss). Presets crossfade when the stage changes.
+`src/audio/sound-effects/Ambience.ts` defines 23 presets: `ocean`, `foundry`, `space`, `forest`, `wind`, `rain`, `underwater`, `city`, `cathedral`, `arctic`, `horizon`, `desert`, `ice`, `garden`, `cosmos`, `alpine`, `abyss`, `wilderness`, `volcanic`, `aurora`, `neon`, `veil`, `web`. Each preset is one to five looping white- or pink-noise layers. The layers are filtered (low-pass, band-pass or high-pass), with an LFO on the gain (swells, gusts) and an optional slow filter sweep. Most presets also schedule sparse synthesised events at random intervals: a far-off caravan bell (desert), a bamboo water knocker or a bird (garden), ice creaks and tinkles (ice), bubbles and a rare deep call (abyss). Presets crossfade when the stage changes.
+
+`web` is the most detailed bed: a cave under a ruin, with webs across the arches.
+
+- **Layers.** Still cave air and a low room tone, wind moaning faintly through two stone arches, and a fine hiss of moving air. The moans are narrow bands that swell, fade almost to nothing and drift in pitch at unrelated rates. The layers read an 11 s pink-noise loop at different rates, so the bed never repeats on the shared 2 s loop.
+- **Timing.** Events (`ambienceVoices.ts`) come every 2 to 6.5 s, with a one-in-five chance of a further 7 to 15 s of rest. About a third of them play nothing.
+- **Events.** Mostly drips a long way off, sometimes the same drip falling two to four times. Sometimes a small insect's trill or wingbeats passing, a silk creak, a rustle or a pebble shaken loose. Rarely a far skitter, something large crawling far off, or a web humming.
+- **Far creatures.** These are the creature one-shots above, low-passed, quieter and mostly heard through the bed's echo. The echo (the preset's `space`) is four feedback delays of 0.14 to 0.35 s that darken on every repeat.
+- **Levels.** Rendered offline with `renderAmbience` (also in the audio lab), the bed at level 1 measures −31.6 LUFS integrated, with 3 s short-term loudness from −33.9 to −30.1 and a peak of −15.3 dBFS. The Veil's bed at its shipped level of 0.75 measures −31.7 LUFS. Played alone, each event peaks 7 to 14 LU below the bed's median.
 
 ## 5. Ready for recorded music: FileTrack and the encode pipeline
 
@@ -230,5 +269,6 @@ Settings → Audio → Sound test (`AudioTest` in `src/ui/settings/audioPanels.t
   - Combos: Combo 1–2, Combo 3–5, Combo 6+.
   - Moments: Level up, Goal reached, World unlocked, Danger, Game over, Pause, Resume.
 - **Creature passing (spatial)**: eight positional footsteps moving from left to right in front of the listener.
+- **Spiders in the dark (spatial)**: three skitters on the left, a large spider's seven steps from right to left behind the board, a silk creak overhead and a web hum, through the same rate limits as in a world.
 
 The Music Room plays every unlocked world's tracks, not only each world's default track.

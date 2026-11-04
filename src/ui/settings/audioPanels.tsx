@@ -253,6 +253,16 @@ function AudioTest(): ReactNode {
     // A creature walking from left to right in front of the listener.
     for (let i = 0; i < 8; i++) window.setTimeout(() => shell.audio.sfx.playAt('footstep', -60 + i * 17, -14, -40, { gain: 0.8 }), i * 380);
   };
+  const spiders = async (): Promise<void> => {
+    await ensure();
+    // A small spider dashing past on the left, a large one walking right to left behind the
+    // board, a strand creaking overhead and a web humming: through the same budget as in a world.
+    const at = (ms: number, play: () => void): void => void window.setTimeout(play, ms);
+    [0, 500, 1300].forEach((ms, i) => at(ms, () => shell.audio.playWorldSound('skitter', -30 + i * 6, -12, -20, 0.5 - i * 0.1)));
+    for (let i = 0; i < 7; i++) at(1900 + i * 520, () => shell.audio.playWorldSound('crawl', 50 - i * 16, -14, -60, 1));
+    at(5800, () => shell.audio.playWorldSound('silk', 10, 20, -25, 0.8));
+    at(6900, () => shell.audio.playWorldSound('webHum', -20, 10, -40, 0.8));
+  };
 
   return (
     <div className="audio-test" data-testid="audio-test">
@@ -304,6 +314,9 @@ function AudioTest(): ReactNode {
         <div className="settings-actions">
           <Button onClick={() => void footsteps()} testId="sfx-footsteps">
             Creature passing (spatial)
+          </Button>
+          <Button onClick={() => void spiders()} testId="sfx-spiders">
+            Spiders in the dark (spatial)
           </Button>
         </div>
       </div>

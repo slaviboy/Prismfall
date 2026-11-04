@@ -76,7 +76,8 @@ export class Biquad {
   }
 }
 
-class Canvas {
+/** A stereo render target (creature sounds reuse it). */
+export class Canvas {
   readonly left: Float32Array;
   readonly right: Float32Array;
   constructor(
