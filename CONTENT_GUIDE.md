@@ -93,6 +93,7 @@ The SDK exports:
 | `zColor`, `zVec3`, `colorUniform`, `floatUniform`, `linear`, `seeded`, `scaledCount` | parameter types, TSL uniforms, sRGB-to-linear colour, deterministic random, quality-scaled counts |
 | `frameUniforms` | per-frame TSL uniforms (time, music features, clear pulse, danger, fog density, flash limit, screen effects) |
 | `frameUniforms.worldEvents` | the accessibility World events setting: 1 full, 0.5 calm, 0 off. Worlds with creatures or sudden events read it (The Veil: calm makes events rarer, further away and gentler and drops the sudden shadow events; off leaves only the fog weather) |
+| `frameUniforms.weatherIntensity` | the Storm intensity setting (SDK 1.5): 0.55 subtle, 1 normal, 1.35 heavy, 1.7 extreme. Weather worlds scale rain, wind and lightning with it, never gameplay (Dark Storm) |
 | `noBloom`, `additiveFog` | exclude a material from bloom; distance-fade an additive colour |
 | `makeRecipeEffect`, `runRecipe`, `BASE_RECIPE`, `ClearRecipe` | line-clear particle recipes |
 | `resolveBlockPreset`, `BLOCK_PRESETS` | block surface presets |
@@ -101,7 +102,7 @@ The SDK exports:
 
 ### SDK versions
 
-`src/sdk/version.ts` holds `SDK_VERSION = '1.3.0'`. Minor versions add API, major versions break it.
+`src/sdk/version.ts` holds `SDK_VERSION = '1.5.0'`. Minor versions add API, major versions break it.
 
 | Version | Added |
 |---|---|
@@ -109,6 +110,7 @@ The SDK exports:
 | 1.1 | themed transitions (`TransitionEffect`, `sdk.transitions`), `WorldSounds` (`ctx.sounds.emit('footstep', …)`), `additiveFog` |
 | 1.2 | `GroundField.surface(x, z)` and `GroundField.setWaterLevel(y)` (the water component declares its surface so a VR viewer stands on it) |
 | 1.3 | `ctx.shakeWorld(strength, seconds)`: a decaying tremor of the world root only (never the board, HUD or camera; off under reduced motion and in VR, scaled by the screen-effects setting), and `frameUniforms.screenEffects` (the screen-effects setting, 0 in VR) for screen-space world effects. Ashen Vigil uses both |
+| 1.5 | Weather (Dark Storm): `ctx.sounds.weather?.(state)` keeps rain and wind beds sounding (call it every frame or so with `rain` 0..1.5, `wind`, `gust` and an optional `surfaces` mix of water, rock, wood and foliage; the beds fade out soon after the calls stop), `ctx.sounds.storm?.(sound)` schedules a thunder `delay` seconds ahead on the audio clock or a lightning crack (`{ kind, x, y, z, distance, energy, delay, seed, strokes, channel, tag }`; `distance` is the apparent distance that shapes the sound and picks the near or distant thunder bus), and `frameUniforms.weatherIntensity` (the Storm intensity setting: 0.55 subtle, 1 normal, 1.35 heavy, 1.7 extreme). Rain, wind, distant thunder, nearby thunder and the crack each have their own bus and volume setting (Settings → Audio → Weather). 1.4 is reserved for parallel work and may land with other additions |
 
 Two version checks exist:
 
@@ -436,7 +438,7 @@ For recorded or produced music, use `kind: "file"` with an audio file and a `tra
 
 | Field | Values |
 |---|---|
-| `ambience.preset` | `ocean`, `foundry`, `space`, `forest`, `wind`, `rain`, `underwater`, `city`, `cathedral`, `arctic`, `horizon`, `desert`, `ice`, `garden`, `cosmos`, `alpine`, `abyss`, `wilderness`, `volcanic`, `aurora`, `neon`, `veil` (`src/audio/sound-effects/Ambience.ts`). Each preset is filtered noise layers with slow LFOs, plus occasional synthesised events. An unknown name plays silence. |
+| `ambience.preset` | `ocean`, `foundry`, `space`, `forest`, `wind`, `rain`, `underwater`, `city`, `cathedral`, `arctic`, `horizon`, `desert`, `ice`, `garden`, `cosmos`, `alpine`, `abyss`, `wilderness`, `volcanic`, `aurora`, `neon`, `veil`, `storm` (`src/audio/sound-effects/Ambience.ts`). Each preset is filtered noise layers with slow LFOs, plus occasional synthesised events. An unknown name plays silence. |
 | `sfx.preset` | The tonal family for gameplay sounds: `glass`, `metal`, `crystal`, `organic`, `neon`, `paper`, `stone`, `ice`, `oasis`, `koto`, `void` (`SFX_PRESETS` in `SfxBank.ts`). Unknown names fail `npm run content:validate`. |
 | `sfx.material` | The block impact sound: a built-in `MaterialAudioProfile` name (`glass`, `pearl`, `metal`, `sandstone`, `ice`, `wood`, `cosmic`, `mineral`, `water`, `organic`, `obsidian`, `aurora`, `neon`, `paper`) or an inline profile. Unknown names fail `npm run content:validate`; an invalid inline profile falls back to `glass` at runtime. |
 | `sfx.overrides` | A map from sound id (`SFX_IDS` in `SfxBank.ts`, e.g. `lock`, `hardDrop`, `clear4`) to a stage audio file. The file replaces the generated sound for that id (no variations). Validation checks that the files exist; unknown ids are skipped with a console warning. |
@@ -525,6 +527,15 @@ Things to know:
 - **Materials.** There is no material registry. Block surfaces come from `blocks.material` (a `BLOCK_PRESETS` name) plus `blocks.overrides`. Blender scenery is recoloured with `materials` rules in `gltfScene` and `scatter`. A custom component builds its own TSL node materials, as `paperCranes` does with `MeshStandardNodeMaterial`. Use `noBloom(material)` to keep a material out of the emissive bloom target, and `additiveFog(color)` for additive materials.
 - **Line-clear effects** implement `trigger(ctx, clear, params)`. `makeRecipeEffect(id, partialRecipe, description)` builds one from the recipe system below.
 - **Transitions** implement `play(ctx, params)`. They run once when a world crossfades in (only for crossfades longer than 0.6 s) and use fire-and-forget burst particles. Respect `ctx.intensityScale`, `ctx.reducedMotion` and `ctx.bursts.budget()`. An unknown transition name fails `npm run content:validate` (unless the stage has a module, which may register it).
+
+### Weather worlds (Dark Storm)
+
+`content/stages/dark-storm/` is the worked example of a weather world: everything is drawn and timed by its own module, and its sound goes through the SDK 1.5 weather and storm sounds.
+
+- **One clock, one source of truth.** `director.ts` (pure TypeScript, seeded, unit-tested) runs the storm: four states (calm, active, intense, distant) with weighted transitions biased by the music's section intensity and the game's progress, levels that ease over seconds, Poisson strikes with clusters and lulls at four intensity levels, return strokes, QUAD accents and cloud flickers. A flash governor caps flash onsets at three in any second, and at one smooth flash every 2.5 s with Reduce flashing; World events calm and reduced motion halve the lightning and keep it at least a kilometre away, off keeps only small distant flashes. `tickStorm` (`shared.ts`) advances it once per frame from whichever component updates first.
+- **Sound from the same event.** When a strike starts, the same data (position, distance, energy, strokes, seed) drives the bolt, the light and the sound: a nearby strike's crack goes out with the flash (`ctx.sounds.storm({ kind: 'crack', delay: leader })`), and its thunder `thunderDelay(distance)` seconds later (the apparent distance at 343 m/s, compressed to at most 15 s). The audio system schedules both on the audio clock (`AudioBufferSourceNode.start(when)`), never with JS timers.
+- **World-only light.** Flashes light the world through its own `lightsNode` (a hemisphere whose sky colour carries the lit cloud deck, three point lights at the brightest flashes, a shadow-casting directional light pointed at the strongest), set on its `MeshStandardNodeMaterial`s with `setupEnvironment()` returning null; the board is never lit by them. Shaders that light themselves (clouds, rain, haze, reflections) read the same flash data from uniform arrays.
+- **Review handle.** The lightning mesh carries `userData.storm` (`director`, `log`, `active`, `force(level, azimuth, distance)`), which capture scripts find with `scene.traverse` to force a strike for a screenshot; game code never uses it.
 
 ### Built-in line-clear recipes
 

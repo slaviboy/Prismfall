@@ -290,11 +290,11 @@ export const rainComponent: ComponentFactory<Params> = {
         const streak = mx_noise_float(vec3(x.mul(1.4), uvq.y.mul(1.2).add(u.time.mul(1.6)), seed)).mul(0.5).add(0.5);
         const sheet = mx_noise_float(vec3(x.mul(0.25), uvq.y.mul(0.6), u.time.mul(0.04).add(seed))).mul(0.5).add(0.5);
         const edge = smoothstep(0, 0.25, uvq.x).mul(smoothstep(1, 0.75, uvq.x)).mul(smoothstep(0, 0.12, uvq.y)).mul(smoothstep(1, 0.8, uvq.y));
-        const alpha = cast<F>(smoothstep(0.25, 0.9, sheet).mul(streak.mul(0.3).add(0.7)).mul(edge).mul(u.rain.mul(0.55).add(0.25)).mul(0.2));
+        const alpha = cast<F>(smoothstep(0.25, 0.9, sheet).mul(streak.mul(0.3).add(0.7)).mul(edge).mul(u.rain.mul(0.55).add(0.25)).mul(0.12));
         const centre = cast<V3>(vec3(at.x, ground + height / 2, at.z));
         // The curtain's colour: the storm air, lit through from behind by any flash.
         const view = cast<V3>(normalize(centre.sub(cameraPosition)));
-        const air = cast<V3>(skyRadiance(s, cast<V3>(normalize(vec3(view.x, 0.04, view.z))), 1).mul(0.9));
+        const air = cast<V3>(skyRadiance(s, cast<V3>(normalize(vec3(view.x, 0.04, view.z))), 1).mul(1.15));
         let lit: V3 = air;
         for (let k = 0; k < MAX_FLASH; k++) {
           const fp = cast<V4>(u.flashPos.element(int(k)));

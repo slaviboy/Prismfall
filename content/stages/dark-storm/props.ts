@@ -153,7 +153,7 @@ export const propsComponent: ComponentFactory<Params> = {
     const b: Builder = { pos: [], nrm: [], kind: [], idx: [] };
     const drips: Vector3[] = [];
     const place = (x: number, zz: number, sink = 0.15): Vector3 => new Vector3(x, terrainHeight(x, zz) - sink, zz);
-    const ok = (x: number, zz: number): boolean => ledgeMask(x, zz) > 0.95 && puddle(x, zz) < 0.3 && streamDistance(x, zz) > 2.5 && boardLimit(x, zz) > 0 && Math.hypot(x - EYE.x, zz - EYE.z) > 11;
+    const ok = (x: number, zz: number): boolean => ledgeMask(x, zz) > 0.95 && puddle(x, zz) < 0.3 && streamDistance(x, zz) > 2.5 && boardLimit(x, zz) > 0 && Math.hypot(x - EYE.x, zz - EYE.z) > 14;
 
     // The stone circle: a ring of tall stones, two of them fallen.
     const ring = pointAt(-30, 52);
@@ -264,7 +264,7 @@ export const propsComponent: ComponentFactory<Params> = {
       const at = pointAt(az, dist);
       if (!ok(at.x, at.z)) continue;
       i++;
-      const size = 0.2 + Math.pow(rand(), 2.6) * 1.1;
+      const size = 0.2 + Math.pow(rand(), 2.6) * (dist < 25 ? 0.45 : 0.95);
       const g = roughen(mergeVertices(new IcosahedronGeometry(1, 1)), 0.34, 1.6, i);
       const sc = new Vector3(size * (0.9 + rand() * 0.8), size * (0.45 + rand() * 0.4), size * (0.8 + rand() * 0.7));
       const q = new Quaternion().setFromAxisAngle(new Vector3(0, 1, 0), rand() * 6.28);

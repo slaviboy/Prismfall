@@ -466,3 +466,16 @@ three.js addons used by the game are part of the `three` package: `GLTFLoader`, 
 | `fake-indexeddb` | 6.2.7 | Apache-2.0 |
 
 External programs used by the content pipelines are not part of the build. Blender generates the models and processes the photoscans, Google Chrome (driven by Playwright) renders thumbnails and screenshots, and ffmpeg is used by `npm run audio:encode`, which has had no input so far.
+
+## 11. Dark Storm
+
+Everything in `content/stages/dark-storm/` is original work for Prismfall: the landscape, the props (standing stones, bothy ruin, dead tree, fence, boulders, grass), the clouds, the rain and the lightning are all procedural geometry and shaders written for this world, and its sound is synthesised at runtime (no recorded audio, no textures, no models). Its two pictures are renders of the game.
+
+| File | Origin | Licence |
+|---|---|---|
+| `content/stages/dark-storm/previews/thumb.jpg` | render of the game (960×540, JPEG quality 84, the sizes `scripts/thumbnails.ts` uses), captured during a lightning strike forced through the world's review handle (also recorded in `content/stages/dark-storm/assets.json`) | Original work for Prismfall |
+| `content/stages/dark-storm/previews/backdrop.jpg` | wide render of the game (2560×1080, JPEG quality 80, the picture behind world select), captured the same way | Original work for Prismfall |
+| `content/stages/dark-storm/music/black-squall.ts` | "Black Squall", authored composition (recorded in `assets.json`) | Original work for Prismfall |
+| `content/stages/dark-storm/music/eye-of-the-storm.ts` | "Eye of the Storm", authored composition (recorded in `assets.json`) | Original work for Prismfall |
+| `content/stages/dark-storm/stage.json`, `stage.ts`, `shared.ts`, `director.ts`, `director.test.ts`, `bolt.ts`, `terrain.ts`, `terrain.test.ts`, `sky.ts`, `land.ts`, `props.ts`, `grass.ts`, `lightning.ts`, `rain.ts`, `effects.ts`, `assets.json` | Dark Storm manifest and SDK module: the storm director, procedural lightning channels, terrain, ray-marched cloud deck, wet ground and loch, props, grass, GPU rain, line clear and transition | Original work for Prismfall |
+| `src/audio/weather/stormSynth.ts`, `stormJobs.ts`, `stormRender.worker.ts`, `StormAudio.ts` | The weather sound engine: synthesised thunder, lightning cracks, rain droplet loops and noise beds | Original work for Prismfall |

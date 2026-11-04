@@ -666,7 +666,7 @@ export function skyRadiance(s: Storm, dir: V3, blur: F | number = 0): V3 {
     const lobe = exp(float(1).sub(c).div(width.mul(width)).negate().mul(1.4));
     const halo = exp(float(1).sub(c).mul(-6).div(spread));
     const above = smoothstep(-0.05, 0.08, el);
-    col = cast<V3>(col.add(vec3(...FLASH_COLOR).mul(fp.w.mul(lobe.mul(0.7).add(halo.mul(0.025))).mul(above))));
+    col = cast<V3>(col.add(vec3(...FLASH_COLOR).mul(fp.w.max(0).pow(0.75).mul(lobe.mul(0.8).add(halo.mul(0.03))).mul(above))));
   }
   return col;
 }

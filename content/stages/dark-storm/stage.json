@@ -92,13 +92,13 @@
     "geometry": "chamfer",
     "material": "stormCrystal",
     "palette": {
-      "I": "#2aa8d8",
-      "O": "#e8b62a",
-      "T": "#9a50e0",
-      "S": "#3fb84a",
-      "Z": "#e0342e",
-      "J": "#3a62e8",
-      "L": "#ee7a22"
+      "I": "#22b4e6",
+      "O": "#ffd21a",
+      "T": "#9a4ee6",
+      "S": "#3cc04a",
+      "Z": "#e82a2a",
+      "J": "#3a5ff0",
+      "L": "#ff8c1a"
     }
   },
   "environment": {
@@ -317,5 +317,6 @@
   },
   "unlock": {
     "type": "always"
-  }
+  },
+  "thumbnail": "previews/thumb.jpg"
 }

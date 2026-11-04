@@ -85,24 +85,24 @@ function walk(rand: () => number, from: V3, to: V3, steps: number, wander: numbe
   const dir0 = norm(sub(to, from));
   let heading = dir0;
   for (let i = 1; i < steps; i++) {
-    // A landing leader homes in on its strike point; a branch only keeps its general direction
-    // (homing on a point in the air made branches loop back on themselves).
-    const pull = land ? norm(sub(to, p)) : dir0;
+    // The walk keeps its general direction with a persistent heading and random kinks, equally
+    // tortuous all the way down (homing on the target made the last stretch run straight, and
+    // made branches loop back on themselves).
     const progress = i / steps;
-    // Persistent heading with random kinks; the pull towards the target grows near the end.
     const kink = randomDir(rand);
-    const w = 0.35 + 0.5 * progress * progress;
-    heading = norm(add(add(mul(heading, 0.55), mul(pull, w)), mul(kink, wander * (1 - 0.6 * progress))));
+    heading = norm(add(add(mul(heading, 0.55), mul(dir0, 0.38)), mul(kink, wander)));
     let step = stepLen * (0.55 + rand() * 0.9);
     if (rand() < 0.08) step *= 1.8;
     let next = add(p, mul(heading, step));
     if (sag > 0) next = [next[0], next[1] - sag * Math.sin(Math.PI * progress) * stepLen * 0.08, next[2]];
     pts.push(next);
     p = next;
-    if (land && len(sub(to, p)) < stepLen * 0.8) break;
   }
-  if (land) pts.push(to);
-  return pts;
+  if (!land) return pts;
+  // A landing channel ends exactly on its strike point: the walk's error is spread along it.
+  const err = sub(to, p);
+  const n = pts.length - 1;
+  return pts.map((q, i) => add(q, mul(err, i / n)));
 }
 
 /** Fine tortuosity: midpoint displacement of every segment, `levels` times. */
@@ -143,7 +143,7 @@ export function buildChannel(spec: ChannelSpec): Channel {
   const horizontal = spec.kind === 'cloudToCloud';
   const span = len(sub(spec.bottom, spec.top));
   const steps = Math.round((horizontal ? 40 : 34) + detail * 30 + rand() * 14);
-  const coarse = walk(rand, spec.top, spec.bottom, steps, horizontal ? 0.85 : 0.8, true, horizontal ? 1 : 0);
+  const coarse = walk(rand, spec.top, spec.bottom, steps, horizontal ? 0.7 : 0.58, true, horizontal ? 1 : 0);
   const main = roughen(rand, coarse, detail > 0.5 ? 2 : 1, 0.3);
   const s = arcLengths(main);
   const L = s[s.length - 1]!;

@@ -181,7 +181,7 @@ function baseHeight(x: number, z: number): number {
   // The far shore rises into moorland, then the mountains.
   const moor = Math.max(0, fbm(x / 240, z / 240, 4, 37) + 0.25) * 55 * smoothstep(650, 1050, dist);
   h += moor * (0.4 + 0.6 * smoothstep(10, 50, aaz));
-  const band = smoothstep(1000, 1350, dist) * smoothstep(2300, 2000, dist);
+  const band = smoothstep(1000, 1350, dist) * smoothstep(2080, 1850, dist);
   const massif = smoothstep(-0.3, 0.4, fbm(x / 520, z / 520, 4, 41));
   const crest = 1 - Math.abs(fbm(x / 300, z / 300, 4, 43));
   const ribs = Math.pow(1 - Math.abs(fbm(x / 130, z / 130, 4, 47)), 2.3) * 52;

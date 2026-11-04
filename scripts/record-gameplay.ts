@@ -7,7 +7,9 @@
  * (rAF intervals during normal play) is logged per world.
  *
  * Usage: node scripts/record-gameplay.ts [--stages a,b] [--out reference-capture/ours] [--size 2560x1080] [--play 18]
- * Requires a test build (npm run build:test); the preview server is started if needed.
+ *   [--port 4174 --dist dist-test]
+ * Requires a test build (npm run build:test); the preview server is started if needed. --port and
+ * --dist record a private test build instead (as in stage-shots.ts).
  */
 import { chromium, type Page } from '@playwright/test';
 import { execFileSync, execSync, spawn, type ChildProcess } from 'node:child_process';
@@ -24,19 +26,22 @@ const only = opt('stages', '').split(',').filter(Boolean);
 const outDir = resolve(ROOT, opt('out', 'reference-capture/ours'));
 const [width, height] = opt('size', '2560x1080').split('x').map(Number) as [number, number];
 const playS = Number(opt('play', '18'));
+const port = opt('port', '4174');
+const dist = opt('dist', 'dist-test');
+const BASE = `http://localhost:${port}/`;
 
 async function ensureServer(): Promise<ChildProcess | null> {
   try {
-    if ((await fetch('http://localhost:4174/')).ok) return null;
+    if ((await fetch(BASE)).ok) return null;
   } catch {
     /* not running */
   }
-  if (!existsSync(join(ROOT, 'dist-test/index.html'))) execSync('npm run build:test', { cwd: ROOT, stdio: 'inherit' });
-  const server = spawn(process.execPath, [join(ROOT, 'node_modules/vite/bin/vite.js'), 'preview', '--mode', 'test', '--outDir', 'dist-test'], { cwd: ROOT, stdio: 'ignore' });
+  if (!existsSync(join(ROOT, dist, 'index.html'))) execSync(dist === 'dist-test' ? 'npm run build:test' : `npx vite build --mode test --outDir ${dist}`, { cwd: ROOT, stdio: 'inherit' });
+  const server = spawn(process.execPath, [join(ROOT, 'node_modules/vite/bin/vite.js'), 'preview', '--mode', 'test', '--outDir', dist, '--port', port, '--strictPort'], { cwd: ROOT, stdio: 'ignore' });
   for (let i = 0; i < 60; i++) {
     await new Promise((r) => setTimeout(r, 500));
     try {
-      if ((await fetch('http://localhost:4174/')).ok) return server;
+      if ((await fetch(BASE)).ok) return server;
     } catch {
       /* starting */
     }
@@ -140,7 +145,7 @@ try {
   page.on('console', (m) => {
     if (m.type() === 'error') console.log(`  [error] ${m.text().slice(0, 300)}`);
   });
-  await page.goto('http://localhost:4174/');
+  await page.goto(BASE);
   await page.getByTestId('boot-start').click();
   await page.getByTestId('main-menu').waitFor();
   await page.evaluate(() => (window as unknown as { __PRISMFALL__: { updateSection(s: string, p: unknown): void } }).__PRISMFALL__.updateSection('setup', { unlockAll: true }));

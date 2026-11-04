@@ -3,7 +3,10 @@
  * quality presets, backends and stages, recording frame time, GPU time and renderer counters.
  *
  * Usage: npm run perf -- [--quick] [--stages a,b] [--presets high,ultra] [--backends webgpu,webgl2] [--seconds 8]
+ *   [--resolutions 2560x1440,3840x2160] [--port 4174 --dist dist-test]
  * Requires a test build (npm run build:test); started automatically if dist-test is missing.
+ * --port and --dist measure a private test build instead (as in stage-shots.ts); --resolutions picks
+ * rows of the full matrix by name.
  */
 import { chromium, type Page } from '@playwright/test';
 import { spawn, execSync, type ChildProcess } from 'node:child_process';
@@ -21,13 +24,23 @@ const seconds = Number(opt('seconds', quick ? '5' : '8'));
 const presets = opt('presets', quick ? 'high,ultra' : 'low,medium,high,ultra').split(',');
 const backends = opt('backends', 'webgpu,webgl2').split(',');
 const stages = opt('stages', '').split(',').filter(Boolean);
-const RESOLUTIONS = quick
+const port = opt('port', '4174');
+const dist = opt('dist', 'dist-test');
+const BASE = `http://localhost:${port}/`;
+const pickResolutions = opt('resolutions', '').split(',').filter(Boolean);
+const ALL_RESOLUTIONS = quick
   ? [{ name: '2560x1080', w: 2560, h: 1080, dpr: 1 }, { name: '3840x2160', w: 1920, h: 1080, dpr: 2 }]
   : [
       { name: '2560x1080', w: 2560, h: 1080, dpr: 1 },
       { name: '2560x1440', w: 2560, h: 1440, dpr: 1 },
       { name: '3840x2160', w: 1920, h: 1080, dpr: 2 },
     ];
+const FULL = [
+  { name: '2560x1080', w: 2560, h: 1080, dpr: 1 },
+  { name: '2560x1440', w: 2560, h: 1440, dpr: 1 },
+  { name: '3840x2160', w: 1920, h: 1080, dpr: 2 },
+];
+const RESOLUTIONS = pickResolutions.length > 0 ? FULL.filter((r) => pickResolutions.includes(r.name)) : ALL_RESOLUTIONS;
 
 interface Result {
   stage: string;
@@ -47,17 +60,17 @@ interface Result {
 
 async function ensureServer(): Promise<ChildProcess | null> {
   try {
-    const res = await fetch('http://localhost:4174/');
+    const res = await fetch(BASE);
     if (res.ok) return null;
   } catch {
     /* not running */
   }
-  if (!existsSync(join(ROOT, 'dist-test/index.html'))) execSync('npm run build:test', { cwd: ROOT, stdio: 'inherit' });
-  const server = spawn(process.execPath, [join(ROOT, 'node_modules/vite/bin/vite.js'), 'preview', '--mode', 'test', '--outDir', 'dist-test'], { cwd: ROOT, stdio: 'ignore' });
+  if (!existsSync(join(ROOT, dist, 'index.html'))) execSync(dist === 'dist-test' ? 'npm run build:test' : `npx vite build --mode test --outDir ${dist}`, { cwd: ROOT, stdio: 'inherit' });
+  const server = spawn(process.execPath, [join(ROOT, 'node_modules/vite/bin/vite.js'), 'preview', '--mode', 'test', '--outDir', dist, '--port', port, '--strictPort'], { cwd: ROOT, stdio: 'ignore' });
   for (let i = 0; i < 60; i++) {
     await new Promise((r) => setTimeout(r, 500));
     try {
-      if ((await fetch('http://localhost:4174/')).ok) return server;
+      if ((await fetch(BASE)).ok) return server;
     } catch {
       /* wait */
     }
@@ -110,7 +123,7 @@ try {
     for (const res of RESOLUTIONS) {
       const context = await browser.newContext({ viewport: { width: res.w, height: res.h }, deviceScaleFactor: res.dpr });
       const page = await context.newPage();
-      await page.goto(`http://localhost:4174/?backend=${backend}`);
+      await page.goto(`${BASE}?backend=${backend}`);
       await page.getByTestId('boot-start').click();
       for (const stage of stageList) {
         for (const preset of presets) {

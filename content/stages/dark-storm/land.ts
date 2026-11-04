@@ -32,7 +32,7 @@ const schema = z.object({
   /** Ring and segment counts of the ground mesh (scaled by detail). */
   rings: z.number().int().min(40).max(300).default(190),
   segments: z.number().int().min(64).max(1200).default(720),
-  reach: z.number().positive().default(2150),
+  reach: z.number().positive().default(2060),
   /** Loch surface: wind chop and rain on it. */
   chop: z.number().min(0).default(1),
 });
@@ -152,10 +152,10 @@ export const landComponent: ComponentFactory<Params> = {
     const ring = ripples(s, xz, rain);
     const flowDir = vec2(0.6, -0.8);
     const flow = cast<V2>(vec2(mx_noise_float(vec3(xz.mul(2.2).sub(flowDir.mul(u.time.mul(1.6))), u.time.mul(0.3))), mx_noise_float(vec3(xz.mul(2.2).sub(flowDir.mul(u.time.mul(1.6))).add(7.7), u.time.mul(0.3)))).mul(0.12));
-    const tilt = cast<V2>(mix(bump.mul(float(1).sub(water)), ring.add(flow.mul(streamM)), water));
+    const tilt = cast<V2>(mix(bump.mul(float(1).sub(water)), ring.mul(2.2).add(flow.mul(streamM)), water));
     const nWorld = cast<V3>(normalize(mix(geoN, vec3(0, 1, 0), water.mul(0.85)).add(vec3(tilt.x.negate(), 0, tilt.y.negate()))));
     m.normalNode = cast<V3>(normalize(cameraViewMatrix.mul(vec4(nWorld, 0)).xyz));
-    const rough = cast<F>(mix(mix(float(0.42).sub(nB.mul(0.14)), float(0.26).sub(nC.mul(0.08)), rock), float(0.04), water));
+    const rough = cast<F>(mix(mix(float(0.42).sub(nB.mul(0.14)), float(0.26).sub(nC.mul(0.08)), rock), float(0.07).add(rain.mul(0.08)), water));
     m.roughnessNode = rough;
     m.metalness = 0;
 
