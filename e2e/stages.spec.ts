@@ -2,12 +2,14 @@ import { test, expect, openMenu, hooks, autoplay, canvasStats } from './fixtures
 
 /** Every discovered stage loads, renders and plays without console errors. */
 test('every stage loads, renders and plays', async ({ page }) => {
-  test.setTimeout(240_000);
+  test.setTimeout(120_000);
   await page.setViewportSize({ width: 2560, height: 1080 });
   await openMenu(page, '?');
   await page.evaluate(() => (window as unknown as { __PRISMFALL__: { updateSection(s: string, p: unknown): void } }).__PRISMFALL__.updateSection('setup', { unlockAll: true }));
   const ids = await hooks<string[]>(page, 'h.shell.stageManager.stages().map((s) => s.id)');
   expect(ids.length).toBeGreaterThan(0);
+  // About ten seconds a world, plus headroom for a busy GPU (23 worlds took 3.5 to 4 minutes).
+  test.setTimeout(60_000 + ids.length * 15_000);
   for (const id of ids) {
     await page.evaluate((stageId) => {
       const h = (window as unknown as { __PRISMFALL__: { shell: { startGame(o: unknown): void } } }).__PRISMFALL__;
