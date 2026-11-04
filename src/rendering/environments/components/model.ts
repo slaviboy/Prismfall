@@ -6,7 +6,7 @@ import { sampleModel, type SurfaceSampleSet } from '../../particles/meshSampler'
 import { createSurfaceParticles, type GlowOptions, type SurfaceParticleOptions, type SurfaceParticles } from '../../particles/surfaceParticles';
 import { createRemapper, materialRuleSchema } from './materialRemap';
 import { floatUniform, seeded, zColor, zVec3 } from './common';
-import { RevealTracker, buildPath, inPlaceClip, orderedStops, passWaypoints, pathState, stopWeight, type PathPlan, type PathShape } from './modelMotion';
+import { RevealTracker, buildPath, inPlaceClip, lateralWaypoints, orderedStops, passWaypoints, pathState, stopWeight, type PathPlan, type PathShape } from './modelMotion';
 
 const zStop = z.object({
   /** Share of the path (0..1) where the walker halts. */
@@ -216,6 +216,11 @@ const schema = z.object({
       arc: z.number().min(0).default(0),
       leaps: z.number().int().min(1).max(12).default(1),
       scale: z.number().positive().default(1),
+      /**
+       * Since SDK 1.7: `axial` (default) sweeps from the distance past the camera; `lateral` crosses
+       * the frame side-on at about `distance[1]` units (a caravan, a whale, a rider in the distance).
+       */
+      path: z.enum(['axial', 'lateral']).default('axial'),
     })
     .prefault({}),
   dissolve: z
@@ -746,7 +751,10 @@ export const modelComponent: ComponentFactory<Params> = {
       const dirParam = typeof q.direction === 'string' ? q.direction : cfg.direction;
       const direction = dirParam === 'out' ? 'out' : dirParam === 'in' ? 'in' : (passDir = -passDir) > 0 ? 'in' : 'out';
       const dist = Array.isArray(q.distance) ? [num(q.distance[0], cfg.distance[0]), num(q.distance[1], cfg.distance[1])] : cfg.distance;
-      const pts = passWaypoints(view.boardRect(), side, direction, num(q.height, cfg.height), dist[0] as number, dist[1] as number, num(q.margin, cfg.margin));
+      const lateral = (typeof q.path === 'string' ? q.path : cfg.path) === 'lateral';
+      const pts = lateral
+        ? lateralWaypoints(view.boardRect(), side, direction, num(q.height, cfg.height), dist[1] as number, num(q.margin, cfg.margin))
+        : passWaypoints(view.boardRect(), side, direction, num(q.height, cfg.height), dist[0] as number, dist[1] as number, num(q.margin, cfg.margin));
       const fixedY = typeof q.y === 'number' ? q.y : cfg.y;
       const ground = fixedY === undefined && (typeof q.ground === 'boolean' ? q.ground : (cfg.ground ?? it.snap));
       const world = pts.map((w) => view.toWorld(w.x, w.y, w.distance, new Vector3()));

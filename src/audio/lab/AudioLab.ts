@@ -399,6 +399,28 @@ export async function measureShippedTracks(ids?: readonly string[], opts: Parame
   return out;
 }
 
+export { measureDrives, type DriveReport, type DriveSection } from './driveReport';
+import type { DriveReport } from './driveReport';
+
+/**
+ * How each world's default track moves the Environment Music Director (living.json tuning):
+ * `ids` limits it to those worlds.
+ */
+export async function measureWorldDrives(ids?: readonly string[], opts: { intensity?: number; maxSeconds?: number } = {}): Promise<(DriveReport & { stage: string })[]> {
+  const { availableStages, loadMusicModule } = await import('../../stages/registry');
+  const { measureDrives } = await import('./driveReport');
+  const out: (DriveReport & { stage: string })[] = [];
+  for (const info of availableStages()) {
+    const m = info.manifest;
+    if (!m || (ids && !ids.includes(m.id))) continue;
+    const track = m.music.tracks.find((t) => t.id === (m.music.defaultTrack ?? '')) ?? m.music.tracks.find((t) => t.kind === 'composition');
+    if (!track || track.kind !== 'composition') continue;
+    const c = (await loadMusicModule(info, track.src)) as Composition;
+    out.push({ stage: m.id, ...(await measureDrives(c, opts)) });
+  }
+  return out;
+}
+
 /** Each available world's composition tracks and default track (for per-world loudness checks). */
 export async function worldTracks(): Promise<{ stage: string; defaultTrack: string; tracks: string[] }[]> {
   const { availableStages } = await import('../../stages/registry');

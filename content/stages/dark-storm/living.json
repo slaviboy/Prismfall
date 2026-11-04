@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "description": "Dark Storm: the storm follows the song's sections in its own director; peaks add a strike, and rare distant flickers answer strong accents.",
+  "music": [],
+  "events": [
+    {
+      "layer": "lightning",
+      "on": "music:peak",
+      "action": "burst",
+      "quantize": "beat",
+      "cooldown": 30,
+      "params": {
+        "level": 3
+      }
+    },
+    {
+      "layer": "lightning",
+      "on": "music:accent",
+      "action": "burst",
+      "quantize": "none",
+      "cooldown": 14,
+      "params": {
+        "level": 1
+      },
+      "chance": 0.15,
+      "when": {
+        "minIntensity": 0.45
+      }
+    }
+  ]
+}

@@ -140,7 +140,9 @@ export const auroraComponent: ComponentFactory<Params> = {
     geometry.computeBoundingSphere();
 
     const u = { intensity: floatUniform(p.intensity), presence: floatUniform(1), speed: floatUniform(p.speed) };
-    const t = ctx.uniforms.time.mul(u.speed);
+    // The fold clock is integrated on the CPU (speed is reactive: a change of speed must not jump the folds).
+    const clock = floatUniform(0);
+    const t = clock;
     const rib = attribute<'vec4'>('ribbon', 'vec4');
     const ru = rib.x;
     const rv = rib.y;
@@ -205,6 +207,9 @@ export const auroraComponent: ComponentFactory<Params> = {
     return {
       object: mesh,
       reactive: { intensity: u.intensity, speed: u.speed },
+      update(frame) {
+        clock.value += frame.dt * Math.max(0, u.speed.value);
+      },
       setPresence(v) {
         u.presence.value = v;
       },

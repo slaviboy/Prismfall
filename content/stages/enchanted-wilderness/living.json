@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "description": "Forest: the bass moves the mist gently, the mids stir the spores, the treble lights the fireflies, which grow busier in quiet passages, and sections shift the forest light.",
+  "music": [
+    {
+      "layer": "forest-mist",
+      "target": "opacity",
+      "drive": "body",
+      "amount": 0.15,
+      "role": "large"
+    },
+    {
+      "layer": "spores",
+      "target": "turbulence",
+      "drive": "motion",
+      "amount": 0.35,
+      "role": "mid"
+    },
+    {
+      "layer": "spores",
+      "target": "brightness",
+      "drive": "detail",
+      "amount": 0.35,
+      "role": "fine"
+    },
+    {
+      "layer": "fireflies",
+      "target": "brightness",
+      "drive": "detail",
+      "amount": 0.35,
+      "role": "fine"
+    },
+    {
+      "layer": "fireflies",
+      "target": "activity",
+      "drive": "calm",
+      "amount": 0.4,
+      "role": "section"
+    },
+    {
+      "layer": "sky",
+      "target": "glow",
+      "drive": "intensity",
+      "amount": 0.12,
+      "role": "section"
+    }
+  ],
+  "events": [
+    {
+      "layer": "sky",
+      "on": "music:section",
+      "action": "pulse",
+      "quantize": "bar",
+      "cooldown": 40,
+      "params": {
+        "target": "glow",
+        "amount": 0.2,
+        "attack": 4,
+        "hold": 4,
+        "release": 8
+      }
+    },
+    {
+      "layer": "sky",
+      "on": "music:drop",
+      "action": "wave",
+      "quantize": "bar",
+      "cooldown": 45,
+      "params": {
+        "strength": 0.35
+      }
+    },
+    {
+      "layer": "owl",
+      "on": "ambient",
+      "every": [
+        50,
+        100
+      ],
+      "action": "pass",
+      "quantize": "bar",
+      "cooldown": 20,
+      "params": {},
+      "weight": 2,
+      "vary": 0.25,
+      "group": "visitors"
+    },
+    {
+      "layer": "red-deer",
+      "on": "ambient",
+      "every": [
+        50,
+        100
+      ],
+      "action": "burst",
+      "quantize": "bar",
+      "cooldown": 20,
+      "params": {
+        "strength": 0.5
+      },
+      "weight": 1,
+      "vary": 0.25,
+      "group": "visitors"
+    }
+  ]
+}

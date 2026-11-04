@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "description": "Folded Sky: the mids agitate the murmuration, sections quicken it, the treble lights the seeds, phrases now and then turn the whole flock, and a gull glides by.",
+  "music": [
+    {
+      "layer": "sky",
+      "target": "glow",
+      "drive": "swell",
+      "amount": 0.1,
+      "role": "large"
+    },
+    {
+      "layer": "murmuration",
+      "target": "agitation",
+      "drive": "motion",
+      "amount": 0.4,
+      "role": "mid"
+    },
+    {
+      "layer": "murmuration",
+      "target": "tempo",
+      "drive": "intensity",
+      "amount": 0.2,
+      "role": "section"
+    },
+    {
+      "layer": "seeds",
+      "target": "brightness",
+      "drive": "detail",
+      "amount": 0.35,
+      "role": "fine"
+    },
+    {
+      "layer": "seeds",
+      "target": "turbulence",
+      "drive": "flux",
+      "amount": 0.3,
+      "role": "mid"
+    }
+  ],
+  "events": [
+    {
+      "layer": "murmuration",
+      "on": "music:phrase",
+      "action": "burst",
+      "quantize": "bar",
+      "cooldown": 25,
+      "params": {
+        "falcon": false,
+        "turns": 1
+      },
+      "chance": 0.35
+    },
+    {
+      "layer": "sky",
+      "on": "music:drop",
+      "action": "wave",
+      "quantize": "bar",
+      "cooldown": 45,
+      "params": {
+        "strength": 0.4
+      }
+    },
+    {
+      "layer": "gull",
+      "on": "ambient",
+      "every": [
+        50,
+        100
+      ],
+      "action": "pass",
+      "quantize": "bar",
+      "cooldown": 20,
+      "params": {},
+      "weight": 1,
+      "vary": 0.25
+    }
+  ]
+}

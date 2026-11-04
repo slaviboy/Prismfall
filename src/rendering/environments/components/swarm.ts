@@ -102,7 +102,8 @@ export const swarmComponent: ComponentFactory<Params> = {
     const flockA = uniformArrayOf(stateA);
     const flockB = uniformArrayOf(stateB);
     const u = { presence: floatUniform(1), glow: floatUniform(p.glow), tempo: floatUniform(1), music: floatUniform(0) };
-    const time = ctx.uniforms.time;
+    // The wingbeat clock is integrated on the CPU (tempo is reactive: a change must not jump the strokes).
+    const flapClock = floatUniform(0);
     const flap = FLAP[p.kind];
     const part = attribute<'vec4'>('part', 'vec4');
 
@@ -111,7 +112,7 @@ export const swarmComponent: ComponentFactory<Params> = {
       const fb = vec4At(flockB, attrA.x.toInt());
       const seed = attrA.y;
       const phase = attrA.w;
-      const t = time.mul(u.tempo).mul(p.tempo);
+      const t = flapClock;
       const side = part.x;
       const span = part.y;
       const along = part.z;
@@ -277,6 +278,7 @@ export const swarmComponent: ComponentFactory<Params> = {
       reactive: { glow: u.glow, tempo: u.tempo },
       update(frame) {
         clock += Math.min(0.1, frame.dt) * (reduced ? 0.5 : 1) * u.tempo.value;
+        flapClock.value += Math.min(0.1, frame.dt) * Math.max(0, u.tempo.value) * p.tempo;
         u.music.value = frame.audio.bass * 0.5 + frame.audio.beatPulse * 0.5;
         for (let i = 0; i < p.flocks; i++) {
           const fs = flockSeeds[i]!;

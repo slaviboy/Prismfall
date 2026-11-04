@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "description": "The Veil: the bass moves the fog slowly, the mids light the distant mist, the treble stirs the fine drift, and at the music's peaks something large shows itself out in the fog.",
+  "classes": {
+    "atmosphere.fineDrift": "motion"
+  },
+  "music": [
+    {
+      "layer": "atmosphere",
+      "target": "density",
+      "drive": "swell",
+      "amount": 0.12,
+      "role": "large"
+    },
+    {
+      "layer": "atmosphere",
+      "target": "drift",
+      "drive": "body",
+      "amount": 0.2,
+      "role": "large"
+    },
+    {
+      "layer": "mist",
+      "target": "glow",
+      "drive": "motion",
+      "amount": 0.25,
+      "role": "mid"
+    },
+    {
+      "layer": "atmosphere",
+      "target": "lights",
+      "drive": "motion",
+      "amount": 0.2,
+      "role": "mid"
+    },
+    {
+      "layer": "atmosphere",
+      "target": "fineDrift",
+      "drive": "detail",
+      "amount": 0.25,
+      "role": "fine"
+    }
+  ],
+  "events": [
+    {
+      "layer": "atmosphere",
+      "on": "music:peak",
+      "action": "show",
+      "quantize": "bar",
+      "cooldown": 90,
+      "params": {
+        "kinds": [
+          "silhouette"
+        ]
+      }
+    },
+    {
+      "layer": "atmosphere",
+      "on": "ambient",
+      "every": [
+        70,
+        150
+      ],
+      "action": "show",
+      "quantize": "bar",
+      "cooldown": 20,
+      "params": {
+        "kinds": [
+          "swarm"
+        ]
+      },
+      "weight": 1,
+      "vary": 0.25,
+      "group": "veil"
+    },
+    {
+      "layer": "atmosphere",
+      "on": "ambient",
+      "every": [
+        70,
+        150
+      ],
+      "action": "show",
+      "quantize": "bar",
+      "cooldown": 20,
+      "params": {
+        "kinds": [
+          "bankRoll"
+        ]
+      },
+      "weight": 1,
+      "vary": 0.25,
+      "group": "veil",
+      "when": {
+        "calm": true
+      }
+    }
+  ]
+}

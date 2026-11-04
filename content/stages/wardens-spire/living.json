@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "description": "The tower: the bass drives the heat in the land and the sky's glow, sections set the sentinels' pace, builds gather the storm and drops roll a front of heat across the land.",
+  "music": [
+    {
+      "layer": "land",
+      "target": "heat",
+      "drive": "body",
+      "amount": 0.25,
+      "role": "large"
+    },
+    {
+      "layer": "sky",
+      "target": "glow",
+      "drive": "swell",
+      "amount": 0.15,
+      "role": "large"
+    },
+    {
+      "layer": "sentinels",
+      "target": "pace",
+      "drive": "intensity",
+      "amount": 0.2,
+      "role": "section"
+    }
+  ],
+  "events": [
+    {
+      "layer": "storm",
+      "on": "music:peak",
+      "action": "burst",
+      "quantize": "bar",
+      "cooldown": 40,
+      "params": {}
+    },
+    {
+      "layer": "sky",
+      "on": "music:drop",
+      "action": "wave",
+      "quantize": "bar",
+      "cooldown": 45,
+      "params": {
+        "strength": 0.45
+      }
+    },
+    {
+      "layer": "storm",
+      "on": "ambient",
+      "every": [
+        40,
+        90
+      ],
+      "action": "burst",
+      "quantize": "bar",
+      "cooldown": 20,
+      "params": {},
+      "weight": 1,
+      "vary": 0.25
+    }
+  ]
+}

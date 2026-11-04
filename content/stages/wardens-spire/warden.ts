@@ -463,9 +463,13 @@ export const wardenComponent: ComponentFactory<Params> = {
         const dt = Math.min(0.1, frame.dt);
         clock += dt;
         const k = 1 - Math.exp(-dt / 0.9);
-        mid += (frame.audio.mid - mid) * k;
-        bass += (frame.audio.bass * 0.6 + frame.audio.subBass * 0.4 - bass) * k;
-        activity += (Math.min(1, frame.audio.sectionIntensity * 0.75 + frame.audio.overallEnergy * 0.3) - activity) * (1 - Math.exp(-dt / 4));
+        // The music director's drives (SDK 1.7): the mids light the core and the beam, the bass stirs
+        // the cage, and builds (tension) make the eye search harder before a drop.
+        const m = frame.music;
+        const level = frame.levels.music;
+        mid += (m.motion * level - mid) * k;
+        bass += (m.body * level - bass) * k;
+        activity += (Math.min(1, frame.audio.sectionIntensity * 0.6 + m.intensity * 0.25 + m.tension * 0.35 * level) - activity) * (1 - Math.exp(-dt / 4));
         out = controller.update(dt, { activity, reducedMotion: ctx.quality.reducedMotion });
         const o = out;
         // Cage: nested lag so the rings swing after one another.
@@ -497,8 +501,8 @@ export const wardenComponent: ComponentFactory<Params> = {
         // Dimmer as it turns towards the viewer (it never points at them; this keeps it gentle near the limit).
         const sep = Math.acos(Math.max(-1, Math.min(1, dir.dot(toEye)))) / DEG;
         const towards = 0.55 + 0.45 * Math.min(1, Math.max(0, (sep - p.separation) / 14));
-        bu.beamPower.value = o.intensity * (0.95 + mid * 0.1) * focusGain * towards * presence.value;
-        bu.coreGlow.value = o.intensity * (0.94 + mid * 0.14);
+        bu.beamPower.value = o.intensity * (0.94 + mid * 0.16) * focusGain * towards * presence.value;
+        bu.coreGlow.value = o.intensity * (0.92 + mid * 0.2);
         bu.awaken.value = o.awaken;
         stir += (Math.min(1, bass * 0.8 + o.awaken) - stir) * (1 - Math.exp(-dt * 2));
         u.glow.value = bu.coreGlow.value * (1 + o.focus * 0.25);

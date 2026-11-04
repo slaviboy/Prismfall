@@ -88,8 +88,15 @@ export const DRIVE_TIMING = {
   downbeat: { decay: 0.4 },
 } as const;
 
-/** Accent governor: the rarest an accent may be, as a share of a beat and in seconds. */
-export const ACCENT = { minBeats: 0.75, minSeconds: 0.28, maxPerSecond: 2.5, flashMinSeconds: 0.6, flashScale: 0.6 } as const;
+/**
+ * Accent governor: an accent is an onset that stands out from the recent onsets (at least `relative`
+ * × their running level), at least `minBeats` beats and `minSeconds` apart; measured on the
+ * shipped tracks this keeps accents to about 15-40 a minute in dense sections, not every beat.
+ */
+export const ACCENT = { minBeats: 1, minSeconds: 0.35, maxPerSecond: 2.5, relative: 1.08, flashMinSeconds: 0.6, flashScale: 0.6 } as const;
+
+/** Peak cue: the music's intensity rises above `on` (re-armed below `off`). */
+export const PEAK = { on: 0.68, off: 0.55 } as const;
 
 const BREAKS = new Set(['break', 'intro', 'outro']);
 
@@ -125,6 +132,8 @@ export class EnvironmentMusicDirector {
   private lastTransient = 0;
   private lastAccent = -1e9;
   private accentRate = 0;
+  /** Running level of recent onsets (accents must stand out from it). */
+  private onsetLevel = 0.6;
   private lastSectionKind: string | null = null;
   private lastSectionName: string | null = null;
   private sectionStart = 0;
@@ -181,8 +190,11 @@ export class EnvironmentMusicDirector {
     this.lastTransient = f.transientIntensity;
     this.accentRate *= Math.exp(-dt / 2);
     if (live && jump > 0.15 && f.transientIntensity > 0.45) {
+      const v = f.transientIntensity;
+      const standsOut = v >= this.onsetLevel * ACCENT.relative || v > 0.92;
+      this.onsetLevel += (v - this.onsetLevel) * 0.2;
       const minGap = input.flashReduction ? Math.max(ACCENT.flashMinSeconds, 1.5 * beatSeconds) : Math.max(ACCENT.minSeconds, ACCENT.minBeats * beatSeconds);
-      if (time - this.lastAccent >= minGap && this.accentRate < ACCENT.maxPerSecond * 2) {
+      if (standsOut && time - this.lastAccent >= minGap && this.accentRate < ACCENT.maxPerSecond * 2) {
         let strength = clamp01((f.transientIntensity - 0.4) / 0.6) * 0.8 + 0.2;
         // On the music's grid an accent counts fully; between beats it is a lesser one.
         if (f.beatConfidence > 0.5) {
@@ -212,11 +224,11 @@ export class EnvironmentMusicDirector {
     d.release *= Math.exp(-dt / T.release.decay);
     const calmTarget = !input.active ? 1 : f.quiet ? 1 : Math.max(BREAKS.has(f.sectionKind) ? 0.7 : 0, clamp01(1 - (d.intensity - 0.2) / 0.45));
     d.calm = env(d.calm, calmTarget, dt, T.calm.attack, T.calm.release);
-    if (d.intensity > 0.82 && this.peakArmed && live) {
+    if (d.intensity > PEAK.on && this.peakArmed && live) {
       this.peakArmed = false;
       this.cues.push({ kind: 'peak', strength: 1, time });
       d.release = Math.max(d.release, 0.6);
-    } else if (d.intensity < 0.7) this.peakArmed = true;
+    } else if (d.intensity < PEAK.off) this.peakArmed = true;
     if (d.calm > 0.65 && this.calmArmed && input.active) {
       this.calmArmed = false;
       this.cues.push({ kind: 'calm', strength: 1, time });
@@ -286,6 +298,7 @@ export class EnvironmentMusicDirector {
     this.lastTransient = 0;
     this.lastAccent = -1e9;
     this.accentRate = 0;
+    this.onsetLevel = 0.6;
     this.lastSectionKind = null;
     this.lastSectionName = null;
     this.peakArmed = true;

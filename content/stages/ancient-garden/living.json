@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "description": "Japan wood: the bass moves the light, the mids stir the petals, the treble catches them, phrases send a breeze through the blossom and section changes shift the sun shafts.",
+  "music": [
+    {
+      "layer": "sky",
+      "target": "glow",
+      "drive": "body",
+      "amount": 0.08,
+      "role": "large"
+    },
+    {
+      "layer": "sun-shafts",
+      "target": "intensity",
+      "drive": "swell",
+      "amount": 0.25,
+      "role": "large"
+    },
+    {
+      "layer": "sun-shafts",
+      "target": "intensity",
+      "drive": "motion",
+      "amount": 0.12,
+      "role": "mid"
+    },
+    {
+      "layer": "petals",
+      "target": "turbulence",
+      "drive": "motion",
+      "amount": 0.4,
+      "role": "mid"
+    },
+    {
+      "layer": "petals",
+      "target": "speed",
+      "drive": "energy",
+      "amount": 0.25,
+      "role": "mid"
+    },
+    {
+      "layer": "petals",
+      "target": "brightness",
+      "drive": "detail",
+      "amount": 0.35,
+      "role": "fine"
+    },
+    {
+      "layer": "petals",
+      "target": "density",
+      "drive": "intensity",
+      "amount": 0.3,
+      "role": "section"
+    }
+  ],
+  "events": [
+    {
+      "layer": "sun-shafts",
+      "on": "music:section",
+      "action": "pulse",
+      "quantize": "bar",
+      "cooldown": 30,
+      "params": {
+        "target": "intensity",
+        "amount": 0.6,
+        "attack": 3,
+        "hold": 4,
+        "release": 6
+      }
+    },
+    {
+      "layer": "petals",
+      "on": "music:phrase",
+      "action": "pulse",
+      "quantize": "bar",
+      "cooldown": 14,
+      "params": {
+        "target": "turbulence",
+        "amount": 0.6,
+        "attack": 1.5,
+        "hold": 1,
+        "release": 3
+      },
+      "chance": 0.5
+    },
+    {
+      "layer": "sky",
+      "on": "music:drop",
+      "action": "wave",
+      "quantize": "bar",
+      "cooldown": 45,
+      "params": {
+        "strength": 0.4
+      }
+    },
+    {
+      "layer": "crane",
+      "on": "ambient",
+      "every": [
+        45,
+        90
+      ],
+      "action": "pass",
+      "quantize": "bar",
+      "cooldown": 20,
+      "params": {},
+      "weight": 1,
+      "vary": 0.25
+    }
+  ]
+}

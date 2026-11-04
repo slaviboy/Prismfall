@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "description": "Tradewind Cove: the bass works the chop in the lagoon, the mids move the palms, sections lift the sky, and gulls and dolphins come by.",
+  "music": [
+    {
+      "layer": "cove",
+      "target": "chop",
+      "drive": "body",
+      "amount": 0.25,
+      "role": "large"
+    },
+    {
+      "layer": "sky",
+      "target": "glow",
+      "drive": "swell",
+      "amount": 0.1,
+      "role": "large"
+    },
+    {
+      "layer": "palms",
+      "target": "wind",
+      "drive": "motion",
+      "amount": 0.3,
+      "role": "mid"
+    }
+  ],
+  "events": [
+    {
+      "layer": "sky",
+      "on": "music:drop",
+      "action": "wave",
+      "quantize": "bar",
+      "cooldown": 45,
+      "params": {
+        "strength": 0.4
+      }
+    },
+    {
+      "layer": "seagull",
+      "on": "ambient",
+      "every": [
+        50,
+        100
+      ],
+      "action": "pass",
+      "quantize": "bar",
+      "cooldown": 20,
+      "params": {},
+      "weight": 2,
+      "vary": 0.25,
+      "group": "visitors"
+    },
+    {
+      "layer": "dolphins",
+      "on": "ambient",
+      "every": [
+        50,
+        100
+      ],
+      "action": "show",
+      "quantize": "bar",
+      "cooldown": 20,
+      "params": {
+        "seconds": 2,
+        "hold": 20
+      },
+      "weight": 1,
+      "vary": 0.25,
+      "group": "visitors"
+    }
+  ]
+}

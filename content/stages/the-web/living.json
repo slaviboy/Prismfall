@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "description": "The Web: the bass thickens the mist, the mids breathe through the webs, the treble lights the drifting silk dust, and section changes stir the spiders.",
+  "classes": {
+    "webs.breathe": "motion"
+  },
+  "music": [
+    {
+      "layer": "mist",
+      "target": "density",
+      "drive": "body",
+      "amount": 0.15,
+      "role": "large"
+    },
+    {
+      "layer": "webs",
+      "target": "breathe",
+      "drive": "motion",
+      "amount": 0.3,
+      "role": "mid"
+    },
+    {
+      "layer": "dust",
+      "target": "brightness",
+      "drive": "detail",
+      "amount": 0.4,
+      "role": "fine"
+    },
+    {
+      "layer": "dust",
+      "target": "turbulence",
+      "drive": "flux",
+      "amount": 0.3,
+      "role": "mid"
+    }
+  ],
+  "events": [
+    {
+      "layer": "spiders",
+      "on": "music:section",
+      "action": "show",
+      "quantize": "bar",
+      "cooldown": 45,
+      "params": {
+        "kinds": [
+          "tremble"
+        ]
+      },
+      "chance": 0.5
+    },
+    {
+      "layer": "sky",
+      "on": "music:drop",
+      "action": "wave",
+      "quantize": "bar",
+      "cooldown": 45,
+      "params": {
+        "strength": 0.35
+      }
+    },
+    {
+      "layer": "bats",
+      "on": "ambient",
+      "every": [
+        50,
+        110
+      ],
+      "action": "pass",
+      "quantize": "bar",
+      "cooldown": 20,
+      "params": {},
+      "weight": 1,
+      "vary": 0.25
+    }
+  ]
+}

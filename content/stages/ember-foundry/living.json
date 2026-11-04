@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "description": "Machine hall: the bass heats the molten channel, the mids light the hall, the treble throws sparks, sections set the machines working harder, and now and then the arms strike on a downbeat.",
+  "music": [
+    {
+      "layer": "molten-channel",
+      "target": "heat",
+      "drive": "body",
+      "amount": 0.3,
+      "role": "large"
+    },
+    {
+      "layer": "hall",
+      "target": "emissive",
+      "drive": "motion",
+      "amount": 0.3,
+      "role": "mid"
+    },
+    {
+      "layer": "anvil-sparks",
+      "target": "amount",
+      "drive": "detail",
+      "amount": 0.4,
+      "role": "fine"
+    },
+    {
+      "layer": "embers",
+      "target": "brightness",
+      "drive": "detail",
+      "amount": 0.4,
+      "role": "fine"
+    },
+    {
+      "layer": "smoke",
+      "target": "opacity",
+      "drive": "intensity",
+      "amount": 0.2,
+      "role": "section"
+    },
+    {
+      "layer": "robot-arms",
+      "target": "pace",
+      "drive": "intensity",
+      "amount": 0.3,
+      "role": "section"
+    }
+  ],
+  "events": [
+    {
+      "layer": "robot-arms",
+      "on": "music:downbeat",
+      "action": "clip",
+      "quantize": "none",
+      "cooldown": 6,
+      "params": {
+        "clip": "Take 001",
+        "speed": 2,
+        "fade": 0.3,
+        "stagger": 0.12
+      },
+      "chance": 0.25
+    },
+    {
+      "layer": "hall",
+      "on": "music:drop",
+      "action": "pulse",
+      "quantize": "bar",
+      "cooldown": 30,
+      "params": {
+        "target": "emissive",
+        "amount": 0.6,
+        "attack": 0.5,
+        "hold": 3,
+        "release": 5
+      }
+    },
+    {
+      "layer": "sky",
+      "on": "music:drop",
+      "action": "wave",
+      "quantize": "bar",
+      "cooldown": 45,
+      "params": {
+        "strength": 0.4
+      }
+    }
+  ]
+}

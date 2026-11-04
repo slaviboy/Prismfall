@@ -32,6 +32,9 @@ describe('background intensity', () => {
 
   it('classifies targets by layer type and name', () => {
     expect(classifyTarget('model', 'pace')).toBe('creatures');
+    // Static scenery is placed with model layers too: never thinned out by default.
+    expect(classifyTarget('model', 'visible')).toBe('none');
+    expect(classifyTarget('model', 'visible', 'creatures')).toBe('creatures');
     expect(classifyTarget('model', 'brightness')).toBe('light');
     expect(classifyTarget('particles', 'brightness')).toBe('particles');
     expect(classifyTarget('particles', 'turbulence')).toBe('motion');

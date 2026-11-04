@@ -91,7 +91,9 @@ The SDK exports:
 | `defineStage`, `SDK_VERSION` | the stage module wrapper and the running SDK version |
 | `z` | zod, for component parameter schemas |
 | `zColor`, `zVec3`, `colorUniform`, `floatUniform`, `linear`, `seeded`, `scaledCount` | parameter types, TSL uniforms, sRGB-to-linear colour, deterministic random, quality-scaled counts |
-| `frameUniforms` | per-frame TSL uniforms (time, music features, clear pulse, danger, fog density, flash limit, screen effects; since 1.5 also `heat`, `clearWave`, `comboLevel`, `pieceX`, `stackHeight` and the clear-front slots) |
+| `frameUniforms` | per-frame TSL uniforms (time, music features, clear pulse, danger, fog density, flash limit, screen effects; since 1.5 also `heat`, `clearWave`, `comboLevel`, `pieceX`, `stackHeight` and the clear-front slots). The board and blocks read some of these, so their meaning never changes (PROTECTED_PLAYFIELD.md) |
+| `environmentUniforms` | since 1.7, world-only uniforms: `music.*` (the music director's drives, already scaled by the Background intensity music level) and `level.*` (the Background intensity levels). Use these, not `frameUniforms.bass` or `beatPulse`, for music in a world's shaders |
+| `MUSIC_DRIVES`, `MUSIC_CUES` | since 1.7, the drive and cue names |
 | `clearFront`, `clearFrontMotion`, `clearFrontRaw` | the world clear wave in a shader (SDK 1.5): the travelling front at a world position, scaled for light or for motion (section 6.1) |
 | `frameUniforms.worldEvents` | the accessibility World events setting: 1 full, 0.5 calm, 0 off. Worlds with creatures or sudden events read it (The Veil: calm makes events rarer, further away and gentler and drops the sudden shadow events; off leaves only the fog weather) |
 | `frameUniforms.weatherIntensity` | the Storm intensity setting (SDK 1.6): 0.55 subtle, 1 normal, 1.35 heavy, 1.7 extreme. Weather worlds scale rain, wind and lightning with it, never gameplay (Dark Storm) |
@@ -103,7 +105,7 @@ The SDK exports:
 
 ### SDK versions
 
-`src/sdk/version.ts` holds `SDK_VERSION = '1.6.0'`. Minor versions add API, major versions break it.
+`src/sdk/version.ts` holds `SDK_VERSION = '1.7.0'`. Minor versions add API, major versions break it.
 
 | Version | Added |
 |---|---|
@@ -113,6 +115,7 @@ The SDK exports:
 | 1.3 | `ctx.shakeWorld(strength, seconds)`: a decaying tremor of the world root only (never the board, HUD or camera; off under reduced motion and in VR, scaled by the screen-effects setting), and `frameUniforms.screenEffects` (the screen-effects setting, 0 in VR) for screen-space world effects. Ashen Vigil uses both |
 | 1.4 | creature world sounds: `ctx.sounds.emit()` accepts `skitter`, `crawl`, `silk` and `webHum` (see "World sounds" in section 9), and the `WorldSoundName` type |
 | 1.5 | liveliness (section 6.1): the world clear wave (`clearFront()`, manifest `clearWave`, the built-in components' `clearWave` parameters), the long-lived signals `game.heat`, `game.clearWave`, `game.backToBack` and `game.stackHeight`, section states (`sectionStates`, binding `when`, `onSection`), event call-ins (`events`, `onCall`, `ctx.view`), piece-motion events (`move`, `rotate`, `spawn`, `hold`, columns) and `AudioFeatures.sectionKind` |
+| 1.7 | Living worlds (§6.5): the Environment Music Director's drives as bindable features (`music.body`, `music.motion`, `music.detail`, `music.intensity`, `music.tension`, …) and shader uniforms (`environmentUniforms.music.*`, `environmentUniforms.level.*`), `EnvFrame.music` and `EnvFrame.levels`, `EnvironmentComponent.onMusicCue`, the call-in triggers `music:<cue>` and `ambient` (with `every`), the call-in fields `group`, `weight`, `vary` and `when`, the `pulse` and `wave` actions, Background intensity classes, `living.json` per world, and side-on `model` passes (`pass.path: "lateral"`) |
 | 1.6 | Weather (Dark Storm): `ctx.sounds.weather?.(state)` keeps rain and wind beds sounding (call it every frame or so with `rain` 0..1.5, `wind`, `gust` and an optional `surfaces` mix of water, rock, wood and foliage; the beds fade out soon after the calls stop), `ctx.sounds.storm?.(sound)` schedules a thunder `delay` seconds ahead on the audio clock or a lightning crack (`{ kind, x, y, z, distance, energy, delay, seed, strokes, channel, tag }`; `distance` is the apparent distance that shapes the sound and picks the near or distant thunder bus), and `frameUniforms.weatherIntensity` (the Storm intensity setting: 0.55 subtle, 1 normal, 1.35 heavy, 1.7 extreme). Rain, wind, distant thunder, nearby thunder and the crack each have their own bus and volume setting (Settings → Audio → Weather). 1.4 is reserved for parallel work and may land with other additions |
 
 Two version checks exist:
@@ -294,7 +297,7 @@ A binding drives one reactive uniform from an audio feature or a game signal (`b
 |---|---|---|
 | `layer` | `*` | Which layers: a layer id, `type:<componentType>`, or `*` for every layer that exposes `target`. |
 | `target` | (required) | A name from the component's reactive targets. |
-| `feature` | (required) | `subBass`, `bass`, `lowMid`, `mid`, `highMid`, `treble`, `overallEnergy`, `waveformRms`, `spectralFlux`, `spectralCentroid`, `transientIntensity`, `beatPulse`, `barPulse`, `beatPhase`, `barPhase`, `sectionIntensity`, `anticipation`, `game.danger`, `game.clearPulse`, `game.combo`, `game.level`, `game.progress`, and since SDK 1.5 `game.heat`, `game.clearWave`, `game.backToBack`, `game.stackHeight` (section 6.1) |
+| `feature` | (required) | `subBass`, `bass`, `lowMid`, `mid`, `highMid`, `treble`, `overallEnergy`, `waveformRms`, `spectralFlux`, `spectralCentroid`, `transientIntensity`, `beatPulse`, `barPulse`, `beatPhase`, `barPhase`, `sectionIntensity`, `anticipation`, `game.danger`, `game.clearPulse`, `game.combo`, `game.level`, `game.progress`, since SDK 1.5 `game.heat`, `game.clearWave`, `game.backToBack`, `game.stackHeight` (section 6.1), and since SDK 1.7 the music drives `music.body`, `music.swell`, `music.motion`, `music.detail`, `music.shimmer`, `music.flux`, `music.energy`, `music.intensity`, `music.tension`, `music.release`, `music.calm`, `music.accent`, `music.beat`, `music.downbeat` and `music.phrase` (section 6.5) |
 | `amount` | 0.5 | Strength. |
 | `mode` | `mul` | `mul`: base × (1 + amount × envelope). `add`: base + amount × envelope. |
 | `curve` | `smooth` | `linear`, `smooth`, `pow2`, `sqrt` (applied to the feature value clamped to 0..1). |
@@ -416,12 +419,21 @@ Songs have structure (`intro`, `verse`, `build`, `drop`, `break`, `bridge`, `out
 | Field | Meaning |
 |---|---|
 | `layer` | A layer id, `type:<componentType>` or `*`. |
-| `on` | `clear>=N` (lines; a perfect clear counts as 4), `combo>=N`, `b2b`, `perfect`, `spin`, `levelUp`, `danger` (the stack enters the danger zone), `section:<kind or name>` (the music enters it), `progress>=x`, `heat>=x` (crossing upwards). |
+| `on` | `clear>=N` (lines; a perfect clear counts as 4), `combo>=N`, `b2b`, `perfect`, `spin`, `levelUp`, `danger` (the stack enters the danger zone), `section:<kind or name>` (the music enters it), `progress>=x`, `heat>=x` (crossing upwards), and since SDK 1.7 `music:<cue>` (`accent`, `downbeat`, `phrase`, `build`, `drop`, `break`, `peak`, `calm`, `section`) and `ambient` (a timer; see `every`). |
 | `quantize` | `bar` (default), `beat`, `phrase` (`phraseBars`, default 4) or `none`: the call waits for the next such moment in the music (without beats it goes after at most that long). |
 | `cooldown` | Seconds before the entry may fire again (default 8). |
 | `chance` | Probability that a trigger fires (default 1). |
-| `action` | `pass`, `clip`, `burst`, `show`, `hide`, `reveal`. |
+| `action` | `pass`, `clip`, `burst`, `show`, `hide`, `reveal`, and since SDK 1.7 `pulse` and `wave` (below). |
 | `params` | Passed to the component (`CallInfo.params`). |
+| `every` | Since SDK 1.7, for `ambient`: `[min, max]` seconds between calls. Each interval is random in that range, shorter when the music is busy, and divided by the Background intensity event frequency. |
+| `group`, `weight` | Since SDK 1.7: entries in a group take turns. When their trigger fires, or their shared ambient timer comes round, one entry is picked by `weight`, never the one picked last time. |
+| `vary` | Since SDK 1.7: random variation of the call's strength, ±share (0..1). |
+| `when` | Since SDK 1.7: `{ section, minIntensity, maxIntensity, calm }`. The call happens only in those sections, within that music intensity range, or (with `calm: true`) only while the music is calm. |
+
+Two actions are carried out by the environment itself, for any layer:
+
+- **`pulse`** takes `params` `{ target, amount, mode, attack, hold, release }`. The layer's reactive `target` swells by `amount` times the call's strength (`mode` `mul` by default, or `add`): it rises over `attack` seconds, holds for `hold` and settles over `release`. The swell is scaled by the target's Background intensity class.
+- **`wave`** takes `params` `{ strength }` (default 0.5). A front of light and motion rolls out from the board through the world, exactly like a clear's front, so every `clearWave` hookup answers it. It never heats the run and never takes a young clear front's slot.
 
 World events (accessibility): calm halves the chance and doubles the cooldown; off stops call-ins.
 
@@ -445,6 +457,66 @@ A component opts in with `onCall(call)`, where `call` is `{ action, params, trig
 - **Moving Sands**: a cool glitter and sheen front sweeps the near dunes and on over the far dune sea (`clearWave.far` 1700); blowing sand gusts with each front (`clearWave.stir`, `clear-gust`), denser in drops, thinner in breaks; the stars and Milky Way grow with the run's progress; the airglow lingers after clears; meteors with heat and one after a QUAD; the caravan's glow shimmers as fronts pass.
 - **Luminous Tide**: wave facets glitter and the bioluminescent surf brightens as fronts run out to sea, with a low travelling swell; plankton flare and stir; the horizon, stars and moon grow with progress; a QUAD or a combo of four sends a glowing dolphin leaping past close by, clear of the board.
 - **Northern Lights**: the front runs over the tundra (glints, sheen), catches the snow and rims of the spruce and the ranges, and surges along the aurora curtains; the aurora also rises with heat and lingers after clears, and swells in drops (winding up ahead of them); meteors come with combos (rate and a call-in).
+
+### 6.5 Living worlds: living.json (SDK 1.7)
+
+A world's `living.json`, beside its `stage.json`, says how the world lives with the music and over time.
+
+- It is validated with the manifest: every layer id it names must exist, and a broken file makes the world unavailable.
+- See `src/stages/living.ts`, LIVING_ENVIRONMENT_ARCHITECTURE.md and MUSIC_REACTIVE_ENVIRONMENTS.md.
+
+```json
+{
+  "schemaVersion": 1,
+  "description": "Bass breathes through the ice and the aurora; the treble glints in the snow.",
+  "classes": { "lake.glow": "light", "spirits": "creatures" },
+  "music": [
+    { "layer": "aurora", "target": "intensity", "drive": "swell", "amount": 0.35, "role": "large" },
+    { "layer": "snow", "target": "brightness", "drive": "detail", "amount": 0.4, "role": "fine" },
+    { "layer": "snow", "target": "turbulence", "drive": "tension", "amount": 0.8, "role": "section" }
+  ],
+  "events": [
+    { "layer": "aurora", "on": "music:drop", "action": "pulse", "quantize": "bar", "cooldown": 30, "params": { "target": "intensity", "amount": 0.8, "attack": 1.5, "hold": 6, "release": 8 } },
+    { "layer": "owl", "on": "ambient", "every": [45, 90], "group": "visitors", "action": "pass", "params": { "path": "lateral" } }
+  ]
+}
+```
+
+| Field | Meaning |
+|---|---|
+| `music` | The world's music reaction profile. Each entry binds a layer `target` to a `drive` of the Environment Music Director. Optional fields: `amount`, `mode` (`mul`, `add`), `curve`, extra smoothing (`attackMs`, `releaseMs`; the drive already has its own envelope), `min`, `max`, `when`, and a `role` (`large`, `mid`, `fine`, `beat`, `section`: the scale of thing it moves, for documentation and the dashboard). |
+| `classes` | The Background intensity class of a whole layer (`"layer": "atmosphere"`) or of one target (`"layer.target": "none"`). Classes are `motion`, `light`, `particles`, `atmosphere`, `creatures`, `events` and `none`. Defaults come from the component type and the target name (`src/rendering/environments/living/intensity.ts`). |
+| `events` | Event call-ins, with every field of section 6.3 (ambient timers, music cues, groups). They run alongside the manifest's `events`. |
+| `phraseBars` | Bars per phrase for the `phrase` drive and cue (default: the manifest's `phraseBars`). |
+
+**The drives.** All are 0..1, normalised to the song, and each has its own speed (`MusicDrive` in `src/rendering/environments/living/musicDirector.ts`):
+
+| Drive | Follows | Speed | Typical use |
+|---|---|---|---|
+| `body` | sub-bass and bass | 250 ms attack, 1.4 s release | large masses: cloud bulk, structures, lava, swell |
+| `swell` | bass and loudness | seconds | the slow breathing of the whole world |
+| `motion` | low mids and mids | 120 ms / 600 ms | medium things: lanterns, trees, machines, water |
+| `detail` | high mids and treble | 30 ms / 250 ms, slew-limited | fine detail: sparkle, small lights, dust |
+| `shimmer` | treble above its recent level | fast, rate-limited | glints, sparkle bursts |
+| `flux` | spectral change | fast | turbulence |
+| `energy` | loudness relative to the song | about 1 s | general activity |
+| `intensity` | the section's intensity, energy and onset density | about 3 s | density, creature activity, set pieces |
+| `tension` | builds and the bars before a drop | rises over seconds, falls at the drop | wind-up: churn, gathering clouds |
+| `release` | the aftermath of a drop or peak | decays over about 6 s | lingering light after a drop |
+| `calm` | quiet passages, breaks, intros | about 2 s | quiet-time details (fireflies, birds) |
+| `accent` | governed onsets (about 15–40 a minute in dense music) | quick decay | small flares, never global light |
+| `beat` | selected beats only (downbeats, accented or busy beats) | quick decay | lantern pulses, small rhythmic accents |
+| `downbeat` | the first beat of each bar | 0.4 s decay | slow rhythmic accents |
+| `phrase` | position in the phrase, 0..1 | linear | slow sweeps over a phrase |
+
+**Background intensity.** Every classified reactive target, bound or not, is scaled by its class's knob: both its base value and every response on it (bindings, section states, pulses). Balanced (every knob at 1) is the world as authored. The levels never reach the board.
+
+**Rules.**
+
+- Use the drives for music in a world, not `frameUniforms.bass` or `beatPulse`. The board reads those uniforms, so their meaning stays as it is.
+- Never pulse global light on the beat.
+- Keep `beat` and `accent` on small things.
+- Put the large shape of the song (`intensity`, `swell`, `tension`, `release`) on large things.
 
 ## 7. Step 4: music
 

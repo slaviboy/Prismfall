@@ -74,15 +74,18 @@ const PARTICLE_TYPES = new Set(['particles', 'emitter', 'particleShapes']);
 const MOTION = /^(speed|spin|sway|turbulence|amplitude|drift|flow|jitter|stir|chop|ripple|swell|wind|gust|wave|tempo|pace)$/i;
 const LIGHT = /^(glow|emissive|brightness|intensity|stars|disc|nebula|windows|neon|lamps|heat|flash|surf|atmosphere|sparkle|glint|sheen|light|lights|beam|beams|shimmer|aurora|fire|embers|lava)$/i;
 const ATMOSPHERE = /^(opacity|fog|haze|mist|murk|plume|smoke|veil|density|thickness)$/i;
-const CREATURE = /^(pace|tempo|visible|activity|agitation)$/i;
+const CREATURE = /^(pace|tempo|activity|agitation)$/i;
 
 /**
  * Class of `target` on a layer of `type`: an explicit override from the world's living.json wins;
- * otherwise creature layers' pace, visibility and activity are `creatures`, particle layers' density,
- * amount and brightness are `particles`, and target names decide the rest.
+ * otherwise creature layers' pace, tempo and activity are `creatures`, particle layers' density,
+ * amount and brightness are `particles`, and target names decide the rest. A `visible` share is
+ * never scaled by default: `model` layers also place static scenery (rocks, ruins, trees), which a
+ * lower creature level must not thin out. A world opts a herd's share in with a class override.
  */
 export function classifyTarget(type: string, target: string, override?: TargetClass): TargetClass {
   if (override) return override;
+  if (/^visible$/i.test(target)) return 'none';
   if (CREATURE_TYPES.has(type) && CREATURE.test(target)) return 'creatures';
   if (PARTICLE_TYPES.has(type) && /^(density|amount|brightness|size)$/i.test(target)) return 'particles';
   if (type === 'meteors' && target === 'rate') return 'events';

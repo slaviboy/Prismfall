@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "description": "Dark space: the bass swells the giant's atmosphere, the mids drift the nebula, the treble lights the stars and dust, phrases send faint waves of light through space and sections change the haze.",
+  "music": [
+    {
+      "layer": "giant",
+      "target": "atmosphere",
+      "drive": "body",
+      "amount": 0.25,
+      "role": "large"
+    },
+    {
+      "layer": "nebula-haze",
+      "target": "opacity",
+      "drive": "motion",
+      "amount": 0.2,
+      "role": "mid"
+    },
+    {
+      "layer": "sky",
+      "target": "nebula",
+      "drive": "motion",
+      "amount": 0.15,
+      "role": "mid"
+    },
+    {
+      "layer": "sky",
+      "target": "stars",
+      "drive": "detail",
+      "amount": 0.35,
+      "role": "fine"
+    },
+    {
+      "layer": "star-dust",
+      "target": "brightness",
+      "drive": "detail",
+      "amount": 0.4,
+      "role": "fine"
+    },
+    {
+      "layer": "star-dust",
+      "target": "speed",
+      "drive": "energy",
+      "amount": 0.2,
+      "role": "mid"
+    },
+    {
+      "layer": "leviathan",
+      "target": "brightness",
+      "drive": "intensity",
+      "amount": 0.25,
+      "role": "section"
+    }
+  ],
+  "events": [
+    {
+      "layer": "sky",
+      "on": "music:phrase",
+      "action": "wave",
+      "quantize": "bar",
+      "cooldown": 16,
+      "params": {
+        "strength": 0.3
+      },
+      "chance": 0.6
+    },
+    {
+      "layer": "sky",
+      "on": "music:drop",
+      "action": "wave",
+      "quantize": "bar",
+      "cooldown": 40,
+      "params": {
+        "strength": 0.55
+      }
+    },
+    {
+      "layer": "giant",
+      "on": "music:drop",
+      "action": "pulse",
+      "quantize": "bar",
+      "cooldown": 40,
+      "params": {
+        "target": "atmosphere",
+        "amount": 0.6,
+        "attack": 2,
+        "hold": 5,
+        "release": 8
+      }
+    },
+    {
+      "layer": "nebula-haze",
+      "on": "music:section",
+      "action": "pulse",
+      "quantize": "bar",
+      "cooldown": 30,
+      "params": {
+        "target": "opacity",
+        "amount": 0.4,
+        "attack": 4,
+        "hold": 6,
+        "release": 8
+      }
+    },
+    {
+      "layer": "leviathan-pass",
+      "on": "ambient",
+      "every": [
+        70,
+        140
+      ],
+      "action": "pass",
+      "quantize": "bar",
+      "cooldown": 20,
+      "params": {},
+      "weight": 1,
+      "vary": 0.25
+    }
+  ]
+}

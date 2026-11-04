@@ -90,8 +90,11 @@ export const particlesComponent: ComponentFactory<ParticleFieldParams> = {
     const time = ctx.uniforms.time;
     const vol = vec3(...p.size);
     const center = vec3(...p.center);
-    // Drift with wrap-around inside the volume (speed is reactive, so drift accumulates via time*speed).
-    const travel = vec3(...p.velocity).mul(time).mul(u.speed);
+    // Drift with wrap-around inside the volume. `speed` is reactive, so the drift clock is integrated
+    // on the CPU (seconds of travel at the current speed): a change of speed changes how fast the
+    // particles move from now on, instead of jumping every particle to time × the new speed.
+    const drift = floatUniform(0);
+    const travel = vec3(...p.velocity).mul(drift);
     const base = s.xyz.mul(vol).add(travel);
     const wrapped = mod(base, vol).sub(vol.mul(0.5)).add(center);
     const ph = s.w.mul(6.283).add(time.mul(0.35));
@@ -154,6 +157,9 @@ export const particlesComponent: ComponentFactory<ParticleFieldParams> = {
     return {
       object: sprite,
       reactive: u,
+      update(frame) {
+        drift.value += frame.dt * Math.max(0, u.speed.value);
+      },
       setPresence(v) {
         u.presence.value = v;
       },

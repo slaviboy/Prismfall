@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "description": "Volcanic: the bass drives the lava glow and the crater, the mids stir the ash, the treble lights sparks and embers, builds thicken the heat haze and drops stoke the eruption.",
+  "music": [
+    {
+      "layer": "lava-fields",
+      "target": "glow",
+      "drive": "body",
+      "amount": 0.3,
+      "role": "large"
+    },
+    {
+      "layer": "crater-glow",
+      "target": "opacity",
+      "drive": "body",
+      "amount": 0.25,
+      "role": "large"
+    },
+    {
+      "layer": "ash",
+      "target": "turbulence",
+      "drive": "motion",
+      "amount": 0.3,
+      "role": "mid"
+    },
+    {
+      "layer": "embers",
+      "target": "brightness",
+      "drive": "detail",
+      "amount": 0.45,
+      "role": "fine"
+    },
+    {
+      "layer": "embers",
+      "target": "speed",
+      "drive": "energy",
+      "amount": 0.25,
+      "role": "mid"
+    },
+    {
+      "layer": "heat-smoke",
+      "target": "opacity",
+      "drive": "tension",
+      "amount": 0.3,
+      "role": "section"
+    },
+    {
+      "layer": "eruption",
+      "target": "amount",
+      "drive": "intensity",
+      "amount": 0.4,
+      "role": "section"
+    }
+  ],
+  "events": [
+    {
+      "layer": "crater-glow",
+      "on": "music:build",
+      "action": "pulse",
+      "quantize": "bar",
+      "cooldown": 40,
+      "params": {
+        "target": "opacity",
+        "amount": 0.5,
+        "attack": 6,
+        "hold": 4,
+        "release": 6
+      }
+    },
+    {
+      "layer": "eruption",
+      "on": "music:drop",
+      "action": "pulse",
+      "quantize": "bar",
+      "cooldown": 30,
+      "params": {
+        "target": "amount",
+        "amount": 1.0,
+        "attack": 0.5,
+        "hold": 3,
+        "release": 4
+      }
+    },
+    {
+      "layer": "sky",
+      "on": "music:drop",
+      "action": "wave",
+      "quantize": "bar",
+      "cooldown": 45,
+      "params": {
+        "strength": 0.5
+      }
+    },
+    {
+      "layer": "fire-streaks",
+      "on": "music:peak",
+      "action": "burst",
+      "quantize": "bar",
+      "cooldown": 45,
+      "params": {
+        "count": 3
+      }
+    },
+    {
+      "layer": "fire-streaks",
+      "on": "ambient",
+      "every": [
+        30,
+        60
+      ],
+      "action": "burst",
+      "quantize": "bar",
+      "cooldown": 20,
+      "params": {
+        "count": 1
+      },
+      "weight": 1,
+      "vary": 0.25
+    }
+  ]
+}

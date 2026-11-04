@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "description": "Ashen Vigil: the bass breathes through the fire-lit sky, builds thicken the smoke, the treble shifts the falling ash, and very rarely a distant sun is born.",
+  "music": [
+    {
+      "layer": "sky",
+      "target": "glow",
+      "drive": "swell",
+      "amount": 0.12,
+      "role": "large"
+    },
+    {
+      "layer": "sky",
+      "target": "fire",
+      "drive": "body",
+      "amount": 0.2,
+      "role": "large"
+    },
+    {
+      "layer": "smoke-layers",
+      "target": "opacity",
+      "drive": "tension",
+      "amount": 0.2,
+      "role": "section"
+    },
+    {
+      "layer": "ash",
+      "target": "opacity",
+      "drive": "detail",
+      "amount": 0.15,
+      "role": "fine"
+    }
+  ],
+  "events": [
+    {
+      "layer": "detonations",
+      "on": "ambient",
+      "every": [
+        150,
+        300
+      ],
+      "action": "burst",
+      "quantize": "bar",
+      "cooldown": 20,
+      "params": {},
+      "weight": 1,
+      "vary": 0.25,
+      "when": {
+        "calm": false
+      }
+    }
+  ]
+}

@@ -52,9 +52,11 @@ export const galaxyComponent: ComponentFactory<Params> = {
     const a = instancedBufferAttribute<'vec4'>(new InstancedBufferAttribute(data, 4), 'vec4');
     const b = instancedBufferAttribute<'vec4'>(new InstancedBufferAttribute(extra, 4), 'vec4');
     const u = { brightness: floatUniform(p.brightness), presence: floatUniform(1), spin: floatUniform(p.spin) };
+    // Differential rotation: inner stars complete orbits faster. The turn is integrated on the CPU
+    // (spin is reactive: a change of spin must not jump the stars).
+    const turn = floatUniform(0);
     const t = ctx.uniforms.time;
-    // Differential rotation: inner stars complete orbits faster.
-    const angle = a.y.add(t.mul(u.spin).div(a.x.add(0.15)));
+    const angle = a.y.add(turn.div(a.x.add(0.15)));
     const r = a.x.mul(p.radius);
     const local = vec3(cos(angle).mul(r), a.z.mul(p.radius), sin(angle).mul(r));
     const [tx, tz] = p.tilt;
@@ -88,6 +90,9 @@ export const galaxyComponent: ComponentFactory<Params> = {
     return {
       object: sprite,
       reactive: { brightness: u.brightness, spin: u.spin },
+      update(frame) {
+        turn.value += frame.dt * u.spin.value;
+      },
       setPresence(v) {
         u.presence.value = v;
       },

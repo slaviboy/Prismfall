@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "description": "The deep: the bass breathes in the light shafts and the seafloor, the mids pulse the jellies and glowing schools, the treble lights the plankton, and at the music's peak a vortex of glowing fish rings the board.",
+  "music": [
+    {
+      "layer": "light-shafts",
+      "target": "intensity",
+      "drive": "swell",
+      "amount": 0.3,
+      "role": "large"
+    },
+    {
+      "layer": "seafloor",
+      "target": "glow",
+      "drive": "body",
+      "amount": 0.15,
+      "role": "large"
+    },
+    {
+      "layer": "jellyfish",
+      "target": "glow",
+      "drive": "motion",
+      "amount": 0.3,
+      "role": "mid"
+    },
+    {
+      "layer": "glow-fish-left",
+      "target": "brightness",
+      "drive": "motion",
+      "amount": 0.25,
+      "role": "mid"
+    },
+    {
+      "layer": "glow-fish-right",
+      "target": "brightness",
+      "drive": "motion",
+      "amount": 0.25,
+      "role": "mid"
+    },
+    {
+      "layer": "plankton",
+      "target": "brightness",
+      "drive": "detail",
+      "amount": 0.45,
+      "role": "fine"
+    },
+    {
+      "layer": "marine-snow",
+      "target": "brightness",
+      "drive": "detail",
+      "amount": 0.25,
+      "role": "fine"
+    },
+    {
+      "layer": "marine-snow",
+      "target": "turbulence",
+      "drive": "flux",
+      "amount": 0.3,
+      "role": "mid"
+    },
+    {
+      "layer": "blue-whale",
+      "target": "pace",
+      "drive": "intensity",
+      "amount": 0.15,
+      "role": "section"
+    }
+  ],
+  "events": [
+    {
+      "layer": "sky",
+      "on": "music:drop",
+      "action": "wave",
+      "quantize": "bar",
+      "cooldown": 45,
+      "params": {
+        "strength": 0.45
+      }
+    },
+    {
+      "layer": "climax-vortex",
+      "on": "music:peak",
+      "action": "reveal",
+      "quantize": "bar",
+      "cooldown": 90,
+      "params": {
+        "hold": 14
+      }
+    },
+    {
+      "layer": "light-shafts",
+      "on": "music:section",
+      "action": "pulse",
+      "quantize": "bar",
+      "cooldown": 30,
+      "params": {
+        "target": "intensity",
+        "amount": 0.5,
+        "attack": 3,
+        "hold": 4,
+        "release": 8
+      }
+    },
+    {
+      "layer": "great-white",
+      "on": "ambient",
+      "every": [
+        60,
+        120
+      ],
+      "action": "pass",
+      "quantize": "bar",
+      "cooldown": 20,
+      "params": {},
+      "weight": 2,
+      "vary": 0.25,
+      "group": "deep"
+    },
+    {
+      "layer": "eagle-rays",
+      "on": "ambient",
+      "every": [
+        60,
+        120
+      ],
+      "action": "show",
+      "quantize": "bar",
+      "cooldown": 20,
+      "params": {
+        "seconds": 2.5,
+        "hold": 18
+      },
+      "weight": 1,
+      "vary": 0.25,
+      "group": "deep"
+    }
+  ]
+}

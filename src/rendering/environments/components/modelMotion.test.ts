@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { AnimationClip, AnimationMixer, Bone, Group, QuaternionKeyframeTrack, Vector3, VectorKeyframeTrack } from 'three/webgpu';
-import { RevealTracker, buildPath, inPlaceClip, pathCycle, pathState, revealTarget, stopWeight, type PathPlan } from './modelMotion';
+import { RevealTracker, buildPath, inPlaceClip, lateralWaypoints, pathCycle, pathState, revealTarget, stopWeight, type PathPlan } from './modelMotion';
 
 /** A root (scaled 0.01 and turned Z-up like many exports) with hips and two legs. */
 function rig(): { root: Group; hips: Bone } {
@@ -176,5 +176,23 @@ describe('reveal with the run', () => {
     // After the hold it settles back to the ramp's own value: 0.52 lies 60% into the window.
     expect(run(19, 45, 0.52)).toBeCloseTo(0.648, 2);
     expect(new RevealTracker(undefined).update(0, 0, 1)).toBe(1);
+  });
+});
+
+describe('lateral passes (SDK 1.7)', () => {
+  it('cross one side of the frame at a near-constant distance, never inside the widened board', () => {
+    const rect = { x0: -0.35, y0: -0.9, x1: 0.35, y1: 0.9 };
+    for (const side of [1, -1] as const) {
+      const pts = lateralWaypoints(rect, side, 'in', -0.2, 300, 0.18);
+      expect(Math.abs(pts[0]!.x)).toBeGreaterThan(1);
+      for (const p of pts) {
+        expect(p.x * side).toBeGreaterThanOrEqual(0.35 + 0.18);
+        expect(p.distance).toBeGreaterThan(280);
+        expect(p.distance).toBeLessThan(330);
+        expect(p.y).toBeCloseTo(-0.2);
+      }
+      const out = lateralWaypoints(rect, side, 'out', -0.2, 300, 0.18);
+      expect(out[0]).toEqual(pts[pts.length - 1]);
+    }
   });
 });

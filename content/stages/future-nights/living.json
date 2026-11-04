@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "description": "Neon city: the bass lights the river, the mids move the traffic, the treble lights the aircraft and the rain, and some downbeats send a soft wash of light over the water.",
+  "music": [
+    {
+      "layer": "river",
+      "target": "glow",
+      "drive": "body",
+      "amount": 0.25,
+      "role": "large"
+    },
+    {
+      "layer": "river",
+      "target": "amplitude",
+      "drive": "swell",
+      "amount": 0.15,
+      "role": "large"
+    },
+    {
+      "layer": "traffic",
+      "target": "brightness",
+      "drive": "motion",
+      "amount": 0.25,
+      "role": "mid"
+    },
+    {
+      "layer": "traffic",
+      "target": "lamps",
+      "drive": "motion",
+      "amount": 0.15,
+      "role": "mid"
+    },
+    {
+      "layer": "aircraft",
+      "target": "brightness",
+      "drive": "detail",
+      "amount": 0.35,
+      "role": "fine"
+    },
+    {
+      "layer": "rain",
+      "target": "brightness",
+      "drive": "detail",
+      "amount": 0.35,
+      "role": "fine"
+    },
+    {
+      "layer": "splashes",
+      "target": "brightness",
+      "drive": "accent",
+      "amount": 0.5,
+      "role": "beat"
+    }
+  ],
+  "events": [
+    {
+      "layer": "river",
+      "on": "music:downbeat",
+      "action": "pulse",
+      "quantize": "none",
+      "cooldown": 4,
+      "params": {
+        "target": "glow",
+        "amount": 0.3,
+        "attack": 0.05,
+        "hold": 0.2,
+        "release": 0.8
+      },
+      "chance": 0.3
+    },
+    {
+      "layer": "sky",
+      "on": "music:section",
+      "action": "pulse",
+      "quantize": "bar",
+      "cooldown": 30,
+      "params": {
+        "target": "glow",
+        "amount": 0.25,
+        "attack": 3,
+        "hold": 4,
+        "release": 6
+      }
+    },
+    {
+      "layer": "sky",
+      "on": "music:drop",
+      "action": "wave",
+      "quantize": "bar",
+      "cooldown": 45,
+      "params": {
+        "strength": 0.5
+      }
+    }
+  ]
+}

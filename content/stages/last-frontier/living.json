@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "description": "Wild West: the bass drifts the dust, the mids stir the motes in the low sun, the treble catches them, phrases bring riders past and now and then the donkey speaks up.",
+  "music": [
+    {
+      "layer": "dust",
+      "target": "drift",
+      "drive": "body",
+      "amount": 0.25,
+      "role": "large"
+    },
+    {
+      "layer": "motes-town",
+      "target": "turbulence",
+      "drive": "motion",
+      "amount": 0.3,
+      "role": "mid"
+    },
+    {
+      "layer": "motes-town",
+      "target": "brightness",
+      "drive": "detail",
+      "amount": 0.35,
+      "role": "fine"
+    },
+    {
+      "layer": "motes-right",
+      "target": "brightness",
+      "drive": "detail",
+      "amount": 0.35,
+      "role": "fine"
+    },
+    {
+      "layer": "riders",
+      "target": "pace",
+      "drive": "intensity",
+      "amount": 0.15,
+      "role": "section"
+    }
+  ],
+  "events": [
+    {
+      "layer": "stallion",
+      "on": "music:phrase",
+      "action": "pass",
+      "quantize": "bar",
+      "cooldown": 40,
+      "params": {},
+      "chance": 0.3
+    },
+    {
+      "layer": "dust",
+      "on": "music:drop",
+      "action": "wave",
+      "quantize": "bar",
+      "cooldown": 45,
+      "params": {
+        "strength": 0.4
+      }
+    },
+    {
+      "layer": "stallion",
+      "on": "ambient",
+      "every": [
+        60,
+        120
+      ],
+      "action": "pass",
+      "quantize": "bar",
+      "cooldown": 20,
+      "params": {},
+      "weight": 2,
+      "vary": 0.25,
+      "group": "frontier"
+    },
+    {
+      "layer": "donkey",
+      "on": "ambient",
+      "every": [
+        60,
+        120
+      ],
+      "action": "clip",
+      "quantize": "bar",
+      "cooldown": 20,
+      "params": {
+        "clip": "H_Neigh",
+        "speed": 1
+      },
+      "weight": 1,
+      "vary": 0.25,
+      "group": "frontier"
+    }
+  ]
+}

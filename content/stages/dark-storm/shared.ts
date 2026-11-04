@@ -437,14 +437,21 @@ export function tickStorm(s: Storm, ctx: EnvironmentContext, frame: EnvFrame): v
   const L = d.levels;
   const clearGust = Math.min(1, frame.game.clearWave) * 0.5 * ctx.uniforms.waveMotion.value;
   const gust = Math.max(L.gust, clearGust);
-  const strength = 2.5 + L.wind * 7 + gust * 6;
+  // The music (SDK 1.7 drives, scaled by the Background intensity music level): the mids push the
+  // wind and the rain a little harder, the bass hurries the distant cloud deck. The director still
+  // decides the storm's state and every strike.
+  const m = frame.music;
+  const musicLevel = frame.levels.music * (ctx.quality.reducedMotion ? 0.5 : 1);
+  const midPush = m.motion * musicLevel;
+  const strength = 2.5 + L.wind * 7 + gust * 6 + midPush * 2.2;
   const swing = Math.sin(u.time.value * 0.05) * 0.35 + Math.sin(u.time.value * 0.013 + 1.7) * 0.25;
   u.wind.value.set(-Math.cos(swing) * strength, 0, -Math.sin(swing) * strength * 0.6 - 1);
   u.windOffset.value.addScaledVector(u.wind.value, dt * slow);
-  u.cloudOffset.value.x += (-6 - L.cloudSpeed * 9) * dt * slow;
-  u.cloudOffset.value.z += (-2 - L.cloudSpeed * 3) * dt * slow;
+  const bassDrift = 1 + m.body * musicLevel * 0.6;
+  u.cloudOffset.value.x += (-6 - L.cloudSpeed * 9) * bassDrift * dt * slow;
+  u.cloudOffset.value.z += (-2 - L.cloudSpeed * 3) * bassDrift * dt * slow;
   u.gust.value = gust;
-  u.rain.value = L.rain * Math.max(0.35, Math.min(1.5, 0.6 + 0.4 * comfort.intensity));
+  u.rain.value = Math.min(1.5, L.rain * Math.max(0.35, Math.min(1.5, 0.6 + 0.4 * comfort.intensity)) * (1 + 0.22 * midPush));
   if (frame.presence > 0.02) {
     ctx.sounds.weather?.({ rain: u.rain.value * frame.presence, wind: (L.wind * 0.85 + 0.15) * frame.presence, gust: gust * frame.presence, surfaces: { water: 0.7, rock: 0.55, wood: 0.15, foliage: 0.5 } });
   }

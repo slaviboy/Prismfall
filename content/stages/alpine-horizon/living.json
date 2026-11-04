@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "description": "Mountains: the bass lifts the sky light slowly, the mids stir the meadow pollen, the treble catches it, sections change the light and visitors come and go: an eagle, the does.",
+  "music": [
+    {
+      "layer": "sky",
+      "target": "glow",
+      "drive": "swell",
+      "amount": 0.1,
+      "role": "large"
+    },
+    {
+      "layer": "pollen",
+      "target": "turbulence",
+      "drive": "motion",
+      "amount": 0.35,
+      "role": "mid"
+    },
+    {
+      "layer": "pollen",
+      "target": "speed",
+      "drive": "energy",
+      "amount": 0.2,
+      "role": "mid"
+    },
+    {
+      "layer": "pollen",
+      "target": "brightness",
+      "drive": "detail",
+      "amount": 0.35,
+      "role": "fine"
+    },
+    {
+      "layer": "pollen",
+      "target": "density",
+      "drive": "intensity",
+      "amount": 0.3,
+      "role": "section"
+    },
+    {
+      "layer": "eagles",
+      "target": "pace",
+      "drive": "intensity",
+      "amount": 0.2,
+      "role": "section"
+    }
+  ],
+  "events": [
+    {
+      "layer": "sky",
+      "on": "music:section",
+      "action": "pulse",
+      "quantize": "bar",
+      "cooldown": 40,
+      "params": {
+        "target": "glow",
+        "amount": 0.25,
+        "attack": 4,
+        "hold": 4,
+        "release": 8
+      }
+    },
+    {
+      "layer": "sky",
+      "on": "music:drop",
+      "action": "wave",
+      "quantize": "bar",
+      "cooldown": 45,
+      "params": {
+        "strength": 0.4
+      }
+    },
+    {
+      "layer": "eagles",
+      "on": "ambient",
+      "every": [
+        50,
+        100
+      ],
+      "action": "pass",
+      "quantize": "bar",
+      "cooldown": 20,
+      "params": {},
+      "weight": 2,
+      "vary": 0.25,
+      "group": "visitors"
+    },
+    {
+      "layer": "does",
+      "on": "ambient",
+      "every": [
+        50,
+        100
+      ],
+      "action": "show",
+      "quantize": "bar",
+      "cooldown": 20,
+      "params": {
+        "seconds": 2.5,
+        "hold": 20
+      },
+      "weight": 1,
+      "vary": 0.25,
+      "group": "visitors"
+    }
+  ]
+}

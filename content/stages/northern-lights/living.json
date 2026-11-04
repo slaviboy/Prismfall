@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "description": "Aurora: the bass moves the main curtains, the mids light the far aurora and the sky, the treble lights the stars and snow, phrases send light along the curtains and drops flare the far bands.",
+  "music": [
+    {
+      "layer": "aurora-main",
+      "target": "intensity",
+      "drive": "swell",
+      "amount": 0.3,
+      "role": "large"
+    },
+    {
+      "layer": "aurora-main",
+      "target": "speed",
+      "drive": "body",
+      "amount": 0.25,
+      "role": "large"
+    },
+    {
+      "layer": "aurora-far",
+      "target": "intensity",
+      "drive": "motion",
+      "amount": 0.25,
+      "role": "mid"
+    },
+    {
+      "layer": "sky",
+      "target": "glow",
+      "drive": "motion",
+      "amount": 0.12,
+      "role": "mid"
+    },
+    {
+      "layer": "sky",
+      "target": "stars",
+      "drive": "detail",
+      "amount": 0.35,
+      "role": "fine"
+    },
+    {
+      "layer": "snow",
+      "target": "brightness",
+      "drive": "detail",
+      "amount": 0.3,
+      "role": "fine"
+    },
+    {
+      "layer": "mirror-lake",
+      "target": "glow",
+      "drive": "swell",
+      "amount": 0.15,
+      "role": "large"
+    }
+  ],
+  "events": [
+    {
+      "layer": "aurora-main",
+      "on": "music:phrase",
+      "action": "pulse",
+      "quantize": "bar",
+      "cooldown": 20,
+      "params": {
+        "target": "intensity",
+        "amount": 0.5,
+        "attack": 2,
+        "hold": 2,
+        "release": 5
+      },
+      "chance": 0.5
+    },
+    {
+      "layer": "aurora-far",
+      "on": "music:drop",
+      "action": "pulse",
+      "quantize": "bar",
+      "cooldown": 40,
+      "params": {
+        "target": "intensity",
+        "amount": 0.8,
+        "attack": 2,
+        "hold": 6,
+        "release": 10
+      }
+    },
+    {
+      "layer": "sky",
+      "on": "music:drop",
+      "action": "wave",
+      "quantize": "bar",
+      "cooldown": 45,
+      "params": {
+        "strength": 0.45
+      }
+    },
+    {
+      "layer": "meteors",
+      "on": "ambient",
+      "every": [
+        30,
+        70
+      ],
+      "action": "burst",
+      "quantize": "bar",
+      "cooldown": 20,
+      "params": {
+        "count": 1
+      },
+      "weight": 1,
+      "vary": 0.25
+    }
+  ]
+}

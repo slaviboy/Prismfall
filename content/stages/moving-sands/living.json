@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "description": "Desert: the bass lifts the dune ripples and the blowing sand, the mids pace the caravan, the treble glitters in the sand, percussive accents throw short sand bursts and builds raise the wind.",
+  "music": [
+    {
+      "layer": "dunes",
+      "target": "ripple",
+      "drive": "body",
+      "amount": 0.25,
+      "role": "large"
+    },
+    {
+      "layer": "blowing-sand",
+      "target": "turbulence",
+      "drive": "body",
+      "amount": 0.35,
+      "role": "large"
+    },
+    {
+      "layer": "sky",
+      "target": "glow",
+      "drive": "swell",
+      "amount": 0.12,
+      "role": "large"
+    },
+    {
+      "layer": "camel-caravan",
+      "target": "pace",
+      "drive": "motion",
+      "amount": 0.25,
+      "role": "mid"
+    },
+    {
+      "layer": "camel-caravan",
+      "target": "brightness",
+      "drive": "motion",
+      "amount": 0.2,
+      "role": "mid"
+    },
+    {
+      "layer": "blowing-sand",
+      "target": "brightness",
+      "drive": "detail",
+      "amount": 0.4,
+      "role": "fine"
+    },
+    {
+      "layer": "dunes",
+      "target": "sparkle",
+      "drive": "shimmer",
+      "amount": 0.7,
+      "role": "fine"
+    },
+    {
+      "layer": "blowing-sand",
+      "target": "density",
+      "drive": "intensity",
+      "amount": 0.35,
+      "role": "section"
+    },
+    {
+      "layer": "dunes",
+      "target": "light",
+      "drive": "tension",
+      "amount": 0.15,
+      "role": "section"
+    }
+  ],
+  "events": [
+    {
+      "layer": "blowing-sand",
+      "on": "music:accent",
+      "action": "pulse",
+      "quantize": "none",
+      "cooldown": 4,
+      "params": {
+        "target": "brightness",
+        "amount": 0.5,
+        "attack": 0.05,
+        "hold": 0.12,
+        "release": 0.7
+      },
+      "chance": 0.35
+    },
+    {
+      "layer": "blowing-sand",
+      "on": "music:build",
+      "action": "pulse",
+      "quantize": "bar",
+      "cooldown": 40,
+      "params": {
+        "target": "turbulence",
+        "amount": 0.9,
+        "attack": 4,
+        "hold": 4,
+        "release": 5
+      }
+    },
+    {
+      "layer": "sky",
+      "on": "music:drop",
+      "action": "wave",
+      "quantize": "bar",
+      "cooldown": 40,
+      "params": {
+        "strength": 0.5
+      }
+    },
+    {
+      "layer": "meteors",
+      "on": "music:peak",
+      "action": "burst",
+      "quantize": "bar",
+      "cooldown": 60,
+      "params": {
+        "count": 2
+      }
+    },
+    {
+      "layer": "meteors",
+      "on": "ambient",
+      "every": [
+        40,
+        90
+      ],
+      "action": "burst",
+      "quantize": "bar",
+      "cooldown": 20,
+      "params": {
+        "count": 1
+      },
+      "weight": 1,
+      "vary": 0.25
+    }
+  ]
+}

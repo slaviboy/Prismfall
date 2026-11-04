@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "description": "Maya: the bass thickens the jungle haze, the mids sway the vines and undergrowth, the treble lights pollen, sections move the sun shafts, and drops wake the old glow in the ruins.",
+  "music": [
+    {
+      "layer": "haze",
+      "target": "density",
+      "drive": "body",
+      "amount": 0.12,
+      "role": "large"
+    },
+    {
+      "layer": "waterfall",
+      "target": "flow",
+      "drive": "swell",
+      "amount": 0.1,
+      "role": "large"
+    },
+    {
+      "layer": "undergrowth",
+      "target": "wind",
+      "drive": "motion",
+      "amount": 0.3,
+      "role": "mid"
+    },
+    {
+      "layer": "lianas",
+      "target": "sway",
+      "drive": "motion",
+      "amount": 0.3,
+      "role": "mid"
+    },
+    {
+      "layer": "pollen",
+      "target": "brightness",
+      "drive": "detail",
+      "amount": 0.4,
+      "role": "fine"
+    },
+    {
+      "layer": "leaves",
+      "target": "turbulence",
+      "drive": "flux",
+      "amount": 0.3,
+      "role": "mid"
+    },
+    {
+      "layer": "shafts",
+      "target": "intensity",
+      "drive": "intensity",
+      "amount": 0.3,
+      "role": "section"
+    },
+    {
+      "layer": "ruins",
+      "target": "glow",
+      "drive": "tension",
+      "amount": 0.3,
+      "role": "section"
+    }
+  ],
+  "events": [
+    {
+      "layer": "ruins",
+      "on": "music:drop",
+      "action": "pulse",
+      "quantize": "bar",
+      "cooldown": 40,
+      "params": {
+        "target": "glow",
+        "amount": 0.8,
+        "attack": 2,
+        "hold": 5,
+        "release": 8
+      }
+    },
+    {
+      "layer": "sky",
+      "on": "music:drop",
+      "action": "wave",
+      "quantize": "bar",
+      "cooldown": 45,
+      "params": {
+        "strength": 0.4
+      }
+    },
+    {
+      "layer": "quetzals",
+      "on": "ambient",
+      "every": [
+        45,
+        90
+      ],
+      "action": "pass",
+      "quantize": "bar",
+      "cooldown": 20,
+      "params": {},
+      "weight": 2,
+      "vary": 0.25,
+      "group": "fauna"
+    },
+    {
+      "layer": "macaws",
+      "on": "ambient",
+      "every": [
+        45,
+        90
+      ],
+      "action": "burst",
+      "quantize": "bar",
+      "cooldown": 20,
+      "params": {
+        "strength": 0.5
+      },
+      "weight": 1,
+      "vary": 0.25,
+      "group": "fauna"
+    }
+  ]
+}

@@ -32,7 +32,7 @@ import {
   vec3,
   vec4,
 } from 'three/tsl';
-import { clearFrontRaw, frameUniforms, noBloom, z, type ComponentFactory } from '@prismfall/sdk';
+import { clearFrontRaw, environmentUniforms, frameUniforms, noBloom, z, type ComponentFactory } from '@prismfall/sdk';
 import { EYE, pointAt, terrainHeight } from './terrain';
 import { CLOUD_BASE, FLASH_COLOR, HAZE_DENSITY, MAX_FLASH, cast, hash2, releaseStorm, skyRadiance, storm, surfaceMap, surfaceUV, tickStorm, type F, type Storm, type V2, type V3, type V4 } from './shared';
 
@@ -179,7 +179,9 @@ export const rainComponent: ComponentFactory<Params> = {
         return wrapped.add(corner.mul(step(0.001, keep)));
       })();
       const prof = cast<F>(exp(cast<F>(vAcross).pow(2).mul(-3)).mul(smoothstep(0, 0.25, cast<F>(vAlong))).mul(smoothstep(1, 0.6, cast<F>(vAlong))));
-      const col = cast<V3>(cast<V3>(vColor).mul(prof).mul(cast<F>(vCover)).mul(layer.brightness * p.opacity).mul(u.presence));
+      // The treble catches in the streaks a little (the music director's slew-limited detail drive).
+      const sparkle = environmentUniforms.music.detail.mul(0.3).add(1);
+      const col = cast<V3>(cast<V3>(vColor).mul(prof).mul(cast<F>(vCover)).mul(layer.brightness * p.opacity).mul(u.presence).mul(sparkle));
       m.colorNode = vec4(col, 1);
       m.transparent = true;
       m.depthWrite = false;

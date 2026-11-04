@@ -372,6 +372,22 @@ export interface PassWaypoint {
  * distance beside the board and sweeps out past the camera; `out`: the reverse. `height` is the
  * NDC height the pass keeps to (it rises a little towards the far end).
  */
+/**
+ * Waypoints of a side-on crossing (`pass.path: "lateral"`, SDK 1.7): across one side of the frame at
+ * about `far` units from the camera, between the frame edge (beyond it) and the board's widened
+ * edge, never inside the board's rectangle. `in` enters at the frame edge and travels towards the
+ * board, dissolving before the clear zone; `out` emerges beside the board and leaves by the frame
+ * edge. A slight change of distance along the way keeps it from looking like a flat cut-out.
+ */
+export function lateralWaypoints(rect: NdcRect, side: 1 | -1, direction: 'in' | 'out', height: number, far: number, margin: number): PassWaypoint[] {
+  const edge = Math.max(0, side > 0 ? rect.x1 : -rect.x0) + margin;
+  const inner = Math.min(0.9, edge + 0.03);
+  const xs = [1.3, 1.0, (1.0 + inner) / 2, inner];
+  const ds = [far * 1.06, far, far * 0.97, far * 0.95];
+  const pts = xs.map((x, i) => ({ x: x * side, y: Math.max(-0.95, Math.min(0.95, height)), distance: ds[i] as number }));
+  return direction === 'in' ? pts : pts.reverse();
+}
+
 export function passWaypoints(rect: NdcRect, side: 1 | -1, direction: 'in' | 'out', height: number, near: number, far: number, margin: number): PassWaypoint[] {
   const edge = Math.max(0, side > 0 ? rect.x1 : -rect.x0) + margin;
   const inner = Math.min(0.97, edge + 0.04);

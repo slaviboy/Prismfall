@@ -146,6 +146,8 @@ export const waterComponent: ComponentFactory<z.infer<typeof schema>> = {
       presence: floatUniform(1),
     };
     const t = ctx.uniforms.time;
+    // The swell clock is integrated on the CPU (speed is reactive: a change of speed must not jump the waves).
+    const swellClock = floatUniform(0);
     const k = (2 * Math.PI) / p.wavelength;
     const waves = [
       { d: new Vector2(1, 0.25).normalize(), a: 1, k: k, w: 1 },
@@ -158,7 +160,7 @@ export const waterComponent: ComponentFactory<z.infer<typeof schema>> = {
       let dx: Node<'float'> = float(0);
       let dz: Node<'float'> = float(0);
       for (const w of waves) {
-        const ph = dot(xz, vec2(w.d.x, w.d.y)).mul(w.k).add(t.mul(u.speed).mul(w.w));
+        const ph = dot(xz, vec2(w.d.x, w.d.y)).mul(w.k).add(swellClock.mul(w.w));
         h = h.add(sin(ph).mul(w.a));
         const c = cos(ph).mul(w.a * w.k);
         dx = dx.add(c.mul(w.d.x));
@@ -221,7 +223,7 @@ export const waterComponent: ComponentFactory<z.infer<typeof schema>> = {
       const hashOf = (id: Node<'vec2'>, k: number) => fract(sin(dot(id, vec2(127.1 + k * 31.7, 311.7 + k * 17.9))).mul(43758.5453));
       const swell = (pt: Node<'vec2'>) => {
         let h: Node<'float'> = float(0);
-        for (const w of waves) h = h.add(sin(dot(pt, vec2(w.d.x, w.d.y)).mul(w.k).add(t.mul(u.speed).mul(w.w))).mul(w.a));
+        for (const w of waves) h = h.add(sin(dot(pt, vec2(w.d.x, w.d.y)).mul(w.k).add(swellClock.mul(w.w))).mul(w.a));
         return h;
       };
       const U = sp.stretch;
@@ -343,6 +345,9 @@ export const waterComponent: ComponentFactory<z.infer<typeof schema>> = {
     return {
       object: group,
       reactive: { amplitude: u.amplitude, glow: u.glow, speed: u.speed, ...(p.surf ? { surf: uSurf } : {}) },
+      update(frame) {
+        swellClock.value += frame.dt * Math.max(0, u.speed.value);
+      },
       onGameEvent(e) {
         if (e.kind === 'clear' && e.intensity > 0.2) {
           u.rippleTime.value = ctx.uniforms.time.value;

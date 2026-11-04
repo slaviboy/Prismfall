@@ -1,0 +1,164 @@
+{
+  "schemaVersion": 1,
+  "description": "Ice: the bass breathes slowly through the frozen lake and the snowfield, the treble glints in the snow crystals, accents shake loose a few bright flakes, and strong sections lift the aurora.",
+  "music": [
+    {
+      "layer": "lake",
+      "target": "glow",
+      "drive": "swell",
+      "amount": 0.22,
+      "role": "large"
+    },
+    {
+      "layer": "snowfield",
+      "target": "light",
+      "drive": "body",
+      "amount": 0.1,
+      "role": "large"
+    },
+    {
+      "layer": "snowfield",
+      "target": "sparkle",
+      "drive": "shimmer",
+      "amount": 0.8,
+      "role": "fine"
+    },
+    {
+      "layer": "sky",
+      "target": "stars",
+      "drive": "detail",
+      "amount": 0.25,
+      "role": "fine"
+    },
+    {
+      "layer": "snowfall",
+      "target": "brightness",
+      "drive": "detail",
+      "amount": 0.3,
+      "role": "fine"
+    },
+    {
+      "layer": "snowfall",
+      "target": "turbulence",
+      "drive": "intensity",
+      "amount": 0.5,
+      "role": "section"
+    },
+    {
+      "layer": "snowfall",
+      "target": "density",
+      "drive": "intensity",
+      "amount": 0.25,
+      "role": "section"
+    },
+    {
+      "layer": "snowfall",
+      "target": "speed",
+      "drive": "energy",
+      "amount": 0.2,
+      "role": "mid"
+    },
+    {
+      "layer": "dusk-aurora",
+      "target": "intensity",
+      "drive": "intensity",
+      "amount": 0.45,
+      "role": "section"
+    },
+    {
+      "layer": "dusk-aurora",
+      "target": "speed",
+      "drive": "motion",
+      "amount": 0.2,
+      "role": "mid"
+    }
+  ],
+  "events": [
+    {
+      "layer": "dusk-aurora",
+      "on": "music:drop",
+      "action": "pulse",
+      "quantize": "bar",
+      "cooldown": 40,
+      "params": {
+        "target": "intensity",
+        "amount": 0.9,
+        "attack": 2,
+        "hold": 6,
+        "release": 10
+      }
+    },
+    {
+      "layer": "sky",
+      "on": "music:drop",
+      "action": "wave",
+      "quantize": "bar",
+      "cooldown": 45,
+      "params": {
+        "strength": 0.45
+      }
+    },
+    {
+      "layer": "snowfall",
+      "on": "music:build",
+      "action": "pulse",
+      "quantize": "bar",
+      "cooldown": 40,
+      "params": {
+        "target": "turbulence",
+        "amount": 0.8,
+        "attack": 4,
+        "hold": 6,
+        "release": 6
+      }
+    },
+    {
+      "layer": "snowfall",
+      "on": "music:accent",
+      "action": "pulse",
+      "quantize": "none",
+      "cooldown": 5,
+      "params": {
+        "target": "brightness",
+        "amount": 0.6,
+        "attack": 0.05,
+        "hold": 0.12,
+        "release": 0.7
+      },
+      "chance": 0.3
+    },
+    {
+      "layer": "snowy-owl",
+      "on": "ambient",
+      "every": [
+        55,
+        110
+      ],
+      "action": "pass",
+      "quantize": "bar",
+      "cooldown": 20,
+      "params": {},
+      "weight": 2,
+      "vary": 0.25,
+      "group": "visitors"
+    },
+    {
+      "layer": "elk",
+      "on": "ambient",
+      "every": [
+        55,
+        110
+      ],
+      "action": "show",
+      "quantize": "bar",
+      "cooldown": 20,
+      "params": {
+        "seconds": 2.5,
+        "hold": 20
+      },
+      "weight": 1,
+      "vary": 0.25,
+      "group": "visitors"
+    }
+  ]
+}

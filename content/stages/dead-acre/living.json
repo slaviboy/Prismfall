@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "description": "Dead Acre: the bass rolls the ground fog, the mids make the yard lamps hum brighter, sections quicken the horde, and bats come and go.",
+  "music": [
+    {
+      "layer": "ground-fog",
+      "target": "density",
+      "drive": "swell",
+      "amount": 0.12,
+      "role": "large"
+    },
+    {
+      "layer": "ground-fog",
+      "target": "drift",
+      "drive": "body",
+      "amount": 0.2,
+      "role": "large"
+    },
+    {
+      "layer": "lamps",
+      "target": "glow",
+      "drive": "motion",
+      "amount": 0.25,
+      "role": "mid"
+    },
+    {
+      "layer": "horde",
+      "target": "tempo",
+      "drive": "intensity",
+      "amount": 0.15,
+      "role": "section"
+    }
+  ],
+  "events": [
+    {
+      "layer": "sky",
+      "on": "music:drop",
+      "action": "wave",
+      "quantize": "bar",
+      "cooldown": 45,
+      "params": {
+        "strength": 0.3
+      }
+    },
+    {
+      "layer": "bats",
+      "on": "ambient",
+      "every": [
+        60,
+        120
+      ],
+      "action": "pass",
+      "quantize": "bar",
+      "cooldown": 20,
+      "params": {},
+      "weight": 1,
+      "vary": 0.25
+    }
+  ]
+}

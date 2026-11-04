@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "description": "Machine war: the bass sets the walkers' stride, the mids the patrols, the treble the sparks and embers, sections raise the distant explosions and drops make the machines take notice.",
+  "classes": {
+    "explosions.rate": "events",
+    "smoke.rate": "atmosphere"
+  },
+  "music": [
+    {
+      "layer": "walkers",
+      "target": "pace",
+      "drive": "body",
+      "amount": 0.2,
+      "role": "large"
+    },
+    {
+      "layer": "sky",
+      "target": "glow",
+      "drive": "swell",
+      "amount": 0.12,
+      "role": "large"
+    },
+    {
+      "layer": "machines",
+      "target": "pace",
+      "drive": "motion",
+      "amount": 0.25,
+      "role": "mid"
+    },
+    {
+      "layer": "ash",
+      "target": "turbulence",
+      "drive": "motion",
+      "amount": 0.3,
+      "role": "mid"
+    },
+    {
+      "layer": "embers",
+      "target": "brightness",
+      "drive": "detail",
+      "amount": 0.45,
+      "role": "fine"
+    },
+    {
+      "layer": "explosions",
+      "target": "rate",
+      "drive": "intensity",
+      "amount": 0.4,
+      "role": "section"
+    }
+  ],
+  "events": [
+    {
+      "layer": "machines",
+      "on": "music:drop",
+      "action": "burst",
+      "quantize": "bar",
+      "cooldown": 30,
+      "params": {}
+    },
+    {
+      "layer": "sky",
+      "on": "music:drop",
+      "action": "wave",
+      "quantize": "bar",
+      "cooldown": 45,
+      "params": {
+        "strength": 0.4
+      }
+    }
+  ]
+}
