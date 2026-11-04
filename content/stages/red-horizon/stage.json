@@ -1656,7 +1656,6 @@
     ],
     "bindings": [
       {"layer": "embers", "target": "brightness", "feature": "game.clearWave", "amount": 0.5, "category": "particles", "attackMs": 200, "releaseMs": 2600},
-      {"layer": "explosions", "target": "rate", "feature": "game.heat", "amount": 0.5, "curve": "linear", "attackMs": 1500, "releaseMs": 6000},
       {"layer": "drones", "target": "search", "feature": "game.heat", "amount": 0.3, "category": "lighting", "attackMs": 1500, "releaseMs": 6000},
       {"layer": "machines", "target": "pace", "feature": "game.danger", "amount": 0.2, "attackMs": 1500, "releaseMs": 3000}
     ]
