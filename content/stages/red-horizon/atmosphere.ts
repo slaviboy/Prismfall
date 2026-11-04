@@ -22,7 +22,7 @@ import {
   vec3,
   vec4,
 } from 'three/tsl';
-import { additiveFog, floatUniform, linear, seeded, z, zColor, zVec3, type ComponentFactory, type EnvironmentContext } from '@prismfall/sdk';
+import { additiveFog, clearFront, floatUniform, linear, seeded, z, zColor, zVec3, type ComponentFactory, type EnvironmentContext } from '@prismfall/sdk';
 import { GROUND_Y, VIEWER, backdropDir, backdropTexture, claimLight, hazeDepth, lin, notice, release, setLight, world, zHaze, type F, type Haze, type V3, type World } from './shared';
 
 /**
@@ -106,7 +106,7 @@ export class SmokePool {
   readonly capacity: number;
   private dirty = false;
 
-  constructor(ctx: EnvironmentContext, capacity: number, backdrop: DataTexture | null, haze: Haze, wind: [number, number]) {
+  constructor(ctx: EnvironmentContext, capacity: number, backdrop: DataTexture | null, haze: Haze, wind: [number, number], wave: { glow: number; color: string } = { glow: 0, color: '#ff6a2a' }) {
     this.capacity = capacity;
     const geo = new PlaneGeometry(1, 1);
     const mk = () => {
@@ -194,7 +194,11 @@ export class SmokePool {
     const edge = float(1).sub(density).mul(0.5).add(0.15);
     const lowK = exp(vRise.div(-7));
     const fireK = vHeat.mul(exp(vAge.mul(-9))).mul(lowK).mul(smoothstep(0.3, 1, n)).mul(c.y.mul(-0.35).add(0.75));
-    const col = soot.mul(n.mul(0.5).add(0.6)).add(sky.mul(edge).mul(0.16)).add(lin('#ff6a24').mul(fireK.mul(0.42)));
+    let col = soot.mul(n.mul(0.5).add(0.6)).add(sky.mul(edge).mul(0.16)).add(lin('#ff6a24').mul(fireK.mul(0.42)));
+    if (wave.glow > 0) {
+      // The clear front glows through the smoke as it passes (denser billows hold more of it).
+      col = col.add(lin(wave.color).mul(clearFront(vWorld as unknown as V3).mul(density.mul(0.6).add(0.4)).mul(wave.glow * 0.3)));
+    }
     const tau = hazeDepth(vWorld as unknown as V3, haze);
     const fogged = mix(sky, col, exp(tau.negate()));
     m.colorNode = vec4(fogged, alpha.mul(exp(tau.mul(-0.3))));
@@ -257,6 +261,8 @@ const smokeSchema = z.object({
   wind: z.tuple([z.number(), z.number()]).default([1.6, -0.4]),
   capacity: z.number().int().min(64).max(4000).default(1600),
   haze: zHaze,
+  /** The world clear wave (SDK 1.5): the smoke glows (`glow`, in `color`) where a front passes. */
+  clearWave: z.object({ glow: z.number().min(0).default(0), color: zColor.default('#ff6a2a') }).prefault({}),
   seed: z.number().default(5),
 });
 
@@ -269,7 +275,7 @@ export const smokeComponent: ComponentFactory<z.infer<typeof smokeSchema>> = {
     const w = world(ctx);
     const backdrop = await backdropTexture(w);
     const k = ctx.quality.detail === 'low' ? 0.5 : ctx.quality.detail === 'medium' ? 0.75 : 1;
-    const pool = new SmokePool(ctx, Math.round(p.capacity * k), backdrop, p.haze, p.wind);
+    const pool = new SmokePool(ctx, Math.round(p.capacity * k), backdrop, p.haze, p.wind, p.clearWave);
     pools.set(w, pool);
     const rand = seeded(p.seed * 911 + 3);
     const carry = p.sources.map(() => rand());
@@ -350,6 +356,8 @@ const fireSchema = z.object({
     .default([]),
   brightness: z.number().min(0).default(1),
   bloom: z.number().min(0).default(0.12),
+  /** The world clear wave (SDK 1.5): each fire flares (share of its brightness) as a front reaches it. */
+  clearWave: z.number().min(0).default(0),
   seed: z.number().default(9),
 });
 
@@ -405,7 +413,8 @@ export const firesComponent: ComponentFactory<z.infer<typeof fireSchema>> = {
     const body = smoothstep(width, width.mul(0.35), u.x.sub(0.5).abs()).mul(smoothstep(0, 0.08, u.y)).mul(smoothstep(1, 0.55, u.y.add(flick.mul(0.35))));
     const pulse = mx_noise_float(vec3(t.mul(2.4), seed, 3)).mul(0.25).add(0.85);
     const core = mix(vCol.rgb, lin('#ffd890'), smoothstep(0.55, 0.95, body).mul(smoothstep(0.6, 0.1, u.y)));
-    const glow = core.mul(body).mul(pulse).mul(p.brightness * 1.4);
+    const flare = p.clearWave > 0 ? clearFront(a.xyz as unknown as V3).mul(p.clearWave).add(1) : float(1);
+    const glow = core.mul(body).mul(pulse).mul(flare).mul(p.brightness * 1.4);
     const col = additiveFog(glow as unknown as V3);
     m.colorNode = vec4(col, 1);
     m.blending = AdditiveBlending;

@@ -21,7 +21,7 @@ import {
   vec4,
   frontFacing,
 } from 'three/tsl';
-import { colorUniform, floatUniform, noBloom, seeded, z, zColor, type ComponentFactory } from '@prismfall/sdk';
+import { clearFront, colorUniform, floatUniform, noBloom, seeded, z, zColor, type ComponentFactory } from '@prismfall/sdk';
 import { canopyLight, canopyTime, loadTexture, zCanopy, zSun } from './env';
 
 /**
@@ -48,6 +48,8 @@ const schema = z.object({
   wind: z.number().min(0).default(0.08),
   /** Share of the plants drawn at each detail level (low, medium, high, ultra). */
   share: z.tuple([z.number(), z.number(), z.number(), z.number()]).default([0.3, 0.6, 1, 1]),
+  /** The world clear wave (SDK 1.5): leaves catch a passing sheen of light (`sheen`, in `color`). */
+  clearWave: z.object({ sheen: z.number().min(0).default(0), color: zColor.default('#fff4c8') }).prefault({}),
   seed: z.number().default(5),
 });
 type Params = z.infer<typeof schema>;
@@ -71,6 +73,7 @@ export const jungleFoliage: ComponentFactory<Params> = {
     const sky = colorUniform(p.sky);
     const ground = colorUniform(p.ground);
     const tint = colorUniform(p.tint);
+    const waveColor = colorUniform(p.clearWave.color);
     const L = vec3(...p.sun.direction).normalize();
     const share = p.share[['low', 'medium', 'high', 'ultra'].indexOf(ctx.quality.detail)] ?? 1;
     const rand = seeded(p.seed);
@@ -110,7 +113,10 @@ export const jungleFoliage: ComponentFactory<Params> = {
       // Self-shading: the heart of a clump is darker than its outer leaves.
       const occl = smoothstep(0.0, 0.55, h).mul(0.55).add(0.45);
       const sunLight = sunColor.mul(ndl.add(back)).mul(dapple).mul(p.sun.intensity).mul(u.sun);
-      m.colorNode = base.rgb.mul(tint).mul(amb.mul(occl).add(sunLight.mul(occl.mul(0.6).add(0.4))));
+      const leaf = base.rgb.mul(tint);
+      const lit = leaf.mul(amb.mul(occl).add(sunLight.mul(occl.mul(0.6).add(0.4))));
+      // The clear front: a sheen of light running through the leaves (outer leaves more than the heart).
+      m.colorNode = p.clearWave.sheen > 0 ? lit.add(leaf.mul(waveColor).mul(clearFront(wp).mul(occl).mul(p.clearWave.sheen))) : lit;
       // Crisp cut-out leaves; the dither only shows while the world fades in or out.
       m.opacityNode = step(0.5, base.a).mul(u.presence);
       m.alphaHash = true;

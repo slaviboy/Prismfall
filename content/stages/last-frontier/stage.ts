@@ -16,7 +16,7 @@ import { frontierTown } from './town';
  * through the public SDK; the components live in this folder.
  */
 export default defineStage({
-  sdkVersion: '1.2.0',
+  sdkVersion: '1.5.0',
   register(sdk) {
     sdk.components.register(frontierSky as unknown as ComponentFactory);
     sdk.components.register(frontierGround as unknown as ComponentFactory);

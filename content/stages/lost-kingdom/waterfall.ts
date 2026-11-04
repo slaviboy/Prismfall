@@ -40,7 +40,7 @@ import {
   vec4,
   asin,
 } from 'three/tsl';
-import { colorUniform, floatUniform, noBloom, scaledCount, seeded, z, zColor, zVec3, type ComponentFactory } from '@prismfall/sdk';
+import { clearFront, colorUniform, floatUniform, noBloom, scaledCount, seeded, z, zColor, zVec3, type ComponentFactory } from '@prismfall/sdk';
 import { canopyLight, loadTexture, zCanopy, zSun, type V3 } from './env';
 
 /**
@@ -76,6 +76,8 @@ const schema = z.object({
   spray: z.number().min(0).default(1),
   puffs: z.number().int().min(0).max(400).default(90),
   droplets: z.number().int().min(0).max(4000).default(900),
+  /** The world clear wave (SDK 1.5): the spray billows light up and lift as a front passes. */
+  clearWave: z.object({ spray: z.number().min(0).default(0) }).prefault({}),
   seed: z.number().default(3),
 });
 type Params = z.infer<typeof schema>;
@@ -254,8 +256,10 @@ export const jungleWaterfall: ComponentFactory<Params> = {
       const soft = smoothstep(1.0, 0.0, length(q)).pow(1.6);
       const wisp = mx_noise_float(vec3(q.mul(1.6), a.z.mul(30).add(ph))).mul(0.5).add(0.5);
       const fade = smoothstep(0.0, 0.12, ph).mul(smoothstep(1.0, 0.45, ph));
-      m.colorNode = vec4(colorUniform(p.foam).mul(light(center, null, 2.2)).mul(0.8), 1);
-      m.opacityNode = soft.mul(wisp.mul(0.6).add(0.4)).mul(fade).mul(0.2).mul(u.spray).mul(u.presence);
+      // The clear front lights the spray as it passes (and lifts it a little).
+      const front = p.clearWave.spray > 0 ? clearFront(center).mul(p.clearWave.spray) : float(0);
+      m.colorNode = vec4(colorUniform(p.foam).mul(light(center, null, 2.2)).mul(front.mul(0.6).add(0.8)), 1);
+      m.opacityNode = soft.mul(wisp.mul(0.6).add(0.4)).mul(fade).mul(0.2).mul(u.spray).mul(u.presence).mul(front.mul(0.5).add(1));
       m.transparent = true;
       m.depthWrite = false;
       m.blending = NormalBlending;
