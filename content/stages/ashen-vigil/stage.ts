@@ -86,7 +86,7 @@ import {
   viewportSharedTexture,
   viewZToPerspectiveDepth,
 } from 'three/tsl';
-import { colorUniform, defineStage, floatUniform, linear, seeded, z, zColor, zVec3, type ComponentFactory, type EnvironmentComponent, type EnvironmentContext } from '@prismfall/sdk';
+import { clearFront, clearFrontMotion, colorUniform, defineStage, floatUniform, frameUniforms, linear, seeded, z, zColor, zVec3, type ComponentFactory, type EnvironmentComponent, type EnvironmentContext } from '@prismfall/sdk';
 
 /**
  * Ashen Vigil: a dry salt pan at dusk (a real photograph) under a smoke-reddened sky, with distant
@@ -437,10 +437,27 @@ const skySchema = z.object({
       land: z.number().min(0).default(0.12),
     })
     .prefault({}),
+  /**
+   * The clear wave (SDK 1.5): glitter in the salt crust as a clear's front runs out over the pan,
+   * a soft sheen with it, and a warm lift low over the horizon when a big clear's front gets there
+   * (`horizon`: the distance at which the horizon is taken to be).
+   */
+  wave: z
+    .object({
+      color: zColor.default('#ffd2a0'),
+      glitter: z.number().min(0).default(0.12),
+      sheen: z.number().min(0).default(0.035),
+      sky: z.number().min(0).default(0.06),
+      horizon: z.number().positive().default(470),
+    })
+    .prefault({}),
   seed: z.number().default(1),
 });
 
 type SkyParams = z.infer<typeof skySchema>;
+
+/** The photo's eye height above the salt pan (m): where its ground pixels lie, for the clear wave. */
+const PAN_DEPTH = 1.8;
 
 const ashenSky: ComponentFactory<SkyParams> = {
   type: 'ashenSky',
@@ -586,6 +603,19 @@ const ashenSky: ComponentFactory<SkyParams> = {
     glow = glow.mul(u.glow) as V3;
     sky = sky.add(glow) as V3;
     land = land.add(colorUniform(p.flash.halo).mul(glowLand.mul(u.glow).mul(p.flash.land).mul(smoothstep(-6, 0, elev)))) as V3;
+
+    // The clear wave (SDK 1.5): as a clear's front runs out over the salt pan, the crust glitters
+    // in its band (the photo's ground, placed on a plane below the eye: fine grains catch the low
+    // sun); when a big clear's front reaches the horizon, the smoke low over it lifts warm. Light only.
+    const viewDir = normalize(positionWorld.sub(cameraPosition));
+    const down = max(viewDir.y.negate(), 0.012);
+    const panPoint = cameraPosition.add(viewDir.mul(float(PAN_DEPTH).div(down)));
+    const panFront = clearFront(panPoint as unknown as V3).min(1.2);
+    const grain = mx_noise_float(panPoint.mul(vec3(5.5, 1, 5.5)).add(vec3(0, time.mul(0.02), 0))).mul(0.5).add(0.5);
+    const glitter = smoothstep(0.62, 0.92, grain).mul(smoothstep(-1.5, -6, elev).mul(0.7).add(0.3));
+    land = land.add(colorUniform(p.wave.color).mul(panFront.mul(glitter.mul(p.wave.glitter).add(p.wave.sheen))).mul(step(elev, 0.2))) as V3;
+    const horizonPoint = cameraPosition.add(normalize(vec3(viewDir.x, 0, viewDir.z).add(vec3(0, 0, -1e-4))).mul(p.wave.horizon));
+    sky = sky.add(colorUniform(p.wave.color).mul(clearFront(horizonPoint as unknown as V3).min(1.2).mul(horizonness).mul(p.wave.sky))) as V3;
 
     const color = mix(sky, land, landSoft);
     const material = new MeshBasicNodeMaterial();
@@ -1643,6 +1673,11 @@ const nuclearDetonations: ComponentFactory<DetParams> = {
           if (pending === null) pending = at;
         }
       },
+      onCall(call) {
+        // Manifest call-ins (a drop): one detonation, after the same irregular delay as a QUAD's.
+        if (!p.clears || call.action !== 'burst') return;
+        if (pending === null) pending = time.value + 1.4 + rand() * 2.8;
+      },
       setPresence(value) {
         u.presence.value = value;
       },
@@ -1745,7 +1780,9 @@ const smokeDrift: ComponentFactory<SmokeParams> = {
     }
     const base = colorUniform(p.color).mul(mix(float(1), float(0.22), u.dusk));
     const lit = colorUniform(p.lit).mul(smoothstep(0.1, -0.5, q.y).mul(0.35).mul(u.dusk.mul(0.6).add(0.4)).add(flashLight.mul(0.9)));
-    const color = base.add(lit).mul(n2.y.mul(0.4).add(0.8));
+    // A big clear's front lights the smoke as it passes through the layer (light only).
+    const waveLit = colorUniform('#ffc898').mul(clearFront(positionWorld as unknown as V3).min(1.2).mul(0.1));
+    const color = base.add(lit).add(waveLit).mul(n2.y.mul(0.4).add(0.8));
     const material = new SpriteNodeMaterial();
     material.positionNode = centre;
     material.scaleNode = vec2(iB.x, iB.y.mul(gustEnv.mul(0.3).add(1)));
@@ -1826,7 +1863,13 @@ const ashfall: ComponentFactory<AshParams> = {
     const origin = vec3(p.center[0] - p.size[0] / 2, p.center[1] - p.size[1] / 2, p.center[2] - p.size[2] / 2);
     const raw = iA.xyz.mul(size).add(vel.mul(t)).add(wobble).add(vec3(gust.x, 0, gust.y).mul(push));
     const local = vec3(fract(raw.x.div(size.x)), fract(raw.y.div(size.y)), fract(raw.z.div(size.z)));
-    const pos = origin.add(local.mul(size));
+    const home = origin.add(local.mul(size));
+    // A clear's front gusts through the falling ash: flakes in its band are thrown out from the
+    // board and up a little (motion), and catch the low sun as it passes (light).
+    const away = normalize(vec3(home.x.sub(frameUniforms.waveOrigin.x), 0, home.z.sub(frameUniforms.waveOrigin.z)).add(vec3(1e-4, 0, 0)));
+    const gustW = clearFrontMotion(home as unknown as V3).min(1.2);
+    const pos = home.add(away.mul(gustW.mul(2.4))).add(vec3(0, gustW.mul(0.8), 0));
+    const catchLight = clearFront(home as unknown as V3).min(1.2);
     // Fade near the volume's faces so wrapping never pops.
     const edge = smoothstep(0, 0.06, local).mul(smoothstep(1, 0.94, local));
     const fadeEdges = edge.x.mul(edge.y).mul(edge.z);
@@ -1837,7 +1880,7 @@ const ashfall: ComponentFactory<AshParams> = {
     const flakeShape = smoothstep(0.5, 0.18, length(q).add(ragged));
     // Grey ash, catching a little warm light from the horizon; darker as night falls.
     const glow = shared.flashValues.length > 0 ? max(shared.flashes.element(float(0).toInt() as Node<'int'>).w, 0) : float(0);
-    const tone = mix(colorUniform(p.color), colorUniform(p.dark), iB.z.mul(0.6)).mul(mix(float(1), float(0.3), u.dusk)).add(vec3(1, 0.6, 0.35).mul(glow.mul(0.25)));
+    const tone = mix(colorUniform(p.color), colorUniform(p.dark), iB.z.mul(0.6)).mul(mix(float(1), float(0.3), u.dusk)).add(vec3(1, 0.6, 0.35).mul(glow.mul(0.25))).add(vec3(1, 0.78, 0.55).mul(catchLight.mul(0.32)));
     const alpha = flakeShape.mul(u.opacity).mul(fadeEdges).mul(u.presence);
     const material = new SpriteNodeMaterial();
     material.positionNode = pos;
@@ -1870,8 +1913,9 @@ const ashfall: ComponentFactory<AshParams> = {
 };
 
 export default defineStage({
-  // 1.3: frameUniforms.screenEffects (heat-wave refraction) and ctx.shakeWorld (the shock).
-  sdkVersion: '1.3.0',
+  // 1.3: frameUniforms.screenEffects (heat-wave refraction) and ctx.shakeWorld (the shock); 1.5: the
+  // clear wave (clearFront) and call-ins (onCall).
+  sdkVersion: '1.5.0',
   register(sdk) {
     sdk.components.register(ashenSky as unknown as ComponentFactory);
     sdk.components.register(nuclearDetonations as unknown as ComponentFactory);
