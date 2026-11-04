@@ -97,6 +97,8 @@ In play, the mouse wheel zooms the camera. With developer tools enabled (Setting
 
 **Level creator** (main menu): make your own levels from any world, any world's music (or your own files from the Music Room) and any block design. Levels are saved with your settings. Play one and it becomes the world in the mode setup, until you choose another world or press "Play … as it is". **Block design** (Settings → Graphics) uses one design in every world.
 
+**Background intensity** (Settings → World): how alive the world around the board is. Choose Subtle, Balanced (each world as authored), Immersive or Cinematic. Custom gives seven sliders: environmental animation, music reactivity, particles, lighting, event frequency, creature activity and atmosphere. The board and blocks never change. Reduced motion, Reduce flashing and World events are on the same tab.
+
 **Mouse control** (Settings → Gameplay, off by default): move the mouse and the piece, with its ghost, follows the pointer across the board. Left click hard drops, right click rotates clockwise and middle click holds. The keyboard and controllers keep working; the mouse steers again as soon as it moves or clicks.
 
 ## Saves and data
