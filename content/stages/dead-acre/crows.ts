@@ -1,7 +1,7 @@
 import { BufferAttribute, BufferGeometry, DoubleSide, InstancedBufferAttribute, Mesh, MeshBasicNodeMaterial, Vector2 } from 'three/webgpu';
 import { Fn, abs, atan, attribute, cameraPosition, cos, dot, exp, float, instancedBufferAttribute, mix, mrt, normalGeometry, normalize, positionGeometry, pow, select, sin, smoothstep, step, uniform, varyingProperty, vec3, vec4 } from 'three/tsl';
 import { floatUniform, seeded, z, zVec3, type ComponentFactory } from '@prismfall/sdk';
-import { backdropSampler, backdropTexture, fogDepth, lampLight, release, revealMask, shared, zBackdrop, zFog, type F, type V3 } from './shared';
+import { backdropSampler, backdropTexture, fogDepth, frontCrossing, lampLight, release, revealMask, shared, zBackdrop, zFog, type F, type V3 } from './shared';
 
 const groupSchema = z.object({
   /** Centre of the circling (world). */
@@ -238,6 +238,7 @@ export const crowsComponent: ComponentFactory<Params> = {
     const restless = seeded(p.seed * 31 + 1);
     let nextRestless = p.restless[0] + restless() * (p.restless[1] - p.restless[0]);
     let lastShared = s.startle.at;
+    let lastFrame = -1;
     const startle = (side: number) => {
       if (reduced) return;
       const now = clock.value;
@@ -266,9 +267,19 @@ export const crowsComponent: ComponentFactory<Params> = {
           lastShared = s.startle.at;
           startle(s.startle.side);
         }
+        // A big clear's front scares each flock as it reaches it (a triple or more), so the burst
+        // runs out from the board: the near flock first, the far one a moment later.
+        const o = ctx.uniforms.waveOrigin.value;
+        if (lastFrame >= 0) {
+          for (const gr of p.groups) {
+            const k = frontCrossing(ctx, Math.hypot(gr.center[0] - o.x, gr.center[1] - o.y, gr.center[2] - o.z), lastFrame, frame.time);
+            if (k >= 0.6) startle(Math.sign(gr.center[0]));
+          }
+        }
+        lastFrame = frame.time;
       },
       onGameEvent(ev) {
-        if ((ev.kind === 'clear' && ev.lines >= 3) || ev.kind === 'levelUp') startle(0);
+        if (ev.kind === 'levelUp') startle(0);
       },
       setPresence(v) {
         u.presence.value = v;

@@ -11,7 +11,7 @@ import { lampsComponent } from './lamps';
  * public SDK; the components live in this folder.
  */
 export default defineStage({
-  sdkVersion: '1.2.0',
+  sdkVersion: '1.5.0',
   register(sdk) {
     sdk.components.register(hordeComponent as unknown as ComponentFactory);
     sdk.components.register(fogComponent as unknown as ComponentFactory);

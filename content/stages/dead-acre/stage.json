@@ -310,6 +310,7 @@
             "size": 0.07,
             "brightness": 0.85,
             "seed": 41,
+            "clearWave": 1.0,
             "style": "glow",
             "glow": {
               "color": "#a6ffc8",
@@ -466,6 +467,7 @@
             "size": 0.07,
             "brightness": 0.85,
             "seed": 42,
+            "clearWave": 1.0,
             "style": "glow",
             "glow": {
               "color": "#a6ffc8",
@@ -505,6 +507,24 @@
         "minDetail": "low"
       },
       {
+        "id": "bats",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/bat.glb",
+          "render": "solid",
+          "animation": { "clip": "ArmatureAction", "speed": 1.2, "vary": 0.15 },
+          "exposure": 0.6,
+          "tint": "#b0aaa4",
+          "instances": [
+            { "position": [-40, 10, -40], "scale": 1.1, "snapToGround": false, "pass": true },
+            { "position": [40, 10, -40], "scale": 1.0, "snapToGround": false, "pass": true },
+            { "position": [-30, 12, -50], "scale": 1.15, "snapToGround": false, "pass": true }
+          ],
+          "pass": { "duration": 3.6, "distance": [7, 46], "height": 0.4, "margin": 0.22, "direction": "in", "side": "alternate" }
+        },
+        "minDetail": "medium"
+      },
+      {
         "id": "ground-fog",
         "type": "deadAcreFog",
         "params": {
@@ -517,6 +537,29 @@
       }
     ]
   },
+  "clearWave": {
+    "near": 6,
+    "far": 220,
+    "travel": 3.4
+  },
+  "sectionStates": {
+    "fade": 5,
+    "states": [
+      { "section": ["drop"], "layer": "ground-fog", "target": "density", "scale": 0.85, "anticipate": 0.4 },
+      { "section": ["break", "outro"], "layer": "ground-fog", "target": "density", "scale": 1.25 },
+      { "section": ["drop"], "layer": "horde", "target": "tempo", "scale": 1.2, "anticipate": 0.5 },
+      { "section": ["break"], "layer": "horde", "target": "tempo", "scale": 0.85 },
+      { "section": ["drop"], "layer": "shamblers", "target": "pace", "scale": 1.25, "anticipate": 0.5 },
+      { "section": ["drop"], "layer": "shambler-women", "target": "pace", "scale": 1.25, "anticipate": 0.5 },
+      { "section": ["break"], "layer": "shamblers", "target": "pace", "scale": 0.8 },
+      { "section": ["break"], "layer": "shambler-women", "target": "pace", "scale": 0.8 }
+    ]
+  },
+  "events": [
+    { "layer": "bats", "on": "section:drop", "quantize": "beat", "cooldown": 30, "action": "pass" },
+    { "layer": "bats", "on": "section:drop", "quantize": "bar", "cooldown": 30, "action": "pass" },
+    { "layer": "bats", "on": "combo>=4", "quantize": "beat", "cooldown": 25, "action": "pass" }
+  ],
   "reactivity": {
     "profiles": [],
     "bindings": []
@@ -566,7 +609,7 @@
     "type": "always"
   },
   "requires": {
-    "sdk": "^1.2.0"
+    "sdk": "^1.5.0"
   },
   "thumbnail": "previews/thumb.jpg"
 }

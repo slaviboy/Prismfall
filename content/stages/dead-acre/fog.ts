@@ -1,6 +1,6 @@
 import { BufferAttribute, BufferGeometry, Mesh, MeshBasicNodeMaterial, NormalBlending } from 'three/webgpu';
-import { abs, atan, attribute, cameraPosition, exp, float, length, max, mix, mrt, positionWorld, smoothstep, texture, vec2, vec3, vec4 } from 'three/tsl';
-import { floatUniform, z, zVec3, type ComponentFactory } from '@prismfall/sdk';
+import { abs, atan, attribute, cameraPosition, exp, float, length, max, mix, mrt, normalize, positionWorld, smoothstep, texture, vec2, vec3, vec4 } from 'three/tsl';
+import { clearFront, clearFrontMotion, floatUniform, frameUniforms, z, zVec3, type ComponentFactory } from '@prismfall/sdk';
 import { backdropSampler, backdropTexture, lampLight, noiseTexture, release, shared, zBackdrop, ORIGIN_Z, type F, type V3 } from './shared';
 
 const schema = z.object({
@@ -79,7 +79,12 @@ export const fogComponent: ComponentFactory<Params> = {
     const dir = toP.div(dist.max(1e-3));
     const driftT = t.mul(u.drift).mul(ctx.quality.reducedMotion ? 0.4 : 1);
     const flow = vec2(p.drift[0], p.drift[1]).mul(driftT).mul(h01.mul(0.2).add(0.9));
-    const uvA = positionWorld.xz.div(p.scale).add(flow.div(p.scale));
+    // A clear's front rolls through the fog: the banks in its band are pushed out from the board
+    // (motion) and lift with pale light as it passes (light), then settle back.
+    const away = normalize(vec2(positionWorld.x.sub(frameUniforms.waveOrigin.x), positionWorld.z.sub(frameUniforms.waveOrigin.z)).add(vec2(0.0001, 0)));
+    const push = clearFrontMotion(positionWorld as unknown as V3).min(1.2).mul(3.5);
+    const wave = clearFront(positionWorld as unknown as V3).min(1.2);
+    const uvA = positionWorld.xz.sub(away.mul(push)).div(p.scale).add(flow.div(p.scale));
     const nA = texture(noise, uvA).r;
     const nB = texture(noise, uvA.mul(2.7).add(vec2(0.37, 0.71)).sub(flow.div(p.scale * 1.6))).g;
     const nC = texture(noise, uvA.mul(0.45).add(vec2(0.13, 0.29))).b;
@@ -91,7 +96,7 @@ export const fogComponent: ComponentFactory<Params> = {
     const dens = bank.mul(p.density).add(float(p.mist).mul(float(1).sub(h01))).mul(u.density);
     const slab = p.top / layers;
     const path = float(slab).div(max(abs(dir.y), 0.02));
-    let alpha: F = float(1).sub(exp(dens.mul(path).negate())).min(0.4) as F;
+    let alpha: F = float(1).sub(exp(dens.mul(path).negate())).mul(wave.mul(0.6).add(1)).min(0.45) as F;
     // Fade in from just below the viewer and out towards the far field (the photo carries on).
     alpha = alpha.mul(smoothstep(2.5, 9, dist).mul(smoothstep(4, 30, dist).mul(0.35).add(0.65))).mul(smoothstep(R, R * 0.35, dist)) as F;
     // Sheets seen edge-on at the horizon would show as lines; the photo carries the fog there.
@@ -108,7 +113,7 @@ export const fogComponent: ComponentFactory<Params> = {
     const glow = backdrop.at(turn, float(1.2));
     const low = backdrop.at(turn, float(-2.5));
     const col = mix(low, glow, h01.mul(0.35).add(0.6)).mul(p.brightness).mul(bank.mul(0.25).add(0.85));
-    const lit = col.add(lampLight(s, positionWorld as V3, null).mul(p.lampScatter * 0.08));
+    const lit = col.add(lampLight(s, positionWorld as V3, null).mul(p.lampScatter * 0.08)).add(vec3(0.62, 0.6, 0.55).mul(wave.mul(0.14)));
 
     const material = new MeshBasicNodeMaterial();
     material.colorNode = vec4(lit, 1);
