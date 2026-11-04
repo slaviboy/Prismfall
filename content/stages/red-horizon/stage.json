@@ -15,7 +15,7 @@
   "recommendedQuality": "high",
   "module": "stage.ts",
   "requires": {
-    "sdk": "^1.2.0"
+    "sdk": "^1.5.0"
   },
   "palette": {
     "accent": "#ff3a1e",
@@ -101,6 +101,28 @@
       "L": "#f0701e"
     }
   },
+  "clearWave": {
+    "far": 900,
+    "travel": 3.4
+  },
+  "sectionStates": {
+    "fade": 3,
+    "states": [
+      {"section": ["drop"], "layer": "machines", "target": "pace", "scale": 1.25, "anticipate": 0.3},
+      {"section": ["drop"], "layer": "walkers", "target": "pace", "scale": 1.2, "anticipate": 0.3},
+      {"section": ["drop"], "layer": "explosions", "target": "rate", "scale": 1.25, "anticipate": 0.5},
+      {"section": ["drop"], "layer": "embers", "target": "brightness", "scale": 1.3, "anticipate": 0.4},
+      {"section": ["drop"], "layer": "smoke", "target": "rate", "scale": 1.2},
+      {"section": ["break"], "layer": "machines", "target": "pace", "scale": 0.75},
+      {"section": ["break"], "layer": "walkers", "target": "pace", "scale": 0.8},
+      {"section": ["break"], "layer": "explosions", "target": "rate", "scale": 0.6},
+      {"section": ["break"], "layer": "embers", "target": "brightness", "scale": 0.7}
+    ]
+  },
+  "events": [
+    {"layer": "machines", "on": "clear>=4", "quantize": "beat", "cooldown": 10, "action": "burst"},
+    {"layer": "machines", "on": "b2b", "quantize": "beat", "cooldown": 14, "action": "burst"}
+  ],
   "environment": {
     "layers": [
       {
@@ -713,6 +735,10 @@
         "id": "smoke",
         "type": "redHorizonSmoke",
         "params": {
+          "clearWave": {
+            "glow": 0.5,
+            "color": "#ff5a20"
+          },
           "wind": [
             1.6,
             -0.4
@@ -942,6 +968,7 @@
         "id": "fires",
         "type": "redHorizonFires",
         "params": {
+          "clearWave": 0.8,
           "fires": [
             {
               "at": [
@@ -1539,6 +1566,10 @@
         "id": "ash",
         "type": "particles",
         "params": {
+          "clearWave": {
+            "brightness": 0.2,
+            "stir": 1.2
+          },
           "count": 900,
           "center": [
             0,
@@ -1573,6 +1604,10 @@
         "id": "embers",
         "type": "particles",
         "params": {
+          "clearWave": {
+            "brightness": 1.5,
+            "stir": 1.4
+          },
           "count": 420,
           "center": [
             10,
@@ -1616,8 +1651,15 @@
     ]
   },
   "reactivity": {
-    "profiles": [],
-    "bindings": []
+    "profiles": [
+      {"name": "clear-gust", "layers": ["embers", "ash"]}
+    ],
+    "bindings": [
+      {"layer": "embers", "target": "brightness", "feature": "game.clearWave", "amount": 0.5, "category": "particles", "attackMs": 200, "releaseMs": 2600},
+      {"layer": "explosions", "target": "rate", "feature": "game.heat", "amount": 0.5, "curve": "linear", "attackMs": 1500, "releaseMs": 6000},
+      {"layer": "drones", "target": "search", "feature": "game.heat", "amount": 0.3, "category": "lighting", "attackMs": 1500, "releaseMs": 6000},
+      {"layer": "machines", "target": "pace", "feature": "game.danger", "amount": 0.2, "attackMs": 1500, "releaseMs": 3000}
+    ]
   },
   "effects": {
     "lineClear": {

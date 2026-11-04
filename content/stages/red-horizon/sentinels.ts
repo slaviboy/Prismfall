@@ -5,7 +5,7 @@ import { BeamSet, GlintSet } from './optics';
 import { BoneTexture, RigSolver, blendSkinNode, mergeSkinned, parseRig, slotCount, twoBone, wrapAngle, type BonePose } from './rig';
 import { SensorController } from './sensor';
 import { GroundShadows } from './shadows';
-import { GROUND_Y, TAU, VIEWER, backdropTexture, envTexture, release, stageTexture, world, type F, type World, zHaze } from './shared';
+import { GROUND_Y, TAU, VIEWER, backdropTexture, envTexture, notice, release, stageTexture, world, type F, type World, zHaze } from './shared';
 
 const zXZ = z.tuple([z.number(), z.number()]);
 
@@ -72,6 +72,12 @@ const schema = z.object({
    */
   shadows: z.object({ contact: z.number().min(0).max(1).default(0.6), cast: z.number().min(0).max(1).default(0.85) }).prefault({}),
   haze: zHaze,
+  /**
+   * Call-ins (SDK 1.5): any call (`burst` in the manifest) is a loud moment at the board. The machines
+   * that can see it turn their optics on the playfield and stare (`alert.weight` scales how many do,
+   * like a nearby explosion would); `alert.halt` stops the patrols in their tracks for a moment.
+   */
+  alert: z.object({ weight: z.number().min(0).max(2).default(1.2), halt: z.number().min(0).max(4).default(1.2) }).prefault({}),
   seed: z.number().default(3),
 });
 
@@ -720,10 +726,28 @@ export const sentinelsComponent: ComponentFactory<Params> = {
       P.solve(root, textures[a.lod]!, a.slot);
     };
 
+    // Bindable walking pace (section states quicken the squads in drops); sensors keep real time.
+    const pace = floatUniform(1);
+    let walkClock = 0;
+    let halted = 0;
+    let haltK = 0;
+    // Alarm: after a call-in every machine's optics flare for a few seconds (light channel of the
+    // world events, so flash reduction and calm world events soften it).
+    let alarm = 0;
+    let alarmTarget = 0;
     let clock = 0;
     const update = (dt: number): void => {
       clock += dt;
       w.time = clock;
+      // A halt eases the squads almost to a stop and back (no sudden freeze).
+      halted = Math.max(0, halted - dt);
+      haltK += ((halted > 0 ? 1 : 0) - haltK) * Math.min(1, dt * 2.5);
+      const walkRate = Math.max(0, pace.value) * (1 - haltK * 0.85);
+      const walkDt = dt * walkRate;
+      alarm += (alarmTarget - alarm) * Math.min(1, dt * 5);
+      alarmTarget *= Math.exp(-dt / 1.6);
+      const eyeLift = 1 + alarm * 0.9 * ctx.uniforms.waveLight.value;
+      walkClock += walkDt;
       frame++;
       stepBudget = Math.min(6, stepBudget + dt * 5);
       beams.begin();
@@ -733,7 +757,7 @@ export const sentinelsComponent: ComponentFactory<Params> = {
         a.px = a.x;
         a.pz = a.z;
         a.ph = a.heading;
-        a.visible = a.driver.step(a, clock, dt);
+        a.visible = a.driver.step(a, walkClock, walkDt);
         const tex = textures[a.lod]!;
         if (!a.visible) {
           tex.hide(a.slot);
@@ -843,7 +867,7 @@ export const sentinelsComponent: ComponentFactory<Params> = {
           a.solver.pointOn(id.head, eyeMid, lensW);
           const toCam = vPos.copy(camP).sub(lensW).normalize();
           const facing = Math.max(0, fwd.dot(toCam));
-          const gain = a.sensor.intensity * (0.18 + 0.82 * facing * facing) * 1.4;
+          const gain = a.sensor.intensity * (0.18 + 0.82 * facing * facing) * 1.4 * eyeLift;
           for (const e of eyes) {
             a.solver.pointOn(id.head, e.at, lensW);
             glints.add(lensW.x + toCam.x * 0.03, lensW.y + toCam.y * 0.03, lensW.z + toCam.z * 0.03, e.radius * 1.5 * a.scale, lensCol.x * gain, lensCol.y * gain, lensCol.z * gain);
@@ -866,10 +890,20 @@ export const sentinelsComponent: ComponentFactory<Params> = {
     };
     update(0);
 
+    const boardAt = new Vector3();
     return {
       object: group,
+      reactive: { pace },
       update(frameInfo) {
         update(Math.min(0.1, frameInfo.dt) * (reduced ? 0.7 : 1));
+      },
+      onCall(call) {
+        // The playfield did something loud: machines in view of it turn to look (their own reaction
+        // delay, stare and scan back, as for an explosion), and the squads pause for a moment.
+        boardAt.copy(ctx.uniforms.waveOrigin.value);
+        notice(w, boardAt.x, boardAt.y, boardAt.z, p.alert.weight * Math.min(1.5, Math.max(0.5, call.strength)));
+        halted = Math.max(halted, p.alert.halt);
+        alarmTarget = Math.min(1, Math.max(alarmTarget, 0.6 * call.strength + 0.2));
       },
       setPresence(v) {
         presence.value = v;

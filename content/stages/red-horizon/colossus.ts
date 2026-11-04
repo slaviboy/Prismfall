@@ -164,10 +164,13 @@ export const colossusComponent: ComponentFactory<Params> = {
 
     const ellipse = (cfg: Params['walkers'][number], th: number, out: Vector3) => out.set(cfg.center[0] + Math.cos(th) * cfg.radius[0], GROUND_Y, cfg.center[1] + Math.sin(th) * cfg.radius[1]);
 
+    // Bindable pace: the walkers stride quicker in drops (legs and ground speed together).
+    const pace = floatUniform(1);
     return {
       object: group,
+      reactive: { pace },
       update(frame) {
-        const dt = Math.min(0.1, frame.dt) * (reduced ? 0.7 : 1);
+        const dt = Math.min(0.1, frame.dt) * (reduced ? 0.7 : 1) * Math.max(0, pace.value);
         const t = frame.time;
         stepBudget = Math.min(3, stepBudget + dt);
         beams.begin();
