@@ -1,0 +1,25 @@
+{
+  "uid": "ea11069c86ce410d8c8e7423d87344de",
+  "name": "cave rocks",
+  "page": "https://sketchfab.com/3d-models/cave-rocks-ea11069c86ce410d8c8e7423d87344de",
+  "author": {
+    "name": "DJMaesen",
+    "username": "bumstrum",
+    "profile": "https://sketchfab.com/bumstrum"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"cave rocks\" by DJMaesen (https://sketchfab.com/3d-models/cave-rocks-ea11069c86ce410d8c8e7423d87344de), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 25809,
+  "vertices": 13178,
+  "animations": 0,
+  "files": [
+    {
+      "path": "cave-rocks.gltf.zip",
+      "md5": "b08ba942ac4fa84430d2c500c066656a",
+      "size": 37977631,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

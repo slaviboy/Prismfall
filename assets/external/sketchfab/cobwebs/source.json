@@ -1,0 +1,25 @@
+{
+  "uid": "2dd4798676d84bc7af5d2a8f5834563a",
+  "name": "Cobwebs Asset Pack",
+  "page": "https://sketchfab.com/3d-models/cobwebs-asset-pack-2dd4798676d84bc7af5d2a8f5834563a",
+  "author": {
+    "name": "Em Marshall",
+    "username": "emarshall",
+    "profile": "https://sketchfab.com/emarshall"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Cobwebs Asset Pack\" by Em Marshall (https://sketchfab.com/3d-models/cobwebs-asset-pack-2dd4798676d84bc7af5d2a8f5834563a), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 419,
+  "vertices": 286,
+  "animations": 0,
+  "files": [
+    {
+      "path": "cobwebs.gltf.zip",
+      "md5": "2fc3da487b25d574c23f1411dd328ddc",
+      "size": 2051869,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "uid": "993a5bada2bd4f34846051f497eb38b3",
+  "name": "Collapsed Gothic Chapel Ruin",
+  "page": "https://sketchfab.com/3d-models/collapsed-gothic-chapel-ruin-993a5bada2bd4f34846051f497eb38b3",
+  "author": {
+    "name": "Pigcraft",
+    "username": "s8819296",
+    "profile": "https://sketchfab.com/s8819296"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Collapsed Gothic Chapel Ruin\" by Pigcraft (https://sketchfab.com/3d-models/collapsed-gothic-chapel-ruin-993a5bada2bd4f34846051f497eb38b3), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 1818874,
+  "vertices": 909208,
+  "animations": 0,
+  "files": [
+    {
+      "path": "gothic-chapel.gltf.zip",
+      "md5": "708b367ec9333d431ccf14418b138619",
+      "size": 70596536,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

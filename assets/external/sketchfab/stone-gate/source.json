@@ -1,0 +1,25 @@
+{
+  "uid": "bb1b8cefb79b45b3b3c771cc0c61bcd7",
+  "name": "Ancient Stone Gate Ruin - Moss Covered",
+  "page": "https://sketchfab.com/3d-models/ancient-stone-gate-ruin-moss-covered-bb1b8cefb79b45b3b3c771cc0c61bcd7",
+  "author": {
+    "name": "Pigcraft",
+    "username": "s8819296",
+    "profile": "https://sketchfab.com/s8819296"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Ancient Stone Gate Ruin - Moss Covered\" by Pigcraft (https://sketchfab.com/3d-models/ancient-stone-gate-ruin-moss-covered-bb1b8cefb79b45b3b3c771cc0c61bcd7), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 1921381,
+  "vertices": 960609,
+  "animations": 0,
+  "files": [
+    {
+      "path": "stone-gate.gltf.zip",
+      "md5": "7c46ba603a461dd28bede2d3f20c1857",
+      "size": 77072808,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

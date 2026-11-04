@@ -1,0 +1,25 @@
+{
+  "uid": "6b46820aba4e4f7f82c1fa534e61724f",
+  "name": "Giant Huntsman Spider",
+  "page": "https://sketchfab.com/3d-models/giant-huntsman-spider-6b46820aba4e4f7f82c1fa534e61724f",
+  "author": {
+    "name": "SpiderBight [ArachnoBoy]",
+    "username": "vang807",
+    "profile": "https://sketchfab.com/vang807"
+  },
+  "licence": "CC Attribution-ShareAlike",
+  "licenceUrl": "http://creativecommons.org/licenses/by-sa/4.0/",
+  "attribution": "\"Giant Huntsman Spider\" by SpiderBight [ArachnoBoy] (https://sketchfab.com/3d-models/giant-huntsman-spider-6b46820aba4e4f7f82c1fa534e61724f), CC Attribution-ShareAlike",
+  "downloaded": "2026-11-03",
+  "faces": 34396,
+  "vertices": 17220,
+  "animations": 1,
+  "files": [
+    {
+      "path": "huntsman-spider.gltf.zip",
+      "md5": "c8a6f0b97e492b37b26a95e6116b6b28",
+      "size": 74803460,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

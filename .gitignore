@@ -77,3 +77,4 @@ assets/blender/exports/lost_kingdom/scans/*.glb
 assets/blender/source/environments/last_frontier_horse-rider-*.blend
 assets/blender/exports/frontier*/*.glb
 assets/blender/previews/last_frontier_*.png
+.claude/worktrees/

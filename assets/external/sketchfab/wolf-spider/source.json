@@ -1,0 +1,25 @@
+{
+  "uid": "6392e4cfb64d407182fdad2cea9e0abe",
+  "name": "Wolf Spider (Rigged) - (Rabidosa rabida)",
+  "page": "https://sketchfab.com/3d-models/wolf-spider-rigged-rabidosa-rabida-6392e4cfb64d407182fdad2cea9e0abe",
+  "author": {
+    "name": "Dreaming In Alternation 27",
+    "username": "DreamingInAlternation27",
+    "profile": "https://sketchfab.com/DreamingInAlternation27"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Wolf Spider (Rigged) - (Rabidosa rabida)\" by Dreaming In Alternation 27 (https://sketchfab.com/3d-models/wolf-spider-rigged-rabidosa-rabida-6392e4cfb64d407182fdad2cea9e0abe), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 8458,
+  "vertices": 4307,
+  "animations": 7,
+  "files": [
+    {
+      "path": "wolf-spider.gltf.zip",
+      "md5": "1dcd33634d7bb5816f7bca40274ff190",
+      "size": 21477120,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}
