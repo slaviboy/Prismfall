@@ -9,7 +9,7 @@ import { coconutPalms } from './palms';
  * and the palm shadows through env.ts.
  */
 export default defineStage({
-  sdkVersion: '1.2.0',
+  sdkVersion: '1.5.0',
   register(sdk) {
     sdk.components.register(tradewindCove as unknown as ComponentFactory);
     sdk.components.register(coconutPalms as unknown as ComponentFactory);

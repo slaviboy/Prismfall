@@ -23,7 +23,7 @@ import {
   vec3,
   vec4,
 } from 'three/tsl';
-import { colorUniform, floatUniform, noBloom, seeded, z, zColor, zVec3, type ComponentFactory } from '@prismfall/sdk';
+import { clearFrontMotion, colorUniform, floatUniform, frameUniforms, noBloom, seeded, z, zColor, zVec3, type ComponentFactory } from '@prismfall/sdk';
 import { loadTexture, sampleEnvironment, shadowCasters, shadowTime, skyDirection, windField, windVector, zEnvironment, zSkyDirection, zWind, type F, type V3 } from './env';
 
 /**
@@ -90,6 +90,11 @@ const schema = z.object({
   /** Sunlight passing through the leaflets when they are lit from behind. */
   translucency: z.number().min(0).default(0.7),
   wind: zWind.prefault({}),
+  /**
+   * The world clear wave (SDK 1.5; 0 = off): as a clear's front passes a palm, a gust bends its
+   * crown away from the board by this share of its height, and it swings back in the front's tail.
+   */
+  clearWave: z.object({ gust: z.number().min(0).max(0.2).default(0) }).prefault({}),
   /** Where the viewer stands (for detail levels and the shadows the nearest palms cast). */
   eye: zVec3.default([0, 1, 31]),
 });
@@ -507,7 +512,14 @@ export const coconutPalms: ComponentFactory<Params> = {
       const osc = sin(time.mul(f).mul(Math.PI * 2).add(seed.mul(6.28)));
       const push = S.mul(S).mul(0.011).add(S.mul(osc).mul(0.0065));
       const crossOsc = sin(time.mul(f).mul(Math.PI * 2 * 1.37).add(seed.mul(3.1))).mul(S).mul(0.0035);
-      const D = windV.mul(push).add(crossV.mul(crossOsc)).mul(palmA.z).mul(motion) as V3;
+      let D = windV.mul(push).add(crossV.mul(crossOsc)).mul(palmA.z) as V3;
+      if (p.clearWave.gust > 0) {
+        // The clear front's gust, away from the board (its motion channel is already accessibility-scaled).
+        const base = vec3(palmA.x, p.waterLevel, palmA.y);
+        const away = base.sub(frameUniforms.waveOrigin).mul(vec3(1, 0, 1)).add(vec3(1e-4, 0, 0)).normalize();
+        D = D.add(away.mul(clearFrontMotion(base).min(1.2).mul(p.clearWave.gust).mul(palmA.z))) as V3;
+      }
+      D = D.mul(motion) as V3;
       return { D, S };
     };
     const rotate = (v: V3, axis: V3, ang: F): V3 => {
