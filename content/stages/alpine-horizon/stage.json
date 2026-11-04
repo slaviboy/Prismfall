@@ -96,6 +96,106 @@
       "L": "#d88a48"
     }
   },
+  "requires": {
+    "sdk": "^1.5.0"
+  },
+  "clearWave": {
+    "far": 800,
+    "travel": 3.4
+  },
+  "sectionStates": {
+    "fade": 5,
+    "states": [
+      {
+        "section": [
+          "drop"
+        ],
+        "layer": "pollen",
+        "target": "speed",
+        "scale": 1.4,
+        "anticipate": 0.5
+      },
+      {
+        "section": [
+          "drop"
+        ],
+        "layer": "pollen",
+        "target": "turbulence",
+        "scale": 1.4,
+        "anticipate": 0.4
+      },
+      {
+        "section": [
+          "drop"
+        ],
+        "layer": "eagles",
+        "target": "pace",
+        "scale": 1.2,
+        "anticipate": 0.5
+      },
+      {
+        "section": [
+          "break"
+        ],
+        "layer": "pollen",
+        "target": "speed",
+        "scale": 0.6
+      },
+      {
+        "section": [
+          "break"
+        ],
+        "layer": "pollen",
+        "target": "density",
+        "scale": 0.7
+      },
+      {
+        "section": [
+          "break"
+        ],
+        "layer": "eagles",
+        "target": "pace",
+        "scale": 0.85
+      },
+      {
+        "section": [
+          "build",
+          "drop",
+          "bridge"
+        ],
+        "layer": "does",
+        "target": "visible",
+        "scale": 0
+      }
+    ]
+  },
+  "events": [
+    {
+      "layer": "eagles",
+      "on": "clear>=4",
+      "quantize": "bar",
+      "cooldown": 14,
+      "action": "pass"
+    },
+    {
+      "layer": "eagles",
+      "on": "combo>=4",
+      "quantize": "bar",
+      "cooldown": 22,
+      "action": "pass"
+    },
+    {
+      "layer": "does",
+      "on": "b2b",
+      "quantize": "bar",
+      "cooldown": 30,
+      "action": "show",
+      "params": {
+        "seconds": 2.5,
+        "hold": 24
+      }
+    }
+  ],
   "environment": {
     "layers": [
       {
@@ -126,7 +226,112 @@
                 0.9594
               ]
             }
+          },
+          "clearWave": {
+            "glow": 0.15,
+            "color": "#ffe8c4"
           }
+        },
+        "bind": []
+      },
+      {
+        "id": "does",
+        "type": "model",
+        "params": {
+          "src": "/content/shared/creatures/doe.glb",
+          "render": "solid",
+          "animation": {
+            "clip": "WalkSlow",
+            "inPlace": true,
+            "speed": 1,
+            "vary": 0.1
+          },
+          "instances": [
+            {
+              "position": [
+                52,
+                -14,
+                -40
+              ],
+              "scale": 1.5,
+              "snapToGround": false,
+              "walk": {
+                "to": [
+                  30,
+                  -14,
+                  -30
+                ],
+                "via": [
+                  [
+                    44,
+                    -14,
+                    -37
+                  ],
+                  [
+                    37,
+                    -14,
+                    -33
+                  ]
+                ],
+                "smooth": true,
+                "speed": 0.9,
+                "fade": 0.12,
+                "ease": 1.4,
+                "stops": [
+                  {
+                    "at": 0.3,
+                    "for": 12,
+                    "clip": "Stand_Eating_01"
+                  },
+                  {
+                    "at": 0.75,
+                    "for": 10,
+                    "clip": "Stand_Idle_02"
+                  }
+                ]
+              }
+            },
+            {
+              "position": [
+                56,
+                -14,
+                -46
+              ],
+              "scale": 1.4,
+              "snapToGround": false,
+              "walk": {
+                "to": [
+                  36,
+                  -14,
+                  -36
+                ],
+                "via": [
+                  [
+                    49,
+                    -14,
+                    -43
+                  ],
+                  [
+                    42,
+                    -14,
+                    -39
+                  ]
+                ],
+                "smooth": true,
+                "speed": 0.85,
+                "phase": 0.1,
+                "fade": 0.12,
+                "ease": 1.4,
+                "stops": [
+                  {
+                    "at": 0.45,
+                    "for": 14,
+                    "clip": "Stand_Eating_01"
+                  }
+                ]
+              }
+            }
+          ]
         },
         "bind": []
       },
@@ -325,6 +530,16 @@
                 "phase": 0.35,
                 "bank": 28
               }
+            },
+            {
+              "position": [
+                0,
+                20,
+                -200
+              ],
+              "scale": 0.025,
+              "snapToGround": false,
+              "pass": true
             }
           ],
           "particles": {
@@ -368,15 +583,95 @@
               "overlay": 0.35,
               "size": 1.1,
               "brightness": 0.8
-            }
+            },
+            "clearWave": 0.6
+          },
+          "pass": {
+            "duration": 7,
+            "distance": [
+              26,
+              40
+            ],
+            "height": 0.42,
+            "margin": 0.2,
+            "side": "alternate",
+            "direction": "in"
           }
         },
         "bind": []
+      },
+      {
+        "id": "pollen",
+        "type": "particles",
+        "params": {
+          "clearWave": {
+            "brightness": 2.2,
+            "stir": 2.2
+          },
+          "count": 1100,
+          "center": [
+            0,
+            -2,
+            -32
+          ],
+          "size": [
+            160,
+            30,
+            70
+          ],
+          "color": "#fff8e6",
+          "colorB": "#ffe2a8",
+          "minSize": 0.06,
+          "maxSize": 0.16,
+          "velocity": [
+            0.9,
+            0.25,
+            0.2
+          ],
+          "turbulence": 0.9,
+          "twinkle": 0.35,
+          "brightness": 0.55,
+          "shape": "soft",
+          "additive": true,
+          "seed": 19,
+          "bloom": 0.06
+        },
+        "bind": [
+          {
+            "target": "speed",
+            "feature": "overallEnergy",
+            "amount": 0.4,
+            "category": "particles",
+            "attackMs": 300,
+            "releaseMs": 1500
+          }
+        ]
       }
     ]
   },
   "reactivity": {
-    "profiles": [],
+    "profiles": [
+      {
+        "name": "flux-turbulence",
+        "layers": [
+          "pollen"
+        ]
+      },
+      {
+        "name": "clear-gust",
+        "layers": [
+          "pollen"
+        ]
+      },
+      {
+        "name": "combo-heat",
+        "layers": [
+          "eagles",
+          "pollen"
+        ],
+        "amount": 0.6
+      }
+    ],
     "bindings": []
   },
   "effects": {
