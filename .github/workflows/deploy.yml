@@ -1,0 +1,89 @@
+# Prismfall: GitHub Pages deployment, PREPARED BUT DORMANT.
+#
+# The repository is private, but a GitHub Pages site is public on the internet even when its
+# repository is private (only an organisation on GitHub Enterprise Cloud can restrict a Pages site).
+# Prismfall is not deployed publicly (CLAUDE.md, DEPLOYMENT.md), so publishing takes three deliberate
+# steps, none of which is done:
+#   1. Settings -> Pages -> Source: GitHub Actions (Pages is disabled for this repository);
+#   2. Actions -> Deploy to GitHub Pages -> Run workflow;
+#   3. tick "deploy" in that dialog.
+# Run without the box, the workflow only lints, tests and builds: a clean-machine check that
+# publishes nothing.
+#
+# Before any publish, read DEPLOYMENT.md ("GitHub Pages"). The placeholder T-800 (Red Horizon) and
+# Barad-dur (Warden's Spire) models are licensed for this personal build only and must be swapped out.
+#
+# The build's URLs are relative (vite.config.ts sets base './'), so it serves from the repository's
+# subpath, https://<owner>.github.io/<repository>/. The browser tests need a real GPU and run locally,
+# not here.
+
+name: Deploy to GitHub Pages
+
+on:
+  # Manual only. Deploying on every push to main would add:
+  #   push:
+  #     branches: [main]
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: 'Publish to GitHub Pages. The site is PUBLIC; read DEPLOYMENT.md first.'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time; one under way is let finish, as GitHub advises.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 26
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm test
+
+      # Validates the content, typechecks, then builds into dist/.
+      - name: Build
+        run: npm run build
+
+      - name: Configure Pages
+        if: ${{ inputs.deploy }}
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        if: ${{ inputs.deploy }}
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    if: ${{ inputs.deploy }}
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

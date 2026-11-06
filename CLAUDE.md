@@ -84,7 +84,7 @@ npm run build              # content validation + typecheck + vite build → dis
 
 ## Git
 
-- **Local repository only.** Never add a remote, never push, never create a hosted repository.
+- **One private remote.** `origin` is the private GitHub repository `slaviboy/Prismfall`, the backup and the way the laptop gets the code. Push `main` (and any new tags) after each commit. Never make it public, never add another remote.
 - Commit after each coherent, tested unit of work, never with failing typecheck or tests.
 - End every commit message with the Co-Authored-By line used in `git log`. Currently: `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
 
@@ -93,5 +93,6 @@ npm run build              # content validation + typecheck + vite build → dis
 - No assets, audio or code from Tetris Effect or any other game. Do not imitate specific copyrighted compositions.
 - No VLC code. VLC was studied for research only, and its visualisers are GPL.
 - Never deploy publicly. Remote access needs HTTPS plus real server-side access control; see [DEPLOYMENT.md](DEPLOYMENT.md). Never disable browser security features as a workaround.
+  - `.github/workflows/deploy.yml` is prepared but dormant: manual runs only, its `deploy` box off by default, and GitHub Pages disabled for the repository. A Pages site is public even from a private repository. Never enable Pages or run with `deploy` ticked without the owner's explicit decision, and only after the fan-made placeholder models are swapped out.
 - No analytics, trackers, ads or external network calls.
 - Record every new asset's source and licence in [ASSET_LICENSES.md](ASSET_LICENSES.md).

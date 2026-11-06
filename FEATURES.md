@@ -44,7 +44,7 @@ How to read the Evidence column:
 | Data-driven levels | Done | `src/stages/`, `content/stages/`; `src/stages/content.test.ts` |
 | High-DPI and high-refresh displays | Done / Manual check | `e2e/rendering.spec.ts` (DPR 2, resize to 2560×1080); 144 Hz feel is a manual check |
 | Saves settings and progress | Done | `src/storage/`; `storage.test.ts`, `e2e/smoke.spec.ts` (a setting survives a reload) |
-| Private repository, no public deployment | Done | Local git with no remote; no CI or deploy scripts; [DEPLOYMENT.md](DEPLOYMENT.md) |
+| Private repository, no public deployment | Done | Private GitHub repository `slaviboy/Prismfall` as the only remote (backup, laptop); `.github/workflows/deploy.yml` prepared but dormant (manual runs, deploy off by default, Pages disabled); [DEPLOYMENT.md](DEPLOYMENT.md) |
 | No analytics, ads, trackers or needless third parties | Done | No external requests in `src/` or `index.html` (no automated test) |
 | Single player only | Done | No multiplayer, accounts or social code |
 

@@ -1,10 +1,12 @@
 # Deployment
 
-Prismfall is played locally on the owner's PC. **Nothing is deployed, and nothing should be deployed publicly.** This document covers three things:
+Prismfall is played locally on the owner's PC and laptop. **Nothing is deployed, and nothing should be deployed publicly.** This document covers five things:
 
 - how to play locally;
+- how to get the game onto another PC, such as the laptop;
 - how to produce a static build;
-- how to reach the game privately from another device, such as a laptop on the home network or a standalone VR headset, if that is ever wanted.
+- the prepared, disabled GitHub Pages workflow;
+- how to reach the game privately from another device, such as a standalone VR headset, if that is ever wanted.
 
 ## Rules
 
@@ -12,8 +14,8 @@ Prismfall is played locally on the owner's PC. **Nothing is deployed, and nothin
 - **Real access control or nothing.** Remote access must sit behind server-side authentication: an identity-aware gateway, a private network or client certificates.
   - An unguessable or "secret" URL is **not** security: URLs leak through history, logs, screenshots and link previews.
   - A password screen in the page is **not** security: the files are downloaded before the check runs, and the check can be skipped.
-- **The repository stays private.** It is a local git repository with no remote. Do not add one, and do not publish it.
-- **No automatic publishing.** There is no CI, no deploy script and no hosting configuration. Every step below is manual and deliberate.
+- **The repository stays private.** Its one remote, `origin`, is the private GitHub repository `slaviboy/Prismfall`: a backup, and the way the laptop gets the code. Never make it public, and do not add other remotes.
+- **No automatic publishing.** No deploy script or hosting configuration runs on its own. `.github/workflows/deploy.yml` is prepared but dormant (see [GitHub Pages](#github-pages-prepared-not-enabled)). Every step below is manual and deliberate.
 - **No analytics or external calls.**
   - The game loads only its own files: models, music, workers and fonts all come from the game's own origin. Fonts are bundled through `@fontsource`.
   - `index.html` sets `referrer: no-referrer`.
@@ -45,6 +47,25 @@ Without the launcher, the same steps are `npm install`, `npm run build`, `npm ru
 
 The dev server (5173) and the preview server (4173) both bind to `localhost` only (`vite.config.ts`). Other machines on the network cannot reach them, which is intended.
 
+## On another PC (the laptop)
+
+The private GitHub repository `slaviboy/Prismfall` holds the full history. Any PC signed in to that GitHub account can clone it and play exactly as on the main PC, on its own localhost:
+
+1. Install [Node.js](https://nodejs.org/) 22 or newer (the main PC runs 26) and Git. The GitHub CLI (`gh`) is the easiest way to sign in: `gh auth login`.
+2. Clone it (about 670 MB):
+
+   ```sh
+   gh repo clone slaviboy/Prismfall
+   ```
+
+   or `git clone https://github.com/slaviboy/Prismfall.git`, signing in when Git asks.
+3. Double-click `Play.cmd` in the clone. The first run installs the dependencies and builds the game.
+4. To update later: `git pull`, then `Play.cmd --rebuild`.
+
+- **Saves stay on each machine.** To carry progress over, use **Settings → Data → Export save file** on one and **Import save file** on the other (see [Saves on another origin](#saves-on-another-origin)).
+- **Working on both machines:** pull before starting, commit and push when done, so `main` never diverges.
+- **Not in the clone:** everything `.gitignore` keeps on the main PC. That covers `reference-capture/`, the downloaded Sketchfab archives, the large Poly Haven and ESO originals, the Blender intermediates and every `dist*/` folder. Playing and developing never need them; only the asset tooling in `scripts/` does. Each asset's `source.json` records its download URL and MD5, and the script that fetched it (`scripts/fetch-*.ts`) can fetch it again. Read the script's header first: `fetch-panorama.ts` also rebuilds the world's sky band in `content/`.
+
 ## Building a static bundle
 
 ```sh
@@ -61,6 +82,30 @@ npm run build        # prebuild: content validation; then typecheck; then vite b
   - Never expose the test build in `dist-test/`: it has the debug hooks and source maps.
 
 Any static file server can serve `dist/`. `vite preview` is fine for single-user use on the PC. For an always-on setup behind a reverse proxy, the proxy can serve `dist/` directly.
+
+## GitHub Pages (prepared, not enabled)
+
+`.github/workflows/deploy.yml` follows the same layout as the owner's other Pages projects: install, lint, unit tests, build, then upload `dist/` and deploy it to GitHub Pages. It is **dormant**:
+
+- it runs only when started by hand (Actions → Deploy to GitHub Pages → Run workflow), never on a push;
+- its Pages steps and its `deploy` job run only when the **deploy** box in that dialog is ticked (off by default);
+- GitHub Pages is disabled for the repository, so even a ticked run would fail before publishing.
+
+Run with the box unticked, it is a clean-machine check that the pushed code installs, passes the unit tests and builds on Linux. It publishes nothing.
+
+**Why it stays off:** a GitHub Pages site is **public on the internet even when its repository is private**. Anyone with the URL can play the game and download every model, texture and composition. Only a repository owned by an organisation on GitHub Enterprise Cloud can restrict a Pages site to people with read access. A paid personal plan (Pro) cannot.
+
+**Before ever publishing it**, all of these must be done, in this order:
+
+1. The owner decides to make the game public and rewrites the [Rules](#rules) above.
+2. The two fan-made placeholders are replaced, because their licence covers this personal build only ([ASSET_LICENSES.md](ASSET_LICENSES.md)):
+   - the T-800 walking machines in Red Horizon;
+   - the Barad-dûr tower in The Warden's Spire.
+3. Every other entry in [ASSET_LICENSES.md](ASSET_LICENSES.md) is checked for terms that rule out public redistribution.
+4. Settings → Pages → Source: **GitHub Actions**.
+5. Actions → Deploy to GitHub Pages → Run workflow, with **deploy** ticked. The site is then at `https://slaviboy.github.io/Prismfall/`. `base: './'` already makes the build work from that subpath.
+
+To deploy on every push instead, as the other projects do, add the commented `push` trigger at the top of the workflow.
 
 ## Saves on another origin
 
@@ -132,4 +177,4 @@ The proxy can serve `dist/` directly, so no Node process is needed. Never forwar
 - [ ] The address is HTTPS, and the device shows no certificate warning.
 - [ ] Only `dist/` (a production build) is served.
 - [ ] Nothing on the router forwards a port to the PC without authentication.
-- [ ] The repository still has no remote.
+- [ ] The GitHub repository is still private, and GitHub Pages is still disabled.

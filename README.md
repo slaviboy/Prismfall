@@ -24,6 +24,8 @@ Stack: TypeScript, React 19, Vite 8, three.js r187 `WebGPURenderer` (WebGPU with
 
 That profile keeps its own saves, separate from your normal browser window. See [Saves and data](#saves-and-data). The server keeps running in a minimised "Prismfall server" window after you close the game; close that window to stop it (the next `Play.cmd` starts it again).
 
+**On another PC (the laptop):** clone the private GitHub repository (`gh repo clone slaviboy/Prismfall`), then run `Play.cmd` there. See [DEPLOYMENT.md](DEPLOYMENT.md#on-another-pc-the-laptop).
+
 **Develop:**
 
 ```sh
