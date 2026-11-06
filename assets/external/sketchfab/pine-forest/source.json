@@ -1,0 +1,25 @@
+{
+  "uid": "bef89be6b189456095db79107045d726",
+  "name": "Pine Forest at Sunset",
+  "page": "https://sketchfab.com/3d-models/pine-forest-at-sunset-bef89be6b189456095db79107045d726",
+  "author": {
+    "name": "Jagobo",
+    "username": "Jagobo",
+    "profile": "https://sketchfab.com/Jagobo"
+  },
+  "licence": "CC Attribution",
+  "licenceUrl": "http://creativecommons.org/licenses/by/4.0/",
+  "attribution": "\"Pine Forest at Sunset\" by Jagobo (https://sketchfab.com/3d-models/pine-forest-at-sunset-bef89be6b189456095db79107045d726), CC Attribution",
+  "downloaded": "2026-11-03",
+  "faces": 2515725,
+  "vertices": 2523357,
+  "animations": 0,
+  "files": [
+    {
+      "path": "pine-forest.gltf.zip",
+      "md5": "d1b1596bc8ad0205403e26971aa28f62",
+      "size": 87443659,
+      "note": "Sketchfab glTF archive (git-ignored); download again with this script"
+    }
+  ]
+}

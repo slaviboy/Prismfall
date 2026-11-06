@@ -4485,6 +4485,539 @@ Create a complete original musical and sound-design identity for every stage.
 
 The music, blocks, particles, environment and gameplay must feel like parts of one professionally produced audiovisual experience.
 
+# 28. REALISTIC 3D ASSET PRODUCTION AND ANIMATED PARTICLE OBJECTS
+## Replace All Cheap-Looking Procedural Background Shapes
+
+### CRITICAL PROBLEM
+
+The current background objects in gameplay look artificial, primitive and amateurish.
+
+Several elements look like randomly generated shapes rather than actual 3D objects.
+
+This is not acceptable for the visual quality we are targeting.
+
+I want realistic, professionally modeled environmental objects and creatures.
+
+For example:
+- Realistic camels, not camel-shaped particle blobs.
+- Realistic pyramids, not basic triangular geometry.
+- Realistic mountains, not random low-poly triangles.
+- Realistic trees, not primitive green shapes.
+- Realistic fish, not generic moving particles.
+- Realistic birds, not abstract flying dots.
+- Realistic architectural structures, not random floating cubes.
+
+**Use actual high-quality 3D models as the foundation of the environmental objects. Then enhance those models with sophisticated particle effects.**
+
+Do not attempt to replace proper 3D modeling with random procedural geometry.
+
+---
+
+## A. SEARCH FOR REAL 3D MODELS
+
+You have permission to search the internet for free, legally usable 3D models.
+
+Investigate:
+
+- Poly Haven.
+- Sketchfab downloadable models.
+- BlenderKit free assets.
+- OpenGameArt.
+- Other reputable free 3D asset libraries.
+- Free rigged and animated model collections.
+
+Prioritize:
+
+- Realistic models.
+- High-quality geometry.
+- Proper PBR materials.
+- Detailed textures.
+- Good topology.
+- Suitable UV maps.
+- Skeletal rigs for animals.
+- Actual walking or movement animations.
+- GLB/glTF, FBX or Blender source availability.
+
+Do not select assets based on the word FREE alone.
+
+Evaluate actual model quality in Blender.
+
+Reject:
+- Primitive low-poly cartoon objects.
+- Poor anatomical proportions.
+- Bad textures.
+- Broken geometry.
+- Incomplete models.
+- Models with obvious visual defects.
+- Models with unsuitable animation.
+
+The objective is professional-quality environmental assets.
+
+## B. LICENSING AND ASSET MANAGEMENT
+
+Every downloaded model must have a verified licence.
+
+Preferred licensing:
+- CC0.
+- Public domain.
+- MIT.
+- Other licences explicitly permitting the intended use.
+
+CC BY assets may be considered when their attribution requirements can be satisfied.
+
+Never assume that every downloadable Sketchfab model is unrestricted.
+
+Do not use:
+- Copyrighted commercial game assets.
+- Ripped assets from Tetris Effect.
+- Unlicensed models.
+- Assets with unknown usage rights.
+- Models downloaded from questionable sources.
+
+Create:
+
+assets/ASSET_CATALOG.md
+
+For every external asset record:
+- Asset name.
+- Source URL.
+- Author.
+- Original download URL.
+- Licence.
+- Attribution requirements.
+- Original file format.
+- Modifications made.
+- Final optimized format.
+- Whether animation is included.
+
+Download and store approved models locally in our private repository.
+
+Do not depend on external websites or third-party CDNs at runtime.
+
+Preserve original source files and licence documents.
+
+---
+
+## C. BUILD AN ASSET INSPECTION PIPELINE
+
+Before integrating a new 3D model:
+
+1. Open it in Blender.
+2. Inspect its proportions.
+3. Inspect geometry and topology.
+4. Inspect textures.
+5. Inspect materials.
+6. Inspect UV mapping.
+7. Inspect skeletons where applicable.
+8. Inspect animation clips.
+9. Check model scale.
+10. Check whether it looks good from the actual gameplay camera distance.
+
+Create a contact sheet or screenshot for every candidate.
+
+Do not integrate a model merely because it downloaded successfully.
+
+For important assets, create a comparison between available candidates and choose the best visual quality.
+
+If an external asset is not good enough, improve it in Blender or create an original professional-quality replacement.
+
+---
+
+# D. REALISTIC DESERT ASSETS
+
+The Desert stage requires particular attention.
+
+### CAMELS
+
+Find or create a proper realistic 3D dromedary camel.
+
+Requirements:
+- Accurate anatomical proportions.
+- Recognizable hump.
+- Proper neck and head.
+- Realistic legs.
+- Correct feet.
+- Detailed body shape.
+- Proper skin/fur appearance.
+- Suitable textures.
+- Natural movement.
+
+A high-quality rigged camel is strongly preferred.
+
+The camel should have:
+- Standing.
+- Idle.
+- Walking.
+- Turning.
+- Head movement.
+
+Use actual skeletal animation or create the missing animations in Blender.
+
+Implement a natural walking cycle.
+
+Make sure the legs move correctly and feet contact the ground naturally.
+
+Do not use a generic robotic walking animation.
+
+Create a caravan using multiple camel instances with variation in movement timing, speed and positioning.
+
+### PYRAMIDS
+
+Create realistic ancient Egyptian-style pyramid models.
+
+They must have:
+- Correct architectural proportions.
+- Sandstone or limestone surfaces.
+- Weathered stone.
+- Individual masonry detail where visible.
+- Natural surface imperfections.
+- Subtle erosion.
+- Appropriate lighting and shadows.
+
+Create several variations in size and distance.
+
+Include original desert architecture where appropriate.
+
+Avoid simple featureless triangular pyramids.
+
+### OTHER DESERT OBJECTS
+
+Build a coherent environmental asset collection:
+
+- Sand dunes.
+- Rock formations.
+- Desert mountains.
+- Ancient columns.
+- Ruined structures.
+- Sandstone monuments.
+- Distant settlements.
+- Desert vegetation.
+
+Objects must work together as a composition.
+
+---
+
+# E. SURFACE SAMPLING — TURN REAL OBJECTS INTO PARTICLE OBJECTS
+
+This is one of the most important technical tasks.
+
+Once we have a good 3D model, create a system that can produce high-quality particle representations of the actual object.
+
+Do not invent the particle shape independently.
+
+The particle positions must come from the real object's mesh surface.
+
+Implement mesh surface sampling.
+
+### Static meshes
+
+For static objects such as pyramids:
+
+1. Load the actual 3D model.
+2. Sample points across its triangle surfaces.
+3. Distribute points according to triangle surface area.
+4. Preserve the actual geometry and silhouette.
+5. Store sampled positions.
+6. Create a GPU-rendered particle representation.
+7. Add controlled particle movement and animation.
+
+Use mathematically correct surface sampling.
+
+Do not simply place random dots inside the object's bounding box.
+
+### Animated meshes
+
+For creatures such as camels:
+
+1. Load the actual rigged model.
+2. Identify its skeleton.
+3. Load or create a realistic animation.
+4. Sample points across the character's surface.
+5. Preserve bone indices and weights for sampled points.
+6. Make particles follow the animated character.
+7. Keep the particle formation aligned with the actual animated anatomy.
+
+Investigate techniques including:
+- Skinned mesh surface sampling.
+- Bone-weighted particle animation.
+- GPU skinning.
+- Vertex animation textures where appropriate.
+- GPU particle systems.
+- Custom Three.js shaders.
+
+For a skinned animated creature, the particle positions must follow the same skeletal transformations as the real model.
+
+Do not recalculate thousands of particle positions individually on the CPU every frame.
+
+Prefer GPU-based skinning and animation wherever practical.
+
+---
+
+# F. HYBRID MODEL AND PARTICLE RENDERING
+
+Very important: do not automatically replace every solid model with a cloud of particles.
+
+The best visual result should combine real 3D geometry and particles.
+
+Create a configurable hybrid rendering system.
+
+Support:
+
+### Mode 1 — Realistic solid model
+
+The actual detailed model is visible with proper materials and lighting.
+
+Use for distant but clearly recognizable objects where solid geometry provides the best result.
+
+### Mode 2 — Solid model with particle surface
+
+The real model remains visible while particles follow its shape.
+
+Particles can provide subtle magical surface details, glowing dust and atmospheric effects.
+
+### Mode 3 — Particle-dominant representation
+
+The recognizable silhouette is composed primarily of particles sampled from the actual model surface.
+
+Use when this genuinely enhances the artistic experience.
+
+### Mode 4 — Dissolve and reform
+
+The actual object gradually transforms into particles and reforms into its original shape.
+
+Synchronize the transition with music or specific stage events where appropriate.
+
+Allow each stage to configure its own rendering mode.
+
+Particles must follow the underlying model rather than forming an unrelated cloud.
+
+Avoid excessive particle density and uncontrolled random movement.
+
+The result should look sophisticated, detailed and intentional.
+
+---
+
+# G. REALISTIC ANIMATED CAMEL FORMATIONS
+
+Implement the Desert camel environment as a proper showcase of this system.
+
+Create several camels moving through a large desert environment.
+
+The visual result should combine:
+
+- Realistic 3D camel geometry.
+- Natural skeletal walking.
+- Accurate body movement.
+- Natural leg motion.
+- Dust emerging from footsteps.
+- Particle surface details.
+- Golden sand particles around the animal.
+- Atmospheric dust.
+- Ground contact.
+- Appropriate lighting.
+- Different distances and scales.
+
+At different points in the animation, camels may appear more solid or more particle-oriented.
+
+However, they must always retain recognizable and convincing anatomy.
+
+Create groups that move through the background naturally.
+
+Use different walking cycles and slight animation variation to avoid robotic synchronization.
+
+The camels must move across the environment in believable formations.
+
+Do not let them intersect mountains, pyramids or other structures.
+
+Use terrain-aware positioning.
+
+They must remain in the background and never obstruct the Tetris playfield.
+
+---
+
+# H. REALISTIC PARTICLE PYRAMIDS AND ARCHITECTURE
+
+Static architecture should also support particle enhancements.
+
+For pyramids, temples and other buildings:
+
+- Generate particle points across the actual mesh.
+- Preserve architectural silhouettes.
+- Add subtle sand erosion.
+- Introduce controlled particle movement.
+- Allow selected surfaces to illuminate.
+- Create particles that drift away during special environmental events.
+- Restore the original structure after the effect.
+
+The particle representation must still look like a pyramid or building.
+
+Do not generate arbitrary particle structures that only vaguely resemble the original model.
+
+---
+
+# I. EXTEND THE SYSTEM TO ALL STAGES
+
+This must become a reusable system, not a special camel implementation.
+
+Create an Asset-to-Particles pipeline that works for different types of assets.
+
+Examples:
+
+ICE:
+- Realistic ice formations.
+- Crystal structures.
+- Particle-based frozen creatures.
+- Snow-covered geometry.
+
+JAPAN:
+- Authentic architectural models.
+- Torii gates.
+- Wooden temples.
+- Cherry blossom trees.
+- Particle-based petals.
+- Birds and other appropriate environmental creatures.
+
+OCEAN:
+- Realistic fish models.
+- Schools of fish.
+- Jellyfish.
+- Rays.
+- Turtles.
+- Particle trails and underwater effects.
+
+MOUNTAINS:
+- Realistic mountain geometry.
+- Rock formations.
+- Trees.
+- Birds.
+- Wildlife.
+- Atmospheric particle effects.
+
+DARK SPACE:
+- Detailed planets.
+- Asteroids.
+- Space structures.
+- Nebula-inspired particle fields.
+- Original particle-based cosmic formations.
+
+FOREST:
+- Detailed trees.
+- Plants.
+- Rocks.
+- Birds.
+- Butterflies.
+- Original particle-based creatures.
+
+The same surface sampling and particle systems should be reusable across different models and stages.
+
+---
+
+# J. ARTISTIC QUALITY CONTROL
+
+The current poor-quality procedural background elements must be removed or replaced.
+
+For every environmental object, verify:
+
+- Is the actual object recognizable?
+- Are its proportions realistic?
+- Is its surface detailed?
+- Are the materials appropriate?
+- Is its lighting convincing?
+- Does the object have genuine 3D volume?
+- Does the particle version preserve the original silhouette?
+- Does animation follow the actual model?
+- Does the object integrate with the environment?
+- Does it look good from the real gameplay camera?
+
+Do not confuse more particles with more quality.
+
+A few beautifully designed, highly detailed and naturally animated objects are better than thousands of poorly designed shapes.
+
+---
+
+# K. GPU PERFORMANCE
+
+Optimize the complete system.
+
+Requirements:
+
+- GPU-oriented point rendering.
+- Instancing where appropriate.
+- Shared geometries.
+- Shared materials.
+- Asset caching.
+- Level of detail.
+- Visibility management.
+- Distance-based particle counts.
+- Animation LOD.
+- Controlled draw calls.
+- Texture optimization.
+
+Use detailed models for important foreground and midground elements.
+
+Use reduced-detail models for distant objects.
+
+Use particles as an enhancement, not as an excuse to render everything at maximum density.
+
+Test in:
+- 1440p.
+- 4K.
+- Desktop.
+- VR.
+
+Maintain good frame timing.
+
+---
+
+# L. VISUAL ACCEPTANCE TEST
+
+For the Desert stage, produce the following showcase:
+
+1. A detailed realistic camel.
+2. A properly animated walking camel.
+3. A particle representation following the actual camel surface.
+4. A caravan of moving camels.
+5. Realistic detailed pyramids.
+6. Particle-enhanced pyramids.
+7. Realistic dune geometry.
+8. Detailed sandstone architecture.
+9. Controlled desert atmospheric particles.
+10. A complete background composition that looks like a professionally authored 3D game environment.
+
+Show screenshots of each implementation stage.
+
+Compare the original primitive background objects against the new detailed assets.
+
+Remove the old poor-quality objects when replacements have been verified.
+
+Repeat the process for the other environments.
+
+Create:
+
+REAL_ASSET_PIPELINE.md
+
+PARTICLE_SURFACE_RENDERING.md
+
+ENVIRONMENTAL_ASSET_REVIEW.md
+
+Include asset sources, licenses, processing steps and performance results.
+
+---
+
+# FINAL INSTRUCTION
+
+I do not want random geometric shapes pretending to be camels, pyramids, mountains, animals or buildings.
+
+I want actual beautiful 3D objects with realistic proportions, professional materials, proper textures and convincing animation.
+
+Then I want these objects enhanced by intelligent particle systems that use their real geometry and animation as the foundation.
+
+The goal is to create a visually exceptional 3D world.
+
+**REAL MODEL FIRST. PARTICLE ENHANCEMENT SECOND. PROFESSIONAL ART DIRECTION ALWAYS.**
+
+Do not consider this complete until the actual running gameplay looks substantially better.
+
 ## FINAL INSTRUCTION
 
 I do not want a quick Tetris clone.
